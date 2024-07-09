@@ -2,7 +2,6 @@
 % Please edit documentation in R/githist-package.R
 \docType{package}
 \name{githist-package}
-\alias{githist}
 \alias{githist-package}
 \title{githist: Code analyses traced along the 'git' history of a package}
 \description{
