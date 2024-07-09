@@ -15,6 +15,7 @@ run_one_pkgstats <- function (path) {
 
     n_fns <- length (unique (fns$fn_name))
 
+    package <- NULL # Suppress 'no visible binding' note.
     ext_calls <- s$external_calls |>
         dplyr::select ("call", "package") |>
         dplyr::group_by (package) |>
