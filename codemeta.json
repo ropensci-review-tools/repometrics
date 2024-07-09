@@ -1,0 +1,40 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "githist",
+  "description": "Code analyses traced along the 'git' history of a package.",
+  "name": "githist: Code analyses traced along the 'git' history of a package",
+  "relatedLink": "https://docs.ropensci.org/githist/",
+  "codeRepository": "https://github.com/ropensci-review-tools/githist",
+  "issueTracker": "https://github.com/ropensci-review-tools/githist/issues",
+  "license": "https://spdx.org/licenses/GPL-3.0",
+  "version": "0.0.1.002",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 4.4.1 (2024-06-14)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Mark",
+      "familyName": "Padgham",
+      "email": "mark.padgham@email.com",
+      "@id": "https://orcid.org/0000-0003-2172-5265"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Mark",
+      "familyName": "Padgham",
+      "email": "mark.padgham@email.com",
+      "@id": "https://orcid.org/0000-0003-2172-5265"
+    }
+  ],
+  "softwareRequirements": {
+    "SystemRequirements": {}
+  },
+  "fileSize": "1.593KB"
+}
