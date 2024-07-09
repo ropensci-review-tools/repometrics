@@ -9,4 +9,9 @@ githist <- function (path) {
     path_cp <- fs::dir_copy (path, fs::path_temp ())
 
     h <- gert::git_log (repo = path_cp, max = 1e6)
+
+    res <- pbapply::pblapply (seq_len (nrow (h)), function (i) {
+        g <- gert::git_reset_soft (ref = h$commit [i], repo = path_cp)
+        run_one_pkgstats (path = path_cp)
+    })
 }
