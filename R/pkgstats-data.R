@@ -25,13 +25,22 @@ run_one_pkgstats <- function (path) {
     n_ext_pkgs <- nrow (ext_calls) - 1L
     ext_calls <- mn_med_sum (ext_calls$n [ext_calls$package != "base"])
 
-    data.frame (
-        doclines = doclines,
-        npars = npars,
-        loc = loc,
-        ext_calls = ext_calls,
-        base_calls = c (NA_integer_, NA_integer_, base_calls),
-        n_ext_pkgs = c (NA_integer_, NA_integer_, n_ext_pkgs),
-        n_fns = c (NA_integer_, NA_integer_, n_fns)
+
+    list (
+        package = s$desc$package,
+        version = s$desc$version,
+        date = s$desc$date,
+        n_aut = s$desc$aut,
+        n_ctb = s$desc$ctb,
+        n_fns = n_fns,
+        n_ext_pkgs = n_ext_pkgs,
+        base_calls = base_calls,
+        loc = s$loc,
+        stats = data.frame (
+            doclines = doclines,
+            npars = npars,
+            loc = loc,
+            ext_calls = ext_calls
+        )
     )
 }
