@@ -39,7 +39,7 @@ run_one_pkgstats <- function (path, pkg_date) {
         date = pkg_date,
         n_aut = s$desc$aut,
         n_ctb = s$desc$ctb,
-        n_fns = nrow (fn_nms),
+        n_fns_tot = nrow (fn_nms),
         n_fns_exp = length (which (fn_nms$exported)),
         n_ext_pkgs = n_ext_pkgs,
         base_calls = base_calls,
