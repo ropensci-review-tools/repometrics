@@ -3,6 +3,11 @@
 #' @param path Path to local repository containing an R package.
 #' @param n If given, only analyses the preceding 'n' commits in the git
 #' history.
+#' @param step_size Analyse package for each `step_size` commits. For example,
+#' with `step_size = 2`, analyses will be run on every second commit, instead
+#' of default running on every commit. The value of `n` then analyses the
+#' first `n` entries taken at intervals of `step_size`.
+#'
 #' @return A list of three items:
 #' \itemize{
 #' \item desc_data Containing data from `DESCRIPTION` files, along with data on
@@ -14,9 +19,10 @@
 #' }
 #'
 #' @export
-githist <- function (path, n = NULL) {
+githist <- function (path, n = NULL, step_size = 1L) {
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
+    checkmate::assert_int (step_size, lower = 1L)
     if (!is.null (n)) {
         checkmate::assert_int (n, lower = 1L)
     }
@@ -29,6 +35,9 @@ githist <- function (path, n = NULL) {
     }
 
     h <- gert::git_log (repo = path_cp, max = 1e6)
+    if (step_size > 1L) {
+        h <- h [seq (1, nrow (h), by = step_size), ]
+    }
     if (!is.null (n)) {
         h <- h [seq_len (n), ]
     }

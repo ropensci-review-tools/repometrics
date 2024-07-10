@@ -4,13 +4,18 @@
 \alias{githist}
 \title{Apply \pkg{pkgstats} across the git history of a package}
 \usage{
-githist(path, n = NULL)
+githist(path, n = NULL, step_size = 1L)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
 
 \item{n}{If given, only analyses the preceding 'n' commits in the git
 history.}
+
+\item{step_size}{Analyse package for each \code{step_size} commits. For example,
+with \code{step_size = 2}, analyses will be run on every second commit, instead
+of default running on every commit. The value of \code{n} then analyses the
+first \code{n} entries taken at intervals of \code{step_size}.}
 }
 \value{
 A list of three items:
