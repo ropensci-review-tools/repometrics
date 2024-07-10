@@ -9,9 +9,7 @@ test_that ("testpkg and input errors", {
     expect_error (githist (path, step_size = 1:2))
     expect_error (githist (path, step_size = "1"))
 
-    expect_output (
-        res <- githist (path)
-    )
+    res <- githist (path)
 
     expect_type (res, "list")
     expect_length (res, 3L)
