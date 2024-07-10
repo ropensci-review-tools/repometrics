@@ -13,7 +13,7 @@ run_one_pkgstats <- function (path, pkg_date) {
     npars <- mn_med_sum (fns$npars)
     loc <- mn_med_sum (fns$loc)
 
-    n_fns <- length (unique (fns$fn_name))
+    fn_nms <- unique (fns [, c ("fn_name", "exported")])
 
     package <- NULL # Suppress 'no visible binding' note.
     ext_calls <- s$external_calls |>
@@ -39,7 +39,8 @@ run_one_pkgstats <- function (path, pkg_date) {
         date = pkg_date,
         n_aut = s$desc$aut,
         n_ctb = s$desc$ctb,
-        n_fns = n_fns,
+        n_fns = nrow (fn_nms),
+        n_fns_exp = length (which (fn_nms$exported)),
         n_ext_pkgs = n_ext_pkgs,
         base_calls = base_calls,
         loc = s$loc,
