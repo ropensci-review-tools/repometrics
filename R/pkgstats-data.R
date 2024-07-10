@@ -1,4 +1,4 @@
-run_one_pkgstats <- function (path) {
+run_one_pkgstats <- function (path, pkg_date) {
 
     s <- pkgstats::pkgstats (path)
 
@@ -26,11 +26,17 @@ run_one_pkgstats <- function (path) {
     n_ext_pkgs <- nrow (ext_calls) - 1L
     ext_calls <- mn_med_sum (ext_calls$n [ext_calls$package != "base"])
 
+    s$loc <- cbind (
+        package = s$desc$package,
+        version = s$desc$version,
+        date = pkg_date,
+        s$loc
+    )
 
     list (
         package = s$desc$package,
         version = s$desc$version,
-        date = s$desc$date,
+        date = pkg_date,
         n_aut = s$desc$aut,
         n_ctb = s$desc$ctb,
         n_fns = n_fns,
@@ -38,6 +44,9 @@ run_one_pkgstats <- function (path) {
         base_calls = base_calls,
         loc = s$loc,
         stats = data.frame (
+            package = s$desc$package,
+            version = s$desc$version,
+            date = pkg_date,
             doclines = doclines,
             npars = npars,
             loc = loc,
