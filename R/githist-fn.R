@@ -29,7 +29,7 @@ githist <- function (path, n = NULL, step_size = 1L) {
 
     path_cp <- path
     clean_after <- FALSE
-    if (fs::path_dir (path) != fs::path_temp ()) {
+    if (fs::path (fs::path_dir (path)) != fs::path_temp ()) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
         clean_after <- TRUE
     }
