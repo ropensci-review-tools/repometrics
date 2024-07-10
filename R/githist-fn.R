@@ -3,6 +3,16 @@
 #' @param path Path to local repository containing an R package.
 #' @param n If given, only analyses the preceding 'n' commits in the git
 #' history.
+#' @return A list of three items:
+#' \itemize{
+#' \item desc_data Containing data from `DESCRIPTION` files, along with data on
+#' numbers of functions.
+#' \item loc Containing data on "lines-of-code" for all languages and
+#' sub-directories within package.
+#' \item stats Containing statistics on (mean, medium, and sum) of various
+#' properties of each function in package.
+#' }
+#'
 #' @export
 githist <- function (path, n = NULL) {
     checkmate::assert_character (path, len = 1L)

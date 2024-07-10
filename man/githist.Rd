@@ -12,6 +12,17 @@ githist(path, n = NULL)
 \item{n}{If given, only analyses the preceding 'n' commits in the git
 history.}
 }
+\value{
+A list of three items:
+\itemize{
+\item desc_data Containing data from \code{DESCRIPTION} files, along with data on
+numbers of functions.
+\item loc Containing data on "lines-of-code" for all languages and
+sub-directories within package.
+\item stats Containing statistics on (mean, medium, and sum) of various
+properties of each function in package.
+}
+}
 \description{
 Apply \pkg{pkgstats} across the git history of a package
 }
