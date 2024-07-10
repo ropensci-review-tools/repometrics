@@ -1,14 +1,22 @@
 #' Apply \pkg{pkgstats} across the git history of a package
 #'
 #' @param path Path to local repository containing an R package.
+#' @param n If given, only analyses the preceding 'n' commits in the git
+#' history.
 #' @export
-githist <- function (path) {
+githist <- function (path, n = NULL) {
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
+    if (!is.null (n)) {
+        checkmate::assert_int (n, lower = 1L)
+    }
 
     path_cp <- fs::dir_copy (path, fs::path_temp ())
 
     h <- gert::git_log (repo = path_cp, max = 1e6)
+    if (!is.null (n)) {
+        h <- h [seq_len (n), ]
+    }
 
     res <- pbapply::pblapply (seq_len (nrow (h)), function (i) {
         g <- gert::git_reset_hard (ref = h$commit [i], repo = path_cp)

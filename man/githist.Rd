@@ -4,10 +4,13 @@
 \alias{githist}
 \title{Apply \pkg{pkgstats} across the git history of a package}
 \usage{
-githist(path)
+githist(path, n = NULL)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
+
+\item{n}{If given, only analyses the preceding 'n' commits in the git
+history.}
 }
 \description{
 Apply \pkg{pkgstats} across the git history of a package
