@@ -35,7 +35,12 @@ collate_pkgstats <- function (x) {
     })
     desc_data <- data.frame (do.call (cbind, desc_data))
     names (desc_data) <- nms2df
-    desc_data$date <- lapply (x, function (i) strftime (i$date, "%y-%m-%d %H:%M:%S"))
+    desc_data$date <- vapply (
+        x,
+        function (i) strftime (i$date, "%y-%m-%d %H:%M:%S"),
+        "character"
+    )
+    desc_data$date <- strptime (desc_data$date, format = "%y-%m-%d %H:%M:%S")
 
     nms_int <- nms2df [-seq_len (which (nms2df == "date"))]
     for (n in nms_int) {
@@ -46,6 +51,9 @@ collate_pkgstats <- function (x) {
     stats <- do.call (rbind, lapply (x, function (i) i$stats))
     stats$measure <- gsub ("[0-9]+$", "", rownames (stats))
     rownames (stats) <- NULL
+
+    # Lazy convert all to tibbles, which `res$loc` is from `dplyr`:
+    class (desc_data) <- class (stats) <- class (loc)
 
     list (
         desc_data = desc_data,
