@@ -1,9 +1,17 @@
-test_that ("testpkg", {
+test_that ("testpkg and input errors", {
+    expect_error (githist (1))
+    expect_error (githist ("a"))
+
     pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
-    res <- githist (path)
+    expect_error (githist (path, step_size = 1:2))
+    expect_error (githist (path, step_size = "1"))
+
+    expect_output (
+        res <- githist (path)
+    )
 
     expect_type (res, "list")
     expect_length (res, 3L)
