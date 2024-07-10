@@ -12,8 +12,10 @@ githist <- function (path, n = NULL) {
     }
 
     path_cp <- path
+    clean_after <- FALSE
     if (fs::path_dir (path) != fs::path_temp ()) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
+        clean_after <- TRUE
     }
 
     h <- gert::git_log (repo = path_cp, max = 1e6)
@@ -26,6 +28,10 @@ githist <- function (path, n = NULL) {
         pkg_date <- h$time [i]
         run_one_pkgstats (path = path_cp, pkg_date = pkg_date)
     })
+
+    if (clean_after) {
+        fs::dir_delete (path_cp)
+    }
 
     collate_pkgstats (res)
 }
