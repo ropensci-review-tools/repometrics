@@ -11,7 +11,10 @@ githist <- function (path, n = NULL) {
         checkmate::assert_int (n, lower = 1L)
     }
 
-    path_cp <- fs::dir_copy (path, fs::path_temp ())
+    path_cp <- path
+    if (fs::path_dir (path) != fs::path_temp ()) {
+        path_cp <- fs::dir_copy (path, fs::path_temp ())
+    }
 
     h <- gert::git_log (repo = path_cp, max = 1e6)
     if (!is.null (n)) {

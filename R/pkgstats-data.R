@@ -22,8 +22,8 @@ run_one_pkgstats <- function (path, pkg_date) {
         dplyr::count (package) |>
         dplyr::filter (package != s$desc$package)
 
-    base_calls <- ext_calls$n [ext_calls$package == "base"]
-    n_ext_pkgs <- nrow (ext_calls) - 1L
+    base_calls <- null2na_int (ext_calls$n [ext_calls$package == "base"])
+    n_ext_pkgs <- null2na_int (nrow (ext_calls)) - 1L
     ext_calls <- mn_med_sum (ext_calls$n [ext_calls$package != "base"])
 
     s$loc <- cbind (
