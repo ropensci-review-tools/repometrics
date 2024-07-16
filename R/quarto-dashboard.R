@@ -20,6 +20,10 @@ ghist_dashboard <- function (results, action = "preview") {
     action <- match.arg (action, c ("preview", "render"))
     quarto_action <- paste0 ("quarto::quarto_", action)
 
+    results <- daily_average (results, "stats")
+    results <- daily_average (results, "desc_data")
+    results <- daily_average (results, "loc")
+
     path_src <- system.file ("extdata", "quarto", package = "githist")
     dir <- fs::dir_copy (path_src, fs::path_temp ())
     saveRDS (results, fs::path (dir, "results.Rds"))
@@ -30,6 +34,21 @@ ghist_dashboard <- function (results, action = "preview") {
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
     })
+}
+
+daily_average <- function (results, what = "stats") {
+
+    results [[what]]$date <- lubridate::ymd (strftime (results [[what]]$date, "%y-%m-%d"))
+
+    cols <- c ("language", "dir", "date")
+    cols <- cols [which (cols %in% names (results [[what]]))]
+
+    results [[what]] <- dplyr::group_by (results [[what]], dplyr::across (dplyr::all_of (cols))) |>
+        dplyr::select_if (is.numeric) |>
+        dplyr::summarise_all (mean, na.rm = TRUE) |>
+        dplyr::ungroup ()
+
+    return (results)
 }
 
 quarto_insert_pkg_name <- function (dir, pkg_name) {
