@@ -9,9 +9,15 @@ ghist_dashboard(results, action = "preview")
 \arguments{
 \item{results}{Results of main \link{githist} function applied to one
 package.}
+
+\item{action}{One of "preview", to start and open a live preview of the
+dashboard website, or "render" to render a static version without previewing
+or opening.}
 }
 \value{
-Nothing; quarto dashboard will automatically open on function call.
+(Invisibly) Path to main "index.html" document of quarto site. Note
+that the site must be served with \code{action = "preview"}, and will not work by
+simply opening this "index.html" file.
 }
 \description{
 Start quarto dashboard with results of main \link{githist} function.
