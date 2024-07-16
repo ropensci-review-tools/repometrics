@@ -1,0 +1,22 @@
+project:
+  type: website
+
+website:
+  title: "Package History"
+  cookie-consent:
+    type: express
+  navbar:
+    left:
+      - fn-stats.qmd
+    right:
+      - icon: "github"
+        menu:
+          - text: Source Code
+            url: https://github.com/ropensci-review-tools/githist
+          - text: Request a Feature
+            url: https://github.com/ropensci-review-tools/githist/issues/new
+
+format:
+  html:
+    theme: cosmo
+    toc: true
