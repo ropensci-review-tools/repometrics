@@ -5,6 +5,7 @@ status](https://github.com/ropensci-review-tools/githist/workflows/R-CMD-check/b
 [![codecov](https://codecov.io/gh/ropensci-review-tools/githist/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/githist)
 [![Project Status:
 Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![R-CMD-check](https://github.com/ropensci-review-tools/githist/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/githist/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 # githist
