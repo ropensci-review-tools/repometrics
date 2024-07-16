@@ -4,7 +4,7 @@
 #' package.
 #' @return Nothing; quarto dashboard will automatically open on function call.
 #' @export
-gh_dashboard <- function (results, action = "preview") {
+ghist_dashboard <- function (results, action = "preview") {
 
 
     check_dashboard_arg (results)
