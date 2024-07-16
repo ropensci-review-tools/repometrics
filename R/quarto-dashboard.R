@@ -20,6 +20,8 @@ ghist_dashboard <- function (results, action = "preview") {
     action <- match.arg (action, c ("preview", "render"))
     quarto_action <- paste0 ("quarto::quarto_", action)
 
+    pkg_name <- results$desc_data$package [1]
+
     results <- daily_average (results, "stats")
     results <- daily_average (results, "desc_data")
     results <- daily_average (results, "loc")
@@ -28,7 +30,6 @@ ghist_dashboard <- function (results, action = "preview") {
     dir <- fs::dir_copy (path_src, fs::path_temp ())
     saveRDS (results, fs::path (dir, "results.Rds"))
 
-    pkg_name <- results$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {
