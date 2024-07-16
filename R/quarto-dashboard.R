@@ -4,13 +4,17 @@
 #' package.
 #' @return Nothing; quarto dashboard will automatically open on function call.
 #' @export
-gh_dashboard <- function (results) {
+gh_dashboard <- function (results, action = "preview") {
+
 
     check_dashboard_arg (results)
 
     requireNamespace ("brio")
     requireNamespace ("quarto")
     requireNamespace ("withr")
+
+    action <- match.arg (action, c ("preview", "render"))
+    quarto_action <- paste0 ("quarto::quarto_", action)
 
     path_src <- system.file ("extdata", "quarto", package = "githist")
     dir <- fs::dir_copy (path_src, fs::path_temp ())
@@ -20,7 +24,7 @@ gh_dashboard <- function (results) {
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {
-        quarto::quarto_preview ()
+        do.call (eval (parse (text = quarto_action)), list ())
     })
 }
 
