@@ -18,7 +18,7 @@ development of ...
 
 ```{r load-data}
 dat <- readRDS ("results.Rds")
-nrow (dat)
+nrow (dat$stats)
 ```
 ```{r stats-data}
 cols <- names (dat$stats) [which (!names (dat$stats) %in% c ("package", "version"))]
@@ -33,4 +33,69 @@ ojs_define (stats_in = stats)
 stats = {
     return transpose(stats_in)
 }
+viewof measure = Inputs.checkbox(
+    ["mean", "median", "sum"],
+    { value: ["mean"],
+        label: "Measure:"
+    }
+)
+statsFiltered = stats.filter(function(row) {
+  return measure.includes(row.measure)
+})
+statsFiltered
+```
+
+```{ojs stats-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            statsFiltered,
+            {
+                x: "date",
+                y: "npars",
+                fontSize: 18
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Year",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
 ```
