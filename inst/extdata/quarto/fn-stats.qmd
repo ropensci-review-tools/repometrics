@@ -14,7 +14,22 @@ library (githist)
 library (lubridate)
 ```
 This page includes several graphs providing insight into the historical
-development of ...
+development of the package.
+
+### Data on individual functions
+
+This plot shows time series for the development of the following measures for each function in the package:
+
+- `doclines` = Numbers of lines of documentation per function.
+- `npars` = Numbers of parameters per function.
+- `loc` = Numbers of lines of code per function.
+- `ext_calls` = Numbers calls made to external functions.
+
+The selector below allows any one of these variables to be selected and
+plotted. Results in each case are displayed as both median and median values
+per function, along with the sum over all functions within the package. These
+"sum" values are arbitrarily rescaled for visual display on similar scales to
+the other measures.
 
 ```{r load-data}
 dat <- readRDS ("results.Rds")
@@ -27,6 +42,7 @@ index <- which (stats$measure == "sum")
 stats$npars [index] <- stats$npars [index] / 100
 stats$loc [index] <- stats$loc [index] / 100
 stats$ext_calls [index] <- stats$ext_calls [index] / 20
+stats$doclines [index] <- stats$doclines [index] / 20
 
 stats <- tidyr::pivot_longer (stats, c ("doclines", "npars", "loc", "ext_calls"))
 ```
@@ -72,6 +88,18 @@ Plot.plot({
                 stroke: "measure",
                 fontSize: 18
             }
+        ),
+        Plot.text(
+            statsFiltered,
+            Plot.selectLast({
+                x: "date",
+                y: "value",
+                z: "measure",
+                text: "measure",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
         ),
         Plot.axisX(
             {
