@@ -23,6 +23,12 @@ dat <- readRDS ("results.Rds")
 cols <- names (dat$stats) [which (!names (dat$stats) %in% c ("package", "version"))]
 stats <- dat$stats [, cols]
 stats$date <- lubridate::ymd (strftime (stats$date, "%y-%m-%d"))
+index <- which (stats$measure == "sum")
+stats$npars [index] <- stats$npars [index] / 100
+stats$loc [index] <- stats$loc [index] / 100
+stats$ext_calls [index] <- stats$ext_calls [index] / 20
+
+stats <- tidyr::pivot_longer (stats, c ("doclines", "npars", "loc", "ext_calls"))
 ```
 
 ```{r ojs-in-stats, echo = FALSE}
@@ -35,15 +41,15 @@ stats = {
         date: new Date(row.date)
     }));
 }
-viewof measure = Inputs.radio(
-    ["mean", "median", "sum"],
+viewof name = Inputs.radio(
+    ["doclines", "npars", "loc", "ext_calls"],
     {
-        value: "mean",
-        label: "Measure:",
+        value: "npars",
+        label: "Variable:",
     }
 )
 statsFiltered = stats.filter(function(row) {
-  return measure.includes(row.measure)
+  return name.includes(row.name)
 })
 ```
 
@@ -62,7 +68,8 @@ Plot.plot({
             statsFiltered,
             {
                 x: "date",
-                y: "npars",
+                y: "value",
+                stroke: "measure",
                 fontSize: 18
             }
         ),
