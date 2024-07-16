@@ -6,6 +6,8 @@
 #' @export
 gh_dashboard <- function (results) {
 
+    check_dashboard_arg (results)
+
     requireNamespace ("brio")
     requireNamespace ("quarto")
     requireNamespace ("withr")
@@ -36,4 +38,25 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
     i <- grep ("^(\\s+?)title", y)
     y [i] <- gsub ("Package", pkg_name, y [i])
     brio::write_lines (y, f_yaml)
+}
+
+check_dashboard_arg <- function (results) {
+
+    checkmate::assert_list (results, len = 3L, names = "named")
+    checkmate::assert_names (names (results), identical.to = c ("desc_data", "loc", "stats"))
+
+    ncols <- vapply (results, ncol, integer (1L))
+    ncols_expected <- c (9, 15, 8)
+    if (!identical (ncols, ncols_expected)) {
+        cli::cli_abort (paste0 (
+            "'results' has wrong number of columns; ",
+            "should be [{ncols_expected}] but is ",
+            "[{ncols}]"
+        ))
+    }
+
+    nrows <- vapply (results, nrow, integer (1L))
+    if (!all (nrows > 0L)) {
+        cli::cli_abort ("'results' contains empty tables.")
+    }
 }
