@@ -46,7 +46,7 @@ check_dashboard_arg <- function (results) {
     checkmate::assert_names (names (results), identical.to = c ("desc_data", "loc", "stats"))
 
     ncols <- vapply (results, ncol, integer (1L))
-    ncols_expected <- c (9, 15, 8)
+    ncols_expected <- c (desc_data = 9L, loc = 15L, stats = 8L)
     if (!identical (ncols, ncols_expected)) {
         cli::cli_abort (paste0 (
             "'results' has wrong number of columns; ",
