@@ -20,8 +20,6 @@ ghist_dashboard <- function (results, action = "preview") {
     action <- match.arg (action, c ("preview", "render"))
     quarto_action <- paste0 ("quarto::quarto_", action)
 
-    pkg_name <- results$desc_data$package [1]
-
     results <- daily_average (results, "stats")
     results <- daily_average (results, "desc_data")
     results <- daily_average (results, "loc")
@@ -30,6 +28,7 @@ ghist_dashboard <- function (results, action = "preview") {
     dir <- fs::dir_copy (path_src, fs::path_temp ())
     saveRDS (results, fs::path (dir, "results.Rds"))
 
+    pkg_name <- results$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {
@@ -41,7 +40,7 @@ daily_average <- function (results, what = "stats") {
 
     results [[what]]$date <- lubridate::ymd (strftime (results [[what]]$date, "%y-%m-%d"))
 
-    cols <- c ("language", "dir", "date")
+    cols <- c ("package", "date", "language", "dir", "measure")
     cols <- cols [which (cols %in% names (results [[what]]))]
 
     results [[what]] <- dplyr::group_by (results [[what]], dplyr::across (dplyr::all_of (cols))) |>
