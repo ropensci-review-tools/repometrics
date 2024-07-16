@@ -16,7 +16,7 @@ library (lubridate)
 This page includes several graphs providing insight into the historical
 development of the package.
 
-### Data on individual functions
+## Data on individual functions
 
 This plot shows time series for the development of the following measures for each function in the package:
 
@@ -50,7 +50,7 @@ stats <- tidyr::pivot_longer (stats, c ("doclines", "npars", "loc", "ext_calls")
 ```{r ojs-in-stats, echo = FALSE}
 ojs_define (stats_in = stats)
 ```
-```{ojs stats-transpose}
+```{ojs stats-transpose-and-filter}
 stats = {
     return transpose(stats_in).map(row => ({
         ...row,
@@ -100,6 +100,101 @@ Plot.plot({
                 dx: 3,
                 fontSize: 18
             })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
+
+## General data
+
+This plot shows some general data.
+
+```{r desc-data}
+cols <- names (dat$desc_data) [which (!names (dat$desc_data) %in% c ("package"))]
+desc <- dat$desc_data [, cols]
+desc$date <- lubridate::ymd (strftime (desc$date, "%y-%m-%d"))
+
+cols <- names (desc) [which (!names (desc) %in% c ("date"))]
+desc <- tidyr::pivot_longer (
+    desc,
+    c ("n_aut", "n_ctb", "n_fns_tot", "n_fns_exp", "n_ext_pkgs", "base_calls")
+)
+names (desc) <- c ("date", "desc_variable", "value")
+```
+
+```{r ojs-in-desc, echo = FALSE}
+ojs_define (desc_in = desc)
+```
+
+```{ojs desc-transpose-and-filter}
+desc = {
+    return transpose(desc_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof desc_variable = Inputs.radio(
+    ["n_aut", "n_ctb", "n_fns_tot", "n_fns_exp", "n_ext_pkgs", "base_calls"],
+    {
+        value: "n_fns_tot",
+        label: "Variable:",
+    }
+)
+descFiltered = desc.filter(function(row) {
+  return desc_variable.includes(row.desc_variable)
+})
+```
+
+```{ojs desc-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            descFiltered,
+            {
+                x: "date",
+                y: "value",
+                fontSize: 18
+            }
         ),
         Plot.axisX(
             {
