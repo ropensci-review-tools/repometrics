@@ -248,3 +248,113 @@ Plot.plot({
     ]
 })
 ```
+
+## Numbers of Files and Lines of Code
+
+```{r loc-data}
+rm_cols <- c ("package", "nempty", "nspaces", "nchars", "nexpr", "ntabs", "indentation")
+cols <- names (dat$loc) [which (!names (dat$loc) %in% rm_cols)]
+loc <- dat$loc [, cols]
+loc$date <- lubridate::ymd (strftime (loc$date, "%y-%m-%d"))
+
+loc <- tidyr::pivot_longer (
+    loc,
+    c ("nfiles", "nlines", "ncode", "ndoc")
+) |>
+    dplyr::rename (loc_measure = name) |>
+    dplyr::mutate (loc_measure = dplyr::case_match (
+        loc_measure,
+        "nfiles" ~ "files",
+        "nlines" ~ "lines_total",
+        "ncode" ~ "lines_code",
+        "ndoc" ~ "lines_doc"
+    ))
+loc_files <- loc [loc$loc_measure == "files", ]
+loc_lines <- loc [loc$loc_measure != "files", ]
+```
+
+```{r ojs-in-loc, echo = FALSE}
+ojs_define (loc_files_in = loc_files)
+ojs_define (loc_lines_in = loc_lines)
+```
+
+This first plot shows total numbers of files in each specified sub-directory.
+
+
+```{ojs loc_files-transpose}
+loc_files = {
+    return transpose(loc_files_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+```
+
+
+```{ojs loc-files-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            loc_files,
+            {
+                x: "date",
+                y: "value",
+                stroke: "dir",
+                fontSize: 18
+            }
+        ),
+        Plot.text(
+            loc_files,
+            Plot.selectLast({
+                x: "date",
+                y: "value",
+                z: "dir",
+                text: "dir",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Numbers of Files",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
