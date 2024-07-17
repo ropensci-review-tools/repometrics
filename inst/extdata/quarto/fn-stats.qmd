@@ -388,7 +388,7 @@ Plot.plot({
     marginLeft: 80,
     marginBottom: 50,
     x: {grid: true},
-    y: {grid: true},
+y: {grid: true, type: "log"},
     marks: [
         Plot.ruleY([0]),
         Plot.lineY(
