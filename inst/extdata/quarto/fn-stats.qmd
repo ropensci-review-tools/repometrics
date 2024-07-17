@@ -145,6 +145,7 @@ This plot shows some general data.
 cols <- names (dat$desc_data) [which (!names (dat$desc_data) %in% c ("package"))]
 desc <- dat$desc_data [, cols]
 desc$date <- lubridate::ymd (strftime (desc$date, "%y-%m-%d"))
+desc$base_calls <- desc$base_calls / 10
 
 cols <- names (desc) [which (!names (desc) %in% c ("date"))]
 desc <- tidyr::pivot_longer (
@@ -152,6 +153,9 @@ desc <- tidyr::pivot_longer (
     c ("n_aut", "n_ctb", "n_fns_tot", "n_fns_exp", "n_ext_pkgs", "base_calls")
 )
 names (desc) <- c ("date", "desc_variable", "value")
+desc$group <- "authors"
+desc$group [grep ("^n\\_fns", desc$desc_variable)] <- "functions"
+desc$group [desc$desc_variable %in% c ("n_ext_pkgs", "base_calls")] <- "external"
 ```
 
 ```{r ojs-in-desc, echo = FALSE}
@@ -165,15 +169,15 @@ desc = {
         date: new Date(row.date)
     }));
 }
-viewof desc_variable = Inputs.radio(
-    ["n_aut", "n_ctb", "n_fns_tot", "n_fns_exp", "n_ext_pkgs", "base_calls"],
+viewof group = Inputs.radio(
+    ["authors", "functions", "external"],
     {
-        value: "n_fns_tot",
-        label: "Variable:",
+        value: "authors",
+        label: "Variable Types:",
     }
 )
 descFiltered = desc.filter(function(row) {
-  return desc_variable.includes(row.desc_variable)
+  return group.includes(row.group)
 })
 ```
 
@@ -193,8 +197,21 @@ Plot.plot({
             {
                 x: "date",
                 y: "value",
+                stroke: "desc_variable",
                 fontSize: 18
             }
+        ),
+        Plot.text(
+            descFiltered,
+            Plot.selectLast({
+                x: "date",
+                y: "value",
+                z: "desc_variable",
+                text: "desc_variable",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
         ),
         Plot.axisX(
             {
