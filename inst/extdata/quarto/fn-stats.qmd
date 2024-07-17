@@ -265,9 +265,9 @@ loc <- tidyr::pivot_longer (
     dplyr::mutate (loc_measure = dplyr::case_match (
         loc_measure,
         "nfiles" ~ "files",
-        "nlines" ~ "lines_total",
-        "ncode" ~ "lines_code",
-        "ndoc" ~ "lines_doc"
+        "nlines" ~ "total",
+        "ncode" ~ "code",
+        "ndoc" ~ "doc"
     ))
 loc_files <- loc [loc$loc_measure == "files", ]
 loc_lines <- loc [loc$loc_measure != "files", ]
@@ -352,6 +352,95 @@ Plot.plot({
                 label: "Numbers of Files",
                 labelAnchor: "center",
                 labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
+
+This next plot shows numbers of lines, both of code and documentation.
+
+```{ojs loc-lines-transpose-and-filter}
+loc_lines = {
+    return transpose(loc_lines_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof loc_measure = Inputs.radio(
+    ["total", "code", "doc"],
+    {
+        value: "total",
+        label: "LOC Type:",
+    }
+)
+locLinesFiltered = loc_lines.filter(function(row) {
+  return loc_measure.includes(row.loc_measure)
+})
+```
+
+```{ojs loc-lines-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 80,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            locLinesFiltered,
+            {
+                x: "date",
+                y: "value",
+                stroke: "dir",
+                fontSize: 18
+            }
+        ),
+        Plot.text(
+            locLinesFiltered,
+            Plot.selectLast({
+                x: "date",
+                y: "value",
+                z: "dir",
+                text: "dir",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Numbers of Lines",
+                labelAnchor: "center",
+                labelOffset: 70,
                 ticks: []
             }
         ),
