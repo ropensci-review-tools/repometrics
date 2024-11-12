@@ -7,20 +7,27 @@ run_one_pkgstats <- function (path, pkg_date) {
             !grepl ("^anonFunc", s$objects$fn_name) &
             !is.na (s$objects$npars)
     )
-    fns <- s$objects [index, ] |>
-        dplyr::select ("fn_name", "language", "loc", "npars", "has_dots", "exported", "num_doclines")
+    # Empty results do not contain all columns:
+    nms <- c ("fn_name", "language", "loc", "npars", "has_dots", "exported", "num_doclines")
+    nms <- nms [which (nms %in% names (s$objects))]
+    fns <- s$objects [index, ] |> dplyr::select (dplyr::all_of (nms))
     doclines <- mn_med_sum (fns$num_doclines [which (!is.na (fns$num_doclines))])
     npars <- mn_med_sum (fns$npars)
     loc <- mn_med_sum (fns$loc)
 
-    fn_nms <- unique (fns [, c ("fn_name", "exported")])
+    fn_nms <- data.frame (exported = logical (0L))
+    if (nrow (fns) > 0L) {
+        fn_nms <- unique (fns [, c ("fn_name", "exported")])
+    }
 
-    package <- NULL # Suppress 'no visible binding' note.
-    ext_calls <- s$external_calls |>
-        dplyr::select ("call", "package") |>
-        dplyr::group_by (package) |>
-        dplyr::count (package) |>
-        dplyr::filter (package != s$desc$package)
+    package <- ext_calls <- NULL # Suppress 'no visible binding' note.
+    if (!is.null (s$external_calls)) {
+        ext_calls <- s$external_calls |>
+            dplyr::select ("call", "package") |>
+            dplyr::group_by (package) |>
+            dplyr::count (package) |>
+            dplyr::filter (package != s$desc$package)
+    }
 
     base_calls <- null2na_int (ext_calls$n [ext_calls$package == "base"])
     n_ext_pkgs <- null2na_int (nrow (ext_calls)) - 1L
