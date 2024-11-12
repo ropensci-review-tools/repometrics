@@ -37,6 +37,29 @@ githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
 
     num_cores <- set_num_cores (num_cores)
 
+    h <- gert::git_log (repo = path, max = 1e6)
+    if (step_size > 1L) {
+        h <- h [seq (1, nrow (h), by = step_size), ]
+    }
+    if (!is.null (n)) {
+        h <- h [seq_len (n), ]
+    }
+
+    if (num_cores == 1L) {
+
+        res <- extract_pkgstats_data_single (h, path)
+
+    } else {
+
+        res <- extract_pkgstats_data_multi (h, path, num_cores)
+
+    }
+
+    collate_pkgstats (res)
+}
+
+extract_pkgstats_data_single <- function (log, path) {
+
     path_cp <- fs::path (fs::path_temp (), basename (path))
     clean_after <- FALSE
     if (fs::path (fs::path_dir (path)) != fs::path_temp () &&
@@ -45,47 +68,32 @@ githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
         clean_after <- TRUE
     }
 
-    h <- gert::git_log (repo = path_cp, max = 1e6)
-    if (step_size > 1L) {
-        h <- h [seq (1, nrow (h), by = step_size), ]
-    }
-    if (!is.null (n)) {
-        h <- h [seq_len (n), ]
-    }
-
-    res <- extract_pkgstats_data (h, path_cp, num_cores)
+    res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
+        g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
+        run_one_pkgstats (path = path_cp, pkg_date = log$time [i])
+    })
 
     if (clean_after) {
         fs::dir_delete (path_cp)
     }
 
-    collate_pkgstats (res)
+    return (res)
 }
 
-extract_pkgstats_data <- function (log, path, num_cores) {
+extract_pkgstats_data_multi <- function (log, path, num_cores) {
 
-    if (num_cores == 1L) {
+    cl <- parallel::makeCluster (num_cores)
+    parallel::clusterExport (cl, c ("log", "path", "run_one_pkgstats"))
+    res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
+        path_cp <- fs::dir_copy (path, fs::path_temp ())
+        g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
+        s <- run_one_pkgstats (path = path_cp, pkg_date = log$time [i])
+        fs::dir_delete (path_cp)
+        return (s)
+    }, cl = cl)
+    parallel::stopCluster (cl)
 
-        res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-            g <- gert::git_reset_hard (ref = log$commit [i], repo = path)
-            run_one_pkgstats (path = path, pkg_date = log$time [i])
-        })
-
-    } else {
-
-        cl <- parallel::makeCluster (num_cores)
-        parallel::clusterExport (cl, c ("log", "path", "run_one_pkgstats"))
-        res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-            path_cp <- fs::dir_copy (path, fs::path_temp ())
-            g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
-            s <- run_one_pkgstats (path = path_cp, pkg_date = log$time [i])
-            fs::dir_delete (path_cp)
-            return (s)
-        }, cl = cl)
-        parallel::stopCluster (cl)
-
-        return (res)
-    }
+    return (res)
 
     return (res)
 }
