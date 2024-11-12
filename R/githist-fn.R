@@ -35,6 +35,8 @@ githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
     }
     checkmate::assert_int (num_cores)
 
+    num_cores <- set_num_cores (num_cores)
+
     path_cp <- fs::path (fs::path_temp (), basename (path))
     clean_after <- FALSE
     if (fs::path (fs::path_dir (path)) != fs::path_temp () &&
@@ -51,17 +53,23 @@ githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
         h <- h [seq_len (n), ]
     }
 
-    res <- pbapply::pblapply (seq_len (nrow (h)), function (i) {
-        g <- gert::git_reset_hard (ref = h$commit [i], repo = path_cp)
-        pkg_date <- h$time [i]
-        run_one_pkgstats (path = path_cp, pkg_date = pkg_date)
-    })
+    res <- extract_pkgstats_data (h, path_cp, num_cores)
 
     if (clean_after) {
         fs::dir_delete (path_cp)
     }
 
     collate_pkgstats (res)
+}
+
+extract_pkgstats_data <- function (log, path, num_cores) {
+
+    res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
+        g <- gert::git_reset_hard (ref = log$commit [i], repo = path)
+        run_one_pkgstats (path = path, pkg_date = log$time [i])
+    })
+
+    return (res)
 }
 
 collate_pkgstats <- function (x) {
