@@ -27,9 +27,10 @@ githist <- function (path, n = NULL, step_size = 1L) {
         checkmate::assert_int (n, lower = 1L)
     }
 
-    path_cp <- path
+    path_cp <- fs::path (fs::path_temp (), basename (path))
     clean_after <- FALSE
-    if (fs::path (fs::path_dir (path)) != fs::path_temp ()) {
+    if (fs::path (fs::path_dir (path)) != fs::path_temp () &&
+        !fs::dir_exists (path_cp)) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
         clean_after <- TRUE
     }
