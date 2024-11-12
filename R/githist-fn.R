@@ -64,10 +64,28 @@ githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
 
 extract_pkgstats_data <- function (log, path, num_cores) {
 
-    res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-        g <- gert::git_reset_hard (ref = log$commit [i], repo = path)
-        run_one_pkgstats (path = path, pkg_date = log$time [i])
-    })
+    if (num_cores == 1L) {
+
+        res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
+            g <- gert::git_reset_hard (ref = log$commit [i], repo = path)
+            run_one_pkgstats (path = path, pkg_date = log$time [i])
+        })
+
+    } else {
+
+        cl <- parallel::makeCluster (num_cores)
+        parallel::clusterExport (cl, c ("log", "path", "run_one_pkgstats"))
+        res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
+            path_cp <- fs::dir_copy (path, fs::path_temp ())
+            g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
+            s <- run_one_pkgstats (path = path, pkg_date = log$time [i])
+            fs::dir_delete (path_cp)
+            return (s)
+        }, cl = cl)
+        parallel::stopCluster (cl)
+
+        return (res)
+    }
 
     return (res)
 }
