@@ -6,10 +6,11 @@ test_that ("testpkg and input errors", {
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
-    expect_error (githist (path, step_size = 1:2))
-    expect_error (githist (path, step_size = "1"))
+    expect_error (githist (path, step_size = 1:2, num_cores = 1L))
+    expect_error (githist (path, step_size = "1", num_cores = 1L))
 
-    res <- githist (path)
+    res <- githist (path, num_cores = 1L)
+    fs::dir_delete (path)
 
     expect_type (res, "list")
     expect_length (res, 3L)
@@ -22,17 +23,17 @@ test_that ("githist parameters", {
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
-    res0 <- githist (path)
+    res0 <- githist (path, num_cores = 1L)
     n0 <- vapply (res0, nrow, integer (1L))
     fs::dir_delete (path)
 
     flist <- unzip (pkg, exdir = fs::path_temp ())
-    res1 <- githist (path, n = 2L)
+    res1 <- githist (path, n = 2L, num_cores = 1L)
     n1 <- vapply (res1, nrow, integer (1L))
     fs::dir_delete (path)
 
     flist <- unzip (pkg, exdir = fs::path_temp ())
-    res2 <- githist (path, n = 2L, step_size = 2L)
+    res2 <- githist (path, n = 2L, step_size = 2L, num_cores = 1L)
     n2 <- vapply (res2, nrow, integer (1L))
     fs::dir_delete (path)
 

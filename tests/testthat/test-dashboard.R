@@ -2,7 +2,7 @@ pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 
-res0 <- githist (path)
+res0 <- githist (path, num_cores = 1L)
 
 test_that ("dashboard input errors", {
 
