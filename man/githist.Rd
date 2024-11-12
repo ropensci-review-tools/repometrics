@@ -4,7 +4,7 @@
 \alias{githist}
 \title{Apply \pkg{pkgstats} across the git history of a package}
 \usage{
-githist(path, n = NULL, step_size = 1L)
+githist(path, n = NULL, step_size = 1L, num_cores = -1L)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
@@ -16,6 +16,13 @@ history.}
 with \code{step_size = 2}, analyses will be run on every second commit, instead
 of default running on every commit. The value of \code{n} then analyses the
 first \code{n} entries taken at intervals of \code{step_size}.}
+
+\item{num_cores}{Number of cores to use in multi-core processing. Has no
+effect on Windows operating systems, on which calculations are always
+single-core only. Negative values are subtracted from number of available
+cores, determined as \code{parallel::detectCores()}, so default of \code{num_cores = -1L} uses \code{detectCores() - 1L}. Positive values use precisely that number,
+restricted to maximum available cores, and a value of zero will use all
+available cores.}
 }
 \value{
 A list of three items:

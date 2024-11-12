@@ -7,6 +7,13 @@
 #' with `step_size = 2`, analyses will be run on every second commit, instead
 #' of default running on every commit. The value of `n` then analyses the
 #' first `n` entries taken at intervals of `step_size`.
+#' @param num_cores Number of cores to use in multi-core processing. Has no
+#' effect on Windows operating systems, on which calculations are always
+#' single-core only. Negative values are subtracted from number of available
+#' cores, determined as `parallel::detectCores()`, so default of `num_cores =
+#' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
+#' restricted to maximum available cores, and a value of zero will use all
+#' available cores.
 #'
 #' @return A list of three items:
 #' \itemize{
@@ -19,13 +26,14 @@
 #' }
 #'
 #' @export
-githist <- function (path, n = NULL, step_size = 1L) {
+githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
     checkmate::assert_int (step_size, lower = 1L)
     if (!is.null (n)) {
         checkmate::assert_int (n, lower = 1L)
     }
+    checkmate::assert_int (num_cores)
 
     path_cp <- fs::path (fs::path_temp (), basename (path))
     clean_after <- FALSE

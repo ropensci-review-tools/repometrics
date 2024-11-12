@@ -16,3 +16,14 @@ mn_med_sum <- function (x) {
 null2na_int <- function (x) {
     ifelse (length (x) == 0, NA_integer_, x)
 }
+
+set_num_cores <- function (num_cores) {
+    if (num_cores <= 0L) {
+        num_cores <- parallel::detectCores () + num_cores
+    }
+    num_cores <- min (num_cores, parallel::detectCores ())
+    if (num_cores < 1L) {
+        cli::cli_abort ("Number of cores must be at least 1")
+    }
+    return (num_cores)
+}
