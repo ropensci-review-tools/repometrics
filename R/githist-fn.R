@@ -83,7 +83,11 @@ extract_pkgstats_data_single <- function (log, path) {
 extract_pkgstats_data_multi <- function (log, path, num_cores) {
 
     cl <- parallel::makeCluster (num_cores)
-    parallel::clusterExport (cl, c ("log", "path", "run_one_pkgstats"))
+    parallel::clusterExport (
+        cl,
+        c ("log", "path", "run_one_pkgstats"),
+        envir = environment ()
+    )
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
         g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
