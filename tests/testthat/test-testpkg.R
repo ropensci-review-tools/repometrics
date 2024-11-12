@@ -9,7 +9,7 @@ test_that ("testpkg and input errors", {
     expect_error (githist (path, step_size = 1:2, num_cores = 1L))
     expect_error (githist (path, step_size = "1", num_cores = 1L))
 
-    res <- githist (path, num_cores = 1L)
+    res <- githist (path, num_cores = 1L, step_days = 0L)
     fs::dir_delete (path)
 
     expect_type (res, "list")
@@ -23,27 +23,28 @@ test_that ("githist parameters", {
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
-    res0 <- githist (path, num_cores = 1L)
+    res0 <- githist (path, step_days = 0L, num_cores = 1L)
+    fs::dir_delete (path)
+
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    res1 <- githist (path, n = 2L, step_days = 0L, num_cores = 1L)
+    fs::dir_delete (path)
+
     n0 <- vapply (res0, nrow, integer (1L))
-    fs::dir_delete (path)
-
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    res1 <- githist (path, n = 2L, num_cores = 1L)
     n1 <- vapply (res1, nrow, integer (1L))
-    fs::dir_delete (path)
+    expect_true (all (n0 > n1))
+    # `n = 2L` selects dates [1:2] from original data:
+    expect_identical (res0$desc_data$date [1:2], res1$desc_data$date)
 
     flist <- unzip (pkg, exdir = fs::path_temp ())
-    res2 <- githist (path, n = 2L, step_size = 2L, num_cores = 1L)
-    n2 <- vapply (res2, nrow, integer (1L))
+    res2 <- githist (path, n = 2L, step_days = 1L, num_cores = 1L)
     fs::dir_delete (path)
 
-    expect_true (all (n0 > n1))
+    n2 <- vapply (res2, nrow, integer (1L))
     expect_true (all (n0 > n2))
-    expect_true (nrow (res0$desc_data) > 2L)
-    expect_equal (nrow (res1$desc_data), 2L)
-    expect_equal (nrow (res2$desc_data), 2L)
-
-    d1 <- abs (diff (res1$desc_data$date, units = "s"))
-    d2 <- abs (diff (res2$desc_data$date, units = "s"))
-    expect_true (mean (d1) < mean (d2))
+    expect_true (all (n1 > n2))
+    expect_equal (
+        length (res2$desc_dat$date),
+        length (unique (res2$desc_data$date))
+    )
 })
