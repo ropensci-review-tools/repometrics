@@ -1,6 +1,6 @@
 Package: githist
 Title: Code analyses traced along the 'git' history of a package
-Version: 0.1.0.031
+Version: 0.1.0.032
 Authors@R: 
     person("Mark", "Padgham", , "mark.padgham@email.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2172-5265"))

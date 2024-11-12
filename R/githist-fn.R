@@ -78,7 +78,7 @@ extract_pkgstats_data <- function (log, path, num_cores) {
         res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
             path_cp <- fs::dir_copy (path, fs::path_temp ())
             g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
-            s <- run_one_pkgstats (path = path, pkg_date = log$time [i])
+            s <- run_one_pkgstats (path = path_cp, pkg_date = log$time [i])
             fs::dir_delete (path_cp)
             return (s)
         }, cl = cl)
