@@ -4,7 +4,7 @@
 \alias{githist}
 \title{Apply \pkg{pkgstats} across the git history of a package}
 \usage{
-githist(path, n = NULL, step_size = 1L, num_cores = -1L)
+githist(path, n = NULL, step_days = 1L, num_cores = -1L)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
@@ -12,10 +12,10 @@ githist(path, n = NULL, step_size = 1L, num_cores = -1L)
 \item{n}{If given, only analyses the preceding 'n' commits in the git
 history.}
 
-\item{step_size}{Analyse package for each \code{step_size} commits. For example,
-with \code{step_size = 2}, analyses will be run on every second commit, instead
-of default running on every commit. The value of \code{n} then analyses the
-first \code{n} entries taken at intervals of \code{step_size}.}
+\item{step_days}{Analyse package at intervals of this number of days. The
+last commit for each day is chosen. For example, \code{step_days = 7L} will
+return weekly statistics. Values of zero or less will analyse all commits,
+including potentially multiple daily commits.}
 
 \item{num_cores}{Number of cores to use in multi-core processing. Has no
 effect on Windows operating systems, on which calculations are always
