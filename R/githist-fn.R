@@ -3,10 +3,10 @@
 #' @param path Path to local repository containing an R package.
 #' @param n If given, only analyses the preceding 'n' commits in the git
 #' history.
-#' @param step_size Analyse package for each `step_size` commits. For example,
-#' with `step_size = 2`, analyses will be run on every second commit, instead
-#' of default running on every commit. The value of `n` then analyses the
-#' first `n` entries taken at intervals of `step_size`.
+#' @param step_days Analyse package at intervals of this number of days. The
+#' last commit for each day is chosen. For example, `step_days = 7L` will
+#' return weekly statistics. Values of zero or less will analyse all commits,
+#' including potentially multiple daily commits.
 #' @param num_cores Number of cores to use in multi-core processing. Has no
 #' effect on Windows operating systems, on which calculations are always
 #' single-core only. Negative values are subtracted from number of available
@@ -26,10 +26,10 @@
 #' }
 #'
 #' @export
-githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
+githist <- function (path, n = NULL, step_days = 1L, num_cores = -1L) {
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
-    checkmate::assert_int (step_size, lower = 1L)
+    checkmate::assert_int (step_days, lower = 0L)
     if (!is.null (n)) {
         checkmate::assert_int (n, lower = 1L)
     }
@@ -38,12 +38,7 @@ githist <- function (path, n = NULL, step_size = 1L, num_cores = -1L) {
     num_cores <- set_num_cores (num_cores)
 
     h <- gert::git_log (repo = path, max = 1e6)
-    if (step_size > 1L) {
-        h <- h [seq (1, nrow (h), by = step_size), ]
-    }
-    if (!is.null (n)) {
-        h <- h [seq_len (n), ]
-    }
+    h <- filter_git_hist (h, n, step_days)
 
     if (num_cores == 1L) {
 

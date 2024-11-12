@@ -27,3 +27,22 @@ set_num_cores <- function (num_cores) {
     }
     return (num_cores)
 }
+
+filter_git_hist <- function (h, n, step_days) {
+    if (!is.null (n)) {
+        h <- h [seq_len (n), ]
+    }
+    if (step_days >= 1L) {
+        h$date <- as.Date (h$time)
+        h <- dplyr::group_by (h, date) |>
+            dplyr::filter (dplyr::row_number () == 1L)
+        if (step_days > 1L) {
+            index <- which (-diff (h$date) < step_days)
+            if (length (index) > 0L) {
+                h <- h [-(index), ]
+            }
+        }
+    }
+
+    return (h)
+}
