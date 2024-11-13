@@ -1,4 +1,4 @@
-chaoss_internal_num_commits <- function (path) {
+chaoss_internal_num_commits <- function (path, end_date = Sys.Date ()) {
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
 
@@ -6,7 +6,7 @@ chaoss_internal_num_commits <- function (path) {
 
     h <- gert::git_log (repo = path, max = 1e6)
     dates <- as.Date (h$time)
-    today_minus_period <- as.Date (Sys.time ()) - period
+    today_minus_period <- as.Date (end_date - period)
     index <- which (dates >= today_minus_period)
 
     return (length (index))
