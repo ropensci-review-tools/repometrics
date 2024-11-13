@@ -28,6 +28,7 @@ set_num_cores <- function (num_cores) {
     return (num_cores)
 }
 
+# nocov start
 get_gh_token <- function () {
     e <- Sys.getenv ()
     nms <- names (e)
@@ -42,6 +43,7 @@ get_gh_token <- function () {
     }
     return (tok)
 }
+# nocov end
 
 pkg_name_from_path <- function (path) {
     desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")

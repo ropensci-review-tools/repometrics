@@ -20,5 +20,18 @@ test_that ("chaoss has CI internal", {
     has_ci <- repo_has_ci_files (path)
     expect_length (has_ci, 0L) # No CI files
 
+    url <- pkg_gh_url_from_path (path)
+    expect_null (url)
+
+    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
+    url <- "https://github.com/my/pkg"
+    desc <- c (
+        readLines (desc_path),
+        paste0 ("URL: ", url),
+    )
+    writeLines (desc, desc_path)
+
+    expect_identical (url, pkg_gh_url_from_path (path))
+
     fs::dir_delete (path)
 })
