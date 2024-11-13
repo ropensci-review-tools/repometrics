@@ -1,3 +1,14 @@
+test_that ("chaoss external util fns", {
+    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- fs::path_dir (flist [1])
+
+    pkg_name <- pkg_name_from_path (path)
+    expect_equal (pkg_name, "testpkg")
+
+    fs::dir_delete (path)
+})
+
 test_that ("chaoss external cran_downloads", {
 
     pkg_name <- "goodpractice"
