@@ -32,10 +32,10 @@ get_gh_token <- function () {
     e <- Sys.getenv ()
     nms <- names (e)
     tok <- unique (e [grep ("GITHUB", nms)])
-    if (length (toks) != 1L) {
+    if (length (tok) != 1L) {
         tok <- unique (e [grep ("GITHUB\\_(PAT|TOK)", nms)])
     }
-    if (length (toks) != 1L) {
+    if (length (tok) != 1L) {
         cli::cli_abort (
             "Unable to determine unique GitHub token from environment variables"
         )

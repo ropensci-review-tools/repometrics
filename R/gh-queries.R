@@ -27,8 +27,7 @@ github_repo_files_query <- function (org = NULL, repo = NULL) {
 
 #' Retrieve latest GitHub workflow results from Rest API
 #'
-#' This uses default of 30 most recent results, and returns the most recent
-#' result for each unique workflow.
+#' This uses default of 30 most recent results.
 #' @noRd
 github_repo_workflow_query <- function (org = NULL, repo = NULL) {
 
@@ -49,21 +48,20 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL) {
 
     ids <- vapply (workflows, function (i) i$id, numeric (1L))
     names <- vapply (workflows, function (i) i$name, character (1L))
-    sha <- vapply (workflows, function (i) i$head_sha, character (1L))
+    shas <- vapply (workflows, function (i) i$head_sha, character (1L))
     titles <- vapply (workflows, function (i) i$display_title, character (1L))
     status <- vapply (workflows, function (i) i$status, character (1L))
     conclusion <- vapply (workflows, function (i) i$conclusion, character (1L))
     created <- vapply (workflows, function (i) i$created_at, character (1L))
+    created <- as.POSIXct (created, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
 
     data.frame (
         name = names,
         id = ids,
-        sha = sha,
+        sha = shas,
         title = titles,
         status = status,
         conclusion = conclusion,
-        created = as.Date (created)
-    ) |>
-        dplyr::group_by (name) |>
-        dplyr::filter (dplyr::row_number () == 1L)
+        created = created
+    )
 }

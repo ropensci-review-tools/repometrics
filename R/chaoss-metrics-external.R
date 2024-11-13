@@ -42,4 +42,6 @@ has_ci_tests <- function (path) {
     repo <- url_parts [i + 2L]
 
     ci_data <- github_repo_workflow_query (org, repo)
+    h <- gert::git_log (repo = path, max = 1e6)
+    any (ci_data$sha %in% h$commit)
 }
