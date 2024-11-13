@@ -29,11 +29,12 @@ github_repo_files_query <- function (org = NULL, repo = NULL) {
 #'
 #' This uses default of 30 most recent results.
 #' @noRd
-github_repo_workflow_query <- function (org = NULL, repo = NULL) {
+github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
 
+    checkmate::assert_integer (n, lower = 1L)
     u_base <- "https://api.github.com/repos/"
     u_repo <- paste0 (u_base, org, "/", repo, "/")
-    u_wf <- paste0 (u_repo, "actions/runs")
+    u_wf <- paste0 (u_repo, "actions/runs?per_page=", n)
 
     tok <- get_gh_token ()
     headers <- list (Authorization = paste0 ("Bearer ", tok))

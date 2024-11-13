@@ -11,3 +11,14 @@ test_that ("chaoss internal num_commits", {
 
     fs::dir_delete (path)
 })
+
+test_that ("chaoss has CI internal", {
+    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- fs::path_dir (flist [1])
+
+    has_ci <- repo_has_ci_files (path)
+    expect_length (has_ci, 0L) # No CI files
+
+    fs::dir_delete (path)
+})

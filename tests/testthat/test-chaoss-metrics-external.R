@@ -20,3 +20,12 @@ test_that ("chaoss external cran_downloads", {
     expect_length (dl, 1L)
     expect_equal (dl, 2308)
 })
+
+test_that ("chaoss has CI external", {
+    org <- "ropensci-review-tools"
+    repo <- "githist"
+    ci_data <- with_mock_dir (
+        "gh_workflow",
+        github_repo_workflow_query (org, repo, n = 2L)
+    )
+})

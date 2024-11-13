@@ -54,9 +54,14 @@ pkg_gh_url_from_path <- function (path) {
     desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
     checkmate::assert_file_exists (desc)
 
-    url <- unname (read.dcf (desc) [, "URL"])
-    url <- strsplit (gsub ("\\n", "", url), ",") [[1]]
-    grep ("github\\.com", url, value = TRUE)
+    desc <- read.dcf (desc)
+    ret <- NULL
+    if ("URL" %in% colnames (desc)) {
+        url <- unname (desc [, "URL"])
+        url <- strsplit (gsub ("\\n", "", url), ",") [[1]]
+        ret <- grep ("github\\.com", url, value = TRUE)
+    }
+    return (ret)
 }
 
 filter_git_hist <- function (h, n, step_days) {
