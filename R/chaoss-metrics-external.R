@@ -26,7 +26,7 @@ cran_downloads <- function (pkg_name, end_date = Sys.Date ()) {
     return (body [[1]]$downloads)
 }
 
-has_ci_tests <- function (path) {
+has_gh_ci_tests <- function (path) {
 
     url <- pkg_gh_url_from_path (path)
     if (length (url) == 0L) {
