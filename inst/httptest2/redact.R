@@ -7,6 +7,21 @@ function (resp) {
         fixed = TRUE
     )
 
+    resp <- httptest2::gsub_response (
+        resp,
+        "https://api.github.com/repos/",
+        "ghapi/",
+        fixed = TRUE
+    )
+
+    test_repo <- "ropensci-review-tools/githist"
+    resp <- httptest2::gsub_response (
+        resp,
+        paste0 (test_repo, "/actions"),
+        "repo/",
+        fixed = TRUE
+    )
+
     # Timestamp pattern, where replacing with "" removes sub-dir:
     ptn <- "[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}"
     resp <- httptest2::gsub_response (
