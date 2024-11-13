@@ -6,5 +6,8 @@ test_that ("chaoss internal num_commits", {
     n <- chaoss_internal_num_commits (path, end_date = as.Date ("2024-08-01"))
     expect_equal (n, 4L)
 
+    n <- chaoss_internal_num_contributors (path, end_date = as.Date ("2024-08-01"))
+    expect_equal (n, 1L)
+
     fs::dir_delete (path)
 })
