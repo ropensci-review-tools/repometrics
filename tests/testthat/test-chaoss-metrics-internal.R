@@ -27,11 +27,14 @@ test_that ("chaoss has CI internal", {
     url <- "https://github.com/my/pkg"
     desc <- c (
         readLines (desc_path),
-        paste0 ("URL: ", url),
+        paste0 ("URL: ", url)
     )
     writeLines (desc, desc_path)
 
     expect_identical (url, pkg_gh_url_from_path (path))
+
+    org_repo <- org_repo_from_path (path)
+    expect_identical (org_repo, c ("my", "pkg"))
 
     fs::dir_delete (path)
 })

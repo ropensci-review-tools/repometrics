@@ -28,4 +28,12 @@ test_that ("chaoss has CI external", {
         "gh_workflow",
         github_repo_workflow_query (org, repo, n = 2L)
     )
+
+    expect_s3_class (ci_data, "data.frame")
+    expect_equal (nrow (ci_data), 2L)
+    expect_equal (ncol (ci_data), 7L)
+    expect_equal (
+        names (ci_data),
+        c ("name", "id", "sha", "title", "status", "conclusion", "created")
+    )
 })

@@ -66,6 +66,24 @@ pkg_gh_url_from_path <- function (path) {
     return (ret)
 }
 
+org_repo_from_path <- function (path) {
+
+    url <- pkg_gh_url_from_path (path)
+    if (length (url) == 0L) {
+        return (FALSE)
+    }
+
+    url_parts <- strsplit (url, "\\/") [[1]]
+    i <- which (url_parts == "github.com")
+    if (length (i) == 0L || i > (length (url_parts) + 2L)) {
+        return (FALSE)
+    }
+    org <- url_parts [i + 1L]
+    repo <- url_parts [i + 2L]
+
+    c (org, repo)
+}
+
 filter_git_hist <- function (h, n, step_days) {
     if (!is.null (n)) {
         h <- h [seq_len (n), ]

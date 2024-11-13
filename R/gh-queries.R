@@ -1,30 +1,3 @@
-github_repo_files_query <- function (org = NULL, repo = NULL) {
-
-    q <- paste0 ("{
-        repository(owner:\"", org, "\", name:\"", repo, "\") {
-            object(expression: \"HEAD:\") {
-                ... on Tree {
-                    entries {
-                        name
-                        type
-                        mode
-                        object {
-                            ... on Commit {
-                                oid
-                                committedDate
-                            }
-                            ... on Blob {
-                                byteSize
-                                isBinary
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }")
-}
-
 #' Retrieve latest GitHub workflow results from Rest API
 #'
 #' This uses default of 30 most recent results.
