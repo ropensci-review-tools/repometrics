@@ -1,6 +1,6 @@
 Package: githist
 Title: Code analyses traced along the 'git' history of a package
-Version: 0.1.0.038
+Version: 0.1.0.044
 Authors@R: 
     person("Mark", "Padgham", , "mark.padgham@email.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2172-5265"))
@@ -15,10 +15,13 @@ Imports:
     dplyr,
     fs,
     gert,
+    httr2,
+    memoise,
     pbapply,
     pkgstats
 Suggests:
     brio,
+    httptest2,
     lubridate,
     quarto,
     testthat (>= 3.0.0),

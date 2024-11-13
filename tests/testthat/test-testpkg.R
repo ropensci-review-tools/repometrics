@@ -47,4 +47,13 @@ test_that ("githist parameters", {
         length (res2$desc_dat$date),
         length (unique (res2$desc_data$date))
     )
+
+    # Finally, test step_days > 1, which has no effect anyway, as all commits
+    # are on same day
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    res3 <- githist (path, n = 2L, step_days = 2L, num_cores = 1L)
+    fs::dir_delete (path)
+
+    n3 <- vapply (res3, nrow, integer (1L))
+    expect_equal (n2, n3)
 })

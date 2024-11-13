@@ -1,0 +1,22 @@
+test_that ("chaoss external util fns", {
+    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- fs::path_dir (flist [1])
+
+    pkg_name <- pkg_name_from_path (path)
+    expect_equal (pkg_name, "testpkg")
+
+    fs::dir_delete (path)
+})
+
+test_that ("chaoss external cran_downloads", {
+
+    pkg_name <- "goodpractice"
+    end_date <- as.Date ("2024-01-01")
+    dl <- with_mock_dir ("cran_dl", {
+        cran_downloads (pkg_name = pkg_name, end_date = end_date)
+    })
+    expect_type (dl, "integer")
+    expect_length (dl, 1L)
+    expect_equal (dl, 2308)
+})
