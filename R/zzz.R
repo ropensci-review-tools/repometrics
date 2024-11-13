@@ -14,3 +14,9 @@
     invisible ()
 }
 # nocov end
+
+get_githist_period <- function () {
+    period <- getOption ("githist_period")
+    checkmate::assert_int (period, lower = 1L)
+    return (period)
+}
