@@ -15,11 +15,13 @@ Imports:
     dplyr,
     fs,
     gert,
+    httr2,
     memoise,
     pbapply,
     pkgstats
 Suggests:
     brio,
+    httptest2,
     lubridate,
     quarto,
     testthat (>= 3.0.0),

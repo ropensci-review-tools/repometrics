@@ -28,6 +28,13 @@ set_num_cores <- function (num_cores) {
     return (num_cores)
 }
 
+pkg_name_from_path <- function (path) {
+    desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
+    checkmate::assert_file_exists (desc)
+
+    unname (read.dcf (desc) [, "Package"])
+}
+
 filter_git_hist <- function (h, n, step_days) {
     if (!is.null (n)) {
         h <- h [seq_len (n), ]
