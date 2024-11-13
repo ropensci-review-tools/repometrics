@@ -25,3 +25,21 @@ cran_downloads <- function (pkg_name, end_date = Sys.Date ()) {
     body <- httr2::resp_body_json (resp)
     return (body [[1]]$downloads)
 }
+
+has_ci_tests <- function (path) {
+
+    url <- pkg_gh_url_from_path (path)
+    if (length (url) == 0L) {
+        return (FALSE)
+    }
+
+    url_parts <- strsplit (url, "\\/") [[1]]
+    i <- which (url_parts == "github.com")
+    if (length (i) == 0L || i > (length (url_parts) + 2L)) {
+        return (FALSE)
+    }
+    org <- url_parts [i + 1L]
+    repo <- url_parts [i + 2L]
+
+    ci_data <- github_repo_workflow_query (org, repo)
+}

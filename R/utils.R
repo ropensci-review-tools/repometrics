@@ -28,11 +28,35 @@ set_num_cores <- function (num_cores) {
     return (num_cores)
 }
 
+get_gh_token <- function () {
+    e <- Sys.getenv ()
+    nms <- names (e)
+    tok <- unique (e [grep ("GITHUB", nms)])
+    if (length (toks) != 1L) {
+        tok <- unique (e [grep ("GITHUB\\_(PAT|TOK)", nms)])
+    }
+    if (length (toks) != 1L) {
+        cli::cli_abort (
+            "Unable to determine unique GitHub token from environment variables"
+        )
+    }
+    return (tok)
+}
+
 pkg_name_from_path <- function (path) {
     desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
     checkmate::assert_file_exists (desc)
 
     unname (read.dcf (desc) [, "Package"])
+}
+
+pkg_gh_url_from_path <- function (path) {
+    desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
+    checkmate::assert_file_exists (desc)
+
+    url <- unname (read.dcf (desc) [, "URL"])
+    url <- strsplit (gsub ("\\n", "", url), ",") [[1]]
+    grep ("github\\.com", url, value = TRUE)
 }
 
 filter_git_hist <- function (h, n, step_days) {
