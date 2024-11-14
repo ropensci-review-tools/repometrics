@@ -65,3 +65,7 @@ test_that ("dashboard build", {
     f_tmp_site <- fs::path (fs::path_temp (), "quarto", "_site", "index.html")
     expect_true (fs::file_exists (f_tmp_site))
 })
+
+if (fs::dir_exists (path)) {
+    fs::dir_delete (path)
+}
