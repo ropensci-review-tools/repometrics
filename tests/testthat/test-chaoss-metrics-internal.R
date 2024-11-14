@@ -1,12 +1,14 @@
+end_date <- as.Date ("2024-08-01")
+
 test_that ("chaoss internal num_commits", {
     pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
-    n <- chaoss_internal_num_commits (path, end_date = as.Date ("2024-08-01"))
+    n <- chaoss_internal_num_commits (path, end_date = end_date)
     expect_equal (n, 4L)
 
-    n <- chaoss_internal_num_contributors (path, end_date = as.Date ("2024-08-01"))
+    n <- chaoss_internal_num_contributors (path, end_date = end_date)
     expect_equal (n, 1L)
 
     fs::dir_delete (path)
@@ -35,6 +37,19 @@ test_that ("chaoss has CI internal", {
 
     org_repo <- org_repo_from_path (path)
     expect_identical (org_repo, c ("my", "pkg"))
+
+    fs::dir_delete (path)
+})
+
+test_that ("chaoss internal change requests", {
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- fs::path_dir (flist [1])
+
+    x <- chaoss_internal_change_req (path, end_date = end_date)
+    expect_equal (x, 0)
+    x <- chaoss_internal_change_req (path, end_date = Sys.Date ())
+    expect_equal (x, NA_integer_) # no commits, so NA returned
 
     fs::dir_delete (path)
 })
