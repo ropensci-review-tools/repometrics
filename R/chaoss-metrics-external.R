@@ -1,5 +1,5 @@
 #' Extract total CRAN downloads for nominated package over period defined by
-#' `options("githist_period")`.
+#' `options("repometrics_period")`.
 #'
 #' @param pkg_name Name of package. For packages not on CRAN, the 'cranlogs'
 #' API returns download counts of 0.
@@ -10,7 +10,7 @@ cran_downloads <- function (pkg_name, end_date = Sys.Date ()) {
 
     checkmate::assert_character (pkg_name, len = 1L)
     checkmate::assert_date (end_date)
-    period <- get_githist_period ()
+    period <- get_repometrics_period ()
     start_date <- as.Date (end_date - period)
     interval <- paste (start_date, sep = ":", end_date)
 

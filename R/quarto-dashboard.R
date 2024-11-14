@@ -24,7 +24,7 @@ ghist_dashboard <- function (results, action = "preview") {
     results <- daily_average (results, "desc_data")
     results <- daily_average (results, "loc")
 
-    path_src <- system.file ("extdata", "quarto", package = "githist")
+    path_src <- system.file ("extdata", "quarto", package = "repometrics")
     dir <- fs::dir_copy (path_src, fs::path_temp ())
     saveRDS (results, fs::path (dir, "results.Rds"))
 

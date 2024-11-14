@@ -3,20 +3,20 @@
 
     op <- options ()
 
-    op.githist <- list (
-        githist_period = 90
+    op.repometrics <- list (
+        repometrics_period = 90
     )
 
-    toset <- !(names (op.githist) %in% names (op))
+    toset <- !(names (op.repometrics) %in% names (op))
     if (any (toset)) {
-        options (op.githist [toset])
+        options (op.repometrics [toset])
     }
     invisible ()
 }
 # nocov end
 
-get_githist_period <- function () {
-    period <- getOption ("githist_period")
+get_repometrics_period <- function () {
+    period <- getOption ("repometrics_period")
     checkmate::assert_int (period, lower = 1L)
     return (period)
 }

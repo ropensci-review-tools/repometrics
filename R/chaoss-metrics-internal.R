@@ -1,13 +1,13 @@
 chaoss_internal_num_commits <- function (path, end_date = Sys.Date ()) {
 
-    log <- git_log_in_period (path, end_date, get_githist_period ())
+    log <- git_log_in_period (path, end_date, get_repometrics_period ())
 
     return (nrow (log))
 }
 
 chaoss_internal_num_contributors <- function (path, end_date = Sys.Date ()) {
 
-    log <- git_log_in_period (path, end_date, get_githist_period ())
+    log <- git_log_in_period (path, end_date, get_repometrics_period ())
 
     auths_un <- unique (log$author)
 
