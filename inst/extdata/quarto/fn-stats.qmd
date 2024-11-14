@@ -10,7 +10,7 @@ format:
 ---
 
 ```{r load-pkg, echo = FALSE, message = FALSE}
-library (githist)
+library (repometrics)
 library (lubridate)
 ```
 This page includes several graphs providing insight into the historical

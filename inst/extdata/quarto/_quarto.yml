@@ -12,9 +12,9 @@ website:
       - icon: "github"
         menu:
           - text: Source Code
-            url: https://github.com/ropensci-review-tools/githist
+            url: https://github.com/ropensci-review-tools/repometrics
           - text: Request a Feature
-            url: https://github.com/ropensci-review-tools/githist/issues/new
+            url: https://github.com/ropensci-review-tools/repometrics/issues/new
 
 format:
   html:

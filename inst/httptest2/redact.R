@@ -14,7 +14,7 @@ function (resp) {
         fixed = TRUE
     )
 
-    test_repo <- "ropensci-review-tools/githist"
+    test_repo <- "ropensci-review-tools/repometrics"
     resp <- httptest2::gsub_response (
         resp,
         paste0 (test_repo, "/actions"),

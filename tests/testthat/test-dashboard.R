@@ -1,4 +1,4 @@
-pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 
@@ -65,3 +65,7 @@ test_that ("dashboard build", {
     f_tmp_site <- fs::path (fs::path_temp (), "quarto", "_site", "index.html")
     expect_true (fs::file_exists (f_tmp_site))
 })
+
+if (fs::dir_exists (path)) {
+    fs::dir_delete (path)
+}

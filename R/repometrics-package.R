@@ -1,6 +1,6 @@
 #' @keywords internal
 #' @importFrom memoise memoise
-#' @aliases githist-package
+#' @aliases repometrics-package
 "_PACKAGE"
 
 # The following block is used by usethis to automatically manage

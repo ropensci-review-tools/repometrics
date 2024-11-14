@@ -1,5 +1,5 @@
 test_that ("multicore", {
-    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 

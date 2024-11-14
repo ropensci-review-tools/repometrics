@@ -1,5 +1,5 @@
 test_that ("chaoss internal num_commits", {
-    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
@@ -13,7 +13,7 @@ test_that ("chaoss internal num_commits", {
 })
 
 test_that ("chaoss has CI internal", {
-    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 

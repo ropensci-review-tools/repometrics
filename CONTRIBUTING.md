@@ -1,18 +1,18 @@
-# Contributing to `github`
+# Contributing to `repometrics`
 
 <!-- This CONTRIBUTING.md is adapted from https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c -->
 
-First of all, thanks for considering contributing to `githist`! 👍 It's
+First of all, thanks for considering contributing to `repometrics`! 👍 It's
 people like you that make it rewarding for us - the project maintainers - to
-work on `githist`. 😊
+work on `repometrics`. 😊
 
-`githist` is an open source project, maintained by people who care.
+`repometrics` is an open source project, maintained by people who care.
 
-- repo: https://github.com/ropensci-review-tools/githist
-- issues: https://github.com/ropensci-review-tools/githist/issues
-- new_issue: https://github.com/ropensci-review-tools/githist/issues/new
-- website: https://docs.ropensci.org/githist/
-- citation: https://ropensci-review-tools.github.io/githist/authors.html
+- repo: https://github.com/ropensci-review-tools/repometrics
+- issues: https://github.com/ropensci-review-tools/repometrics/issues
+- new_issue: https://github.com/ropensci-review-tools/repometrics/issues/new
+- website: https://docs.ropensci.org/repometrics/
+- citation: https://ropensci-review-tools.github.io/repometrics/authors.html
 - email: mailto:mark@ropensci.org
 
 ## Code of conduct
@@ -29,18 +29,18 @@ this [Open Source Guide](https://opensource.guide/how-to-contribute/).
 
 ### Share the love ❤️
 
-Think `githist` is useful? Let others discover it, by telling them in person,
+Think `repometrics` is useful? Let others discover it, by telling them in person,
 via Twitter or a blog post.
 
-Using `githist` for a paper you are writing? Consider [citing
-it](https://github.com/ropensci-review-tools/githist/blob/main/inst/CITATION).
+Using `repometrics` for a paper you are writing? Consider [citing
+it](https://github.com/ropensci-review-tools/repometrics/blob/main/inst/CITATION).
 
 ### Ask a question ⁉️
 
-Using `githist` and got stuck? [Browse the
-documentation](https://docs.ropensci.org/githist/) to see if you can find a
+Using `repometrics` and got stuck? [Browse the
+documentation](https://docs.ropensci.org/repometrics/) to see if you can find a
 solution. Still stuck? Post your question as an [issue on
-GitHub](https://github.com/ropensci-review-tools/githist/issues). While we
+GitHub](https://github.com/ropensci-review-tools/repometrics/issues). While we
 cannot offer user support, we'll try to do our best to address it, as questions
 often lead to better documentation or the discovery of bugs.
 
@@ -49,11 +49,11 @@ Want to ask a question in private? Contact the package maintainer by
 
 ### Propose an idea 💡
 
-Have an idea for a new `githist` feature? Take a look at [the
-documentation](https://docs.ropensci.org/githist/) and [issues
-list](https://github.com/ropensci-review-tools/githist/issues) to see if it
+Have an idea for a new `repometrics` feature? Take a look at [the
+documentation](https://docs.ropensci.org/repometrics/) and [issues
+list](https://github.com/ropensci-review-tools/repometrics/issues) to see if it
 isn't included or suggested yet. If not, suggest your idea as an [issue on
-GitHub](https://github.com/ropensci-review-tools/githist/issues/new).
+GitHub](https://github.com/ropensci-review-tools/repometrics/issues/new).
 While we can't promise to implement your idea, it helps to:
 
 * Explain in detail how it would work.
@@ -63,17 +63,17 @@ See below if you want to contribute code for your idea as well.
 
 ### Report a bug 🐛
 
-Using `githist` and discovered a bug? That's annoying! Don't let others have
+Using `repometrics` and discovered a bug? That's annoying! Don't let others have
 the same experience and report it as an [issue on
-GitHub](https://github.com/ropensci-review-tools/githist/issues/new) so we can
+GitHub](https://github.com/ropensci-review-tools/repometrics/issues/new) so we can
 fix it. A good bug report makes it easier for us to do so, so please:
 
 - Use [the `reprex` package](https://reprex.tidyverse.org) to create a
   reproducible example.
-- Include the version of `githist` with the following line in your `reprex`
+- Include the version of `repometrics` with the following line in your `reprex`
   code:
   ```
-  packageVersion("githist")
+  packageVersion("repometrics")
   ```
 
 ### Improve the documentation 📖
@@ -84,7 +84,7 @@ welcome!
 
 #### The website
 
-[This website](https://docs.ropensci.org/githist/) is generated with
+[This website](https://docs.ropensci.org/repometrics/) is generated with
 [`pkgdown`](http://pkgdown.r-lib.org/). That means we don't have to write any
 html: content is pulled together from documentation in the code, vignettes,
 [Markdown](https://guides.github.com/features/mastering-markdown/) files, the
@@ -92,7 +92,7 @@ package `DESCRIPTION` and `_pkgdown.yml` settings. If you know your way around
 `pkgdown`, you can [propose a file
 change](https://help.github.com/articles/editing-files-in-another-user-s-repository/)
 to improve documentation. If not, [report an
-issue](https://github.com/ropensci-review-tools/githist/issues/new) and we can
+issue](https://github.com/ropensci-review-tools/repometrics/issues/new) and we can
 point you in the right direction.
 
 #### Function documentation
@@ -102,7 +102,7 @@ documentation using [`roxygen2`](https://klutometis.github.io/roxygen/). If you
 want to improve a function description:
 
 1. Go to `R/` directory in the [code
-   repository](https://github.com/ropensci-review-tools/githist/tree/main/R).
+   repository](https://github.com/ropensci-review-tools/repometrics/tree/main/R).
 2. Look for the file with the name of the function.
 3. [Propose a file
    change](https://help.github.com/articles/editing-files-in-another-user-s-repository/)
@@ -111,9 +111,9 @@ want to improve a function description:
 
 ### Contribute code 📝
 
-Care to fix bugs or implement new functionality for `githist`? Awesome! 👏
+Care to fix bugs or implement new functionality for `repometrics`? Awesome! 👏
 Have a look at the [issue
-list](https://github.com/ropensci-review-tools/githist/issues) and leave a
+list](https://github.com/ropensci-review-tools/repometrics/issues) and leave a
 comment on the things you want to work on. See also the development guidelines
 below.
 
@@ -122,7 +122,7 @@ below.
 We try to follow the [GitHub
 flow](https://guides.github.com/introduction/flow/) for development.
 
-1. Fork [this repo](https://github.com/ropensci-review-tools/githist/) and
+1. Fork [this repo](https://github.com/ropensci-review-tools/repometrics/) and
    clone it to your computer. To learn more about this process, see [this
    guide](https://guides.github.com/activities/forking/).
 2. If you have forked and cloned the project before and it has been a while
@@ -141,11 +141,11 @@ flow](https://guides.github.com/introduction/flow/) for development.
 
 ## Code style
 
-The `githist` coding style diverges somewhat from [the commonly used tidyverse
+The `repometrics` coding style diverges somewhat from [the commonly used tidyverse
 style guide](https://style.tidyverse.org/syntax.html#spacing), primarily
 through judicious use of
 whitespace, which aims to improve code readability. Code references in
-`githist` are separated by whitespace, just like words of text. Just like it
+`repometrics` are separated by whitespace, just like words of text. Just like it
 is easier to understand "these three words" than "thesethreewords", code is 
 formatted like this:
 
@@ -165,7 +165,7 @@ The position of brackets is then arbitrary, and we could also write
 these <- three( words (x))
 ```
 
-`githist` code opts for the former style, with the natural result that one
+`repometrics` code opts for the former style, with the natural result that one
 ends up writing
 
 ```r

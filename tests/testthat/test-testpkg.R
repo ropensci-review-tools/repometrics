@@ -2,7 +2,7 @@ test_that ("testpkg and input errors", {
     expect_error (githist (1))
     expect_error (githist ("a"))
 
-    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
@@ -19,7 +19,7 @@ test_that ("testpkg and input errors", {
 })
 
 test_that ("githist parameters", {
-    pkg <- system.file ("extdata", "testpkg.zip", package = "githist")
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     flist <- unzip (pkg, exdir = fs::path_temp ())
     path <- fs::path_dir (flist [1])
 
