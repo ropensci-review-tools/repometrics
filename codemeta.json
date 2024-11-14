@@ -1,14 +1,14 @@
 {
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
-  "identifier": "githist",
-  "description": "Code analyses traced along the 'git' history of a package.",
-  "name": "githist: Code analyses traced along the 'git' history of a package",
+  "identifier": "repometrics",
+  "description": "Metrics for your code repository. Call one function to generate an interactive dashboard displaying the state of your code.",
+  "name": "repometrics: Metrics for Your Code Repository",
   "relatedLink": "https://docs.ropensci.org/githist/",
   "codeRepository": "https://github.com/ropensci-review-tools/githist",
   "issueTracker": "https://github.com/ropensci-review-tools/githist/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.1.0.049",
+  "version": "0.1.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -223,13 +223,10 @@
       "name": "pkgstats",
       "sameAs": "https://github.com/ropensci-review-tools/pkgstats"
     },
-    "SystemRequirements": {}
+    "SystemRequirements": null
   },
-  "fileSize": "90.739KB",
+  "fileSize": "125.048KB",
   "readme": "https://github.com/ropensci-review-tools/githist/blob/main/README.md",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/githist/actions?query=workflow%3AR-CMD-check",
-    "https://app.codecov.io/gh/ropensci-review-tools/githist"
-  ],
+  "contIntegration": ["https://github.com/ropensci-review-tools/githist/actions?query=workflow%3AR-CMD-check", "https://app.codecov.io/gh/ropensci-review-tools/githist"],
   "developmentStatus": "https://www.repostatus.org/#active"
 }

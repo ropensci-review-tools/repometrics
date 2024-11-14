@@ -8,6 +8,6 @@
 
 library (testthat)
 library (httptest2)
-library (githist)
+library (repometrics)
 
-test_check ("githist")
+test_check ("repometrics")

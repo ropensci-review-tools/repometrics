@@ -1,10 +1,11 @@
-Package: githist
-Title: Code analyses traced along the 'git' history of a package
-Version: 0.1.0.049
+Package: repometrics
+Title: Metrics for Your Code Repository
+Version: 0.1.1
 Authors@R: 
     person("Mark", "Padgham", , "mark.padgham@email.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2172-5265"))
-Description: Code analyses traced along the 'git' history of a package.
+Description: Metrics for your code repository. Call one function to generate an
+    interactive dashboard displaying the state of your code.
 License: GPL-3
 URL: https://docs.ropensci.org/githist/,
     https://github.com/ropensci-review-tools/githist
