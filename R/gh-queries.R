@@ -55,11 +55,12 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
     u_repo <- paste0 (u_base, org, "/", repo, "/")
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    u_wf <- paste0 (u_repo, "events?per_page=", ifelse (is_test_env, 2, 100))
+    url0 <- paste0 (u_repo, "events?per_page=", ifelse (is_test_env, 2, 100))
 
     body <- NULL
-    this_url <- u_wf
-    while (!is.null (this_url)) {
+    next_page <- 1
+    this_url <- url0
+    while (!is.null (next_page)) {
 
         req <- httr2::request (this_url) |>
             add_token_to_req ()
@@ -70,11 +71,11 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
         this_body <- httr2::resp_body_json (resp)
         body <- c (body, this_body)
 
-        if (!is_test_env) {
-            this_url <- get_next_link (resp)
-        } else {
-            this_url <- NULL
+        next_page <- get_next_page (resp)
+        if (is_test_env) {
+            next_page <- NULL
         }
+        this_url <- paste0 (url0, "&page=", next_page)
     }
 
     # Extraction function for single fields which may not be present
@@ -159,11 +160,11 @@ add_token_to_req <- function (req) {
 #' Pagination for Rest API. see
 #' https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api
 #' @noRd
-get_next_link <- function (resp) {
+get_next_page <- function (resp) {
 
     link <- httr2::resp_headers (resp)$link
 
-    next_url <- NULL
+    next_page <- NULL
 
     if (!is.null (link)) {
         next_ptn <- "rel\\=\\\"next"
@@ -171,13 +172,10 @@ get_next_link <- function (resp) {
             # "next" is always first; where there are multiples, "prev" comes
             # after "next"
             ptn <- "<([^>]+)>"
-            next_url <- regmatches (link, regexpr (ptn, link))
-            next_url <- gsub ("<|>", "", next_url)
-            if (!grepl ("after", next_url)) {
-                cli::cli_abort ("Pagination link in GitHub Rest API malformed: [{next_url}]")
-            }
+            next_page <- regmatches (link, regexpr (ptn, link))
+            next_page <- gsub ("^.*&page\\=|>", "", next_page)
         }
     }
 
-    return (next_url)
+    return (next_page)
 }
