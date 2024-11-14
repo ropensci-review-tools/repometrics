@@ -53,7 +53,9 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
 
     u_base <- "https://api.github.com/repos/"
     u_repo <- paste0 (u_base, org, "/", repo, "/")
-    u_wf <- paste0 (u_repo, "events?per_page=100")
+
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    u_wf <- paste0 (u_repo, "events?per_page=", ifelse (is_test_env, 2, 100))
 
     body <- NULL
     this_url <- u_wf
@@ -67,7 +69,12 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
 
         this_body <- httr2::resp_body_json (resp)
         body <- c (body, this_body)
-        this_url <- get_next_link (resp)
+
+        if (!is_test_env) {
+            this_url <- get_next_link (resp)
+        } else {
+            this_url <- NULL
+        }
     }
 
     # Extraction function for single fields which may not be present

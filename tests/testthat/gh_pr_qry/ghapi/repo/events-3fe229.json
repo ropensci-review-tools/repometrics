@@ -1,0 +1,235 @@
+[
+    {
+        "id": "43737496856",
+        "type": "IssueCommentEvent",
+        "actor": {
+            "id": 6697851,
+            "login": "mpadge",
+            "display_login": "mpadge",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/mpadge",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6697851?"
+        },
+        "repo": {
+            "id": 50784274,
+            "name": "repo/",
+            "url": "ghapi/repo/"
+        },
+        "payload": {
+            "action": "created",
+            "issue": {
+                "url": "ghapi/repo//issues/182",
+                "repository_url": "ghapi/repo/",
+                "labels_url": "ghapi/repo//issues/182/labels{/name}",
+                "comments_url": "ghapi/repo//issues/182/comments",
+                "events_url": "ghapi/repo//issues/182/events",
+                "html_url": "https://github.com/repo//issues/182",
+                "id": 2634833618,
+                "node_id": "I_kwDOAwboEs6dDF7S",
+                "number": 182,
+                "title": "rcmdcheck_vignettes_run fails on wanted errors",
+                "user": {
+                    "login": "valentingar",
+                    "id": 74970146,
+                    "node_id": "MDQ6VXNlcjc0OTcwMTQ2",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/74970146?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/valentingar",
+                    "html_url": "https://github.com/valentingar",
+                    "followers_url": "https://api.github.com/users/valentingar/followers",
+                    "following_url": "https://api.github.com/users/valentingar/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/valentingar/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/valentingar/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/valentingar/subscriptions",
+                    "organizations_url": "https://api.github.com/users/valentingar/orgs",
+                    "repos_url": "https://api.github.com/users/valentingar/repos",
+                    "events_url": "https://api.github.com/users/valentingar/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/valentingar/received_events",
+                    "type": "User",
+                    "user_view_type": "public",
+                    "site_admin": false
+                },
+                "labels": [
+
+                ],
+                "state": "closed",
+                "locked": false,
+                "assignee": null,
+                "assignees": [
+
+                ],
+                "milestone": null,
+                "comments": 1,
+                "created_at": "2024-11-05T08:57:19Z",
+                "updated_at": "2024-11-12T11:33:01Z",
+                "closed_at": "2024-11-12T11:33:00Z",
+                "author_association": "NONE",
+                "active_lock_reason": null,
+                "body": "**Problem:** \r\nIf you want to demonstrate an error message in the package vignette, by setting the chunk option `error=TRUE`, `rcmdcheck_vignettes_run` still returns a note that the code cannot be run. \r\n\r\n**Expected behaviour:**\r\nIt should recognise the `error = TRUE` comment and not test these chunks.\r\n\r\n**Steps to reproduce:**\r\n- create new package\r\n- add vignette `usethis::use_vignette()`\r\n- add a chunk with option `error=TRUE` and code that causes an error message (e.g. `mod <- lm()`)\r\n- run `devtools::build_vignettes`\r\n- run `goodpractice::gp(checks = \"rcmdcheck_vignettes_run\")`",
+                "reactions": {
+                    "url": "ghapi/repo//issues/182/reactions",
+                    "total_count": 0,
+                    "+1": 0,
+                    "-1": 0,
+                    "laugh": 0,
+                    "hooray": 0,
+                    "confused": 0,
+                    "heart": 0,
+                    "rocket": 0,
+                    "eyes": 0
+                },
+                "timeline_url": "ghapi/repo//issues/182/timeline",
+                "performed_via_github_app": null,
+                "state_reason": "not_planned"
+            },
+            "comment": {
+                "url": "ghapi/repo//issues/comments/2470293065",
+                "html_url": "https://github.com/repo//issues/182#issuecomment-2470293065",
+                "issue_url": "ghapi/repo//issues/182",
+                "id": 2470293065,
+                "node_id": "IC_kwDOAwboEs6TPa5J",
+                "user": {
+                    "login": "mpadge",
+                    "id": 6697851,
+                    "node_id": "MDQ6VXNlcjY2OTc4NTE=",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/6697851?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/mpadge",
+                    "html_url": "https://github.com/mpadge",
+                    "followers_url": "https://api.github.com/users/mpadge/followers",
+                    "following_url": "https://api.github.com/users/mpadge/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/mpadge/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/mpadge/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/mpadge/subscriptions",
+                    "organizations_url": "https://api.github.com/users/mpadge/orgs",
+                    "repos_url": "https://api.github.com/users/mpadge/repos",
+                    "events_url": "https://api.github.com/users/mpadge/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/mpadge/received_events",
+                    "type": "User",
+                    "user_view_type": "public",
+                    "site_admin": false
+                },
+                "created_at": "2024-11-12T11:33:00Z",
+                "updated_at": "2024-11-12T11:33:00Z",
+                "author_association": "MEMBER",
+                "body": "Thanks @valentingar. So i followed all of those steps, but I see this, starting with vignette code to confirm `error = TRUE` chunk:\r\n\r\n``` r\r\nsetwd (\"/<path>/<to>/<pkg>/\")\r\nreadLines (\"vignettes/vignette.Rmd\")\r\n```\r\n\r\n    #>  [1] \"---\"                                  \r\n    #>  [2] \"title: \\\"vignette\\\"\"                  \r\n    #>  [3] \"output: rmarkdown::html_vignette\"     \r\n    #>  [4] \"vignette: >\"                          \r\n    #>  [5] \"  %\\\\VignetteIndexEntry{vignette}\"    \r\n    #>  [6] \"  %\\\\VignetteEngine{knitr::rmarkdown}\"\r\n    #>  [7] \"  %\\\\VignetteEncoding{UTF-8}\"         \r\n    #>  [8] \"---\"                                  \r\n    #>  [9] \"\"                                     \r\n    #> [10] \"```{r, include = FALSE}\"              \r\n    #> [11] \"knitr::opts_chunk$set(\"               \r\n    #> [12] \"  collapse = TRUE,\"                   \r\n    #> [13] \"  comment = \\\"#>\\\"\"                   \r\n    #> [14] \")\"                                    \r\n    #> [15] \"```\"                                  \r\n    #> [16] \"\"                                     \r\n    #> [17] \"```{r setup}\"                         \r\n    #> [18] \"library(demo)\"                        \r\n    #> [19] \"```\"                                  \r\n    #> [20] \"\"                                     \r\n    #> [21] \"```{r error, error = TRUE}\"           \r\n    #> [22] \"stop (\\\"This is an error\\\")\"          \r\n    #> [23] \"```\"\r\n\r\nThen:\r\n\r\n``` r\r\nlibrary (goodpractice)\r\npackageVersion (\"goodpractice\")\r\n#> [1] '1.0.5.9001'\r\ng <- gp (checks = \"rcmdcheck_vignettes_run\")\r\n#> ℹ Preparing: rcmdcheck\r\ng\r\n#> \r\n#> ♥ Aha! Super package! Keep up the slick work!\r\ng$checks\r\n#> $rcmdcheck_vignettes_run\r\n#> [1] TRUE\r\n```\r\n\r\n<sup>Created on 2024-11-12 with [reprex v2.1.1](https://reprex.tidyverse.org)<\/sup>\r\n\r\nLooks all good to me, but happy to look further if you still see the issue.",
+                "reactions": {
+                    "url": "ghapi/repo//issues/comments/2470293065/reactions",
+                    "total_count": 0,
+                    "+1": 0,
+                    "-1": 0,
+                    "laugh": 0,
+                    "hooray": 0,
+                    "confused": 0,
+                    "heart": 0,
+                    "rocket": 0,
+                    "eyes": 0
+                },
+                "performed_via_github_app": null
+            }
+        },
+        "public": true,
+        "created_at": "2024-11-12T11:33:03Z",
+        "org": {
+            "id": 85607140,
+            "login": "ropensci-review-tools",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/ropensci-review-tools",
+            "avatar_url": "https://avatars.githubusercontent.com/u/85607140?"
+        }
+    },
+    {
+        "id": "43737496184",
+        "type": "IssuesEvent",
+        "actor": {
+            "id": 6697851,
+            "login": "mpadge",
+            "display_login": "mpadge",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/mpadge",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6697851?"
+        },
+        "repo": {
+            "id": 50784274,
+            "name": "repo/",
+            "url": "ghapi/repo/"
+        },
+        "payload": {
+            "action": "closed",
+            "issue": {
+                "url": "ghapi/repo//issues/182",
+                "repository_url": "ghapi/repo/",
+                "labels_url": "ghapi/repo//issues/182/labels{/name}",
+                "comments_url": "ghapi/repo//issues/182/comments",
+                "events_url": "ghapi/repo//issues/182/events",
+                "html_url": "https://github.com/repo//issues/182",
+                "id": 2634833618,
+                "node_id": "I_kwDOAwboEs6dDF7S",
+                "number": 182,
+                "title": "rcmdcheck_vignettes_run fails on wanted errors",
+                "user": {
+                    "login": "valentingar",
+                    "id": 74970146,
+                    "node_id": "MDQ6VXNlcjc0OTcwMTQ2",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/74970146?v=4",
+                    "gravatar_id": "",
+                    "url": "https://api.github.com/users/valentingar",
+                    "html_url": "https://github.com/valentingar",
+                    "followers_url": "https://api.github.com/users/valentingar/followers",
+                    "following_url": "https://api.github.com/users/valentingar/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/valentingar/gists{/gist_id}",
+                    "starred_url": "https://api.github.com/users/valentingar/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/valentingar/subscriptions",
+                    "organizations_url": "https://api.github.com/users/valentingar/orgs",
+                    "repos_url": "https://api.github.com/users/valentingar/repos",
+                    "events_url": "https://api.github.com/users/valentingar/events{/privacy}",
+                    "received_events_url": "https://api.github.com/users/valentingar/received_events",
+                    "type": "User",
+                    "user_view_type": "public",
+                    "site_admin": false
+                },
+                "labels": [
+
+                ],
+                "state": "closed",
+                "locked": false,
+                "assignee": null,
+                "assignees": [
+
+                ],
+                "milestone": null,
+                "comments": 1,
+                "created_at": "2024-11-05T08:57:19Z",
+                "updated_at": "2024-11-12T11:33:01Z",
+                "closed_at": "2024-11-12T11:33:00Z",
+                "author_association": "NONE",
+                "active_lock_reason": null,
+                "body": "**Problem:** \r\nIf you want to demonstrate an error message in the package vignette, by setting the chunk option `error=TRUE`, `rcmdcheck_vignettes_run` still returns a note that the code cannot be run. \r\n\r\n**Expected behaviour:**\r\nIt should recognise the `error = TRUE` comment and not test these chunks.\r\n\r\n**Steps to reproduce:**\r\n- create new package\r\n- add vignette `usethis::use_vignette()`\r\n- add a chunk with option `error=TRUE` and code that causes an error message (e.g. `mod <- lm()`)\r\n- run `devtools::build_vignettes`\r\n- run `goodpractice::gp(checks = \"rcmdcheck_vignettes_run\")`",
+                "reactions": {
+                    "url": "ghapi/repo//issues/182/reactions",
+                    "total_count": 0,
+                    "+1": 0,
+                    "-1": 0,
+                    "laugh": 0,
+                    "hooray": 0,
+                    "confused": 0,
+                    "heart": 0,
+                    "rocket": 0,
+                    "eyes": 0
+                },
+                "timeline_url": "ghapi/repo//issues/182/timeline",
+                "performed_via_github_app": null,
+                "state_reason": "not_planned"
+            }
+        },
+        "public": true,
+        "created_at": "2024-11-12T11:33:01Z",
+        "org": {
+            "id": 85607140,
+            "login": "ropensci-review-tools",
+            "gravatar_id": "",
+            "url": "https://api.github.com/orgs/ropensci-review-tools",
+            "avatar_url": "https://avatars.githubusercontent.com/u/85607140?"
+        }
+    }
+]
