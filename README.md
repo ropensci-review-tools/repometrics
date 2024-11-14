@@ -7,9 +7,9 @@ status](https://github.com/ropensci-review-tools/githist/workflows/R-CMD-check/b
 Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
-# githist
+# repometrics
 
-Code analyses run over the git history of a package.
+Metrics for your code repository.
 
 ## Code of Conduct
 

@@ -1,12 +1,12 @@
-# Contributing to `github`
+# Contributing to `repometrics`
 
 <!-- This CONTRIBUTING.md is adapted from https://gist.github.com/peterdesmet/e90a1b0dc17af6c12daf6e8b2f044e7c -->
 
-First of all, thanks for considering contributing to `githist`! 👍 It's
+First of all, thanks for considering contributing to `repometrics`! 👍 It's
 people like you that make it rewarding for us - the project maintainers - to
-work on `githist`. 😊
+work on `repometrics`. 😊
 
-`githist` is an open source project, maintained by people who care.
+`repometrics` is an open source project, maintained by people who care.
 
 - repo: https://github.com/ropensci-review-tools/githist
 - issues: https://github.com/ropensci-review-tools/githist/issues
@@ -29,15 +29,15 @@ this [Open Source Guide](https://opensource.guide/how-to-contribute/).
 
 ### Share the love ❤️
 
-Think `githist` is useful? Let others discover it, by telling them in person,
+Think `repometrics` is useful? Let others discover it, by telling them in person,
 via Twitter or a blog post.
 
-Using `githist` for a paper you are writing? Consider [citing
+Using `repometrics` for a paper you are writing? Consider [citing
 it](https://github.com/ropensci-review-tools/githist/blob/main/inst/CITATION).
 
 ### Ask a question ⁉️
 
-Using `githist` and got stuck? [Browse the
+Using `repometrics` and got stuck? [Browse the
 documentation](https://docs.ropensci.org/githist/) to see if you can find a
 solution. Still stuck? Post your question as an [issue on
 GitHub](https://github.com/ropensci-review-tools/githist/issues). While we
@@ -49,7 +49,7 @@ Want to ask a question in private? Contact the package maintainer by
 
 ### Propose an idea 💡
 
-Have an idea for a new `githist` feature? Take a look at [the
+Have an idea for a new `repometrics` feature? Take a look at [the
 documentation](https://docs.ropensci.org/githist/) and [issues
 list](https://github.com/ropensci-review-tools/githist/issues) to see if it
 isn't included or suggested yet. If not, suggest your idea as an [issue on
@@ -63,17 +63,17 @@ See below if you want to contribute code for your idea as well.
 
 ### Report a bug 🐛
 
-Using `githist` and discovered a bug? That's annoying! Don't let others have
+Using `repometrics` and discovered a bug? That's annoying! Don't let others have
 the same experience and report it as an [issue on
 GitHub](https://github.com/ropensci-review-tools/githist/issues/new) so we can
 fix it. A good bug report makes it easier for us to do so, so please:
 
 - Use [the `reprex` package](https://reprex.tidyverse.org) to create a
   reproducible example.
-- Include the version of `githist` with the following line in your `reprex`
+- Include the version of `repometrics` with the following line in your `reprex`
   code:
   ```
-  packageVersion("githist")
+  packageVersion("repometrics")
   ```
 
 ### Improve the documentation 📖
@@ -111,7 +111,7 @@ want to improve a function description:
 
 ### Contribute code 📝
 
-Care to fix bugs or implement new functionality for `githist`? Awesome! 👏
+Care to fix bugs or implement new functionality for `repometrics`? Awesome! 👏
 Have a look at the [issue
 list](https://github.com/ropensci-review-tools/githist/issues) and leave a
 comment on the things you want to work on. See also the development guidelines
@@ -141,11 +141,11 @@ flow](https://guides.github.com/introduction/flow/) for development.
 
 ## Code style
 
-The `githist` coding style diverges somewhat from [the commonly used tidyverse
+The `repometrics` coding style diverges somewhat from [the commonly used tidyverse
 style guide](https://style.tidyverse.org/syntax.html#spacing), primarily
 through judicious use of
 whitespace, which aims to improve code readability. Code references in
-`githist` are separated by whitespace, just like words of text. Just like it
+`repometrics` are separated by whitespace, just like words of text. Just like it
 is easier to understand "these three words" than "thesethreewords", code is 
 formatted like this:
 
@@ -165,7 +165,7 @@ The position of brackets is then arbitrary, and we could also write
 these <- three( words (x))
 ```
 
-`githist` code opts for the former style, with the natural result that one
+`repometrics` code opts for the former style, with the natural result that one
 ends up writing
 
 ```r
