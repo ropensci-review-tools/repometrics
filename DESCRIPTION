@@ -7,9 +7,9 @@ Authors@R:
 Description: Metrics for your code repository. Call one function to generate an
     interactive dashboard displaying the state of your code.
 License: GPL-3
-URL: https://docs.ropensci.org/githist/,
-    https://github.com/ropensci-review-tools/githist
-BugReports: https://github.com/ropensci-review-tools/githist/issues
+URL: https://docs.ropensci.org/repometrics/,
+    https://github.com/ropensci-review-tools/repometrics
+BugReports: https://github.com/ropensci-review-tools/repometrics/issues
 Imports:
     checkmate,
     cli,

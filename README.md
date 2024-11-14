@@ -1,8 +1,8 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/ropensci-review-tools/githist/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/githist/actions?query=workflow%3AR-CMD-check)
-[![codecov](https://codecov.io/gh/ropensci-review-tools/githist/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/githist)
+status](https://github.com/ropensci-review-tools/repometrics/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check)
+[![codecov](https://codecov.io/gh/ropensci-review-tools/repometrics/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/repometrics)
 [![Project Status:
 Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
