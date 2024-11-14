@@ -30,7 +30,7 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
     status <- vapply (workflows, function (i) i$status, character (1L))
     conclusion <- vapply (workflows, function (i) i$conclusion, character (1L))
     created <- vapply (workflows, function (i) i$created_at, character (1L))
-    created <- as.POSIXct (created, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
+    created <- to_posix (created)
 
     data.frame (
         name = names,
@@ -51,11 +51,9 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
 #' @noRd
 github_issues_prs_query <- function (org = NULL, repo = NULL) {
 
-    period <- get_repometrics_period ()
-
     u_base <- "https://api.github.com/repos/"
     u_repo <- paste0 (u_base, org, "/", repo, "/")
-    u_wf <- paste0 (u_repo, "activity?per_page=100")
+    u_wf <- paste0 (u_repo, "events?per_page=100")
 
     body <- NULL
     this_url <- u_wf
@@ -72,17 +70,71 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
         this_url <- get_next_link (resp)
     }
 
-    ids <- vapply (body, function (i) i$id, numeric (1L))
-    activity_type <- vapply (body, function (i) i$activity_type, character (1L))
+    # Extraction function for single fields which may not be present
+    extract_one <- function (body, field = "action", naval = NA_character_) {
+        ret_type <- do.call (typeof (naval), list (1L))
+        vapply (body, function (i) {
+            ifelse (field %in% names (i$payload), i$payload [[field]], naval)
+        }, ret_type)
+    }
+
+    # Extraction function for doubly-nexted fields which may not be present
+    extract_two <- function (body,
+                             field1 = "pull_request",
+                             field2 = "comments",
+                             naval = NA_character_) {
+
+        ret_type <- do.call (typeof (naval), list (1L))
+        vapply (body, function (i) {
+            ret <- naval
+            if (field1 %in% names (i$payload)) {
+                if (field2 %in% names (i$payload [[field1]])) {
+                    ret <- i$payload [[field1]] [[field2]]
+                }
+            }
+            ifelse (is.null (ret), naval, ret)
+        }, ret_type)
+    }
+
+    # Items which are always present:
+    ids <- vapply (body, function (i) i$id, character (1L))
+    type <- vapply (body, function (i) i$type, character (1L))
     login <- vapply (body, function (i) i$actor$login, character (1L))
-    timestamp <- vapply (body, function (i) i$timestamp, character (1L))
-    timestamp <- as.POSIXct (timestamp, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
+
+    # Single-nested items:
+    action <- extract_one (body, "action", NA_character_)
+    number <- extract_one (body, "number", NA_integer_)
+
+    # Doubly-nested items:
+    num_comments <- extract_two (body, "pull_request", "comments", NA_integer_)
+    num_review_comments <-
+        extract_two (body, "pull_request", "review_comments", NA_integer_)
+    commits <- extract_two (body, "pull_request", "commits", NA_integer_)
+    additions <- extract_two (body, "pull_request", "additions", NA_integer_)
+    deletions <- extract_two (body, "pull_request", "deletions", NA_integer_)
+    changed_files <-
+        extract_two (body, "pull_request", "changed_files", NA_integer_)
+    created_at <-
+        extract_two (body, "pull_request", "created_at", NA_character_)
+    created_at <- to_posix (created_at)
+    merged_at <-
+        extract_two (body, "pull_request", "created_at", NA_character_)
+    merged_at <- to_posix (merged_at)
 
     data.frame (
         id = ids,
-        activity_type = activity_type,
+        type = type,
         login = login,
-        timestamp = timestamp
+        action = action,
+        number = number,
+        commits = commits,
+        num_comments = num_comments,
+        num_review_comments = num_review_comments,
+        additions = additions,
+        deletions = deletions,
+        changed_files = changed_files,
+        created_at = created_at,
+        merged_at = merged_at
     )
 }
 

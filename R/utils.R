@@ -28,6 +28,10 @@ set_num_cores <- function (num_cores) {
     return (num_cores)
 }
 
+to_posix <- function (x) {
+    as.POSIXct (x, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
+}
+
 # nocov start
 get_gh_token <- function () {
     e <- Sys.getenv ()
