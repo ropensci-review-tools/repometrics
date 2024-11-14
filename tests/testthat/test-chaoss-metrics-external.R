@@ -64,3 +64,27 @@ test_that ("chaoss external commits in prs", {
     expect_equal (names (dat), nms)
     expect_true (all (c ("created", "closed") %in% dat$action))
 })
+
+test_that ("chaoss external prop commits in change req", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- fs::path_dir (flist [1])
+
+    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
+    url <- "https://github.com/ropensci-review-tools/goodpractice"
+    desc <- c (
+        readLines (desc_path),
+        paste0 ("URL: ", url)
+    )
+    writeLines (desc, desc_path)
+
+    end_date <- as.Date ("2024-01-01")
+    prop_commits <- with_mock_dir ("gh_pr_qry", {
+        prop_commits_in_change_req (path = path, end_date = end_date)
+    })
+    expect_identical (prop_commits, 0.)
+
+    fs::dir_delete (path)
+})
