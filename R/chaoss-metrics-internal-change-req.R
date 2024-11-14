@@ -8,9 +8,16 @@
 #' 'Merge Requests' and Gerrit 'code reviews'." These are here analysed as
 #' merge commits in the git log, even though these may not have been actual PRs
 #' on GitHub or similar, and may not have been reviewed.
+#'
+#' @return NA if no commits made in given period, otherwise the proportion of
+#' commits which came from merged branches.
 #' noRd
 chaoss_internal_change_req <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date, get_repometrics_period ())
-    length (which (log$merge)) / nrow (log)
+    res <- NA_integer_
+    if (nrow (log) > 0L) {
+        res <- length (which (log$merge)) / nrow (log)
+    }
+    return (res)
 }
