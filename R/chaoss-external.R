@@ -39,6 +39,7 @@ has_gh_ci_tests <- function (path) {
 #' is defined as, "Percentage of new code commits linked with change requests
 #' in the last 90 days."
 #' \url{https://chaoss.community/kb/metrics-model-collaboration-development-index/}.
+#' @noRd
 prop_commits_in_change_req <- function (path, end_date = Sys.Date ()) {
 
     or <- org_repo_from_path (path)
