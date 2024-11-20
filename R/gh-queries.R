@@ -169,8 +169,9 @@ get_next_page <- function (resp) {
     if (!is.null (link)) {
         next_ptn <- "rel\\=\\\"next"
         if (grepl (next_ptn, link)) {
-            # "next" is always first; where there are multiples, "prev" comes
-            # after "next"
+            links <- strsplit (link, ",\\s+") [[1]]
+            link <- grep (next_ptn, links, value = TRUE)
+
             ptn <- "<([^>]+)>"
             next_page <- regmatches (link, regexpr (ptn, link))
             next_page <- gsub ("^.*&page\\=|>", "", next_page)
