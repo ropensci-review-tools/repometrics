@@ -33,7 +33,7 @@ contribs_from_gh_api <- function (path, n_per_page = 100) {
 
     or <- org_repo_from_path (path)
     u_base <- "https://api.github.com/repos/"
-    u_org_repo <- paste0 (u_base, or [1], "/", or [2])
+    u_org_repo <- paste0 (u_base, or [1], "/", or [2], "/")
     u_endpoint <- paste0 (u_org_repo, "contributors")
 
     req <- httr2::request (u_endpoint) |>

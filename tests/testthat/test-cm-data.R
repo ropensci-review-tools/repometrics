@@ -1,6 +1,6 @@
 test_that ("cm data git", {
 
-    path <- generate_test_pkg (add_url = FALSE)
+    path <- generate_test_pkg ()
 
     log <- cm_data_gitlog (path)
 
@@ -31,7 +31,7 @@ test_that ("cm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
-    path <- generate_test_pkg (add_url = TRUE)
+    path <- generate_test_pkg ()
     ctbs <- with_mock_dir ("gh_api_ctbs", {
         contribs_from_gh_api (path, n_per_page = 2L)
     })
@@ -60,7 +60,7 @@ test_that ("cm data gh contribs", {
 
 test_that ("cm data gh repo", {
 
-    path <- generate_test_pkg (add_url = TRUE)
+    path <- generate_test_pkg ()
     repo <- with_mock_dir ("gh_api_repo", {
         repo_from_gh_api (path)
     })

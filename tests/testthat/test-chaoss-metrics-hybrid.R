@@ -2,7 +2,7 @@ test_that ("chaoss metric has_ci", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
-    path <- generate_test_pkg (add_url = FALSE)
+    path <- generate_test_pkg ()
 
     chk <- repo_has_ci_files (path)
     expect_length (chk, 0L)

@@ -1,6 +1,6 @@
 test_that ("chaoss external util fns", {
 
-    path <- generate_test_pkg (add_url = FALSE)
+    path <- generate_test_pkg ()
 
     pkg_name <- pkg_name_from_path (path)
     expect_equal (pkg_name, "testpkg")
@@ -68,7 +68,7 @@ test_that ("chaoss external prop commits in change req", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
-    path <- generate_test_pkg (add_url = TRUE)
+    path <- generate_test_pkg ()
 
     end_date <- as.Date ("2024-01-01")
     prop_commits <- with_mock_dir ("gh_pr_qry", {
