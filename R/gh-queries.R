@@ -9,13 +9,8 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
     u_repo <- paste0 (u_base, org, "/", repo, "/")
     u_wf <- paste0 (u_repo, "actions/runs?per_page=", n)
 
-    req <- httr2::request (u_wf)
-
-    if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
-        tok <- get_gh_token ()
-        headers <- list (Authorization = paste0 ("Bearer ", tok))
-        req <- httr2::req_headers (req, "Authorization" = headers)
-    }
+    req <- httr2::request (u_wf) |>
+        add_gh_token_to_req ()
 
     resp <- httr2::req_perform (req)
     httr2::resp_check_status (resp)
@@ -26,9 +21,17 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
     ids <- vapply (workflows, function (i) i$id, numeric (1L))
     names <- vapply (workflows, function (i) i$name, character (1L))
     shas <- vapply (workflows, function (i) i$head_sha, character (1L))
-    titles <- vapply (workflows, function (i) i$display_title, character (1L))
-    status <- vapply (workflows, function (i) i$status, character (1L))
-    conclusion <- vapply (workflows, function (i) i$conclusion, character (1L))
+    titles <- vapply (
+        workflows,
+        function (i) null2na_char (i$display_title),
+        character (1L)
+    )
+    status <- vapply (
+        workflows,
+        function (i) null2na_char (i$status),
+        character (1L)
+    )
+    conclusion <- vapply (workflows, function (i) null2na_char (i$conclusion), character (1L))
     created <- vapply (workflows, function (i) i$created_at, character (1L))
     created <- to_posix (created)
 
@@ -169,8 +172,9 @@ get_next_page <- function (resp) {
     if (!is.null (link)) {
         next_ptn <- "rel\\=\\\"next"
         if (grepl (next_ptn, link)) {
-            # "next" is always first; where there are multiples, "prev" comes
-            # after "next"
+            links <- strsplit (link, ",\\s+") [[1]]
+            link <- grep (next_ptn, links, value = TRUE)
+
             ptn <- "<([^>]+)>"
             next_page <- regmatches (link, regexpr (ptn, link))
             next_page <- gsub ("^.*&page\\=|>", "", next_page)

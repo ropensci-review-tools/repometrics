@@ -42,6 +42,9 @@ has_gh_ci_tests <- function (path) {
 #' @noRd
 prop_commits_in_change_req <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding notes:
+    number <- action <- NULL
+
     or <- org_repo_from_path (path)
 
     gh_dat <- github_issues_prs_query (org = or [1], repo = or [2])

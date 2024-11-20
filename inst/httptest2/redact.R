@@ -10,7 +10,14 @@ function (resp) {
     resp <- httptest2::gsub_response (
         resp,
         "https://api.github.com/repos/",
-        "ghapi/",
+        "ghrepos/",
+        fixed = TRUE
+    )
+
+    resp <- httptest2::gsub_response (
+        resp,
+        "https://api.github.com/users/",
+        "ghusers/",
         fixed = TRUE
     )
 
