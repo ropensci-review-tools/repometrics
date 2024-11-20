@@ -9,13 +9,8 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
     u_repo <- paste0 (u_base, org, "/", repo, "/")
     u_wf <- paste0 (u_repo, "actions/runs?per_page=", n)
 
-    req <- httr2::request (u_wf)
-
-    if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
-        tok <- get_gh_token ()
-        headers <- list (Authorization = paste0 ("Bearer ", tok))
-        req <- httr2::req_headers (req, "Authorization" = headers)
-    }
+    req <- httr2::request (u_wf) |>
+        add_gh_token_to_req ()
 
     resp <- httr2::req_perform (req)
     httr2::resp_check_status (resp)
