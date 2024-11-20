@@ -57,14 +57,15 @@ pkg_name_from_path <- function (path) {
 }
 
 pkg_gh_url_from_path <- function (path) {
+
     desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
     checkmate::assert_file_exists (desc)
 
     desc <- read.dcf (desc)
     ret <- NULL
     if ("URL" %in% colnames (desc)) {
-        url <- unname (desc [, "URL"])
-        url <- strsplit (gsub ("\\n", "", url), ",") [[1]]
+        url <- strsplit (unname (desc [, "URL"]), "\\n") [[1]]
+        url <- gsub ("[[:space:]].*$", "", url)
         ret <- grep ("github\\.com", url, value = TRUE)
     }
     return (ret)
