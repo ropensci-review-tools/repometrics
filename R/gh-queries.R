@@ -26,9 +26,17 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
     ids <- vapply (workflows, function (i) i$id, numeric (1L))
     names <- vapply (workflows, function (i) i$name, character (1L))
     shas <- vapply (workflows, function (i) i$head_sha, character (1L))
-    titles <- vapply (workflows, function (i) i$display_title, character (1L))
-    status <- vapply (workflows, function (i) i$status, character (1L))
-    conclusion <- vapply (workflows, function (i) i$conclusion, character (1L))
+    titles <- vapply (
+        workflows,
+        function (i) null2na_char (i$display_title),
+        character (1L)
+    )
+    status <- vapply (
+        workflows,
+        function (i) null2na_char (i$status),
+        character (1L)
+    )
+    conclusion <- vapply (workflows, function (i) null2na_char (i$conclusion), character (1L))
     created <- vapply (workflows, function (i) i$created_at, character (1L))
     created <- to_posix (created)
 
