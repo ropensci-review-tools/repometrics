@@ -53,7 +53,7 @@ contribs_from_gh_api <- function (path, n_per_page = 100) {
         }
 
         req <- httr2::request (u_endpoint) |>
-            httr2::req_url_query (per_page = 10) |>
+            httr2::req_url_query (per_page = n_per_page) |>
             httr2::req_url_query (page = next_page)
     }
 
