@@ -40,6 +40,9 @@ contribs_from_gh_api <- function (path) {
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
     gh_url <- pkg_gh_url_from_path (path)
+    if (is.null (gh_url)) {
+        return (NULL)
+    }
 
     org_repo <- gsub ("https://github.com/", "", gh_url, fixed = TRUE)
     if (!grepl ("\\/$", org_repo)) {
@@ -53,22 +56,12 @@ contribs_from_gh_api <- function (path) {
     req <- httr2::request (u_endpoint) |>
         httr2::req_url_query (per_page = 100)
 
-    add_token <- function (req) {
-        if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
-            tok <- get_gh_token ()
-            headers <- list (Authorization = paste0 ("Bearer ", tok))
-            req <- httr2::req_headers (req, "Authorization" = headers)
-        }
-
-        return (req)
-    }
-
     body <- NULL
     next_page <- 1
 
     while (!is.null (next_page)) {
 
-        req <- add_token (req)
+        req <- add_gh_token_to_req (req)
         resp <- httr2::req_perform (req)
         httr2::resp_check_status (resp)
 
@@ -91,12 +84,47 @@ contribs_from_gh_api <- function (path) {
     gh_url <- vapply (body, function (i) i$html_url, character (1L))
     contributions <- vapply (body, function (i) i$contributions, integer (1L))
 
-    data.frame (
+    ctbs <- data.frame (
         login = login,
         ctb_id = ctb_id,
         avatar_url = avatar_url,
         api_url = api_url,
         gh_url = gh_url,
         contributions = contributions
+    )
+
+    ctbs_user_info <- lapply (ctbs$login, user_from_gh_api)
+    ctbs_user_info <- do.call (rbind, ctbs_user_info)
+
+    ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id"))
+
+    return (ctbs)
+}
+
+user_from_gh_api <- function (user) {
+
+    u_base <- "https://api.github.com/users/"
+    u_endpoint <- paste0 (u_base, user)
+
+    req <- httr2::request (u_endpoint) |>
+        add_gh_token_to_req ()
+    resp <- httr2::req_perform (req)
+    httr2::resp_check_status (resp)
+    body <- httr2::resp_body_json (resp)
+
+    data.frame (
+        login = body$login,
+        ctb_id = body$id,
+        name = null2na_char (body$name),
+        company = null2na_char (body$company),
+        email = null2na_char (body$email),
+        location = null2na_char (body$location),
+        blog = null2na_char (body$blog),
+        bio = null2na_char (body$bio),
+        public_repos = body$public_repos,
+        followers = body$followers,
+        following = body$following,
+        created_at = body$created_at,
+        updated_at = body$updated_at
     )
 }
