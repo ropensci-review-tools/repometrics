@@ -5,12 +5,11 @@
 github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
 
     checkmate::assert_integer (n, lower = 1L)
-    u_base <- "https://api.github.com/repos/"
-    u_repo <- paste0 (u_base, org, "/", repo, "/")
-    u_wf <- paste0 (u_repo, "actions/runs?per_page=", n)
+    u_wf <- gh_rest_api_endpoint (orgrepo = c (org, repo), endpoint = "actions/runs")
 
     req <- httr2::request (u_wf) |>
-        add_gh_token_to_req ()
+        add_gh_token_to_req () |>
+        httr2::req_url_query (per_page = n)
 
     resp <- httr2::req_perform (req)
     httr2::resp_check_status (resp)
@@ -54,19 +53,17 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
 #' @noRd
 github_issues_prs_query <- function (org = NULL, repo = NULL) {
 
-    u_base <- "https://api.github.com/repos/"
-    u_repo <- paste0 (u_base, org, "/", repo, "/")
-
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    url0 <- paste0 (u_repo, "events?per_page=", ifelse (is_test_env, 2, 100))
+
+    u_events <- gh_rest_api_endpoint (orgrepo = c (org, repo), endpoint = "events")
+
+    req <- req0 <- httr2::request (u_events) |>
+        add_token_to_req () |>
+        httr2::req_url_query (per_page = ifelse (is_test_env, 2, 100))
 
     body <- NULL
     next_page <- 1
-    this_url <- url0
     while (!is.null (next_page)) {
-
-        req <- httr2::request (this_url) |>
-            add_token_to_req ()
 
         resp <- httr2::req_perform (req)
         httr2::resp_check_status (resp)
@@ -78,7 +75,7 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
         if (is_test_env) {
             next_page <- NULL
         }
-        this_url <- paste0 (url0, "&page=", next_page)
+        req <- httr2::req_url_query (req0, page = next_page)
     }
 
     # Extraction function for single fields which may not be present

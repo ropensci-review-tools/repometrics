@@ -24,3 +24,19 @@ add_gh_token_to_req <- function (req) {
 
     return (req)
 }
+
+gh_rest_api_endpoint <- function (path = NULL, orgrepo = NULL, endpoint = NULL) {
+
+    checkmate::assert_character (endpoint, len = 1L)
+
+    if (!is.null (path)) {
+        checkmate::assert_directory (path)
+        orgrepo <- org_repo_from_path (path)
+    } else {
+        checkmate::assert_character (orgrepo, len = 2L)
+    }
+
+    u_base <- "https://api.github.com/repos/"
+    u_org_repo <- paste0 (u_base, orgrepo [1], "/", orgrepo [2], "/")
+    paste0 (u_org_repo, endpoint)
+}
