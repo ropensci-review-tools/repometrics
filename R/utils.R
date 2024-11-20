@@ -17,6 +17,12 @@ null2na_int <- function (x) {
     ifelse (length (x) == 0, NA_integer_, x)
 }
 
+#' Convert single values of length 0 or NULL to `NA_character_`.
+#' @noRd
+null2na_char <- function (x) {
+    ifelse (length (x) == 0, NA_character_, x)
+}
+
 set_num_cores <- function (num_cores) {
     if (num_cores <= 0L) {
         num_cores <- parallel::detectCores () + num_cores
@@ -64,12 +70,24 @@ pkg_gh_url_from_path <- function (path) {
     desc <- read.dcf (desc)
     ret <- NULL
     if ("URL" %in% colnames (desc)) {
-        url <- strsplit (unname (desc [, "URL"]), "\\n") [[1]]
+        url <- strsplit (unname (desc [, "URL"]), "\\n|,") [[1]]
+        url <- gsub ("^[[:space:]]*", "", url)
         url <- gsub ("[[:space:]].*$", "", url)
         ret <- grep ("github\\.com", url, value = TRUE)
     }
     return (ret)
 }
+
+add_gh_token_to_req <- function (req) {
+    if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
+        tok <- get_gh_token ()
+        headers <- list (Authorization = paste0 ("Bearer ", tok))
+        req <- httr2::req_headers (req, "Authorization" = headers)
+    }
+
+    return (req)
+}
+
 
 org_repo_from_path <- function (path) {
 
