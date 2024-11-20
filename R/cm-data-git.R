@@ -1,4 +1,4 @@
-cm_data_gitlog <- function (path) {
+cm_data_gitlog_internal <- function (path) {
 
     cmt <- git2r::commits (repo = path)
 
@@ -48,3 +48,4 @@ cm_data_gitlog <- function (path) {
         whitespace_removed = whitespace [2, ]
     )
 }
+cm_data_gitlog <- memoise::memoise (cm_data_gitlog_internal)
