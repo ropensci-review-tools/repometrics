@@ -7,6 +7,7 @@ cm_data_gitlog_internal <- function (path) {
     aut_email <- vapply (cmt, function (i) i$author$email, character (1L))
     timestamp <- vapply (cmt, function (i) as.character (i$author$when), character (1L))
     cmt_message <- vapply (cmt, function (i) i$message, character (1L))
+    cmt_message <- gsub ("\\n$", "", cmt_message)
 
     stats <- lapply (
         hash,
@@ -28,7 +29,7 @@ cm_data_gitlog_internal <- function (path) {
     # `length (grep ("^(\\-|\\+)$", j))` or
     # `length (which (j %in% c ("-", "+")))`.
     whitespace <- vapply (diffs, function (i) {
-        patch_i <- strsplit (i$patch, "\\n")
+        patch_i <- suppressWarnings (strsplit (i$patch, "\\n"))
         res <- vapply (patch_i, function (j) {
             c (length (which (j == "+")), length (which (j == "-")))
         }, integer (2L))
