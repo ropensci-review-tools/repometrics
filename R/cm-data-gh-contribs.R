@@ -35,7 +35,7 @@ contribs_from_log <- function (log) {
     ) [index, ]
 }
 
-contribs_from_gh_api <- function (path) {
+contribs_from_gh_api <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
@@ -54,7 +54,7 @@ contribs_from_gh_api <- function (path) {
     u_endpoint <- paste0 (u_org_repo, "contributors")
 
     req <- httr2::request (u_endpoint) |>
-        httr2::req_url_query (per_page = 100)
+        httr2::req_url_query (per_page = n_per_page)
 
     body <- NULL
     next_page <- 1
