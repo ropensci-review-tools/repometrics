@@ -40,7 +40,7 @@ cm_data_gitlog_internal <- function (path) {
         hash = hash,
         aut_name = aut_name,
         aut_email = aut_email,
-        timestamp = timestamp,
+        timestamp = as.POSIXct (timestamp),
         message = cmt_message,
         nfiles_changed = nfiles_changed,
         lines_added = lines_added,
