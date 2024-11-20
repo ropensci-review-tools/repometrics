@@ -24,13 +24,16 @@ cm_data_gitlog <- function (path) {
 
     files_changed <- lapply (diffs, function (i) i$new)
 
+    # bench::marking shows this form is quicker than either:
+    # `length (grep ("^(\\-|\\+)$", j))` or
+    # `length (which (j %in% c ("-", "+")))`.
     whitespace <- vapply (diffs, function (i) {
         patch_i <- strsplit (i$patch, "\\n")
-        sum (vapply (patch_i, function (j) {
-            length (grep ("^(\\-|\\+)$", j))
-        }, integer (1L)))
-    }, integer (1L))
-
+        res <- vapply (patch_i, function (j) {
+            c (length (which (j == "+")), length (which (j == "-")))
+        }, integer (2L))
+        as.integer (rowSums (res))
+    }, integer (2L))
 
     data.frame (
         hash = hash,
@@ -41,6 +44,7 @@ cm_data_gitlog <- function (path) {
         nfiles_changed = nfiles_changed,
         lines_added = lines_added,
         lines_removed = lines_removed,
-        whitespace = whitespace
+        whitespace_added = whitespace [1, ],
+        whitespace_removed = whitespace [2, ]
     )
 }
