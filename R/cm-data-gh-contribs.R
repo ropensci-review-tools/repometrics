@@ -31,10 +31,7 @@ contribs_from_gh_api <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
-    or <- org_repo_from_path (path)
-    u_base <- "https://api.github.com/repos/"
-    u_org_repo <- paste0 (u_base, or [1], "/", or [2], "/")
-    u_endpoint <- paste0 (u_org_repo, "contributors")
+    u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "contributors")
 
     req <- httr2::request (u_endpoint) |>
         httr2::req_url_query (per_page = n_per_page)
@@ -50,13 +47,13 @@ contribs_from_gh_api <- function (path, n_per_page = 100) {
 
         body <- c (body, httr2::resp_body_json (resp))
 
-        next_page <- get_next_page (resp)
+        next_page <- gh_next_page (resp)
         if (is_test_env) {
             next_page <- NULL
         }
 
         req <- httr2::request (u_endpoint) |>
-            httr2::req_url_query (per_page = 10) |>
+            httr2::req_url_query (per_page = n_per_page) |>
             httr2::req_url_query (page = next_page)
     }
 

@@ -5,12 +5,11 @@
 github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
 
     checkmate::assert_integer (n, lower = 1L)
-    u_base <- "https://api.github.com/repos/"
-    u_repo <- paste0 (u_base, org, "/", repo, "/")
-    u_wf <- paste0 (u_repo, "actions/runs?per_page=", n)
+    u_wf <- gh_rest_api_endpoint (orgrepo = c (org, repo), endpoint = "actions/runs")
 
     req <- httr2::request (u_wf) |>
-        add_gh_token_to_req ()
+        add_gh_token_to_req () |>
+        httr2::req_url_query (per_page = n)
 
     resp <- httr2::req_perform (req)
     httr2::resp_check_status (resp)
@@ -54,19 +53,17 @@ github_repo_workflow_query <- function (org = NULL, repo = NULL, n = 30L) {
 #' @noRd
 github_issues_prs_query <- function (org = NULL, repo = NULL) {
 
-    u_base <- "https://api.github.com/repos/"
-    u_repo <- paste0 (u_base, org, "/", repo, "/")
-
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    url0 <- paste0 (u_repo, "events?per_page=", ifelse (is_test_env, 2, 100))
+
+    u_events <- gh_rest_api_endpoint (orgrepo = c (org, repo), endpoint = "events")
+
+    req <- req0 <- httr2::request (u_events) |>
+        add_token_to_req () |>
+        httr2::req_url_query (per_page = ifelse (is_test_env, 2, 100))
 
     body <- NULL
     next_page <- 1
-    this_url <- url0
     while (!is.null (next_page)) {
-
-        req <- httr2::request (this_url) |>
-            add_token_to_req ()
 
         resp <- httr2::req_perform (req)
         httr2::resp_check_status (resp)
@@ -74,11 +71,11 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
         this_body <- httr2::resp_body_json (resp)
         body <- c (body, this_body)
 
-        next_page <- get_next_page (resp)
+        next_page <- gh_next_page (resp)
         if (is_test_env) {
             next_page <- NULL
         }
-        this_url <- paste0 (url0, "&page=", next_page)
+        req <- httr2::req_url_query (req0, page = next_page)
     }
 
     # Extraction function for single fields which may not be present
@@ -147,39 +144,4 @@ github_issues_prs_query <- function (org = NULL, repo = NULL) {
         created_at = created_at,
         merged_at = merged_at
     )
-}
-
-add_token_to_req <- function (req) {
-
-    if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
-        tok <- get_gh_token ()
-        headers <- list (Authorization = paste0 ("Bearer ", tok))
-        req <- httr2::req_headers (req, "Authorization" = headers)
-    }
-
-    return (req)
-}
-
-#' Pagination for Rest API. see
-#' https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api
-#' @noRd
-get_next_page <- function (resp) {
-
-    link <- httr2::resp_headers (resp)$link
-
-    next_page <- NULL
-
-    if (!is.null (link)) {
-        next_ptn <- "rel\\=\\\"next"
-        if (grepl (next_ptn, link)) {
-            links <- strsplit (link, ",\\s+") [[1]]
-            link <- grep (next_ptn, links, value = TRUE)
-
-            ptn <- "<([^>]+)>"
-            next_page <- regmatches (link, regexpr (ptn, link))
-            next_page <- gsub ("^.*&page\\=|>", "", next_page)
-        }
-    }
-
-    return (next_page)
 }
