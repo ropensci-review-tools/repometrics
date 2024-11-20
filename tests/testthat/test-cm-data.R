@@ -106,3 +106,40 @@ test_that ("cm data dependencies", {
         expect_type (deps [[n]], "character")
     }
 })
+
+test_that ("cm data gh issues", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    issues <- with_mock_dir ("gh_api_issues", {
+        issues_from_gh_api (path, n_per_page = 2L)
+    })
+
+    fs::dir_delete (path)
+
+    expect_s3_class (issues, "data.frame")
+    expect_equal (nrow (issues), 2L)
+    expect_equal (ncol (issues), 24L)
+    nms <- c (
+        "number", "title", "id", "url", "user_login", "user_id", "labels",
+        "state", "assignee", "comments", "created_at", "updated_at",
+        "closed_at", "issue_body", "closed_by", "state_reason",
+        "reaction_plus1", "reaction_minus1", "reaction_laugh",
+        "reaction_hooray", "reaction_confused", "reaction_heart",
+        "reaction_rocket", "reaction_eyes"
+    )
+    expect_equal (names (issues), nms)
+
+    int_index <- c (1, 6, 10, grep ("^reaction", names (issues)))
+    char_index <- seq_along (nms) [-int_index]
+    int_nms <- nms [int_index]
+    char_nms <- nms [char_index]
+    for (n in names (issues)) {
+        type <- ifelse (n %in% char_nms, "character", "integer")
+        if (n == "id") {
+            type <- "double"
+        }
+        expect_type (issues [[n]], type)
+    }
+})
