@@ -2,9 +2,7 @@ test_that ("chaoss metric has_ci", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
+    path <- generate_test_pkg ()
 
     chk <- repo_has_ci_files (path)
     expect_length (chk, 0L)
