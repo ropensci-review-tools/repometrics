@@ -90,3 +90,19 @@ test_that ("cm data gh repo", {
         expect_type (repo [[n]], type)
     }
 })
+
+test_that ("cm data dependencies", {
+
+    path <- generate_test_pkg ()
+    deps <- cm_data_dependencies (path)
+    fs::dir_delete (path)
+
+    expect_s3_class (deps, "data.frame")
+    expect_equal (nrow (deps), 1L)
+    expect_equal (ncol (deps), 3L)
+    nms <- c ("name", "type", "version")
+    expect_equal (names (deps), nms)
+    for (n in names (deps)) {
+        expect_type (deps [[n]], "character")
+    }
+})
