@@ -47,7 +47,7 @@ contribs_from_gh_api <- function (path, n_per_page = 100) {
 
         body <- c (body, httr2::resp_body_json (resp))
 
-        next_page <- get_next_page (resp)
+        next_page <- gh_next_page (resp)
         if (is_test_env) {
             next_page <- NULL
         }
