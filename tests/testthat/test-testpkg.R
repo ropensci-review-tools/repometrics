@@ -2,9 +2,7 @@ test_that ("testpkg and input errors", {
     expect_error (githist (1))
     expect_error (githist ("a"))
 
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
+    path <- generate_test_pkg (add_url = FALSE)
 
     expect_error (githist (path, step_size = 1:2, num_cores = 1L))
     expect_error (githist (path, step_size = "1", num_cores = 1L))
@@ -19,14 +17,12 @@ test_that ("testpkg and input errors", {
 })
 
 test_that ("githist parameters", {
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
 
+    path <- generate_test_pkg (add_url = FALSE)
     res0 <- githist (path, step_days = 0L, num_cores = 1L)
     fs::dir_delete (path)
 
-    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- generate_test_pkg (add_url = FALSE)
     res1 <- githist (path, n = 2L, step_days = 0L, num_cores = 1L)
     fs::dir_delete (path)
 
@@ -36,7 +32,7 @@ test_that ("githist parameters", {
     # `n = 2L` selects dates [1:2] from original data:
     expect_identical (res0$desc_data$date [1:2], res1$desc_data$date)
 
-    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- generate_test_pkg (add_url = FALSE)
     res2 <- githist (path, n = 2L, step_days = 1L, num_cores = 1L)
     fs::dir_delete (path)
 
@@ -50,7 +46,7 @@ test_that ("githist parameters", {
 
     # Finally, test step_days > 1, which has no effect anyway, as all commits
     # are on same day
-    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- generate_test_pkg (add_url = FALSE)
     res3 <- githist (path, n = 2L, step_days = 2L, num_cores = 1L)
     fs::dir_delete (path)
 

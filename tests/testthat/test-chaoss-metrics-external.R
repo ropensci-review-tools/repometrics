@@ -1,7 +1,6 @@
 test_that ("chaoss external util fns", {
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
+
+    path <- generate_test_pkg (add_url = FALSE)
 
     pkg_name <- pkg_name_from_path (path)
     expect_equal (pkg_name, "testpkg")
@@ -68,17 +67,8 @@ test_that ("chaoss external commits in prs", {
 test_that ("chaoss external prop commits in change req", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
 
-    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
-    url <- "https://github.com/ropensci-review-tools/goodpractice"
-    desc <- c (
-        readLines (desc_path),
-        paste0 ("URL: ", url)
-    )
-    writeLines (desc, desc_path)
+    path <- generate_test_pkg (add_url = TRUE)
 
     end_date <- as.Date ("2024-01-01")
     prop_commits <- with_mock_dir ("gh_pr_qry", {

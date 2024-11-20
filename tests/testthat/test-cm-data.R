@@ -1,8 +1,6 @@
 test_that ("cm data git", {
 
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
+    path <- generate_test_pkg (add_url = FALSE)
 
     log <- cm_data_gitlog (path)
 
@@ -32,18 +30,8 @@ test_that ("cm data git", {
 test_that ("cm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
 
-    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
-    url <- "https://github.com/ropensci-review-tools/goodpractice"
-    desc <- c (
-        readLines (desc_path),
-        paste0 ("URL: ", url)
-    )
-    writeLines (desc, desc_path)
-
+    path <- generate_test_pkg (add_url = TRUE)
     ctbs <- with_mock_dir ("gh_api_ctbs", {
         contribs_from_gh_api (path, n_per_page = 2L)
     })
@@ -72,18 +60,7 @@ test_that ("cm data gh contribs", {
 
 test_that ("cm data gh repo", {
 
-    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
-    flist <- unzip (pkg, exdir = fs::path_temp ())
-    path <- fs::path_dir (flist [1])
-
-    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
-    url <- "https://github.com/ropensci-review-tools/goodpractice"
-    desc <- c (
-        readLines (desc_path),
-        paste0 ("URL: ", url)
-    )
-    writeLines (desc, desc_path)
-
+    path <- generate_test_pkg (add_url = TRUE)
     repo <- with_mock_dir ("gh_api_repo", {
         repo_from_gh_api (path)
     })
