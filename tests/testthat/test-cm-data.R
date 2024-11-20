@@ -48,6 +48,8 @@ test_that ("cm data gh contribs", {
         contribs_from_gh_api (path, n_per_page = 2L)
     })
 
+    fs::dir_delete (path)
+
     expect_s3_class (ctbs, "data.frame")
     expect_equal (nrow (ctbs), 2L)
     expect_equal (ncol (ctbs), 17L)
@@ -66,6 +68,48 @@ test_that ("cm data gh contribs", {
         type <- ifelse (n %in% char_nms, "character", "integer")
         expect_type (ctbs [[n]], type)
     }
+})
+
+test_that ("cm data gh repo", {
+
+    pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
+    flist <- unzip (pkg, exdir = fs::path_temp ())
+    path <- fs::path_dir (flist [1])
+
+    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
+    url <- "https://github.com/ropensci-review-tools/goodpractice"
+    desc <- c (
+        readLines (desc_path),
+        paste0 ("URL: ", url)
+    )
+    writeLines (desc, desc_path)
+
+    repo <- with_mock_dir ("gh_api_repo", {
+        repo_from_gh_api (path)
+    })
 
     fs::dir_delete (path)
+
+    expect_s3_class (repo, "data.frame")
+    expect_equal (nrow (repo), 1L)
+    expect_equal (ncol (repo), 17L)
+    nms <- c (
+        "id", "name", "full_name", "owner", "url", "description", "is_fork",
+        "created_at", "updated_at", "homepage", "size", "stargazers_count",
+        "language", "forks_count", "open_issues_count", "topics",
+        "default_branch"
+    )
+    expect_equal (names (repo), nms)
+
+    int_index <- c (1, 11:12, 14:15)
+    char_index <- seq_along (nms) [-int_index]
+    int_nms <- nms [int_index]
+    char_nms <- nms [char_index]
+    for (n in names (repo)) {
+        type <- ifelse (n %in% char_nms, "character", "integer")
+        if (n == "is_fork") {
+            type <- "logical"
+        }
+        expect_type (repo [[n]], type)
+    }
 })
