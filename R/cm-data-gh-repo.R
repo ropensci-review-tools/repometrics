@@ -28,6 +28,7 @@ repo_from_gh_api <- function (path) {
         homepage = null2na_char (body$homepage),
         size = body$size,
         stargazers_count = body$stargazers_count,
+        subscribers_count = body$subscribers_count,
         language = null2na_char (body$language),
         forks_count = body$forks_count,
         open_issues_count = body$open_issues_count,

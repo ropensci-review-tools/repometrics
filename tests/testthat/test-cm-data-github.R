@@ -40,16 +40,16 @@ test_that ("cm data gh repo", {
 
     expect_s3_class (repo, "data.frame")
     expect_equal (nrow (repo), 1L)
-    expect_equal (ncol (repo), 17L)
+    expect_equal (ncol (repo), 18L)
     nms <- c (
         "id", "name", "full_name", "owner", "url", "description", "is_fork",
         "created_at", "updated_at", "homepage", "size", "stargazers_count",
-        "language", "forks_count", "open_issues_count", "topics",
-        "default_branch"
+        "subscribers_count", "language", "forks_count", "open_issues_count",
+        "topics", "default_branch"
     )
     expect_equal (names (repo), nms)
 
-    int_index <- c (1, 11:12, 14:15)
+    int_index <- c (1, 11:13, 15:16)
     char_index <- seq_along (nms) [-int_index]
     int_nms <- nms [int_index]
     char_nms <- nms [char_index]
