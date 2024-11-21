@@ -145,13 +145,13 @@ test_that ("cm data gh prs", {
 
     expect_s3_class (prs, "data.frame")
     expect_equal (nrow (prs), 2L)
-    expect_equal (ncol (prs), 21L)
+    expect_equal (ncol (prs), 22L)
     nms <- c (
         "number", "user_login", "state", "merged", "merged_by", "merge_commit",
         "closed", "title", "review_decision", "created_at", "closed_at",
         "updated_at", "additions", "deletions", "changed_files", "commit_oids",
         "closing_issue_refs", "total_comments", "participants", "body",
-        "comments"
+        "comments", "reviews"
     )
     expect_equal (names (prs), nms)
 
@@ -159,7 +159,7 @@ test_that ("cm data gh prs", {
         "number", "additions", "deletions", "changed_files", "total_comments"
     )
     logical_nms <- c ("merged", "closed")
-    list_nms <- c ("closing_issue_refs", "comments")
+    list_nms <- c ("closing_issue_refs", "comments", "reviews")
     non_char <- c (int_nms, logical_nms, list_nms)
     char_nms <- names (prs) [which (!names (prs) %in% non_char)]
     for (n in names (prs)) {
