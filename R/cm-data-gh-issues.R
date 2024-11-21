@@ -86,3 +86,55 @@ get_issue_reactions <- function (body) {
 
     return (reaction_counts)
 }
+
+issue_comments_from_gh_api <- function (path, n_per_page = 100) {
+
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+
+    u_endpoint <-
+        gh_rest_api_endpoint (path = path, endpoint = "issues/comments")
+
+    req0 <- req <- httr2::request (u_endpoint) |>
+        httr2::req_url_query (per_page = n_per_page) |>
+        add_gh_token_to_req ()
+
+    body <- NULL
+    next_page <- 1
+
+    while (!is.null (next_page)) {
+
+        resp <- httr2::req_perform (req)
+        httr2::resp_check_status (resp)
+
+        body <- c (body, httr2::resp_body_json (resp))
+
+        next_page <- gh_next_page (resp)
+        if (is_test_env) {
+            next_page <- NULL
+        }
+
+        req <- httr2::req_url_query (req0, page = next_page)
+    }
+
+    issue_url <- vapply (body, function (i) i$issue_url, character (1L))
+    comment_url <- vapply (body, function (i) i$html_url, character (1L))
+    comment_id <- vapply (body, function (i) i$id, double (1L))
+    issue_number <- as.integer (basename (issue_url))
+    user_login <- vapply (body, function (i) i$user$login, character (1L))
+    user_id <- vapply (body, function (i) i$user$id, integer (1L))
+    created_at <- vapply (body, function (i) i$created_at, character (1L))
+    updated_at <- vapply (body, function (i) i$updated_at, character (1L))
+    issue_body <- vapply (body, function (i) i$body, character (1L))
+
+    data.frame (
+        issue_url = issue_url,
+        issue_number = issue_number,
+        comment_url = comment_url,
+        comment_id = comment_id,
+        user_login = user_login,
+        user_id = user_id,
+        created_at = created_at,
+        updated_at = updated_at,
+        issue_body = issue_body
+    )
+}
