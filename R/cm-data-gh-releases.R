@@ -1,13 +1,32 @@
-releases_from_gh_api <- function (path) {
+releases_from_gh_api <- function (path, n_per_page = 100L) {
+
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "releases")
 
-    req <- httr2::request (u_endpoint)
-    req <- add_gh_token_to_req (req)
-    resp <- httr2::req_perform (req)
-    httr2::resp_check_status (resp)
+    req <- httr2::request (u_endpoint) |>
+        httr2::req_url_query (per_page = n_per_page)
 
-    body <- httr2::resp_body_json (resp)
+    body <- NULL
+    next_page <- 1
+
+    while (!is.null (next_page)) {
+
+        req <- add_gh_token_to_req (req)
+        resp <- httr2::req_perform (req)
+        httr2::resp_check_status (resp)
+
+        body <- c (body, httr2::resp_body_json (resp))
+
+        next_page <- gh_next_page (resp)
+        if (is_test_env) {
+            next_page <- NULL
+        }
+
+        req <- httr2::request (u_endpoint) |>
+            httr2::req_url_query (per_page = n_per_page) |>
+            httr2::req_url_query (page = next_page)
+    }
 
     data.frame (
         id = vapply (body, function (i) i$id, integer (1L)),
