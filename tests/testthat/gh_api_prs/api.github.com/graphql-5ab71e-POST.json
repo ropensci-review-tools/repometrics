@@ -1,0 +1,256 @@
+{
+    "data": {
+        "repository": {
+            "pullRequests": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpHOBbKXmg=="
+                },
+                "nodes": [
+                    {
+                        "number": 19,
+                        "author": {
+                            "login": "jsta"
+                        },
+                        "state": "MERGED",
+                        "closed": true,
+                        "title": "fix warning typos",
+                        "reviewDecision": null,
+                        "reviews": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "merged": true,
+                        "mergedBy": {
+                            "login": "gaborcsardi"
+                        },
+                        "mergeCommit": {
+                            "oid": "f786c10114644afae18c1eb51e662e149451d757"
+                        },
+                        "assignees": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "createdAt": "2016-07-28T17:17:36Z",
+                        "closedAt": "2016-07-28T18:19:24Z",
+                        "updatedAt": "2016-07-28T18:19:28Z",
+                        "closingIssuesReferences": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "commits": {
+                            "nodes": [
+                                {
+                                    "commit": {
+                                        "oid": "c4c8e971b47953779d1302cfdcf3719baac33eb3"
+                                    }
+                                },
+                                {
+                                    "commit": {
+                                        "oid": "e1081bb7e5c6a9a8d09b76dfba594522a79d3060"
+                                    }
+                                }
+                            ]
+                        },
+                        "additions": 2,
+                        "changedFiles": 2,
+                        "deletions": 2,
+                        "participants": {
+                            "nodes": [
+                                {
+                                    "login": "jsta"
+                                },
+                                {
+                                    "login": "codecov-io"
+                                },
+                                {
+                                    "login": "gaborcsardi"
+                                }
+                            ]
+                        },
+                        "labels": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "body": "",
+                        "totalCommentsCount": 4,
+                        "comments": {
+                            "nodes": [
+                                {
+                                    "createdAt": "2016-07-28T17:27:01Z",
+                                    "author": {
+                                        "login": "codecov-io"
+                                    },
+                                    "body": "## [Current coverage](https://codecov.io/gh/MangoTheCat/goodpractice/pull/19?src=pr) is 18.61% (diff: 100%)\n\n> Merging [#19](https://codecov.io/gh/MangoTheCat/goodpractice/pull/19?src=pr) into [master](https://codecov.io/gh/MangoTheCat/goodpractice/branch/master?src=pr) will not change coverage\n\n``` diff\n@@             master        #19   diff @@\n==========================================\n  Files             9          9          \n  Lines           274        274          \n  Methods           0          0          \n  Messages          0          0          \n  Branches          0          0          \n==========================================\n  Hits             51         51          \n  Misses          223        223          \n  Partials          0          0          \n```\n\n> Powered by [Codecov](https://codecov.io?src=pr). Last update [cae5198...c064cf7](https://codecov.io/gh/MangoTheCat/goodpractice/compare/cae5198f942621d43cf81b3c0183f6b0fad25323...c064cf713759526a2c09ae1c0505a98f0635867f?src=pr)\n"
+                                },
+                                {
+                                    "createdAt": "2016-07-28T18:19:28Z",
+                                    "author": {
+                                        "login": "gaborcsardi"
+                                    },
+                                    "body": "Thanks!\n"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "number": 54,
+                        "author": {
+                            "login": "LiNk-NY"
+                        },
+                        "state": "MERGED",
+                        "closed": true,
+                        "title": "create goodpractice::goodpractice alias from goodpractice::gp, resolves #52",
+                        "reviewDecision": null,
+                        "reviews": {
+                            "nodes": [
+                                {
+                                    "author": {
+                                        "login": "gaborcsardi"
+                                    },
+                                    "submittedAt": "2016-12-01T10:41:46Z",
+                                    "state": "COMMENTED",
+                                    "body": ""
+                                },
+                                {
+                                    "author": {
+                                        "login": "LiNk-NY"
+                                    },
+                                    "submittedAt": "2016-12-23T18:51:38Z",
+                                    "state": "COMMENTED",
+                                    "body": ""
+                                },
+                                {
+                                    "author": {
+                                        "login": "LiNk-NY"
+                                    },
+                                    "submittedAt": "2016-12-23T18:52:02Z",
+                                    "state": "COMMENTED",
+                                    "body": ""
+                                },
+                                {
+                                    "author": {
+                                        "login": "LiNk-NY"
+                                    },
+                                    "submittedAt": "2016-12-23T18:55:59Z",
+                                    "state": "COMMENTED",
+                                    "body": ""
+                                }
+                            ]
+                        },
+                        "merged": true,
+                        "mergedBy": {
+                            "login": "gaborcsardi"
+                        },
+                        "mergeCommit": {
+                            "oid": "e6ea88fd81e680de280b01056c0dadcee59dec9f"
+                        },
+                        "assignees": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "createdAt": "2016-11-28T22:35:30Z",
+                        "closedAt": "2017-01-22T19:14:39Z",
+                        "updatedAt": "2017-01-22T19:14:43Z",
+                        "closingIssuesReferences": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "commits": {
+                            "nodes": [
+                                {
+                                    "commit": {
+                                        "oid": "5ecd642cdc2264f93bed99ec486f70870da33997"
+                                    }
+                                },
+                                {
+                                    "commit": {
+                                        "oid": "4d7b3f3f24da3ba24ed50d07d864801f4466d678"
+                                    }
+                                },
+                                {
+                                    "commit": {
+                                        "oid": "d61adf23e6db4426a66bdf9a7b162b3af3b18837"
+                                    }
+                                },
+                                {
+                                    "commit": {
+                                        "oid": "22e1bd022834e9edcaea6d571648154f08144893"
+                                    }
+                                }
+                            ]
+                        },
+                        "additions": 36,
+                        "changedFiles": 7,
+                        "deletions": 21,
+                        "participants": {
+                            "nodes": [
+                                {
+                                    "login": "LiNk-NY"
+                                },
+                                {
+                                    "login": "codecov-io"
+                                },
+                                {
+                                    "login": "gaborcsardi"
+                                }
+                            ]
+                        },
+                        "labels": {
+                            "nodes": [
+
+                            ]
+                        },
+                        "body": "Changes include: \r\n\r\n* alias function creation and exporting\r\n* authorship information in R format\r\n* reformatted package documentation\r\n\r\nFeel free to change it at your leisure. \r\n\r\nRegards,\r\nMarcel ",
+                        "totalCommentsCount": 11,
+                        "comments": {
+                            "nodes": [
+                                {
+                                    "createdAt": "2016-11-28T22:36:06Z",
+                                    "author": {
+                                        "login": "LiNk-NY"
+                                    },
+                                    "body": "@gaborcsardi I ran the check on your package and it wasn't passing. I wasn't sure why. \r\n#### Edit: This only happens in RStudio. It seems like a path issue. \r\nHere is the output: \r\n\r\n```\r\nchecking tests ... ERROR\r\nRunning the tests in ‘tests/testthat.R’ failed.\r\nLast 13 lines of output:\r\n  > library(testthat)\r\n  > library(goodpractice)\r\n  > \r\n  > test_check(\"goodpractice\")\r\n  1. Error: checks are not overwritten (@test-integrity.R#11) --------------------\r\n  non-character argument\r\n  1: unlist(strsplit(rlines, \"\\\\s+\")) at testthat/test-integrity.R:11\r\n  2: strsplit(rlines, \"\\\\s+\")\r\n  \r\n  testthat results ================================================================\r\n  OK: 4 SKIPPED: 0 FAILED: 1\r\n  1. Error: checks are not overwritten (@test-integrity.R#11) \r\n  \r\n  Error: testthat unit tests failed\r\n  Execution halted\r\nR CMD check results\r\n1 error  | 0 warnings | 0 notes\r\n```"
+                                },
+                                {
+                                    "createdAt": "2016-12-01T00:05:00Z",
+                                    "author": {
+                                        "login": "LiNk-NY"
+                                    },
+                                    "body": "@gaborcsardi Any thoughts on this? Thanks. "
+                                },
+                                {
+                                    "createdAt": "2016-12-23T18:57:33Z",
+                                    "author": {
+                                        "login": "codecov-io"
+                                    },
+                                    "body": "## [Current coverage](https://codecov.io/gh/MangoTheCat/goodpractice/pull/54?src=pr) is 15.40% (diff: 100%)\n> Merging [#54](https://codecov.io/gh/MangoTheCat/goodpractice/pull/54?src=pr) into [master](https://codecov.io/gh/MangoTheCat/goodpractice/branch/master?src=pr) will not change coverage\n\n```diff\n@@             master        #54   diff @@\n==========================================\n  Files            10         10          \n  Lines           331        331          \n  Methods           0          0          \n  Messages          0          0          \n  Branches          0          0          \n==========================================\n  Hits             51         51          \n  Misses          280        280          \n  Partials          0          0          \n```\n\n> Powered by [Codecov](https://codecov.io?src=pr). Last update [e0ecd4f...22e1bd0](https://codecov.io/gh/MangoTheCat/goodpractice/compare/e0ecd4fd932b6d2fd159652cd15cdbc52f4f5e25...22e1bd022834e9edcaea6d571648154f08144893?src=pr)"
+                                },
+                                {
+                                    "createdAt": "2017-01-19T18:35:57Z",
+                                    "author": {
+                                        "login": "LiNk-NY"
+                                    },
+                                    "body": "Hi Gabor, @gaborcsardi \r\nAny updates on implementing this? "
+                                },
+                                {
+                                    "createdAt": "2017-01-22T19:14:43Z",
+                                    "author": {
+                                        "login": "gaborcsardi"
+                                    },
+                                    "body": "Thanks!"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
