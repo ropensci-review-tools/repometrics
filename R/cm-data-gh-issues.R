@@ -134,7 +134,7 @@ issue_comments_from_gh_api <- function (path, n_per_page = 100) {
         user_login = user_login,
         user_id = user_id,
         created_at = created_at,
-        updated_at = updated_at,
+        updated_a = updated_at,
         issue_body = issue_body
     )
 }
