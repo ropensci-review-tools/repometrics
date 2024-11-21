@@ -42,3 +42,20 @@ test_that ("cm data dependencies", {
         expect_type (deps [[n]], "character")
     }
 })
+
+skip_on_cran ()
+
+test_that ("cm data libyears", {
+
+    path <- generate_test_pkg ()
+    libyears <- with_mock_dir ("gh_libyears", {
+        cm_data_libyears (path)
+    })
+    fs::dir_delete (path)
+
+    expect_type (libyears, "double")
+    expect_length (libyears, 2L)
+    expect_named (libyears)
+    expect_equal (names (libyears), c ("mean", "median"))
+    expect_true (all (libyears > 0))
+})
