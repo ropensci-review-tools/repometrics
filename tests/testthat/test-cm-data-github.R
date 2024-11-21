@@ -1,32 +1,3 @@
-test_that ("cm data git", {
-
-    path <- generate_test_pkg ()
-
-    log <- cm_data_gitlog (path)
-
-    expect_s3_class (log, "data.frame")
-    expect_equal (ncol (log), 10L)
-    nms <- c (
-        "hash", "aut_name", "aut_email", "timestamp", "message",
-        "nfiles_changed", "lines_added", "lines_removed", "whitespace_added",
-        "whitespace_removed"
-    )
-    expect_equal (names (log), nms)
-
-    char_nms <- nms [c (1:3, 5)]
-    int_nms <- nms [6:10]
-    for (n in names (log)) {
-        type <- ifelse (n %in% char_nms, "character", "integer")
-        if (n == "timestamp") {
-            expect_s3_class (log [[n]], "POSIXct")
-        } else {
-            expect_type (log [[n]], type)
-        }
-    }
-
-    fs::dir_delete (path)
-})
-
 test_that ("cm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
@@ -91,22 +62,6 @@ test_that ("cm data gh repo", {
     }
 })
 
-test_that ("cm data dependencies", {
-
-    path <- generate_test_pkg ()
-    deps <- cm_data_dependencies (path)
-    fs::dir_delete (path)
-
-    expect_s3_class (deps, "data.frame")
-    expect_equal (nrow (deps), 1L)
-    expect_equal (ncol (deps), 3L)
-    nms <- c ("name", "type", "version")
-    expect_equal (names (deps), nms)
-    for (n in names (deps)) {
-        expect_type (deps [[n]], "character")
-    }
-})
-
 test_that ("cm data gh issues", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
@@ -141,5 +96,38 @@ test_that ("cm data gh issues", {
             type <- "double"
         }
         expect_type (issues [[n]], type)
+    }
+})
+
+test_that ("cm data gh issue commentss", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    cmts <- with_mock_dir ("gh_api_issue_cmts", {
+        issue_comments_from_gh_api (path, n_per_page = 2L)
+    })
+
+    fs::dir_delete (path)
+
+    expect_s3_class (cmts, "data.frame")
+    expect_equal (nrow (cmts), 2L)
+    expect_equal (ncol (cmts), 9L)
+    nms <- c (
+        "issue_url", "issue_number", "comment_url", "comment_id", "user_login",
+        "user_id", "created_at", "updated_a", "issue_body"
+    )
+    expect_equal (names (cmts), nms)
+
+    int_index <- c (2, 6)
+    char_index <- seq_along (nms) [-int_index]
+    int_nms <- nms [int_index]
+    char_nms <- nms [char_index]
+    for (n in names (cmts)) {
+        type <- ifelse (n %in% char_nms, "character", "integer")
+        if (n == "comment_id") {
+            type <- "double"
+        }
+        expect_type (cmts [[n]], type)
     }
 })
