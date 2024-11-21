@@ -23,3 +23,21 @@ cm_data_dependencies <- function (path) {
 
     data.frame (do.call (rbind, deps))
 }
+
+cm_data_libyears <- function (path) {
+
+    deps <- cm_data_dependencies (path)
+    cran_db <- data.frame (tools::CRAN_package_db ())
+    index <- match (deps$name, cran_db$Package)
+    deps$cran_version <- cran_db$Version [index]
+    deps$published <- as.Date (cran_db$Published [index])
+    deps <- deps [which (!is.na (deps$published)), ]
+
+    rel <- releases_from_gh_api (path, latest_only = TRUE)
+    rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
+
+    dt <- difftime (deps$published, rel_date, units = "days")
+    dt <- as.numeric (dt) / 365.25 # In years
+
+    c (mean = mean (dt), median = stats::median (dt))
+}
