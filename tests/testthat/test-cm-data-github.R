@@ -175,3 +175,39 @@ test_that ("cm data gh prs", {
         expect_type (prs [[n]], type)
     }
 })
+
+test_that ("cm data gh releases", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    releases <- with_mock_dir ("gh_api_releases", {
+        releases_from_gh_api (path, n_per_page = 2L)
+    })
+
+    fs::dir_delete (path)
+
+    expect_s3_class (releases, "data.frame")
+    expect_equal (nrow (releases), 2L)
+    expect_equal (ncol (releases), 10L)
+    nms <- c (
+        "id", "author_login", "author_id", "tag_name", "target_commitish",
+        "name", "draft", "prerelease", "created_at", "published_at"
+    )
+    expect_equal (names (releases), nms)
+
+    int_nms <- c ("id", "author_id")
+    logical_nms <- c ("draft", "prerelease")
+    non_char <- c (int_nms, logical_nms)
+    char_nms <- names (releases) [which (!names (releases) %in% non_char)]
+    for (n in names (releases)) {
+        if (n %in% int_nms) {
+            type <- "integer"
+        } else if (n %in% logical_nms) {
+            type <- "logical"
+        } else {
+            type <- "character"
+        }
+        expect_type (releases [[n]], type)
+    }
+})
