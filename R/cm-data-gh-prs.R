@@ -1,64 +1,172 @@
-prs_from_gh_api <- function (path, n_per_page = 100) {
+#' The GitHub GraphQL query to extract information from all pull requests.
+#'
+#' The Rest API pull request just dumps meta-information about each PR. Getting
+#' details on individual PRs then requires looping over each PR number and
+#' making a separate call. This GraphQL query does everything in a single call.
+#'
+#' @param org The GitHub organization.
+#' @param repo The GitHub repository.
+#' @param end_cursor The end cursor from the previous query.
+#'
+#' @return The GraphQL query to pass to a `gh::gh_gql()` call.
+#' @noRd
+gh_prs_qry <- function (org = "ropensci-review-tools",
+                        repo = "repometrics",
+                        n_per_page = 100L,
+                        end_cursor = NULL) {
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    checkmate::assert_integerish (n_per_page)
 
-    u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "pulls")
-
-    req0 <- req <- httr2::request (u_endpoint) |>
-        httr2::req_url_query (state = "all") |>
-        httr2::req_url_query (per_page = n_per_page) |>
-        add_gh_token_to_req ()
-
-    body <- NULL
-    next_page <- 1
-
-    while (!is.null (next_page)) {
-
-        resp <- httr2::req_perform (req)
-        httr2::resp_check_status (resp)
-
-        body <- c (body, httr2::resp_body_json (resp))
-
-        next_page <- gh_next_page (resp)
-        if (is_test_env) {
-            next_page <- NULL
-        }
-
-        req <- httr2::req_url_query (req0, page = next_page)
+    after_txt <- ""
+    if (!is.null (end_cursor)) {
+        after_txt <- paste0 (", after:\"", end_cursor, "\"")
     }
 
+    q <- paste0 ("{
+        repository(owner:\"", org, "\", name:\"", repo, "\") {
+            pullRequests (first: ", n_per_page, after_txt, ") {
+                pageInfo {
+                    hasNextPage
+                    endCursor
+                }
+                nodes {
+                    number
+                    author {
+                        login
+                    }
+                    state
+                    closed
+                    title
+                    reviewDecision
+                    merged
+                    mergedBy {
+                        login
+                    }
+                    mergeCommit {
+                        oid
+                    }
+                    assignees (first: 100) {
+                        nodes {
+                            name
+                        }
+                    }
+                    createdAt
+                    closedAt
+                    updatedAt
+                    closingIssuesReferences (first: 100) {
+                        nodes {
+                            number
+                        }
+                    }
+                    commits (first: 100) {
+                        nodes {
+                            commit {
+                                oid
+                            }
+                        }
+                    }
+                    additions
+                    changedFiles
+                    deletions
+                    participants (first: 100) {
+                        nodes {
+                            login
+                        }
+                    }
+                    labels (first: 100) {
+                        nodes {
+                            name,
+                        }
+                    }
+                    body
+                    totalCommentsCount
+                    comments (last: 100) {
+                        nodes {
+                            createdAt,
+                            author {
+                                login
+                            },
+                            body
+                        }
+                    }
+                }
+            }
+        }
+    }")
+
+    return (q)
+}
+
+prs_from_gh_api <- function (path, n_per_page = 30L) {
+
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    if (is_test_env) {
+        n_per_page <- 2L
+    }
+
+    or <- org_repo_from_path (path)
+    end_cursor <- pr_data <- NULL
+    has_next_page <- TRUE
+
+    while (has_next_page) {
+
+        q <- gh_prs_qry (org = or [1], repo = or [2], end_cursor = end_cursor, n_per_page = n_per_page)
+        dat <- gh::gh_gql (query = q)
+
+        pr_data <- c (pr_data, dat$data$repository$pullRequests$nodes)
+
+        has_next_page <- dat$data$repository$pullRequests$pageInfo$hasNextPage
+        end_cursor <- dat$data$repository$pullRequests$pageInfo$endCursor
+        if (is_test_env) {
+            has_next_page <- FALSE
+        }
+    }
+
+    commit_oids <- vapply (pr_data, function (i) {
+        oids <- vapply (i$commits$nodes, function (j) {
+            j$commit$oid
+        }, character (1L))
+        paste0 (oids, collapse = ",")
+    }, character (1L))
+    participants <- vapply (pr_data, function (i) {
+        p <- vapply (i$participants$nodes, function (j) j$login, character (1L))
+        paste0 (p, collapse = ",")
+    }, character (1L))
+    comments <- lapply (pr_data, function (i) {
+        created_at <- vapply (i$comments$nodes, function (j) j$createdAt, character (1L))
+        author <- vapply (i$comments$nodes, function (j) j$author$login, character (1L))
+        body <- vapply (i$comments$nodes, function (j) j$body, character (1L))
+        data.frame (
+            author = author,
+            created_at = created_at,
+            body = body
+        )
+    })
+    closing_issue_refs <- lapply (pr_data, function (i) {
+        vapply (i$closingIssuesReferences$nodes, function (j) j$number, integer (1L))
+    })
+
     data.frame (
-        url = vapply (body, function (i) i$html_url, character (1L)),
-        id = vapply (body, function (i) i$number, numeric (1L)),
-        number = vapply (body, function (i) i$number, integer (1L)),
-        state = vapply (body, function (i) i$state, character (1L)),
-        title = vapply (body, function (i) i$title, character (1L)),
-        user_login = vapply (body, function (i) i$user$login, character (1L)),
-        user_id = vapply (body, function (i) i$user$id, integer (1L)),
-        pr_body = vapply (body, function (i) null2na_char (i$body), character (1L)),
-        created_at = vapply (body, function (i) i$created_at, character (1L)),
-        updated_at = vapply (body, function (i) i$updated_at, character (1L)),
-        closed_at = vapply (
-            body,
-            function (i) null2na_char (i$closed_at),
-            character (1L)
-        ),
-        merged_at = vapply (
-            body,
-            function (i) null2na_char (i$merged_at),
-            character (1L)
-        ),
-        merge_commit_sha = vapply (
-            body,
-            function (i) null2na_char (i$merge_commit_sha),
-            character (1L)
-        ),
-        assignee = vapply (body, function (i) null2na_char (i$assignee), character (1L)),
-        requested_reviewers = vapply (
-            body,
-            function (i) null2na_char (i$requested_reviewers),
-            character (1L)
-        ),
-        draft = vapply (body, function (i) i$draft, logical (1L))
+        number = vapply (pr_data, function (i) i$number, integer (1L)),
+        user_login = vapply (pr_data, function (i) i$author$login, character (1L)),
+        state = vapply (pr_data, function (i) i$state, character (1L)),
+        merged = vapply (pr_data, function (i) i$merged, logical (1L)),
+        merged_by = vapply (pr_data, function (i) null2na_char (i$mergedBy$login), character (1L)),
+        merge_commit = vapply (pr_data, function (i) null2na_char (i$mergeCommit$oid), character (1L)),
+        closed = vapply (pr_data, function (i) i$closed, logical (1L)),
+        title = vapply (pr_data, function (i) i$title, character (1L)),
+        review_decision = vapply (pr_data, function (i) null2na_char (i$reviewDecision), character (1L)),
+        created_at = vapply (pr_data, function (i) i$createdAt, character (1L)),
+        closed_at = vapply (pr_data, function (i) null2na_char (i$closedAt), character (1L)),
+        updated_at = vapply (pr_data, function (i) i$updatedAt, character (1L)),
+        additions = vapply (pr_data, function (i) i$additions, integer (1L)),
+        deletions = vapply (pr_data, function (i) i$deletions, integer (1L)),
+        changed_files = vapply (pr_data, function (i) i$changedFiles, integer (1L)),
+        commit_oids = commit_oids,
+        closing_issue_refs = I (closing_issue_refs),
+        total_comments = vapply (pr_data, function (i) i$totalCommentsCount, integer (1L)),
+        participants = participants,
+        body = vapply (pr_data, function (i) i$body, character (1L)),
+        comments = I (comments)
     )
 }
