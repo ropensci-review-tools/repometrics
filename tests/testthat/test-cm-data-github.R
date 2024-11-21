@@ -99,7 +99,7 @@ test_that ("cm data gh issues", {
     }
 })
 
-test_that ("cm data gh issue commentss", {
+test_that ("cm data gh issue comments", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
@@ -129,5 +129,49 @@ test_that ("cm data gh issue commentss", {
             type <- "double"
         }
         expect_type (cmts [[n]], type)
+    }
+})
+
+test_that ("cm data gh prs", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    prs <- with_mock_dir ("gh_api_prs", {
+        prs_from_gh_api (path, n_per_page = 2L)
+    })
+
+    fs::dir_delete (path)
+
+    expect_s3_class (prs, "data.frame")
+    expect_equal (nrow (prs), 2L)
+    expect_equal (ncol (prs), 22L)
+    nms <- c (
+        "number", "user_login", "state", "merged", "merged_by", "merge_commit",
+        "closed", "title", "review_decision", "created_at", "closed_at",
+        "updated_at", "additions", "deletions", "changed_files", "commit_oids",
+        "closing_issue_refs", "total_comments", "participants", "body",
+        "comments", "reviews"
+    )
+    expect_equal (names (prs), nms)
+
+    int_nms <- c (
+        "number", "additions", "deletions", "changed_files", "total_comments"
+    )
+    logical_nms <- c ("merged", "closed")
+    list_nms <- c ("closing_issue_refs", "comments", "reviews")
+    non_char <- c (int_nms, logical_nms, list_nms)
+    char_nms <- names (prs) [which (!names (prs) %in% non_char)]
+    for (n in names (prs)) {
+        if (n %in% int_nms) {
+            type <- "integer"
+        } else if (n %in% logical_nms) {
+            type <- "logical"
+        } else if (n %in% list_nms) {
+            type <- "list"
+        } else {
+            type <- "character"
+        }
+        expect_type (prs [[n]], type)
     }
 })
