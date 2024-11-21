@@ -38,6 +38,16 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
                     closed
                     title
                     reviewDecision
+                    reviews (first: 100) {
+                        nodes {
+                            author {
+                                login
+                            }
+                            submittedAt
+                            state
+                            body
+                        }
+                    }
                     merged
                     mergedBy {
                         login
@@ -145,6 +155,18 @@ prs_from_gh_api <- function (path, n_per_page = 30L) {
     closing_issue_refs <- lapply (pr_data, function (i) {
         vapply (i$closingIssuesReferences$nodes, function (j) j$number, integer (1L))
     })
+    reviews <- lapply (pr_data, function (i) {
+        login <- vapply (i$reviews$nodes, function (j) j$author$login, character (1L))
+        state <- vapply (i$reviews$nodes, function (j) j$state, character (1L))
+        submitted_at <- vapply (i$reviews$nodes, function (j) j$submittedAt, character (1L))
+        body <- vapply (i$reviews$nodes, function (j) j$body, character (1L))
+        data.frame (
+            login = login,
+            state = state,
+            submitted_at = submitted_at,
+            body = body
+        )
+    })
 
     data.frame (
         number = vapply (pr_data, function (i) i$number, integer (1L)),
@@ -167,6 +189,7 @@ prs_from_gh_api <- function (path, n_per_page = 30L) {
         total_comments = vapply (pr_data, function (i) i$totalCommentsCount, integer (1L)),
         participants = participants,
         body = vapply (pr_data, function (i) i$body, character (1L)),
-        comments = I (comments)
+        comments = I (comments),
+        reviews = I (reviews)
     )
 }
