@@ -1,5 +1,5 @@
 LFILE = README
-VIGNETTE = pkgstats
+VIGNETTE = repometrics
 
 all: help
 
@@ -9,6 +9,9 @@ init: ## Initialize `pkgdown` site
 vignette: ## Render vignette defined at top of `makefile`
 	echo "pkgdown::build_article('$(VIGNETTE)',quiet=FALSE)" | R --no-save -q
 
+site: ## Build entire `pkgdown` site
+	echo "pkgdown::build_site()" | R --no-save -q
+
 knith: $(LFILE).Rmd ## Render readme to HTML
 	echo "rmarkdown::render('$(LFILE).Rmd',output_file='$(LFILE).html')" | R --no-save -q
 
@@ -16,7 +19,7 @@ knitr: $(LFILE).Rmd ## Render `REAMDE.Rds` to `README.md`.
 	echo "rmarkdown::render('$(LFILE).Rmd',output_file='$(LFILE).md')" | R --no-save -q
 
 open: ## Open HTML-rendered vignette
-	xdg-open docs/articles/$(VIGNETTE).html &
+	xdg-open docs/index.html &
 
 pkgcheck: ## Run `pkgcheck` and print results to screen.
 	Rscript -e 'library(pkgcheck); checks <- pkgcheck(); print(checks); summary (checks)'
