@@ -1,4 +1,11 @@
-releases_from_gh_api <- function (path, n_per_page = 100L) {
+releases_from_gh_api <- function (path, n_per_page = 100L, latest_only = FALSE) {
+
+    checkmate::assert_integerish (n_per_page)
+    checkmate::assert_logical (latest_only)
+
+    if (latest_only) {
+        n_per_page <- 1L
+    }
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
@@ -19,7 +26,7 @@ releases_from_gh_api <- function (path, n_per_page = 100L) {
         body <- c (body, httr2::resp_body_json (resp))
 
         next_page <- gh_next_page (resp)
-        if (is_test_env) {
+        if (is_test_env || latest_only) {
             next_page <- NULL
         }
 
