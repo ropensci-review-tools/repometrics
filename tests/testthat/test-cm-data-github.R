@@ -98,3 +98,36 @@ test_that ("cm data gh issues", {
         expect_type (issues [[n]], type)
     }
 })
+
+test_that ("cm data gh issue commentss", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    cmts <- with_mock_dir ("gh_api_issue_cmts", {
+        issue_comments_from_gh_api (path, n_per_page = 2L)
+    })
+
+    fs::dir_delete (path)
+
+    expect_s3_class (cmts, "data.frame")
+    expect_equal (nrow (cmts), 2L)
+    expect_equal (ncol (cmts), 9L)
+    nms <- c (
+        "issue_url", "issue_number", "comment_url", "comment_id", "user_login",
+        "user_id", "created_at", "updated_a", "issue_body"
+    )
+    expect_equal (names (cmts), nms)
+
+    int_index <- c (2, 6)
+    char_index <- seq_along (nms) [-int_index]
+    int_nms <- nms [int_index]
+    char_nms <- nms [char_index]
+    for (n in names (cmts)) {
+        type <- ifelse (n %in% char_nms, "character", "integer")
+        if (n == "comment_id") {
+            type <- "double"
+        }
+        expect_type (cmts [[n]], type)
+    }
+})
