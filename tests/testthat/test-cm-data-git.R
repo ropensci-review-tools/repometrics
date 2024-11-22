@@ -44,6 +44,10 @@ test_that ("cm data dependencies", {
 })
 
 skip_on_cran ()
+# The `releases_from_gh_api()` call fails here on mac, I guess because of
+# httptest2, and some interaction with the `cran_package_db()` call also
+# triggered with `cm_data_libyears()`?
+skip_on_os ("mac")
 
 test_that ("cm data libyears", {
 
