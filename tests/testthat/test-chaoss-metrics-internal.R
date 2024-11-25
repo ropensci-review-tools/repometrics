@@ -4,7 +4,7 @@ test_that ("chaoss internal num_commits", {
 
     path <- generate_test_pkg ()
 
-    n <- chaoss_internal_num_commits (path, end_date = end_date)
+    n <- cm_metrics_num_commits (path, end_date = end_date)
     expect_equal (n, 4L)
 
     n <- chaoss_internal_num_contributors (path, end_date = end_date)
