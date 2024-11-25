@@ -27,13 +27,13 @@ cm_data_dependencies <- function (path) {
 cm_data_libyears <- function (path) {
 
     deps <- cm_data_dependencies (path)
-    cran_db <- data.frame (tools::CRAN_package_db ())
+    cran_db <- data.frame (cran_pkg_db ())
     index <- match (deps$name, cran_db$Package)
     deps$cran_version <- cran_db$Version [index]
     deps$published <- as.Date (cran_db$Published [index])
     deps <- deps [which (!is.na (deps$published)), ]
 
-    rel <- releases_from_gh_api (path, latest_only = TRUE)
+    rel <- cm_data_releases_from_gh_api (path, latest_only = TRUE)
     rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
 
     dt <- difftime (deps$published, rel_date, units = "days")
@@ -41,3 +41,5 @@ cm_data_libyears <- function (path) {
 
     c (mean = mean (dt), median = stats::median (dt))
 }
+
+cran_pkg_db <- memoise::memoise (tools::CRAN_package_db)

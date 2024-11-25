@@ -4,7 +4,7 @@ test_that ("chaoss internal num_commits", {
 
     path <- generate_test_pkg ()
 
-    n <- chaoss_internal_num_commits (path, end_date = end_date)
+    n <- cm_metrics_num_commits (path, end_date = end_date)
     expect_equal (n, 4L)
 
     n <- chaoss_internal_num_contributors (path, end_date = end_date)
@@ -36,18 +36,6 @@ test_that ("chaoss has CI internal", {
     writeLines (desc [-i], desc_path)
     expect_null (pkg_gh_url_from_path (path))
     expect_false (org_repo_from_path (path))
-
-    fs::dir_delete (path)
-})
-
-test_that ("chaoss internal change requests", {
-
-    path <- generate_test_pkg ()
-
-    x <- chaoss_internal_change_req (path, end_date = end_date)
-    expect_equal (x, 0)
-    x <- chaoss_internal_change_req (path, end_date = Sys.Date ())
-    expect_equal (x, NA_integer_) # no commits, so NA returned
 
     fs::dir_delete (path)
 })

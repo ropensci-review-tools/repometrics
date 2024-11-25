@@ -4,7 +4,7 @@ test_that ("cm data gh contribs", {
 
     path <- generate_test_pkg ()
     ctbs <- with_mock_dir ("gh_api_ctbs", {
-        contribs_from_gh_api (path, n_per_page = 2L)
+        cm_data_contribs_from_gh_api (path, n_per_page = 2L)
     })
 
     fs::dir_delete (path)
@@ -33,7 +33,7 @@ test_that ("cm data gh repo", {
 
     path <- generate_test_pkg ()
     repo <- with_mock_dir ("gh_api_repo", {
-        repo_from_gh_api (path)
+        cm_data_repo_from_gh_api (path)
     })
 
     fs::dir_delete (path)
@@ -68,7 +68,7 @@ test_that ("cm data gh issues", {
 
     path <- generate_test_pkg ()
     issues <- with_mock_dir ("gh_api_issues", {
-        issues_from_gh_api (path, n_per_page = 2L)
+        cm_data_issues_from_gh_api (path, n_per_page = 2L)
     })
 
     fs::dir_delete (path)
@@ -105,7 +105,7 @@ test_that ("cm data gh issue comments", {
 
     path <- generate_test_pkg ()
     cmts <- with_mock_dir ("gh_api_issue_cmts", {
-        issue_comments_from_gh_api (path, n_per_page = 2L)
+        cm_data_issue_comments_from_gh_api (path, n_per_page = 2L)
     })
 
     fs::dir_delete (path)
@@ -138,7 +138,7 @@ test_that ("cm data gh prs", {
 
     path <- generate_test_pkg ()
     prs <- with_mock_dir ("gh_api_prs", {
-        prs_from_gh_api (path, n_per_page = 2L)
+        cm_data_prs_from_gh_api (path, n_per_page = 2L)
     })
 
     fs::dir_delete (path)
@@ -182,7 +182,7 @@ test_that ("cm data gh releases", {
 
     path <- generate_test_pkg ()
     releases <- with_mock_dir ("gh_api_releases", {
-        releases_from_gh_api (path, n_per_page = 2L)
+        cm_data_releases_from_gh_api (path, n_per_page = 2L)
     })
 
     fs::dir_delete (path)

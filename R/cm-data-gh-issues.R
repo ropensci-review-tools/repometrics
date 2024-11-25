@@ -1,4 +1,4 @@
-issues_from_gh_api <- function (path, n_per_page = 100) {
+cm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
@@ -69,6 +69,8 @@ issues_from_gh_api <- function (path, n_per_page = 100) {
 
     return (issues)
 }
+cm_data_issues_from_gh_api <-
+    memoise::memoise (cm_data_issues_from_gh_api_internal)
 
 get_issue_reactions <- function (body) {
 
@@ -87,7 +89,7 @@ get_issue_reactions <- function (body) {
     return (reaction_counts)
 }
 
-issue_comments_from_gh_api <- function (path, n_per_page = 100) {
+cm_data_issue_comments_from_gh_api_internal <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
@@ -138,3 +140,5 @@ issue_comments_from_gh_api <- function (path, n_per_page = 100) {
         issue_body = issue_body
     )
 }
+cm_data_issue_comments_from_gh_api <-
+    memoise::memoise (cm_data_issue_comments_from_gh_api_internal)

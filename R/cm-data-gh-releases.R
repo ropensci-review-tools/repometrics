@@ -1,4 +1,4 @@
-releases_from_gh_api <- function (path, n_per_page = 100L, latest_only = FALSE) {
+cm_data_releases_from_gh_api_internal <- function (path, n_per_page = 100L, latest_only = FALSE) {
 
     checkmate::assert_integerish (n_per_page)
     checkmate::assert_logical (latest_only)
@@ -48,3 +48,4 @@ releases_from_gh_api <- function (path, n_per_page = 100L, latest_only = FALSE) 
         published_at = vapply (body, function (i) i$published_at, character (1L))
     )
 }
+cm_data_releases_from_gh_api <- memoise::memoise (cm_data_releases_from_gh_api_internal)
