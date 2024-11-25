@@ -39,15 +39,3 @@ test_that ("chaoss has CI internal", {
 
     fs::dir_delete (path)
 })
-
-test_that ("chaoss internal change requests", {
-
-    path <- generate_test_pkg ()
-
-    x <- chaoss_internal_change_req (path, end_date = end_date)
-    expect_equal (x, 0)
-    x <- chaoss_internal_change_req (path, end_date = Sys.Date ())
-    expect_equal (x, NA_integer_) # no commits, so NA returned
-
-    fs::dir_delete (path)
-})

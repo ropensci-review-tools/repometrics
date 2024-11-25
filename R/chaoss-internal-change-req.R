@@ -15,9 +15,18 @@
 chaoss_internal_change_req <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date, get_repometrics_period ())
-    res <- NA_integer_
-    if (nrow (log) > 0L) {
-        res <- length (which (log$merge)) / nrow (log)
-    }
+    prs <- cm_data_prs_from_gh_api (path)
+    prs <- prs [which (prs$merged), ]
+    closed_dates <- as.Date (prs$closed_at)
+    start_date <- end_date - get_repometrics_period ()
+    index <- which (closed_dates >= start_date & closed_dates <= end_date)
+    prs <- prs [index, ]
+
+    num_commits <- vapply (prs$commit_oids, function (i) {
+        length (strsplit (i, ",") [[1]])
+    }, integer (1L), USE.NAMES = FALSE)
+
+    res <- sum (num_commits) / nrow (log)
+
     return (res)
 }

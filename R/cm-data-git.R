@@ -50,3 +50,26 @@ cm_data_gitlog_internal <- function (path) {
     )
 }
 cm_data_gitlog <- memoise::memoise (cm_data_gitlog_internal)
+
+git_log_in_period <- function (path, end_date = Sys.Date (), period = 90) {
+
+    checkmate::assert_character (path, len = 1L)
+    checkmate::assert_directory (path)
+    checkmate::assert_date (end_date)
+
+    log <- cm_data_gitlog (path)
+
+    if (nrow (log) == 0) {
+        return (log)
+    }
+    dates <- as.Date (log$time)
+    today_minus_period <- as.Date (end_date - period)
+    index <- which (dates >= today_minus_period)
+    log <- log [index, ]
+
+    if (dates [1] > end_date) {
+        log <- log [which (dates <= end_date), ]
+    }
+
+    return (log)
+}
