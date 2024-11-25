@@ -1,0 +1,56 @@
+[
+    {
+        "url": "ghrepos/repo//releases/158953460",
+        "assets_url": "ghrepos/repo//releases/158953460/assets",
+        "upload_url": "https://uploads.github.com/repos/repo//releases/158953460/assets{?name,label}",
+        "html_url": "https://github.com/repo//releases/tag/v1.0.5",
+        "id": 158953460,
+        "author": {
+            "login": "mpadge",
+            "id": 6697851,
+            "node_id": "MDQ6VXNlcjY2OTc4NTE=",
+            "avatar_url": "https://avatars.githubusercontent.com/u/6697851?v=4",
+            "gravatar_id": "",
+            "url": "ghusers/mpadge",
+            "html_url": "https://github.com/mpadge",
+            "followers_url": "ghusers/mpadge/followers",
+            "following_url": "ghusers/mpadge/following{/other_user}",
+            "gists_url": "ghusers/mpadge/gists{/gist_id}",
+            "starred_url": "ghusers/mpadge/starred{/owner}{/repo}",
+            "subscriptions_url": "ghusers/mpadge/subscriptions",
+            "organizations_url": "ghusers/mpadge/orgs",
+            "repos_url": "ghusers/mpadge/repos",
+            "events_url": "ghusers/mpadge/events{/privacy}",
+            "received_events_url": "ghusers/mpadge/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+        },
+        "node_id": "RE_kwDOAwboEs4JeW_0",
+        "tag_name": "v1.0.5",
+        "target_commitish": "main",
+        "name": "goodpractice 1.0.5",
+        "draft": false,
+        "prerelease": false,
+        "created_at": "2024-06-05T09:31:17Z",
+        "published_at": "2024-06-05T09:34:42Z",
+        "assets": [
+
+        ],
+        "tarball_url": "ghrepos/repo//tarball/v1.0.5",
+        "zipball_url": "ghrepos/repo//zipball/v1.0.5",
+        "body": "* New maintainer: rOpenSci\r\n* Package reinstated on CRAN, after archiving of previous version.\r\n* CRAN fixes - skipping failing test and adding \\alias{goodpractice} to package Rd\r\n* Adding docs.ropensci site to DESCRIPTION",
+        "reactions": {
+            "url": "ghrepos/repo//releases/158953460/reactions",
+            "total_count": 1,
+            "+1": 0,
+            "-1": 0,
+            "laugh": 0,
+            "hooray": 0,
+            "confused": 0,
+            "heart": 1,
+            "rocket": 0,
+            "eyes": 0
+        }
+    }
+]
