@@ -1,4 +1,6 @@
-contribs_from_log <- function (log) {
+cm_data_contribs_from_log <- function (path) {
+
+    log <- cm_data_gitlog (path)
 
     gh_handle <- unique (log$aut_name)
     gh_email <- log$aut_email [match (gh_handle, log$aut_name)]
@@ -27,7 +29,7 @@ contribs_from_log <- function (log) {
     ) [index, ]
 }
 
-contribs_from_gh_api <- function (path, n_per_page = 100) {
+cm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
 
@@ -80,6 +82,8 @@ contribs_from_gh_api <- function (path, n_per_page = 100) {
 
     return (ctbs)
 }
+cm_data_contribs_from_gh_api <-
+    memoise::memoise (cm_data_contribs_from_gh_api_internal)
 
 user_from_gh_api <- function (user) {
 

@@ -107,7 +107,7 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
     return (q)
 }
 
-prs_from_gh_api <- function (path, n_per_page = 30L) {
+cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     if (is_test_env) {
@@ -193,3 +193,4 @@ prs_from_gh_api <- function (path, n_per_page = 30L) {
         reviews = I (reviews)
     )
 }
+cm_data_prs_from_gh_api <- memoise::memoise (cm_data_prs_from_gh_api_internal)

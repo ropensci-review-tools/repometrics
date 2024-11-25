@@ -1,4 +1,4 @@
-repo_from_gh_api <- function (path) {
+cm_data_repo_from_gh_api_internal <- function (path) {
 
     or <- org_repo_from_path (path)
 
@@ -36,3 +36,4 @@ repo_from_gh_api <- function (path) {
         default_branch = null2na_char (body$default_branch)
     )
 }
+cm_data_repo_from_gh_api <- memoise::memoise (cm_data_repo_from_gh_api_internal)
