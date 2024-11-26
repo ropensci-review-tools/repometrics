@@ -13,7 +13,7 @@ test_that ("cm metrics num_commits num_contribs", {
     fs::dir_delete (path)
 })
 
-test_that ("chaoss has CI internal", {
+test_that ("cm metric has CI internal", {
 
     path <- generate_test_pkg ()
     has_ci <- repo_has_ci_files (path)
@@ -62,4 +62,16 @@ test_that ("cm metric has_ci", {
     expect_true (chk)
 
     fs::dir_delete (path)
+})
+
+test_that ("cm metric cran_downloads", {
+
+    pkg_name <- "goodpractice"
+    end_date <- as.Date ("2024-01-01")
+    dl <- with_mock_dir ("cran_dl", {
+        cm_metric_cran_downloads (pkg_name = pkg_name, end_date = end_date)
+    })
+    expect_type (dl, "integer")
+    expect_length (dl, 1L)
+    expect_equal (dl, 2308)
 })
