@@ -12,7 +12,7 @@
 #' @return NA if no commits made in given period, otherwise the proportion of
 #' commits which came from merged branches.
 #' @noRd
-chaoss_internal_change_req <- function (path, end_date = Sys.Date ()) {
+cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date, get_repometrics_period ())
     prs <- cm_data_prs_from_gh_api (path)
