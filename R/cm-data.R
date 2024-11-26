@@ -1,14 +1,17 @@
-cm_data <- function (path) {
+cm_data <- function (path, n_per_page = 30L) {
+
+    checkmate::assert_directory_exists (path)
+    checkmate::assert_integerish (n_per_page, lower = 1L, len = 1L)
 
     data_fns <- get_cm_data_fns ()
 
     if (all_cm_data_fns_memoised (data_fns, path)) {
         res <- lapply (data_fns, function (i) {
-            do.call (i, list (path))
+            do.call (i, list (path = path, n_per_page = n_per_page))
         })
     } else {
         res <- pbapply::pblapply (data_fns, function (i) {
-            do.call (i, list (path))
+            do.call (i, list (path = path, n_per_page = n_per_page))
         })
     }
     names (res) <- gsub ("^cm\\_data\\_", "", data_fns)

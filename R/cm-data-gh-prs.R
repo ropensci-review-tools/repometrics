@@ -110,9 +110,6 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
 cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    if (is_test_env) {
-        n_per_page <- 2L
-    }
 
     or <- org_repo_from_path (path)
     end_cursor <- pr_data <- NULL
@@ -120,7 +117,12 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
 
     while (has_next_page) {
 
-        q <- gh_prs_qry (org = or [1], repo = or [2], end_cursor = end_cursor, n_per_page = n_per_page)
+        q <- gh_prs_qry (
+            org = or [1],
+            repo = or [2],
+            end_cursor = end_cursor,
+            n_per_page = n_per_page
+        )
         dat <- gh::gh_gql (query = q)
 
         pr_data <- c (pr_data, dat$data$repository$pullRequests$nodes)
