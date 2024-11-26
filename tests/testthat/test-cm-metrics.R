@@ -82,3 +82,16 @@ test_that ("cm metrics num_commits num_contribs", {
 
     fs::dir_delete (path)
 })
+
+test_that ("cm metrics change req frequency", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    dat <- cm_metric_change_req (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (dat, "double")
+    expect_length (dat, 1L)
+    expect_equal (dat, 0.)
+})
