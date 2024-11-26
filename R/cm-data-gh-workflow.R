@@ -1,19 +1,16 @@
 #' Retrieve latest GitHub workflow results from Rest API
 #'
-#' This uses default of 30 most recent results.
 #' @noRd
-#'
-#'
-cm_data_gh_repo_workflow_internal <- function (path, n = 30L) {
+cm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
 
     or <- org_repo_from_path (path)
 
-    checkmate::assert_integer (n, lower = 1L)
+    checkmate::assert_integer (n_per_page, lower = 1L)
     u_wf <- gh_rest_api_endpoint (orgrepo = or, endpoint = "actions/runs")
 
     req <- httr2::request (u_wf) |>
         add_gh_token_to_req () |>
-        httr2::req_url_query (per_page = n)
+        httr2::req_url_query (per_page = n_per_page)
 
     resp <- httr2::req_perform (req)
     httr2::resp_check_status (resp)

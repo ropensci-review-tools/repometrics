@@ -1,4 +1,10 @@
-cm_data_repo_from_gh_api_internal <- function (path) {
+#' Get repository data from GitHub API
+#'
+#' @param path Local path to repository
+#' @param n_per_page Not used here, but needed so all functions can safely be
+#' called with this parameter.
+#' @noRd
+cm_data_repo_from_gh_api_internal <- function (path, n_per_page) {
 
     or <- org_repo_from_path (path)
 
