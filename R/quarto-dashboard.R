@@ -1,7 +1,8 @@
-#' Start quarto dashboard with results of main \link{githist} function.
+#' Start quarto dashboard with results of main \link{repo_pkgstats_history}
+#' function.
 #'
-#' @param results Results of main \link{githist} function applied to one
-#' package.
+#' @param results Results of main \link{repo_pkgstats_history} function applied
+#' to one package.
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.

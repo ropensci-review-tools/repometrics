@@ -38,10 +38,7 @@ to_posix <- function (x) {
     as.POSIXct (x, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
 }
 
-filter_git_hist <- function (h, n, step_days) {
-    if (!is.null (n)) {
-        h <- h [seq_len (n), ]
-    }
+filter_git_hist <- function (h, step_days) {
     if (step_days >= 1L) {
         h$date <- as.Date (h$time)
         h <- dplyr::group_by (h, date) |>

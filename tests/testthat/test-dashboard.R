@@ -2,7 +2,7 @@ pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 
-res0 <- githist (path, num_cores = 1L)
+res0 <- repo_pkgstats_history (path, num_cores = 1L)
 
 test_that ("dashboard input errors", {
 
