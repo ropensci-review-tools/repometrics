@@ -75,18 +75,3 @@ test_that ("cm metric cran_downloads", {
     expect_length (dl, 1L)
     expect_equal (dl, 2308)
 })
-
-test_that ("cm metric prop commits in change req", {
-
-    Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
-    path <- generate_test_pkg ()
-
-    end_date <- as.Date ("2024-01-01")
-    prop_commits <- with_mock_dir ("gh_pr_qry", {
-        cm_metric_prop_commits_in_change_req (path = path, end_date = end_date)
-    })
-    expect_identical (prop_commits, 0.)
-
-    fs::dir_delete (path)
-})

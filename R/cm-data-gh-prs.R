@@ -132,6 +132,11 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
         }
     }
 
+    num_commits <- vapply (
+        pr_data,
+        function (i) length (i$commits$nodes),
+        integer (1L)
+    )
     commit_oids <- vapply (pr_data, function (i) {
         oids <- vapply (i$commits$nodes, function (j) {
             j$commit$oid
@@ -181,6 +186,7 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
         created_at = vapply (pr_data, function (i) i$createdAt, character (1L)),
         closed_at = vapply (pr_data, function (i) null2na_char (i$closedAt), character (1L)),
         updated_at = vapply (pr_data, function (i) i$updatedAt, character (1L)),
+        num_commits = num_commits,
         additions = vapply (pr_data, function (i) i$additions, integer (1L)),
         deletions = vapply (pr_data, function (i) i$deletions, integer (1L)),
         changed_files = vapply (pr_data, function (i) i$changedFiles, integer (1L)),

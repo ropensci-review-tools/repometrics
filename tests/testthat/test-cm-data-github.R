@@ -145,18 +145,19 @@ test_that ("cm data gh prs", {
 
     expect_s3_class (prs, "data.frame")
     expect_equal (nrow (prs), 2L)
-    expect_equal (ncol (prs), 22L)
+    expect_equal (ncol (prs), 23L)
     nms <- c (
         "number", "user_login", "state", "merged", "merged_by", "merge_commit",
         "closed", "title", "review_decision", "created_at", "closed_at",
-        "updated_at", "additions", "deletions", "changed_files", "commit_oids",
-        "closing_issue_refs", "total_comments", "participants", "body",
-        "comments", "reviews"
+        "updated_at", "num_commits", "additions", "deletions", "changed_files",
+        "commit_oids", "closing_issue_refs", "total_comments", "participants",
+        "body", "comments", "reviews"
     )
     expect_equal (names (prs), nms)
 
     int_nms <- c (
-        "number", "additions", "deletions", "changed_files", "total_comments"
+        "number", "num_commits", "additions",
+        "deletions", "changed_files", "total_comments"
     )
     logical_nms <- c ("merged", "closed")
     list_nms <- c ("closing_issue_refs", "comments", "reviews")
