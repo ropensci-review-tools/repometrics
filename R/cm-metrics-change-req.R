@@ -12,9 +12,13 @@
 #' @return NA if no commits made in given period, otherwise the proportion of
 #' commits which came from merged branches.
 #' @noRd
-chaoss_internal_change_req <- function (path, end_date = Sys.Date ()) {
+cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date, get_repometrics_period ())
+    if (nrow (log) == 0) {
+        return (0)
+    }
+
     prs <- cm_data_prs_from_gh_api (path)
     prs <- prs [which (prs$merged), ]
     closed_dates <- as.Date (prs$closed_at)
@@ -22,11 +26,7 @@ chaoss_internal_change_req <- function (path, end_date = Sys.Date ()) {
     index <- which (closed_dates >= start_date & closed_dates <= end_date)
     prs <- prs [index, ]
 
-    num_commits <- vapply (prs$commit_oids, function (i) {
-        length (strsplit (i, ",") [[1]])
-    }, integer (1L), USE.NAMES = FALSE)
-
-    res <- sum (num_commits) / nrow (log)
+    res <- sum (prs$num_commits) / nrow (log)
 
     return (res)
 }
