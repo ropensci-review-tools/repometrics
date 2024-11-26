@@ -7,7 +7,9 @@
 #' called with this parameter.
 #' @return A single integer counting the number of downloads.
 #' @noRd
-cm_metric_cran_downloads <- function (path, end_date = Sys.Date (), n_per_page) {
+cm_metric_cran_downloads <- function (path,
+                                      end_date = Sys.Date (),
+                                      n_per_page) {
 
     checkmate::assert_directory_exists (path)
     checkmate::assert_date (end_date)

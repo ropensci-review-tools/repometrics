@@ -1,4 +1,6 @@
-cm_data_releases_from_gh_api_internal <- function (path, n_per_page = 100L, latest_only = FALSE) {
+cm_data_releases_from_gh_api_internal <- function (path,
+                                                   n_per_page = 100L,
+                                                   latest_only = FALSE) {
 
     checkmate::assert_integerish (n_per_page)
     checkmate::assert_logical (latest_only)
@@ -37,15 +39,19 @@ cm_data_releases_from_gh_api_internal <- function (path, n_per_page = 100L, late
 
     data.frame (
         id = vapply (body, function (i) i$id, integer (1L)),
-        author_login = vapply (body, function (i) i$author$login, character (1L)),
+        author_login =
+            vapply (body, function (i) i$author$login, character (1L)),
         author_id = vapply (body, function (i) i$author$id, integer (1L)),
         tag_name = vapply (body, function (i) i$tag_name, character (1L)),
-        target_commitish = vapply (body, function (i) i$target_commitish, character (1L)),
+        target_commitish =
+            vapply (body, function (i) i$target_commitish, character (1L)),
         name = vapply (body, function (i) i$name, character (1L)),
         draft = vapply (body, function (i) i$draft, logical (1L)),
         prerelease = vapply (body, function (i) i$prerelease, logical (1L)),
         created_at = vapply (body, function (i) i$created_at, character (1L)),
-        published_at = vapply (body, function (i) i$published_at, character (1L))
+        published_at =
+            vapply (body, function (i) i$published_at, character (1L))
     )
 }
-cm_data_releases_from_gh_api <- memoise::memoise (cm_data_releases_from_gh_api_internal)
+cm_data_releases_from_gh_api <-
+    memoise::memoise (cm_data_releases_from_gh_api_internal)

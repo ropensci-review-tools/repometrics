@@ -32,7 +32,11 @@ cm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
         function (i) null2na_char (i$status),
         character (1L)
     )
-    conclusion <- vapply (workflows, function (i) null2na_char (i$conclusion), character (1L))
+    conclusion <- vapply (
+        workflows,
+        function (i) null2na_char (i$conclusion),
+        character (1L)
+    )
     created <- vapply (workflows, function (i) i$created_at, character (1L))
     created <- to_posix (created)
 
