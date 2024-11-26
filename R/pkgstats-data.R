@@ -1,8 +1,6 @@
 #' Apply \pkg{pkgstats} across the git history of a package
 #'
 #' @param path Path to local repository containing an R package.
-#' @param n If given, only analyses the preceding 'n' commits in the git
-#' history.
 #' @param step_days Analyse package at intervals of this number of days. The
 #' last commit for each day is chosen. For example, `step_days = 7L` will
 #' return weekly statistics. Values of zero or less will analyse all commits,

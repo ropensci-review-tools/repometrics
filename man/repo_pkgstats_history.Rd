@@ -20,9 +20,6 @@ single-core only. Negative values are subtracted from number of available
 cores, determined as \code{parallel::detectCores()}, so default of \code{num_cores = -1L} uses \code{detectCores() - 1L}. Positive values use precisely that number,
 restricted to maximum available cores, and a value of zero will use all
 available cores.}
-
-\item{n}{If given, only analyses the preceding 'n' commits in the git
-history.}
 }
 \value{
 A list of three items:
