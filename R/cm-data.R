@@ -1,3 +1,29 @@
+#' Calculate all repository data used in CHAOSS metrics
+#' \url{https://chaoss.community/kb-metrics-and-metrics-models/}.
+#'
+#' @param path Path to local source repository.
+#' @return A list of the following `data.frame` objects:
+#' \enumerate{
+#' \item `contribs_from_gh_api` with details of all code contributors from GitHub
+#' \item `contribs_from_log` with details of all code contributors from the local git log
+#' \item `dependencies` A simple `data.frame` of all package dependencies
+#' \item `gh_repo_workflow` with details of all workflows run on GitHub,
+#' including status of most recent runs
+#' \item `gitlog` with one row for each git commit, and associated statistics
+#' \item `issue_comments_from_gh_api` with details of all comments from all
+#' repository issues on GitHub
+#' \item `issues_from_gh_api` with details of all issues on GitHub
+#' \item `libyears` The CHAOSS metric described at
+#' \url{https://chaoss.community/kb/metric-libyears/}, measuring the relative
+#' age of a project's dependencies, with lower values indicating more
+#' up-to-date projects. This is the only item which is not a `data.frame`,
+#' rather a named numerical vector of mean and median "libyears"
+#' \item `prs_from_gh_api` with details of all pull requests on GitHub
+#' \item `releases_from_gh_api` with details of all repository releases on GitHub
+#' \item `repo_from_gh_api` A `data.frame` of a single line, with several key
+#' attributes of the repository on GitHub.
+#' }
+#' @export
 cm_data <- function (path) {
 
     checkmate::assert_directory_exists (path)

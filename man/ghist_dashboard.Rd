@@ -2,13 +2,14 @@
 % Please edit documentation in R/quarto-dashboard.R
 \name{ghist_dashboard}
 \alias{ghist_dashboard}
-\title{Start quarto dashboard with results of main \link{githist} function.}
+\title{Start quarto dashboard with results of main \link{repo_pkgstats_history}
+function.}
 \usage{
 ghist_dashboard(results, action = "preview")
 }
 \arguments{
-\item{results}{Results of main \link{githist} function applied to one
-package.}
+\item{results}{Results of main \link{repo_pkgstats_history} function applied
+to one package.}
 
 \item{action}{One of "preview", to start and open a live preview of the
 dashboard website, or "render" to render a static version without previewing
@@ -20,5 +21,6 @@ that the site must be served with \code{action = "preview"}, and will not work b
 simply opening this "index.html" file.
 }
 \description{
-Start quarto dashboard with results of main \link{githist} function.
+Start quarto dashboard with results of main \link{repo_pkgstats_history}
+function.
 }
