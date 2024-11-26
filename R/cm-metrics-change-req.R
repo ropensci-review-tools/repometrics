@@ -1,4 +1,5 @@
-#' From \url{https://chaoss.community/kb/metrics-model-collaboration-development-index/},
+#' From
+#' \url{https://chaoss.community/kb/metrics-model-collaboration-development-index/},
 #' the "Code Commit linked with Change Request" (which is not hyperlinked to
 #' anywhere else), is defined as "Percentage of new code commits linked with
 #' change request in last 90 days." The interpretation of "Change Request" is

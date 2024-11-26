@@ -1,6 +1,7 @@
 cm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
 
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "issues")
 
@@ -35,7 +36,8 @@ cm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) {
         user_login = vapply (body, function (i) i$user$login, character (1L)),
         user_id = vapply (body, function (i) i$user$id, integer (1L)),
         labels = vapply (body, function (i) {
-            these_labels <- vapply (i$labels, function (j) j$name, character (1L))
+            these_labels <-
+                vapply (i$labels, function (j) j$name, character (1L))
             paste0 (these_labels, collapse = ", ")
         }, character (1L)),
         state = vapply (body, function (i) i$state, character (1L)),
@@ -52,7 +54,11 @@ cm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) {
             function (i) null2na_char (i$closed_at),
             character (1L)
         ),
-        issue_body = vapply (body, function (i) null2na_char (i$body), character (1L)),
+        issue_body = vapply (
+            body,
+            function (i) null2na_char (i$body),
+            character (1L)
+        ),
         closed_by = vapply (
             body,
             function (i) null2na_char (i$closed_by$login),
@@ -89,9 +95,11 @@ get_issue_reactions <- function (body) {
     return (reaction_counts)
 }
 
-cm_data_issue_comments_from_gh_api_internal <- function (path, n_per_page = 100) {
+cm_data_issue_comments_from_gh_api_internal <- function (path,
+                                                         n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
 
     u_endpoint <-
         gh_rest_api_endpoint (path = path, endpoint = "issues/comments")

@@ -13,9 +13,9 @@ get_gh_token <- function () {
     }
     return (tok)
 }
-# nocov end
 
 add_gh_token_to_req <- function (req) {
+
     if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
         tok <- get_gh_token ()
         headers <- list (Authorization = paste0 ("Bearer ", tok))
@@ -24,6 +24,7 @@ add_gh_token_to_req <- function (req) {
 
     return (req)
 }
+# nocov end
 
 gh_rest_api_endpoint <- function (path = NULL, orgrepo = NULL, endpoint = NULL) {
 
@@ -39,17 +40,6 @@ gh_rest_api_endpoint <- function (path = NULL, orgrepo = NULL, endpoint = NULL) 
     u_base <- "https://api.github.com/repos/"
     u_org_repo <- paste0 (u_base, orgrepo [1], "/", orgrepo [2], "/")
     paste0 (u_org_repo, endpoint)
-}
-
-add_token_to_req <- function (req) {
-
-    if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW"))) {
-        tok <- get_gh_token ()
-        headers <- list (Authorization = paste0 ("Bearer ", tok))
-        req <- httr2::req_headers (req, "Authorization" = headers)
-    }
-
-    return (req)
 }
 
 #' Pagination for Rest API. see

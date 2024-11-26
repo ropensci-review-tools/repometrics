@@ -1,15 +1,21 @@
 #' Extract total CRAN downloads for nominated package over period defined by
 #' `options("repometrics_period")`.
 #'
-#' @param pkg_name Name of package. For packages not on CRAN, the 'cranlogs'
-#' API returns download counts of 0.
+#' @param path Local path to repository.
 #' @param end_date The date up to which download counts are to be aggregated.
+#' @param n_per_page Not used here, but needed so all functions can safely be
+#' called with this parameter.
 #' @return A single integer counting the number of downloads.
 #' @noRd
-cm_metric_cran_downloads <- function (pkg_name, end_date = Sys.Date ()) {
+cm_metric_cran_downloads <- function (path,
+                                      end_date = Sys.Date (),
+                                      n_per_page) {
 
-    checkmate::assert_character (pkg_name, len = 1L)
+    checkmate::assert_directory_exists (path)
     checkmate::assert_date (end_date)
+
+    pkg_name <- pkg_name_from_path (path)
+
     period <- get_repometrics_period ()
     start_date <- as.Date (end_date - period)
     interval <- paste (start_date, sep = ":", end_date)

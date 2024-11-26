@@ -1,14 +1,44 @@
 end_date <- as.Date ("2024-08-01")
 
-test_that ("cm metrics num_commits num_contribs", {
+test_that ("cm metric cran_downloads", {
+
+    mock_cm_data ()
+
+    path <- generate_test_pkg () # has URL of "goodpractice"
+    desc_path <- fs::path (path, "DESCRIPTION")
+    desc <- readLines (desc_path)
+    desc [1] <- "Package: goodpractice"
+    writeLines (desc, desc_path)
+
+    end_date <- as.Date ("2024-01-01")
+    dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
+    expect_type (dl, "integer")
+    expect_length (dl, 1L)
+    expect_equal (dl, 2308)
+
+    fs::dir_delete (path)
+})
+
+test_that ("cm metric has_ci", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
     path <- generate_test_pkg ()
 
-    n <- cm_metric_num_commits (path, end_date = end_date)
-    expect_equal (n, 4L)
+    chk <- repo_has_ci_files (path)
+    expect_length (chk, 0L)
 
-    n <- cm_metric_num_contributors (path, end_date = end_date)
-    expect_equal (n, 1L)
+    d <- fs::dir_create (fs::path (path, ".github", "workflows"))
+    f <- fs::path (d, "workflow.yaml")
+    writeLines ("a", f)
+
+    chk <- repo_has_ci_files (path)
+    expect_length (chk, 1L)
+    expect_equal (chk, "github")
+
+    # Test cli::cli_alert_warning output:
+    expect_snapshot (chk <- cm_metric_has_ci (path))
+    expect_true (chk)
 
     fs::dir_delete (path)
 })
@@ -40,38 +70,28 @@ test_that ("cm metric has CI internal", {
     fs::dir_delete (path)
 })
 
-test_that ("cm metric has_ci", {
-
-    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+test_that ("cm metrics num_commits num_contribs", {
 
     path <- generate_test_pkg ()
 
-    chk <- repo_has_ci_files (path)
-    expect_length (chk, 0L)
+    n <- cm_metric_num_commits (path, end_date = end_date)
+    expect_equal (n, 4L)
 
-    d <- fs::dir_create (fs::path (path, ".github", "workflows"))
-    f <- fs::path (d, "workflow.yaml")
-    writeLines ("a", f)
-
-    chk <- repo_has_ci_files (path)
-    expect_length (chk, 1L)
-    expect_equal (chk, "github")
-
-    # Test cli::cli_alert_warning output:
-    expect_snapshot (chk <- cm_metric_has_ci (path))
-    expect_true (chk)
+    n <- cm_metric_num_contributors (path, end_date = end_date)
+    expect_equal (n, 1L)
 
     fs::dir_delete (path)
 })
 
-test_that ("cm metric cran_downloads", {
+test_that ("cm metrics change req frequency", {
 
-    pkg_name <- "goodpractice"
-    end_date <- as.Date ("2024-01-01")
-    dl <- with_mock_dir ("cran_dl", {
-        cm_metric_cran_downloads (pkg_name = pkg_name, end_date = end_date)
-    })
-    expect_type (dl, "integer")
-    expect_length (dl, 1L)
-    expect_equal (dl, 2308)
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    dat <- cm_metric_change_req (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (dat, "double")
+    expect_length (dat, 1L)
+    expect_equal (dat, 0.)
 })

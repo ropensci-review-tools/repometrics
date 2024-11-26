@@ -110,6 +110,7 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
 cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
 
     or <- org_repo_from_path (path)
     end_cursor <- pr_data <- NULL
@@ -150,8 +151,16 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
         paste0 (p, collapse = ",")
     }, character (1L))
     comments <- lapply (pr_data, function (i) {
-        created_at <- vapply (i$comments$nodes, function (j) j$createdAt, character (1L))
-        author <- vapply (i$comments$nodes, function (j) j$author$login, character (1L))
+        created_at <- vapply (
+            i$comments$nodes,
+            function (j) j$createdAt,
+            character (1L)
+        )
+        author <- vapply (
+            i$comments$nodes,
+            function (j) j$author$login,
+            character (1L)
+        )
         body <- vapply (i$comments$nodes, function (j) j$body, character (1L))
         data.frame (
             author = author,
@@ -160,12 +169,24 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
         )
     })
     closing_issue_refs <- lapply (pr_data, function (i) {
-        vapply (i$closingIssuesReferences$nodes, function (j) j$number, integer (1L))
+        vapply (
+            i$closingIssuesReferences$nodes,
+            function (j) j$number,
+            integer (1L)
+        )
     })
     reviews <- lapply (pr_data, function (i) {
-        login <- vapply (i$reviews$nodes, function (j) j$author$login, character (1L))
+        login <- vapply (
+            i$reviews$nodes,
+            function (j) j$author$login,
+            character (1L)
+        )
         state <- vapply (i$reviews$nodes, function (j) j$state, character (1L))
-        submitted_at <- vapply (i$reviews$nodes, function (j) null2na_char (j$submittedAt), character (1L))
+        submitted_at <- vapply (
+            i$reviews$nodes,
+            function (j) null2na_char (j$submittedAt),
+            character (1L)
+        )
         body <- vapply (i$reviews$nodes, function (j) j$body, character (1L))
         data.frame (
             login = login,
@@ -175,26 +196,55 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
         )
     })
 
+    # A few extra pro-processing ones just to avoid long lines:
+    user_login <- vapply (pr_data, function (i) i$author$login, character (1L))
+    merged_by <- vapply (
+        pr_data,
+        function (i) null2na_char (i$mergedBy$login),
+        character (1L)
+    )
+    merge_commit <- vapply (
+        pr_data,
+        function (i) null2na_char (i$mergeCommit$oid),
+        character (1L)
+    )
+    review_decision <- vapply (
+        pr_data,
+        function (i) null2na_char (i$reviewDecision),
+        character (1L)
+    )
+    closed_at <- vapply (
+        pr_data,
+        function (i) null2na_char (i$closedAt),
+        character (1L)
+    )
+    changed_files <- vapply (pr_data, function (i) i$changedFiles, integer (1L))
+    total_comments <- vapply (
+        pr_data,
+        function (i) i$totalCommentsCount,
+        integer (1L)
+    )
+
     data.frame (
         number = vapply (pr_data, function (i) i$number, integer (1L)),
-        user_login = vapply (pr_data, function (i) i$author$login, character (1L)),
+        user_login = user_login,
         state = vapply (pr_data, function (i) i$state, character (1L)),
         merged = vapply (pr_data, function (i) i$merged, logical (1L)),
-        merged_by = vapply (pr_data, function (i) null2na_char (i$mergedBy$login), character (1L)),
-        merge_commit = vapply (pr_data, function (i) null2na_char (i$mergeCommit$oid), character (1L)),
+        merged_by = merged_by,
+        merge_commit = merge_commit,
         closed = vapply (pr_data, function (i) i$closed, logical (1L)),
         title = vapply (pr_data, function (i) i$title, character (1L)),
-        review_decision = vapply (pr_data, function (i) null2na_char (i$reviewDecision), character (1L)),
+        review_decision = review_decision,
         created_at = vapply (pr_data, function (i) i$createdAt, character (1L)),
-        closed_at = vapply (pr_data, function (i) null2na_char (i$closedAt), character (1L)),
+        closed_at = closed_at,
         updated_at = vapply (pr_data, function (i) i$updatedAt, character (1L)),
         num_commits = num_commits,
         additions = vapply (pr_data, function (i) i$additions, integer (1L)),
         deletions = vapply (pr_data, function (i) i$deletions, integer (1L)),
-        changed_files = vapply (pr_data, function (i) i$changedFiles, integer (1L)),
+        changed_files = changed_files,
         commit_oids = commit_oids,
         closing_issue_refs = I (closing_issue_refs),
-        total_comments = vapply (pr_data, function (i) i$totalCommentsCount, integer (1L)),
+        total_comments = total_comments,
         participants = participants,
         body = vapply (pr_data, function (i) i$body, character (1L)),
         comments = I (comments),

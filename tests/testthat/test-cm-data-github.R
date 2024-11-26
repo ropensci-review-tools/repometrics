@@ -1,76 +1,117 @@
+# These test the individual components of the full data tested in
+# 'test-cm-data.R'. These components are tested here in the order in which they
+# are returned. Components which come directly from git, and not github, are
+# not checked here, and are tested in 'test-cm-data-git.R'.
+#
+#' - [x] "contribs_from_gh_api"
+#' - [x] "contribs_from_log"
+#' - [ ] "dependencies"
+#' - [x] "gh_repo_workflow"
+#' - [ ] "gitlog"
+#' - [x] "issue_comments_from_gh_api"
+#' - [x] "issues_from_gh_api"
+#' - [ ] "libyears"
+#' - [x] "prs_from_gh_api"
+#' - [x] "releases_from_gh_api"
+#' - [x] "repo_from_gh_api"
+
 test_that ("cm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
 
     path <- generate_test_pkg ()
-    ctbs <- with_mock_dir ("gh_api_ctbs", {
-        cm_data_contribs_from_gh_api (path, n_per_page = 2L)
-    })
-
+    ctbs_api <- cm_data_contribs_from_gh_api (path)
+    ctbs_log <- cm_data_contribs_from_log (path)
     fs::dir_delete (path)
 
-    expect_s3_class (ctbs, "data.frame")
-    expect_equal (nrow (ctbs), 2L)
-    expect_equal (ncol (ctbs), 17L)
+    expect_s3_class (ctbs_api, "data.frame")
+    expect_equal (nrow (ctbs_api), 2L)
+    expect_equal (ncol (ctbs_api), 17L)
     nms <- c (
         "login", "ctb_id", "avatar_url", "api_url", "gh_url", "contributions", "name", "company",
         "email", "location", "blog", "bio", "public_repos", "followers", "following", "created_at",
         "updated_at"
     )
-    expect_equal (names (ctbs), nms)
+    expect_equal (names (ctbs_api), nms)
 
     int_index <- c (2, 6, 13:15)
     char_index <- seq_along (nms) [-int_index]
     int_nms <- nms [int_index]
     char_nms <- nms [char_index]
-    for (n in names (ctbs)) {
+    for (n in names (ctbs_api)) {
         type <- ifelse (n %in% char_nms, "character", "integer")
-        expect_type (ctbs [[n]], type)
+        expect_type (ctbs_api [[n]], type)
+    }
+
+    expect_s3_class (ctbs_log, "data.frame")
+    expect_equal (nrow (ctbs_log), 1L)
+    expect_equal (ncol (ctbs_log), 2L)
+    nms <- c ("handle", "email")
+    expect_equal (names (ctbs_log), nms)
+})
+
+# dependencies are in 'test-cm-data-git.R'
+
+test_that ("cm data gh workflow", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    wf <- cm_data_gh_repo_workflow (path)
+    fs::dir_delete (path)
+
+    expect_s3_class (wf, "data.frame")
+    expect_equal (nrow (wf), 2L)
+    expect_equal (ncol (wf), 7L)
+    nms <- c ("name", "id", "sha", "title", "status", "conclusion", "created")
+    expect_equal (names (wf), nms)
+
+    dbls <- c ("id", "created")
+    for (n in names (wf)) {
+        type <- ifelse (n %in% dbls, "double", "character")
+        expect_type (wf [[n]], type)
     }
 })
 
-test_that ("cm data gh repo", {
+# gitlog is in 'test-cm-data.git'
 
+test_that ("cm data gh issue comments", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    repo <- with_mock_dir ("gh_api_repo", {
-        cm_data_repo_from_gh_api (path)
-    })
-
+    cmts <- cm_data_issue_comments_from_gh_api (path)
     fs::dir_delete (path)
 
-    expect_s3_class (repo, "data.frame")
-    expect_equal (nrow (repo), 1L)
-    expect_equal (ncol (repo), 18L)
+    expect_s3_class (cmts, "data.frame")
+    expect_equal (nrow (cmts), 2L)
+    expect_equal (ncol (cmts), 9L)
     nms <- c (
-        "id", "name", "full_name", "owner", "url", "description", "is_fork",
-        "created_at", "updated_at", "homepage", "size", "stargazers_count",
-        "subscribers_count", "language", "forks_count", "open_issues_count",
-        "topics", "default_branch"
+        "issue_url", "issue_number", "comment_url", "comment_id", "user_login",
+        "user_id", "created_at", "updated_a", "issue_body"
     )
-    expect_equal (names (repo), nms)
+    expect_equal (names (cmts), nms)
 
-    int_index <- c (1, 11:13, 15:16)
+    int_index <- c (2, 6)
     char_index <- seq_along (nms) [-int_index]
     int_nms <- nms [int_index]
     char_nms <- nms [char_index]
-    for (n in names (repo)) {
+    for (n in names (cmts)) {
         type <- ifelse (n %in% char_nms, "character", "integer")
-        if (n == "is_fork") {
-            type <- "logical"
+        if (n == "comment_id") {
+            type <- "double"
         }
-        expect_type (repo [[n]], type)
+        expect_type (cmts [[n]], type)
     }
 })
 
 test_that ("cm data gh issues", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    issues <- with_mock_dir ("gh_api_issues", {
-        cm_data_issues_from_gh_api (path, n_per_page = 2L)
-    })
-
+    issues <- cm_data_issues_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (issues, "data.frame")
@@ -99,48 +140,14 @@ test_that ("cm data gh issues", {
     }
 })
 
-test_that ("cm data gh issue comments", {
-
-    Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
-    path <- generate_test_pkg ()
-    cmts <- with_mock_dir ("gh_api_issue_cmts", {
-        cm_data_issue_comments_from_gh_api (path, n_per_page = 2L)
-    })
-
-    fs::dir_delete (path)
-
-    expect_s3_class (cmts, "data.frame")
-    expect_equal (nrow (cmts), 2L)
-    expect_equal (ncol (cmts), 9L)
-    nms <- c (
-        "issue_url", "issue_number", "comment_url", "comment_id", "user_login",
-        "user_id", "created_at", "updated_a", "issue_body"
-    )
-    expect_equal (names (cmts), nms)
-
-    int_index <- c (2, 6)
-    char_index <- seq_along (nms) [-int_index]
-    int_nms <- nms [int_index]
-    char_nms <- nms [char_index]
-    for (n in names (cmts)) {
-        type <- ifelse (n %in% char_nms, "character", "integer")
-        if (n == "comment_id") {
-            type <- "double"
-        }
-        expect_type (cmts [[n]], type)
-    }
-})
+# libyears is in 'test-cm-data.git'
 
 test_that ("cm data gh prs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    prs <- with_mock_dir ("gh_api_prs", {
-        cm_data_prs_from_gh_api (path, n_per_page = 2L)
-    })
-
+    prs <- cm_data_prs_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (prs, "data.frame")
@@ -180,16 +187,13 @@ test_that ("cm data gh prs", {
 test_that ("cm data gh releases", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    releases <- with_mock_dir ("gh_api_releases", {
-        cm_data_releases_from_gh_api (path, n_per_page = 2L)
-    })
-
+    releases <- cm_data_releases_from_gh_api (path, latest_only = TRUE)
     fs::dir_delete (path)
 
     expect_s3_class (releases, "data.frame")
-    expect_equal (nrow (releases), 2L)
+    expect_equal (nrow (releases), 1L)
     expect_equal (ncol (releases), 10L)
     nms <- c (
         "id", "author_login", "author_id", "tag_name", "target_commitish",
@@ -210,5 +214,37 @@ test_that ("cm data gh releases", {
             type <- "character"
         }
         expect_type (releases [[n]], type)
+    }
+})
+
+test_that ("cm data gh repo", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    repo <- cm_data_repo_from_gh_api (path)
+    fs::dir_delete (path)
+
+    expect_s3_class (repo, "data.frame")
+    expect_equal (nrow (repo), 1L)
+    expect_equal (ncol (repo), 18L)
+    nms <- c (
+        "id", "name", "full_name", "owner", "url", "description", "is_fork",
+        "created_at", "updated_at", "homepage", "size", "stargazers_count",
+        "subscribers_count", "language", "forks_count", "open_issues_count",
+        "topics", "default_branch"
+    )
+    expect_equal (names (repo), nms)
+
+    int_index <- c (1, 11:13, 15:16)
+    char_index <- seq_along (nms) [-int_index]
+    int_nms <- nms [int_index]
+    char_nms <- nms [char_index]
+    for (n in names (repo)) {
+        type <- ifelse (n %in% char_nms, "character", "integer")
+        if (n == "is_fork") {
+            type <- "logical"
+        }
+        expect_type (repo [[n]], type)
     }
 })

@@ -2,7 +2,8 @@ cm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date, get_repometrics_period ())
 
-    # Remove any duplicates of either names or emails, but excluding non-entries:
+    # Remove any duplicates of either names or emails, but excluding
+    # non-entries:
     rm_dup_rows <- function (x) {
         x <- gsub ("\\s+", "", x)
         index <- seq_along (x)

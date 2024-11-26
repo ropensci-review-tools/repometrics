@@ -1,17 +1,16 @@
 #' Get the full git log from local repository.
 #'
 #' @param path Local path to repository
-#' @param n_per_page Not used here, but needed so all functions can safely be
-#' called with this parameter.
 #' @noRd
-cm_data_gitlog_internal <- function (path, n_per_page) {
+cm_data_gitlog_internal <- function (path) {
 
     cmt <- git2r::commits (repo = path)
 
     hash <- vapply (cmt, function (i) i$sha, character (1L))
     aut_name <- vapply (cmt, function (i) i$author$name, character (1L))
     aut_email <- vapply (cmt, function (i) i$author$email, character (1L))
-    timestamp <- vapply (cmt, function (i) as.character (i$author$when), character (1L))
+    timestamp <-
+        vapply (cmt, function (i) as.character (i$author$when), character (1L))
     cmt_message <- vapply (cmt, function (i) i$message, character (1L))
     cmt_message <- gsub ("\\n$", "", cmt_message)
 
@@ -29,7 +28,7 @@ cm_data_gitlog_internal <- function (path, n_per_page) {
         function (i) gert::git_diff (ref = i, repo = path)
     )
 
-    files_changed <- lapply (diffs, function (i) i$new)
+    # files_changed <- lapply (diffs, function (i) i$new)
 
     # bench::marking shows this form is quicker than either:
     # `length (grep ("^(\\-|\\+)$", j))` or

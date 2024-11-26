@@ -3,6 +3,7 @@
 #' @noRd
 cm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
 
+    n_per_page <- n_per_page_in_tests (n_per_page)
     or <- org_repo_from_path (path)
 
     checkmate::assert_integer (n_per_page, lower = 1L)
@@ -31,7 +32,11 @@ cm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
         function (i) null2na_char (i$status),
         character (1L)
     )
-    conclusion <- vapply (workflows, function (i) null2na_char (i$conclusion), character (1L))
+    conclusion <- vapply (
+        workflows,
+        function (i) null2na_char (i$conclusion),
+        character (1L)
+    )
     created <- vapply (workflows, function (i) i$created_at, character (1L))
     created <- to_posix (created)
 

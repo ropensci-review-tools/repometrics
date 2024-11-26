@@ -1,10 +1,8 @@
 #' Get contributors from the git log
 #'
 #' @param path Local path to repository
-#' @param n_per_page Not used here, but needed so all functions can safely be
-#' called with this parameter.
 #' @noRd
-cm_data_contribs_from_log <- function (path, n_per_page = 30L) {
+cm_data_contribs_from_log <- function (path) {
 
     log <- cm_data_gitlog (path)
 
@@ -45,6 +43,7 @@ cm_data_contribs_from_log <- function (path, n_per_page = 30L) {
 cm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
 
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "contributors")
 
