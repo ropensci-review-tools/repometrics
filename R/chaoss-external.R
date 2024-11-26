@@ -1,12 +1,3 @@
-has_gh_ci_tests <- function (path) {
-
-    or <- org_repo_from_path (path)
-
-    ci_data <- github_repo_workflow_query (or [1], or [2])
-    h <- gert::git_log (repo = path, max = 1e6)
-    any (ci_data$sha %in% h$commit)
-}
-
 #' The "Ratio of Code Commits linked with Change Requests" CHAOSS metric. This
 #' is defined as, "Percentage of new code commits linked with change requests
 #' in the last 90 days."

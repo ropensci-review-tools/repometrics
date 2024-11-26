@@ -19,6 +19,15 @@ repo_has_ci_files <- function (path) {
     return (nms [which (has_it)])
 }
 
+has_gh_ci_tests <- function (path) {
+
+    or <- org_repo_from_path (path)
+
+    ci_data <- github_repo_workflow_query (or [1], or [2])
+    h <- gert::git_log (repo = path, max = 1e6)
+    any (ci_data$sha %in% h$commit)
+}
+
 cm_metric_has_ci <- function (path) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
