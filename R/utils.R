@@ -56,3 +56,8 @@ filter_git_hist <- function (h, n, step_days) {
 
     return (h)
 }
+
+n_per_page_in_tests <- function (n_per_page) {
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    ifelse (is_test_env, 2L, n_per_page)
+}

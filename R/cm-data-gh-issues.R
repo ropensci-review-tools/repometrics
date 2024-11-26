@@ -1,6 +1,7 @@
 cm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
 
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "issues")
 
@@ -92,6 +93,7 @@ get_issue_reactions <- function (body) {
 cm_data_issue_comments_from_gh_api_internal <- function (path, n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
 
     u_endpoint <-
         gh_rest_api_endpoint (path = path, endpoint = "issues/comments")

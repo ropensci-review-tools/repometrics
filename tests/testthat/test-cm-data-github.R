@@ -21,8 +21,8 @@ test_that ("cm data gh contribs", {
     mock_cm_data ()
 
     path <- generate_test_pkg ()
-    ctbs_api <- cm_data_contribs_from_gh_api (path, n_per_page = 2L)
-    ctbs_log <- cm_data_contribs_from_log (path, n_per_page = 2L)
+    ctbs_api <- cm_data_contribs_from_gh_api (path)
+    ctbs_log <- cm_data_contribs_from_log (path)
     fs::dir_delete (path)
 
     expect_s3_class (ctbs_api, "data.frame")
@@ -58,7 +58,7 @@ test_that ("cm data gh workflow", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
     path <- generate_test_pkg ()
-    wf <- cm_data_gh_repo_workflow (path, n_per_page = 2L)
+    wf <- cm_data_gh_repo_workflow (path)
     fs::dir_delete (path)
 
     expect_s3_class (wf, "data.frame")
@@ -81,7 +81,7 @@ test_that ("cm data gh issue comments", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
     path <- generate_test_pkg ()
-    cmts <- cm_data_issue_comments_from_gh_api (path, n_per_page = 2L)
+    cmts <- cm_data_issue_comments_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (cmts, "data.frame")
@@ -111,7 +111,7 @@ test_that ("cm data gh issues", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
     path <- generate_test_pkg ()
-    issues <- cm_data_issues_from_gh_api (path, n_per_page = 2L)
+    issues <- cm_data_issues_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (issues, "data.frame")
@@ -147,7 +147,7 @@ test_that ("cm data gh prs", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
     path <- generate_test_pkg ()
-    prs <- cm_data_prs_from_gh_api (path, n_per_page = 2L)
+    prs <- cm_data_prs_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (prs, "data.frame")
@@ -189,11 +189,11 @@ test_that ("cm data gh releases", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
     path <- generate_test_pkg ()
-    releases <- cm_data_releases_from_gh_api (path, n_per_page = 2L)
+    releases <- cm_data_releases_from_gh_api (path, latest_only = TRUE)
     fs::dir_delete (path)
 
     expect_s3_class (releases, "data.frame")
-    expect_equal (nrow (releases), 2L)
+    expect_equal (nrow (releases), 1L)
     expect_equal (ncol (releases), 10L)
     nms <- c (
         "id", "author_login", "author_id", "tag_name", "target_commitish",

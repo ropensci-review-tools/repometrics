@@ -1,10 +1,8 @@
 #' Extract package dependencies from "DESCRIPTION" file.
 #'
 #' @param path Local path to repository
-#' @param n_per_page Not used here, but needed so all functions can safely be
-#' called with this parameter.
 #' @noRd
-cm_data_dependencies <- function (path, n_per_page = 30L) {
+cm_data_dependencies <- function (path) {
 
     desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
     checkmate::assert_file_exists (desc_path)
@@ -33,10 +31,8 @@ cm_data_dependencies <- function (path, n_per_page = 30L) {
 #' Extract CHAOSS "libyears" metric
 #'
 #' @param path Local path to repository
-#' @param n_per_page Not used here, but needed so all functions can safely be
-#' called with this parameter.
 #' @noRd
-cm_data_libyears <- function (path, n_per_page = 30L) {
+cm_data_libyears <- function (path) {
 
     deps <- cm_data_dependencies (path)
     cran_db <- data.frame (cran_pkg_db ())

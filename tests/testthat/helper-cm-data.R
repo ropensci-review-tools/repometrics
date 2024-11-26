@@ -5,30 +5,29 @@ mock_cm_data <- function () {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
-    n_per_page <- 2L
     end_date <- as.Date ("2024-01-01")
 
     path <- generate_test_pkg ()
     ctbs <- httptest2::with_mock_dir ("gh_api_ctbs", {
-        cm_data_contribs_from_gh_api (path, n_per_page = n_per_page)
+        cm_data_contribs_from_gh_api (path)
     })
     repo <- httptest2::with_mock_dir ("gh_api_repo", {
         cm_data_repo_from_gh_api (path)
     })
     issues <- httptest2::with_mock_dir ("gh_api_issues", {
-        cm_data_issues_from_gh_api (path, n_per_page = n_per_page)
+        cm_data_issues_from_gh_api (path)
     })
     cmts <- httptest2::with_mock_dir ("gh_api_issue_cmts", {
-        cm_data_issue_comments_from_gh_api (path, n_per_page = n_per_page)
+        cm_data_issue_comments_from_gh_api (path)
     })
     prs <- httptest2::with_mock_dir ("gh_api_prs", {
-        cm_data_prs_from_gh_api (path, n_per_page = n_per_page)
+        cm_data_prs_from_gh_api (path)
     })
     releases <- httptest2::with_mock_dir ("gh_api_releases", {
-        cm_data_releases_from_gh_api (path, n_per_page = n_per_page)
+        cm_data_releases_from_gh_api (path)
     })
     workflow <- httptest2::with_mock_dir ("gh_api_workflow", {
-        cm_data_gh_repo_workflow (path, n_per_page = n_per_page)
+        cm_data_gh_repo_workflow (path)
     })
     libyears <- httptest2::with_mock_dir ("gh_libyears", {
         cm_data_libyears (path)
