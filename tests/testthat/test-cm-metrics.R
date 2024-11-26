@@ -66,6 +66,8 @@ test_that ("cm metric has_ci", {
 
 test_that ("cm metric cran_downloads", {
 
+    mock_cm_data ()
+
     path <- generate_test_pkg () # has URL of "goodpractice"
     desc_path <- fs::path (path, "DESCRIPTION")
     desc <- readLines (desc_path)
@@ -73,9 +75,7 @@ test_that ("cm metric cran_downloads", {
     writeLines (desc, desc_path)
 
     end_date <- as.Date ("2024-01-01")
-    dl <- with_mock_dir ("cran_dl", {
-        cm_metric_cran_downloads (path = path, end_date = end_date)
-    })
+    dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
     expect_type (dl, "integer")
     expect_length (dl, 1L)
     expect_equal (dl, 2308)

@@ -51,10 +51,10 @@ skip_on_os ("mac")
 
 test_that ("cm data libyears", {
 
+    mock_cm_data ()
+
     path <- generate_test_pkg ()
-    libyears <- with_mock_dir ("gh_libyears", {
-        cm_data_libyears (path)
-    })
+    libyears <- cm_data_libyears (path)
     fs::dir_delete (path)
 
     expect_type (libyears, "double")

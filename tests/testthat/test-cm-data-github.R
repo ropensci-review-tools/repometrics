@@ -1,12 +1,10 @@
 test_that ("cm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
 
     path <- generate_test_pkg ()
-    ctbs <- with_mock_dir ("gh_api_ctbs", {
-        cm_data_contribs_from_gh_api (path, n_per_page = 2L)
-    })
-
+    ctbs <- cm_data_contribs_from_gh_api (path, n_per_page = 2L)
     fs::dir_delete (path)
 
     expect_s3_class (ctbs, "data.frame")
@@ -31,11 +29,10 @@ test_that ("cm data gh contribs", {
 
 test_that ("cm data gh repo", {
 
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    repo <- with_mock_dir ("gh_api_repo", {
-        cm_data_repo_from_gh_api (path)
-    })
-
+    repo <- cm_data_repo_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (repo, "data.frame")
@@ -65,12 +62,9 @@ test_that ("cm data gh repo", {
 test_that ("cm data gh issues", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    issues <- with_mock_dir ("gh_api_issues", {
-        cm_data_issues_from_gh_api (path, n_per_page = 2L)
-    })
-
+    issues <- cm_data_issues_from_gh_api (path, n_per_page = 2L)
     fs::dir_delete (path)
 
     expect_s3_class (issues, "data.frame")
@@ -102,12 +96,9 @@ test_that ("cm data gh issues", {
 test_that ("cm data gh issue comments", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    cmts <- with_mock_dir ("gh_api_issue_cmts", {
-        cm_data_issue_comments_from_gh_api (path, n_per_page = 2L)
-    })
-
+    cmts <- cm_data_issue_comments_from_gh_api (path, n_per_page = 2L)
     fs::dir_delete (path)
 
     expect_s3_class (cmts, "data.frame")
@@ -135,12 +126,9 @@ test_that ("cm data gh issue comments", {
 test_that ("cm data gh prs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    prs <- with_mock_dir ("gh_api_prs", {
-        cm_data_prs_from_gh_api (path, n_per_page = 2L)
-    })
-
+    prs <- cm_data_prs_from_gh_api (path, n_per_page = 2L)
     fs::dir_delete (path)
 
     expect_s3_class (prs, "data.frame")
@@ -180,12 +168,9 @@ test_that ("cm data gh prs", {
 test_that ("cm data gh releases", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
+    mock_cm_data ()
     path <- generate_test_pkg ()
-    releases <- with_mock_dir ("gh_api_releases", {
-        cm_data_releases_from_gh_api (path, n_per_page = 2L)
-    })
-
+    releases <- cm_data_releases_from_gh_api (path, n_per_page = 2L)
     fs::dir_delete (path)
 
     expect_s3_class (releases, "data.frame")
