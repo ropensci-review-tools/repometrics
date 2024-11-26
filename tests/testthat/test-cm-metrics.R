@@ -1,13 +1,13 @@
 end_date <- as.Date ("2024-08-01")
 
-test_that ("chaoss internal num_commits", {
+test_that ("cm metrics num_commits num_contribs", {
 
     path <- generate_test_pkg ()
 
     n <- cm_metrics_num_commits (path, end_date = end_date)
     expect_equal (n, 4L)
 
-    n <- chaoss_internal_num_contributors (path, end_date = end_date)
+    n <- cm_metrics_num_contributors (path, end_date = end_date)
     expect_equal (n, 1L)
 
     fs::dir_delete (path)
