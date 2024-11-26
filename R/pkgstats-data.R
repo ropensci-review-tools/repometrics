@@ -35,21 +35,39 @@ repo_pkgstats_history <- function (path,
 
     num_cores <- set_num_cores (num_cores)
 
-    h <- gert::git_log (repo = path, max = 1e6)
-    h <- filter_git_hist (h, step_days)
+    log <- cm_data_gitlog (path)
+    log <- filter_git_log (log, step_days)
 
     if (num_cores == 1L) {
 
-        res <- extract_pkgstats_data_single (h, path)
+        res <- extract_pkgstats_data_single (log, path)
 
     } else {
 
-        res <- extract_pkgstats_data_multi (h, path, num_cores)
+        res <- extract_pkgstats_data_multi (log, path, num_cores)
 
     }
 
     collate_pkgstats (res)
 }
+
+filter_git_log <- function (log, step_days) {
+
+    if (step_days >= 1L) {
+        log$date <- as.Date (log$timestamp)
+        log <- dplyr::group_by (log, date) |>
+            dplyr::filter (dplyr::row_number () == 1L)
+        if (step_days > 1L) {
+            index <- which (-diff (log$date) < step_days)
+            if (length (index) > 0L) {
+                log <- log [-(index), ]
+            }
+        }
+    }
+
+    return (log)
+}
+
 
 extract_pkgstats_data_single <- function (log, path) {
 
@@ -62,8 +80,8 @@ extract_pkgstats_data_single <- function (log, path) {
     }
 
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-        g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
-        run_one_pkgstats (path = path_cp, pkg_date = log$time [i])
+        g <- gert::git_reset_hard (ref = log$hash [i], repo = path_cp)
+        run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
     })
 
     if (clean_after) {
@@ -83,8 +101,8 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
     )
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
-        g <- gert::git_reset_hard (ref = log$commit [i], repo = path_cp)
-        s <- run_one_pkgstats (path = path_cp, pkg_date = log$time [i])
+        g <- gert::git_reset_hard (ref = log$hash [i], repo = path_cp)
+        s <- run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
         fs::dir_delete (path_cp)
         return (s)
     }, cl = cl)

@@ -38,22 +38,6 @@ to_posix <- function (x) {
     as.POSIXct (x, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")
 }
 
-filter_git_hist <- function (h, step_days) {
-    if (step_days >= 1L) {
-        h$date <- as.Date (h$time)
-        h <- dplyr::group_by (h, date) |>
-            dplyr::filter (dplyr::row_number () == 1L)
-        if (step_days > 1L) {
-            index <- which (-diff (h$date) < step_days)
-            if (length (index) > 0L) {
-                h <- h [-(index), ]
-            }
-        }
-    }
-
-    return (h)
-}
-
 n_per_page_in_tests <- function (n_per_page) {
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     ifelse (is_test_env, 2L, n_per_page)
