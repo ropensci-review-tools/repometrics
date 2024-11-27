@@ -34,3 +34,30 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
 
     return (ret)
 }
+
+cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
+
+    issues <- cm_data_issues_from_gh_api (path)
+    index <- grep ("bug|defect|fix", issues$label, ignore.case = TRUE)
+    index <- index [which (!grepl ("wontfix", issues$label [index]))]
+    bugs <- issues [index, ]
+    bugs <- bugs [grep ("issues", bugs$url), ]
+
+    ret <- c (mean = NA_real_, median = NA_real_)
+    if (nrow (bugs) == 0L) {
+        return (ret)
+    }
+
+    bugs$created_at <- as.Date (bugs$created_at)
+    bugs$closed_at <- as.Date (bugs$closed_at)
+    bugs$resolution_dur <- difftime (bugs$closed_at, bugs$created_at, units = "days")
+    bugs$resolution_dur <- as.numeric (bugs$resolution_dur)
+    start_date <- end_date - get_repometrics_period ()
+    index <- which (bugs$created_at >= start_date & bugs$closed_at <= end_date)
+    bugs <- bugs [index, ]
+
+    return (c (
+        mean = ifelse (nrow (bugs) == 0L, NA_real_, mean (bugs$resolution_dur)),
+        median = stats::median (bugs$resolution_dur)
+    ))
+}
