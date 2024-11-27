@@ -14,6 +14,9 @@ mock_cm_data <- function () {
     repo <- httptest2::with_mock_dir ("gh_api_repo", {
         cm_data_repo_from_gh_api (path)
     })
+    forks <- httptest2::with_mock_dir ("gh_api_forks", {
+        cm_data_repo_forks (path)
+    })
     issues <- httptest2::with_mock_dir ("gh_api_issues", {
         cm_data_issues_from_gh_api (path)
     })

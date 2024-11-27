@@ -1,0 +1,24 @@
+{
+    "data": {
+        "repository": {
+            "forks": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpHOBDjiGQ=="
+                },
+                "nodes": [
+                    {
+                        "createdAt": "2016-08-17T17:52:57Z",
+                        "nameWithOwner": "richelbilderbeek/goodpractice",
+                        "url": "https://github.com/richelbilderbeek/goodpractice"
+                    },
+                    {
+                        "createdAt": "2016-10-13T18:37:09Z",
+                        "nameWithOwner": "jlehtoma/goodpractice",
+                        "url": "https://github.com/jlehtoma/goodpractice"
+                    }
+                ]
+            }
+        }
+    }
+}
