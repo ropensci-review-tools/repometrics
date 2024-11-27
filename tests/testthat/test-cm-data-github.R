@@ -284,3 +284,20 @@ test_that ("cm data gh stars", {
     expect_type (stars$login, "character")
     expect_type (stars$starred_at, "double")
 })
+
+test_that ("cm data main contributors", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    end_date <- as.Date ("2024-08-01")
+
+    ctbs_main_recent <- main_contributors (path, end_date = end_date, period = 365)
+    ctbs_main_all <- main_contributors (path, end_date = end_date, period = NULL)
+    expect_type (ctbs_main_recent, "character")
+    expect_type (ctbs_main_all, "character")
+
+    fs::dir_delete (path)
+
+})
