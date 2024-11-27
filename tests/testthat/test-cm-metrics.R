@@ -130,3 +130,16 @@ test_that ("cm metrics pr-reviews", {
     )
     expect_equal (names (revs), nms)
 })
+
+test_that ("cm metrics num forks", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    forks <- cm_metric_num_forks (path)
+    fs::dir_delete (path)
+
+    expect_type (forks, "integer")
+    expect_length (forks, 1L)
+    expect_true (forks > 10L)
+})
