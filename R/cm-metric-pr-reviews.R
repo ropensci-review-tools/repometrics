@@ -91,6 +91,35 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 
-    dat <- cm_metric_pr_reviews (path, end_date = end_date)
-    return (dat$approval_duration)
+    prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
+
+    prs$created_at <- as.Date (prs$created_at)
+    prs$closed_at <- as.Date (prs$closed_at)
+
+    index_approved <- which (prs$review_decision == "APPROVED")
+
+    cycle_dur <- vapply (prs$reviews, function (i) {
+        dates <- as.Date (i$submitted_at)
+        ret <- NA_real_
+        if (length (dates) > 1L) {
+            dt <- diff (dates, units = "days")
+            ret <- mean (as.integer (dt))
+        }
+        return (ret)
+    }, numeric (1L))
+    cycle_dur <- as.numeric (cycle_dur)
+    cycle_dur_mn <- mean (cycle_dur [index_approved], na.rm = TRUE)
+    cycle_dur_md <- stats::median (cycle_dur [index_approved], na.rm = TRUE)
+
+    review_dur <- difftime (prs$closed_at, prs$created_at, units = "days")
+    review_dur <- as.numeric (review_dur)
+    review_dur_mn <- mean (review_dur [index_approved], na.rm = TRUE)
+    review_dur_md <- stats::median (review_dur [index_approved], na.rm = TRUE)
+
+    c (
+        cycle_dur_mn = cycle_dur_mn,
+        cycle_dur_md = cycle_dur_md,
+        review_dur_mn = review_dur_mn,
+        review_dur_md = review_dur_md
+    )
 }

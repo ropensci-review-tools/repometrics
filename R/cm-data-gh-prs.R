@@ -43,6 +43,7 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
                             author {
                                 login
                             }
+                            createdAt
                             submittedAt
                             state
                             body
@@ -182,16 +183,37 @@ cm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
             character (1L)
         )
         state <- vapply (i$reviews$nodes, function (j) j$state, character (1L))
+        created_at <- vapply (
+            i$reviews$nodes,
+            function (j) null2na_char (j$createdAt),
+            character (1L)
+        )
         submitted_at <- vapply (
             i$reviews$nodes,
             function (j) null2na_char (j$submittedAt),
             character (1L)
         )
         body <- vapply (i$reviews$nodes, function (j) j$body, character (1L))
+
+        num_comments <- i$totalCommentsCount
+
+        lens <- c (length (login), length (state), length (created_at), length (submitted_at))
+        has_content <- any (lens > 0L) | num_comments > 0L
+
+        if (has_content) {
+            login <- null2na_char (login)
+            state <- null2na_char (state)
+            submitted_at <- null2na_char (submitted_at)
+            body <- null2na_char (body)
+        } else {
+            num_comments <- integer (0L)
+        }
+
         data.frame (
             login = login,
             state = state,
             submitted_at = submitted_at,
+            num_comments = num_comments,
             body = body
         )
     })
