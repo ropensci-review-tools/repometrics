@@ -95,3 +95,16 @@ test_that ("cm metrics change req frequency", {
     expect_length (dat, 1L)
     expect_equal (dat, 0.)
 })
+
+test_that ("cm metrics issues-to-prs", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    x <- cm_metric_issues_to_prs (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (x, "double")
+    expect_length (x, 1L)
+    expect_true (x > 0)
+})
