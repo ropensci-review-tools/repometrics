@@ -124,3 +124,33 @@ user_from_gh_api <- function (user) {
         updated_at = body$updated_at
     )
 }
+
+main_contributors <- function (path, end_date = Sys.Date (), threshold = 0.9, period = NULL) {
+
+    if (!is.null (period)) {
+        checkmate::assert_integerish (period, min = 1L)
+        log <- git_log_in_period (path, end_date = end_date, period = period)
+    } else {
+        log <- cm_data_gitlog (path)
+    }
+    contribs <- cm_data_contribs_from_gh_api (path)
+
+    index <- match (log$aut_email, contribs$email)
+    log$login <- contribs$login [index]
+    index <- which (is.na (log$login))
+    index2 <- match (tolower (log$aut_name), tolower (contribs$name)) [index]
+    log$login [index] <- contribs$login [index2] [index]
+
+    log_contribs <- dplyr::filter (log, !is.na (login)) |>
+        dplyr::group_by (login) |>
+        dplyr::summarise (n = dplyr::n ()) |>
+        dplyr::arrange (dplyr::desc (n)) |>
+        dplyr::mutate (sum = cumsum (n) / sum (n))
+
+    index <- which (log_contribs$sum <= threshold)
+    # Then include the next entry as well, if it exists, because for example
+    # with only two entries the first may be skipped if it's below the threshold.
+    index <- c (index, length (index) + 1L)
+
+    return (log_contribs$login [index])
+}
