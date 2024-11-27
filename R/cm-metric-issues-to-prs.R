@@ -1,10 +1,5 @@
 cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
 
-    log <- git_log_in_period (path, end_date, get_repometrics_period ())
-    if (nrow (log) == 0) {
-        return (0)
-    }
-
     prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
     issues <- get_issues_in_period (path, end_date)
 
