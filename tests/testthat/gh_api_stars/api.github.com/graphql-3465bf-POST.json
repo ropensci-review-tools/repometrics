@@ -1,0 +1,26 @@
+{
+    "data": {
+        "repository": {
+            "stargazers": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAxNi0wMi0wMlQwOToxODoxOSswMTowMM4DFLwY"
+                },
+                "edges": [
+                    {
+                        "starredAt": "2016-02-01T10:52:19Z",
+                        "node": {
+                            "login": "Pakillo"
+                        }
+                    },
+                    {
+                        "starredAt": "2016-02-02T08:18:19Z",
+                        "node": {
+                            "login": "uribo"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
