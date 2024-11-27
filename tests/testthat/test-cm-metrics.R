@@ -164,3 +164,15 @@ test_that ("cm metrics code change lines", {
     }
     expect_true (x2 > x1)
 })
+
+test_that ("cm metrics review duration", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    revs <- cm_metric_pr_review_duration (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (revs, "double")
+    expect_length (revs, 1L)
+})

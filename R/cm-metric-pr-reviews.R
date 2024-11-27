@@ -40,7 +40,7 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     }
 
     mean_to_na <- function (x) {
-        ifelse (length (x) == 0L, NA, mean (x))
+        ifelse (length (x) == 0L, NA_real_, mean (x))
     }
 
     pr_duration <- difftime (prs$closed_at, prs$created_at, units = "days")
@@ -87,4 +87,10 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     )
 
     return (ret)
+}
+
+cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
+
+    dat <- cm_metric_pr_reviews (path, end_date = end_date)
+    return (dat$approval_duration)
 }
