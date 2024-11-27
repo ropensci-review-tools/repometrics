@@ -145,3 +145,22 @@ test_that ("cm metrics num forks", {
     expect_equal (names (forks), c ("num_in_period", "num_total"))
     expect_true (forks [["num_total"]] > 0)
 })
+
+test_that ("cm metrics code change lines", {
+
+    path <- generate_test_pkg ()
+    x1 <- cm_metric_code_change_lines (path, end_date = end_date)
+    x2 <- cm_metric_code_change_lines (
+        path,
+        end_date = end_date,
+        exclude_whitespace = FALSE
+    )
+    fs::dir_delete (path)
+
+    for (i in c (x1, x2)) {
+        expect_type (i, "integer")
+        expect_length (i, 1L)
+        expect_true (i > 0)
+    }
+    expect_true (x2 > x1)
+})
