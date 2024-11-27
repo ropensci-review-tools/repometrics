@@ -9,12 +9,13 @@ test_that ("cm data full", {
     fs::dir_delete (path)
 
     expect_type (dat, "list")
-    expect_length (dat, 12L)
+    expect_length (dat, 13L)
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
         "gh_repo_workflow", "gitlog", "issue_comments_from_gh_api",
         "issues_from_gh_api", "libyears", "prs_from_gh_api",
-        "releases_from_gh_api", "repo_forks", "repo_from_gh_api"
+        "releases_from_gh_api", "repo_forks", "repo_from_gh_api",
+        "repo_stargazers"
     )
     expect_equal (names (dat), nms)
 

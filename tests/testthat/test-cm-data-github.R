@@ -248,3 +248,39 @@ test_that ("cm data gh repo", {
         expect_type (repo [[n]], type)
     }
 })
+
+test_that ("cm data gh forks", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    forks <- cm_data_repo_forks (path)
+    fs::dir_delete (path)
+
+    expect_s3_class (forks, "data.frame")
+    expect_equal (nrow (forks), 2L)
+    expect_equal (ncol (forks), 2L)
+    nms <- c ("org_repo", "created")
+    expect_equal (names (forks), nms)
+
+    expect_type (forks$org_repo, "character")
+    expect_type (forks$created, "double")
+})
+
+test_that ("cm data gh stars", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    stars <- cm_data_repo_stargazers (path)
+    fs::dir_delete (path)
+
+    expect_s3_class (stars, "data.frame")
+    expect_equal (nrow (stars), 2L)
+    expect_equal (ncol (stars), 2L)
+    nms <- c ("login", "starred_at")
+    expect_equal (names (stars), nms)
+
+    expect_type (stars$login, "character")
+    expect_type (stars$starred_at, "double")
+})
