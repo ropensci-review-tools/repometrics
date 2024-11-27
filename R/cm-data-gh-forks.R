@@ -29,7 +29,7 @@ gh_forks_qry <- function (org = "ropensci-review-tools",
     return (q)
 }
 
-cm_data_repo_forks <- function (path, n_per_page = 100L) {
+cm_data_repo_forks_internal <- function (path, n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -65,3 +65,4 @@ cm_data_repo_forks <- function (path, n_per_page = 100L) {
         created = as.Date (created)
     )
 }
+cm_data_repo_forks <- memoise::memoise (cm_data_repo_forks_internal)
