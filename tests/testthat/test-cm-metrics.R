@@ -194,3 +194,18 @@ test_that ("cm metrics review response time", {
     nms <- c ("mean", "median")
     expect_equal (names (res), nms)
 })
+
+test_that ("cm metrics defect resolution duration", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    res <- cm_metric_defect_resolution_dur (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 2L)
+    expect_named (res)
+    nms <- c ("mean", "median")
+    expect_equal (names (res), nms)
+})
