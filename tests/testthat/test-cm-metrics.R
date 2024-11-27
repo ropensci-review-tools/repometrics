@@ -174,5 +174,8 @@ test_that ("cm metrics review duration", {
     fs::dir_delete (path)
 
     expect_type (revs, "double")
-    expect_length (revs, 1L)
+    expect_length (revs, 4L)
+    expect_named (revs)
+    nms <- c ("cycle_dur_mn", "cycle_dur_md", "review_dur_mn", "review_dur_md")
+    expect_equal (names (revs), nms)
 })
