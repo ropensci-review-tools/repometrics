@@ -108,3 +108,25 @@ test_that ("cm metrics issues-to-prs", {
     expect_length (x, 1L)
     expect_true (x > 0)
 })
+
+test_that ("cm metrics pr-reviews", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    revs <- cm_metric_pr_reviews (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_s3_class (revs, "data.frame")
+    expect_equal (nrow (revs), 1L)
+    expect_equal (ncol (revs), 12L)
+    nms <- c (
+        "approved_ratio", "rejected_ratio", "approval_duration",
+        "n_comments_per_approved", "n_comments_per_rejected",
+        "n_comments_per_other", "n_commenters_per_approved",
+        "n_commenters_per_rejected", "n_commenters_per_other",
+        "n_iterations_per_approved", "n_iterations_per_rejected",
+        "n_iterations_per_other"
+    )
+    expect_equal (names (revs), nms)
+})

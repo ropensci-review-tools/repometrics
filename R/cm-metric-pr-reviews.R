@@ -33,15 +33,19 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     index_other <- which (prs$review_decision != "APPROVED" & prs$merged)
     index_open <- which (!prs$merged)
 
-    approved_ratio <- length (index_approved) / nrow (prs)
-    rejected_ratio <- length (index_rejected) / nrow (prs)
-    pr_duration <- difftime (prs$closed_at, prs$created_at, units = "days")
-    pr_duration <- as.integer (pr_duration)
-    approval_duration <- mean (pr_duration [index_approved])
+    approved_ratio <- rejected_ratio <- 0
+    if (nrow (prs) > 0) {
+        approved_ratio <- length (index_approved) / nrow (prs)
+        rejected_ratio <- length (index_rejected) / nrow (prs)
+    }
 
     mean_to_na <- function (x) {
         ifelse (length (x) == 0L, NA, mean (x))
     }
+
+    pr_duration <- difftime (prs$closed_at, prs$created_at, units = "days")
+    pr_duration <- as.integer (pr_duration)
+    approval_duration <- mean_to_na (pr_duration [index_approved])
 
     n_comments <- prs$total_comments
     n_comments_per_approved <- mean_to_na (n_comments [index_approved])
