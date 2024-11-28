@@ -1,6 +1,6 @@
 end_date <- as.Date ("2024-08-01")
 
-test_that ("cm metric cran_downloads", {
+test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
 
     mock_cm_data ()
 
@@ -19,7 +19,7 @@ test_that ("cm metric cran_downloads", {
     fs::dir_delete (path)
 })
 
-test_that ("cm metric has_ci", {
+test_that ("cm metric has_ci", { # R/cm-metric-has-ci.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
@@ -43,11 +43,12 @@ test_that ("cm metric has_ci", {
     fs::dir_delete (path)
 })
 
-test_that ("cm metric has CI internal", {
+test_that ("cm metric has CI internal", { # R/cm-metric-has-ci.R
 
     path <- generate_test_pkg ()
     has_ci <- repo_has_ci_files (path)
     # R-universe includes on CI file, so this test fails there:
+    # https://github.com/r-universe/workflows/blob/v1/.github/workflows/build.yml#L11
     on_r_univ <- nzchar (Sys.getenv ("MY_UNIVERSE"))
     if (!on_r_univ) {
         expect_length (has_ci, 0L) # No CI files
@@ -75,6 +76,7 @@ test_that ("cm metric has CI internal", {
 })
 
 test_that ("cm metrics num_commits num_contribs", {
+    # R/cm-metrics-num-ctb.R and R/cm-metrics-num-commits.R
 
     path <- generate_test_pkg ()
 
@@ -87,7 +89,7 @@ test_that ("cm metrics num_commits num_contribs", {
     fs::dir_delete (path)
 })
 
-test_that ("cm metrics change req frequency", {
+test_that ("cm metric change req frequency", { # R/cm-metrics-change-req.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -100,7 +102,7 @@ test_that ("cm metrics change req frequency", {
     expect_equal (dat, 0.)
 })
 
-test_that ("cm metrics issues-to-prs", {
+test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -113,7 +115,7 @@ test_that ("cm metrics issues-to-prs", {
     expect_true (x > 0)
 })
 
-test_that ("cm metrics pr-reviews", {
+test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -135,7 +137,7 @@ test_that ("cm metrics pr-reviews", {
     expect_equal (names (revs), nms)
 })
 
-test_that ("cm metrics num forks", {
+test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -150,7 +152,7 @@ test_that ("cm metrics num forks", {
     expect_true (forks [["num_total"]] > 0)
 })
 
-test_that ("cm metrics code change lines", {
+test_that ("cm metric code change lines", { # R/cm-metrics-code-change.R
 
     path <- generate_test_pkg ()
     x1 <- cm_metric_code_change_lines (path, end_date = end_date)
@@ -169,7 +171,7 @@ test_that ("cm metrics code change lines", {
     expect_true (x2 > x1)
 })
 
-test_that ("cm metrics review duration", {
+test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -184,7 +186,7 @@ test_that ("cm metrics review duration", {
     expect_equal (names (revs), nms)
 })
 
-test_that ("cm metrics review response time", {
+test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -199,12 +201,47 @@ test_that ("cm metrics review response time", {
     expect_equal (names (res), nms)
 })
 
-test_that ("cm metrics defect resolution duration", {
+test_that ("cm metric defect resolution duration", {
+    # R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
     path <- generate_test_pkg ()
     res <- cm_metric_defect_resolution_dur (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 2L)
+    expect_named (res)
+    nms <- c ("mean", "median")
+    expect_equal (names (res), nms)
+})
+
+test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
+
+    end_date <- as.Date ("2024-12-01")
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    res <- cm_metric_label_inclusivity (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 3L)
+    expect_named (res)
+    nms <- c (
+        "prop_labelled", "prop_labelled_friendly", "prop_friendly_overall"
+    )
+    expect_equal (names (res), nms)
+})
+
+test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
+
+    end_date <- as.Date ("2024-12-01")
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    res <- cm_metric_time_to_close (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (res, "double")
