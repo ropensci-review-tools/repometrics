@@ -41,9 +41,8 @@ test_that ("cm data libyears", {
     libyears <- cm_data_libyears (path)
     fs::dir_delete (path)
 
-    expect_type (libyears, "double")
-    expect_length (libyears, 2L)
-    expect_named (libyears)
-    expect_equal (names (libyears), c ("mean", "median"))
-    expect_true (all (libyears > 0))
+    expect_s3_class (libyears, "data.frame")
+    expect_equal (nrow (libyears), 1L)
+    nms <- c ("name", "type", "version", "cran_version", "published", "libyears")
+    expect_equal (names (libyears), nms)
 })

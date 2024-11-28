@@ -286,3 +286,20 @@ test_that ("cm metric popularity", { # R/cm-metric-popularity.R
     nms <- c ("revdeps", "contribs", "forks", "stars")
     expect_equal (names (res), nms)
 })
+
+test_that ("cm metric libyears", { # R/cm-metric-libyears.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_libyears (path)
+
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 2L)
+    expect_named (res)
+    expect_equal (names (res), c ("mean", "median"))
+    expect_true (all (res > 0))
+})

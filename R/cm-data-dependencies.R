@@ -48,7 +48,7 @@ cm_data_dependencies_downstream <- function (path) {
     return (revdeps)
 }
 
-#' Extract CHAOSS "libyears" metric
+#' Data for CHAOSS "libyears" metric
 #'
 #' @param path Local path to repository
 #' @noRd
@@ -65,9 +65,10 @@ cm_data_libyears <- function (path) {
     rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
 
     dt <- difftime (deps$published, rel_date, units = "days")
-    dt <- as.numeric (dt) / 365.25 # In years
+    deps$libyears <- as.numeric (dt) / 365.25 # In years
 
-    c (mean = mean (dt), median = stats::median (dt))
+    return (deps)
+
 }
 
 cran_pkg_db <- memoise::memoise (tools::CRAN_package_db)
