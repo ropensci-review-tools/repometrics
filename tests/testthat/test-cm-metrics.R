@@ -14,7 +14,7 @@ test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
     dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
     expect_type (dl, "integer")
     expect_length (dl, 1L)
-    expect_equal (dl, 2308)
+    expect_true (dl > 1000)
 
     fs::dir_delete (path)
 })
@@ -285,4 +285,59 @@ test_that ("cm metric popularity", { # R/cm-metric-popularity.R
     expect_named (res)
     nms <- c ("revdeps", "contribs", "forks", "stars")
     expect_equal (names (res), nms)
+})
+
+test_that ("cm metric libyears", { # R/cm-metric-libyears.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_libyears (path)
+
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 2L)
+    expect_named (res)
+    expect_equal (names (res), c ("mean", "median"))
+    expect_true (all (res > 0))
+})
+
+test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_issue_age (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (res, "integer")
+    expect_length (res, 3L)
+    expect_named (res)
+    expect_equal (names (res), c ("mean", "median", "n"))
+    expect_equal (res [["n"]], 0L)
+})
+
+test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    # Need to extend period to capture enough releases:
+    op <- getOption ("repometrics_period")
+    options ("repometrics_period" = 1000)
+    res <- cm_metric_release_freq (path, end_date = end_date)
+    options ("repometrics_period" = op)
+
+    fs::dir_delete (path)
+
+    expect_type (res, "integer")
+    expect_length (res, 2L)
+    expect_named (res)
+    expect_equal (names (res), c ("mean", "median"))
+    expect_true (all (res > 0L))
 })

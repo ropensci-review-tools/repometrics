@@ -128,3 +128,30 @@ cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
 
     length (index_closed) / length (index_open)
 }
+
+cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
+
+    # suppress no visible binding notes:
+    created_at <- closed_at <- NULL
+
+    start_date <- end_date - get_repometrics_period ()
+
+    issues <- cm_data_issues_from_gh_api (path) |>
+        dplyr::mutate (
+            created_at = as.Date (created_at), closed_at = as.Date (closed_at)
+        ) |>
+        dplyr::filter (created_at < end_date) |>
+        dplyr::filter (is.na (closed_at) |
+            (closed_at >= start_date & closed_at <= end_date))
+    # using mutate mucks up Date class:
+    issues$closed_at [which (is.na (issues$closed_at))] <- end_date
+
+    dt <- difftime (issues$closed_at, issues$created_at, units = "days") |>
+        as.integer ()
+
+    c (
+        mean = as.integer (mean (dt)),
+        median = as.integer (stats::median (dt)),
+        n = length (dt)
+    )
+}
