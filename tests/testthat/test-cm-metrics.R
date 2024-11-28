@@ -88,7 +88,7 @@ test_that ("cm metrics num_commits num_contribs", {
     fs::dir_delete (path)
 })
 
-test_that ("cm metrics change req frequency", {
+test_that ("cm metric change req frequency", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -101,7 +101,7 @@ test_that ("cm metrics change req frequency", {
     expect_equal (dat, 0.)
 })
 
-test_that ("cm metrics issues-to-prs", {
+test_that ("cm metric issues-to-prs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -114,7 +114,7 @@ test_that ("cm metrics issues-to-prs", {
     expect_true (x > 0)
 })
 
-test_that ("cm metrics pr-reviews", {
+test_that ("cm metric pr-reviews", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -136,7 +136,7 @@ test_that ("cm metrics pr-reviews", {
     expect_equal (names (revs), nms)
 })
 
-test_that ("cm metrics num forks", {
+test_that ("cm metric num forks", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -151,7 +151,7 @@ test_that ("cm metrics num forks", {
     expect_true (forks [["num_total"]] > 0)
 })
 
-test_that ("cm metrics code change lines", {
+test_that ("cm metric code change lines", {
 
     path <- generate_test_pkg ()
     x1 <- cm_metric_code_change_lines (path, end_date = end_date)
@@ -170,7 +170,7 @@ test_that ("cm metrics code change lines", {
     expect_true (x2 > x1)
 })
 
-test_that ("cm metrics review duration", {
+test_that ("cm metric review duration", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -185,7 +185,7 @@ test_that ("cm metrics review duration", {
     expect_equal (names (revs), nms)
 })
 
-test_that ("cm metrics review response time", {
+test_that ("cm metric review response time", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -200,7 +200,7 @@ test_that ("cm metrics review response time", {
     expect_equal (names (res), nms)
 })
 
-test_that ("cm metrics defect resolution duration", {
+test_that ("cm metric defect resolution duration", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     mock_cm_data ()
@@ -212,5 +212,23 @@ test_that ("cm metrics defect resolution duration", {
     expect_length (res, 2L)
     expect_named (res)
     nms <- c ("mean", "median")
+    expect_equal (names (res), nms)
+})
+
+test_that ("cm metric label inclusivity", {
+
+    end_date <- as.Date ("2024-12-01")
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    res <- cm_metric_label_inclusivity (path, end_date = end_date)
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 3L)
+    expect_named (res)
+    nms <- c (
+        "prop_labelled", "prop_labelled_friendly", "prop_friendly_overall"
+    )
     expect_equal (names (res), nms)
 })
