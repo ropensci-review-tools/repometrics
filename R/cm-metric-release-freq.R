@@ -1,5 +1,8 @@
 cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
 
+    # suppress no visible binding notes:
+    published_at <- NULL
+
     start_date <- end_date - get_repometrics_period ()
 
     releases <- cm_data_releases_from_gh_api (path) |>
