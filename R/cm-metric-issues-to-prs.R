@@ -11,13 +11,18 @@ cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-get_issues_in_period <- function (path, end_date = Sys.Date ()) {
+get_issues_in_period <- function (path, end_date = Sys.Date (), closed_only = FALSE) {
 
     issues <- cm_data_issues_from_gh_api (path)
-    created_dates <- as.Date (issues$created_at)
     closed_dates <- as.Date (issues$closed_at)
     start_date <- end_date - get_repometrics_period ()
-    index <- which (created_dates >= start_date & closed_dates <= end_date)
+
+    if (closed_only) {
+        index <- which (closed_dates >= start_date & closed_dates <= end_date)
+    } else {
+        created_dates <- as.Date (issues$created_at)
+        index <- which (created_dates >= start_date & closed_dates <= end_date)
+    }
 
     return (issues [index, ])
 }
