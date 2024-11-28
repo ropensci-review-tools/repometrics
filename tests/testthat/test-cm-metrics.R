@@ -235,7 +235,7 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
     expect_equal (names (res), nms)
 })
 
-test_that ("cm metric time to close", { # R/cm-metric-time-to-close.R
+test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 
     end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
