@@ -250,3 +250,22 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
     nms <- c ("mean", "median")
     expect_equal (names (res), nms)
 })
+
+test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+    # Test prs only grab first two which are years old
+    op <- getOption ("repometrics_period")
+    options ("repometrics_period" = 10000)
+
+    res <- cm_metric_pr_closure_ratio (path, end_date = end_date)
+
+    options ("repometrics_period" = op)
+    fs::dir_delete (path)
+
+    expect_type (res, "double")
+    expect_length (res, 1L)
+    expect_true (res >= 0)
+})

@@ -89,3 +89,36 @@ cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
         median = stats::median (times_to_close)
     )
 }
+
+#' CHAOSS metric "Change Request Closure Ratio"
+#'
+#' \url{https://chaoss.community/kb/metric-change-request-closure-ratio/}
+#' The "ratio atio between the total number of open change requests during a
+#' time period versus the total number of change requests closed in that same
+#' period. A high change request closure ratio indicates that changes are
+#' addressed promptly ..."
+#'
+#' Although the first sentence suggests a ratio of open/closed, the second
+#' indicates that they actually mean closed/open. That is then what is done
+#' here, so that low ratios are good. I submitted
+#' https://github.com/chaoss/wg-metrics-development/pull/265
+#' to suggest a fix. That should at least help clarify.
+#'
+#' @noRd
+cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
+
+    prs <- cm_data_prs_from_gh_api (path)
+    prs$created_at <- as.Date (prs$created_at)
+    prs$closed_at <- as.Date (prs$closed_at)
+
+    closed_at <- as.Date (prs$closed_at)
+    start_date <- end_date - get_repometrics_period ()
+
+    prs_closed <- dplyr::filter (prs, closed)
+    index_closed <- which (prs_closed$closed_at >= start_date &
+        prs_closed$closed_at <= end_date)
+
+    index_open <- which (!prs$closed | prs$closed_at >= start_date)
+
+    length (index_closed) / length (index_open)
+}
