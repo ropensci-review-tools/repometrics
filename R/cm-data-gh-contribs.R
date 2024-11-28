@@ -127,6 +127,9 @@ user_from_gh_api <- function (user) {
 
 main_contributors <- function (path, end_date = Sys.Date (), threshold = 0.9, period = NULL) {
 
+    # suppress no visible warning notes:
+    login <- n <- NULL
+
     if (!is.null (period)) {
         checkmate::assert_integerish (period, min = 1L)
         log <- git_log_in_period (path, end_date = end_date, period = period)
