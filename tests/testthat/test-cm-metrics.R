@@ -303,3 +303,20 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     expect_equal (names (res), c ("mean", "median"))
     expect_true (all (res > 0))
 })
+
+test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_issue_age (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (res, "integer")
+    expect_length (res, 3L)
+    expect_named (res)
+    expect_equal (names (res), c ("mean", "median", "n"))
+    expect_equal (res [["n"]], 0L)
+})
