@@ -1,5 +1,8 @@
 cm_metric_popularity <- function (path, end_date = Sys.Date ()) {
 
+    # suppress no visible binding notes:
+    timestamp <- aut_email <- aut_name <- created <- starred_at <- NULL
+
     revdeps <- cm_data_dependencies_downstream (path)
 
     forks <- cm_data_repo_forks (path) |>

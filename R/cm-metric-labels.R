@@ -19,6 +19,9 @@
 #' @noRd
 cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
 
+    # suppress no visible binding notes:
+    created_at <- NULL
+
     issues_data <- cm_data_issues_from_gh_api (path)
     issues_data$created_at <- as.Date (issues_data$created_at)
 

@@ -73,6 +73,9 @@ cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
 #' @noRd
 cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
 
+    # suppress no visible binding notes:
+    state <- NULL
+
     issues <- get_issues_in_period (path, end_date, closed_only = TRUE) |>
         dplyr::filter (state == "closed")
 
@@ -106,6 +109,9 @@ cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
 #'
 #' @noRd
 cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
+
+    # suppress no visible binding notes:
+    closed <- NULL
 
     prs <- cm_data_prs_from_gh_api (path)
     prs$created_at <- as.Date (prs$created_at)
