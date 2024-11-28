@@ -47,7 +47,11 @@ test_that ("cm metric has CI internal", {
 
     path <- generate_test_pkg ()
     has_ci <- repo_has_ci_files (path)
-    expect_length (has_ci, 0L) # No CI files
+    # R-universe includes on CI file, so this test fails there:
+    on_r_univ <- nzchar (Sys.getenv ("MY_UNIVERSE"))
+    if (!on_r_univ) {
+        expect_length (has_ci, 0L) # No CI files
+    }
 
     url <- "https://github.com/ropensci-review-tools/goodpractice"
     expect_identical (url, pkg_gh_url_from_path (path))
