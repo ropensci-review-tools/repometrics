@@ -269,3 +269,20 @@ test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
     expect_length (res, 1L)
     expect_true (res >= 0)
 })
+
+test_that ("cm metric popularity", { # R/cm-metric-popularity.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    mock_cm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_popularity (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (res, "integer")
+    expect_length (res, 4L)
+    expect_named (res)
+    nms <- c ("revdeps", "contribs", "forks", "stars")
+    expect_equal (names (res), nms)
+})
