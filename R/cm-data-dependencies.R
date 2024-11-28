@@ -28,6 +28,26 @@ cm_data_dependencies <- function (path) {
     data.frame (do.call (rbind, deps))
 }
 
+#' Reverse or downstream dependencies from CRAN db.
+#'
+#' Note that this all works even for packages which aren't on CRAN.
+#' @noRd
+cm_data_dependencies_downstream <- function (path) {
+
+    cran_db <- cran_pkg_db ()
+    pkg_name <- pkg_name_from_path (path)
+    i <- which (cran_db$Package == pkg_name)
+    revdep_cols <- grep ("reverse", names (cran_db), ignore.case = TRUE)
+    revdeps <- unname (do.call (c, cran_db [i, revdep_cols]))
+    revdeps <- unlist (lapply (revdeps, function (i) strsplit (i, ",\\s*") [[1]]))
+    revdeps <- revdeps [which (!is.na (revdeps))]
+    if (is.null (revdeps)) {
+        revdeps <- character (0L)
+    }
+
+    return (revdeps)
+}
+
 #' Extract CHAOSS "libyears" metric
 #'
 #' @param path Local path to repository
