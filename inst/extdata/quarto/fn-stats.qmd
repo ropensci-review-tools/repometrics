@@ -205,7 +205,7 @@ Plot.plot({
         ),
         Plot.text(
             descFiltered,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "desc_variable",
@@ -316,7 +316,7 @@ Plot.plot({
         ),
         Plot.text(
             loc_files,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "dir",
@@ -406,7 +406,7 @@ y: {grid: true, type: "log"},
         ),
         Plot.text(
             locLinesFiltered,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "dir",
