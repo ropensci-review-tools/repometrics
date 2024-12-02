@@ -273,6 +273,12 @@ loc <- tidyr::pivot_longer (
     ))
 loc_files <- loc [loc$loc_measure == "files", ]
 loc_lines <- loc [loc$loc_measure != "files", ]
+
+root_dir <- function (d) {
+    vapply (d, function (i) fs::path_split (i) [[1]] [1], character (1L))
+}
+loc_files$dir <- root_dir (loc_files$dir)
+loc_lines$dir <- root_dir (loc_lines$dir)
 ```
 
 ```{r ojs-in-loc, echo = FALSE}
