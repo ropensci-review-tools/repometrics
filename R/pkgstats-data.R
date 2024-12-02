@@ -116,9 +116,11 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
 reset_repo <- function (path, hash) {
 
     g <- gert::git_reset_hard (ref = hash, repo = path)
-    flist <- fs::dir_ls (path, recurse = TRUE)
+    flist <- fs::dir_ls (path, recurse = TRUE, type = "file")
+    # Reduce to paths relative to 'path' itself:
+    flist <- fs::path_rel (flist, path)
     flist_git <- gert::git_ls (path)
-    flist_out <- flist [which (!fs::path_file (flist) %in% flist_git)]
+    flist_out <- flist [which (!flist %in% flist_git$path)]
     if (length (flist_out) > 0L) {
         tryCatch (
             fs::file_delete (flist_out),
@@ -131,7 +133,13 @@ reset_repo <- function (path, hash) {
 
 run_one_pkgstats <- function (path, pkg_date) {
 
-    s <- pkgstats::pkgstats (path)
+    s <- tryCatch (
+        pkgstats::pkgstats (path),
+        error = function (e) NULL
+    )
+    if (is.null (s)) {
+        return (s)
+    }
 
     index <- which (
         s$objects$kind == "function" &
