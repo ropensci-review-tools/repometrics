@@ -13,7 +13,8 @@
 #' restricted to maximum available cores, and a value of zero will use all
 #' available cores.
 #'
-#' @return A list of three items:
+#' @return `NULL` if `path` is not an R package, or if no \pkg{pkgstats}
+#' results are able to be extracted. Otherwise, a list of three items:
 #' \itemize{
 #' \item desc_data Containing data from `DESCRIPTION` files, along with data on
 #' numbers of functions.
@@ -203,6 +204,14 @@ run_one_pkgstats <- function (path, pkg_date) {
 }
 
 collate_pkgstats <- function (x) {
+
+    index <- which (!vapply (x, is.null, logical (1L)))
+    if (length (index) > 0L) {
+        x <- x [index]
+    } else {
+        return (NULL)
+    }
+
     nms <- names (x [[1]])
     nms2df <- nms [seq_len (which (nms == "loc") - 1L)]
     desc_data <- lapply (nms2df, function (i) {

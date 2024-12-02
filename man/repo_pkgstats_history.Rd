@@ -22,7 +22,8 @@ restricted to maximum available cores, and a value of zero will use all
 available cores.}
 }
 \value{
-A list of three items:
+\code{NULL} if \code{path} is not an R package, or if no \pkg{pkgstats}
+results are able to be extracted. Otherwise, a list of three items:
 \itemize{
 \item desc_data Containing data from \code{DESCRIPTION} files, along with data on
 numbers of functions.
