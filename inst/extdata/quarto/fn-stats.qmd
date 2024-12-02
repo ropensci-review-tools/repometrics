@@ -86,17 +86,18 @@ Plot.plot({
                 x: "date",
                 y: "value",
                 stroke: "measure",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
             statsFiltered,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "measure",
                 text: "measure",
-                textAnchor: "start",
+                textAnchor: "end",
                 dx: 3,
                 fontSize: 18
             })
@@ -198,7 +199,8 @@ Plot.plot({
                 x: "date",
                 y: "value",
                 stroke: "desc_variable",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
@@ -308,7 +310,8 @@ Plot.plot({
                 x: "date",
                 y: "value",
                 stroke: "dir",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
@@ -397,7 +400,8 @@ y: {grid: true, type: "log"},
                 x: "date",
                 y: "value",
                 stroke: "dir",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
