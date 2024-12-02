@@ -257,7 +257,12 @@ Plot.plot({
 rm_cols <- c ("package", "nempty", "nspaces", "nchars", "nexpr", "ntabs", "indentation")
 cols <- names (dat$loc) [which (!names (dat$loc) %in% rm_cols)]
 loc <- dat$loc [, cols]
-loc$date <- lubridate::ymd (strftime (loc$date, "%y-%m-%d"))
+loc$date <- as.Date (loc$date)
+loc$dir <- vapply (
+    loc$dir,
+    function (d) fs::path_split (d) [[1]] [1],
+    character (1L)
+)
 
 loc <- tidyr::pivot_longer (
     loc,
@@ -270,15 +275,14 @@ loc <- tidyr::pivot_longer (
         "nlines" ~ "total",
         "ncode" ~ "code",
         "ndoc" ~ "doc"
-    ))
+    )) |>
+    dplyr::group_by (date, dir, loc_measure) |>
+    dplyr::summarise (value = mean (value)) |>
+    dplyr::ungroup () |>
+    dplyr::arrange (by = dplyr::desc (date))
+
 loc_files <- loc [loc$loc_measure == "files", ]
 loc_lines <- loc [loc$loc_measure != "files", ]
-
-root_dir <- function (d) {
-    vapply (d, function (i) fs::path_split (i) [[1]] [1], character (1L))
-}
-loc_files$dir <- root_dir (loc_files$dir)
-loc_lines$dir <- root_dir (loc_lines$dir)
 ```
 
 ```{r ojs-in-loc, echo = FALSE}
