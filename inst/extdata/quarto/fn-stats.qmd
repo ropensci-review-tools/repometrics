@@ -1,5 +1,5 @@
 ---
-title: "Historical Data"
+title: "Metrics from git commit history "
 execute:
   echo: false
 format: 
@@ -11,7 +11,6 @@ format:
 
 ```{r load-pkg, echo = FALSE, message = FALSE}
 library (repometrics)
-library (lubridate)
 ```
 This page includes several graphs providing insight into the historical
 development of the package.
@@ -37,7 +36,7 @@ dat <- readRDS ("results.Rds")
 ```{r stats-data}
 cols <- names (dat$stats) [which (!names (dat$stats) %in% c ("package", "version"))]
 stats <- dat$stats [, cols]
-stats$date <- lubridate::ymd (strftime (stats$date, "%y-%m-%d"))
+stats$date <- as.Date (stats$date)
 index <- which (stats$measure == "sum")
 stats$npars [index] <- stats$npars [index] / 100
 stats$loc [index] <- stats$loc [index] / 100
@@ -145,7 +144,7 @@ This plot shows some general data.
 ```{r desc-data}
 cols <- names (dat$desc_data) [which (!names (dat$desc_data) %in% c ("package"))]
 desc <- dat$desc_data [, cols]
-desc$date <- lubridate::ymd (strftime (desc$date, "%y-%m-%d"))
+desc$date <- as.Date (desc$date)
 desc$base_calls <- desc$base_calls / 10
 
 cols <- names (desc) [which (!names (desc) %in% c ("date"))]
