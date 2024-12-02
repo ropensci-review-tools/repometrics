@@ -86,17 +86,18 @@ Plot.plot({
                 x: "date",
                 y: "value",
                 stroke: "measure",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
             statsFiltered,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "measure",
                 text: "measure",
-                textAnchor: "start",
+                textAnchor: "end",
                 dx: 3,
                 fontSize: 18
             })
@@ -198,12 +199,13 @@ Plot.plot({
                 x: "date",
                 y: "value",
                 stroke: "desc_variable",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
             descFiltered,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "desc_variable",
@@ -255,7 +257,12 @@ Plot.plot({
 rm_cols <- c ("package", "nempty", "nspaces", "nchars", "nexpr", "ntabs", "indentation")
 cols <- names (dat$loc) [which (!names (dat$loc) %in% rm_cols)]
 loc <- dat$loc [, cols]
-loc$date <- lubridate::ymd (strftime (loc$date, "%y-%m-%d"))
+loc$date <- as.Date (loc$date)
+loc$dir <- vapply (
+    loc$dir,
+    function (d) fs::path_split (d) [[1]] [1],
+    character (1L)
+)
 
 loc <- tidyr::pivot_longer (
     loc,
@@ -268,7 +275,12 @@ loc <- tidyr::pivot_longer (
         "nlines" ~ "total",
         "ncode" ~ "code",
         "ndoc" ~ "doc"
-    ))
+    )) |>
+    dplyr::group_by (date, dir, loc_measure) |>
+    dplyr::summarise (value = mean (value)) |>
+    dplyr::ungroup () |>
+    dplyr::arrange (by = dplyr::desc (date))
+
 loc_files <- loc [loc$loc_measure == "files", ]
 loc_lines <- loc [loc$loc_measure != "files", ]
 ```
@@ -308,12 +320,13 @@ Plot.plot({
                 x: "date",
                 y: "value",
                 stroke: "dir",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
             loc_files,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "dir",
@@ -397,12 +410,13 @@ y: {grid: true, type: "log"},
                 x: "date",
                 y: "value",
                 stroke: "dir",
-                fontSize: 18
+                fontSize: 18,
+                curve: "basis-open"
             }
         ),
         Plot.text(
             locLinesFiltered,
-            Plot.selectLast({
+            Plot.selectFirst({
                 x: "date",
                 y: "value",
                 z: "dir",

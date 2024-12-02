@@ -13,6 +13,7 @@
 ghist_dashboard <- function (results, action = "preview") {
 
     check_dashboard_arg (results)
+    results <- timestamps_to_dates (results)
 
     requireNamespace ("brio")
     requireNamespace ("quarto")
@@ -20,10 +21,6 @@ ghist_dashboard <- function (results, action = "preview") {
 
     action <- match.arg (action, c ("preview", "render"))
     quarto_action <- paste0 ("quarto::quarto_", action)
-
-    results <- daily_average (results, "stats")
-    results <- daily_average (results, "desc_data")
-    results <- daily_average (results, "loc")
 
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
@@ -38,19 +35,25 @@ ghist_dashboard <- function (results, action = "preview") {
     })
 }
 
-daily_average <- function (results, what = "stats") {
+timestamps_to_dates <- function (results) {
 
-    results [[what]]$date <- lubridate::ymd (strftime (results [[what]]$date, "%y-%m-%d"))
+    lapply (results, function (i) {
 
-    cols <- c ("package", "date", "language", "dir", "measure")
-    cols <- cols [which (cols %in% names (results [[what]]))]
+        i$date <- as.Date (i$date)
 
-    results [[what]] <- dplyr::group_by (results [[what]], dplyr::across (dplyr::all_of (cols))) |>
-        dplyr::select_if (is.numeric) |>
-        dplyr::summarise_all (mean, na.rm = TRUE) |>
-        dplyr::ungroup ()
+        if (any (duplicated (i$date))) {
 
-    return (results)
+            cols <- c ("package", "date", "language", "dir", "measure")
+            cols <- cols [which (cols %in% names (i))]
+
+            i <- dplyr::group_by (i, dplyr::across (dplyr::all_of (cols))) |>
+                dplyr::select_if (is.numeric) |>
+                dplyr::summarise_all (mean, na.rm = TRUE) |>
+                dplyr::ungroup ()
+        }
+
+        return (dplyr::arrange (i, by = dplyr::desc (date)))
+    })
 }
 
 quarto_insert_pkg_name <- function (dir, pkg_name) {
