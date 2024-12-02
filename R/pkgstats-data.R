@@ -80,7 +80,7 @@ extract_pkgstats_data_single <- function (log, path) {
     }
 
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-        g <- gert::git_reset_hard (ref = log$hash [i], repo = path_cp)
+        flist <- reset_repo (path_cp, log$hash [i])
         run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
     })
 
@@ -101,7 +101,7 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
     )
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
-        g <- gert::git_reset_hard (ref = log$hash [i], repo = path_cp)
+        flist <- reset_repo (path_cp, log$hash [i])
         s <- run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
         fs::dir_delete (path_cp)
         return (s)
@@ -111,6 +111,22 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
     return (res)
 
     return (res)
+}
+
+reset_repo <- function (path, hash) {
+
+    g <- gert::git_reset_hard (ref = hash, repo = path)
+    flist <- fs::dir_ls (path, recurse = TRUE)
+    flist_git <- gert::git_ls (path)
+    flist_out <- flist [which (!fs::path_file (flist) %in% flist_git)]
+    if (length (flist_out) > 0L) {
+        tryCatch (
+            fs::file_delete (flist_out),
+            error = function (e) NULL
+        )
+    }
+
+    return (fs::dir_ls (path, recurse = TRUE))
 }
 
 run_one_pkgstats <- function (path, pkg_date) {
