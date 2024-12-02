@@ -13,6 +13,7 @@
 ghist_dashboard <- function (results, action = "preview") {
 
     check_dashboard_arg (results)
+    results <- timestamps_to_dates (results)
 
     requireNamespace ("brio")
     requireNamespace ("quarto")
@@ -31,6 +32,27 @@ ghist_dashboard <- function (results, action = "preview") {
 
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
+    })
+}
+
+timestamps_to_dates <- function (results) {
+
+    lapply (results, function (i) {
+
+        i$date <- as.Date (i$date)
+
+        if (any (duplicated (i$date))) {
+
+            cols <- c ("package", "date", "language", "dir", "measure")
+            cols <- cols [which (cols %in% names (i))]
+
+            i <- dplyr::group_by (i, dplyr::across (dplyr::all_of (cols))) |>
+                dplyr::select_if (is.numeric) |>
+                dplyr::summarise_all (mean, na.rm = TRUE) |>
+                dplyr::ungroup ()
+        }
+
+        return (dplyr::arrange (i, by = dplyr::desc (date)))
     })
 }
 
