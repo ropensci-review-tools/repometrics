@@ -9,24 +9,22 @@ Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 
 # repometrics
 
-Metrics for your code repository.
+Metrics for your code repository. A single function collates a wealth of data
+from commit histories and GitHub interactions, converts it all to standardised
+metrics, and displays the result as a single, interactive dashboard of your
+repository.
 
-## But why?
+## Prior Art
 
 There are lots of tools for collating metrics of software repositories, most of
 which are commercial and not open source. Notable open source tools include
 those in the [github.com/chaoss organization](https://github.com/chaoss),
 especially their [augur](https://github.com/chaoss/augur) and
 [grimoirelab](https://github.com/chaoss/grimoirelab) tools. Both of these tools
-are huge and comprehensive. They are intended to be highly configurable and
-customizable, but can be difficult both to set up and to use.
-
-The `repometrics` package is a lightweight alternative to CHAOSS tools. Where
-those tools use large database and data broker libraries, this package stores
-all data in raw JSON form as directly returned from APIs, and uses tools such
-as [`jq`](https://jqlang.github.io/jq/) for extraction and filtering. Unlike
-the more general CHAOSS tools, the `repometrics` package is also restricted to
-analysing GitHub repositories only.
+are huge and comprehensive. Although intended to be highly configurable and
+customizable, they can be difficult both to set up and to use. The [OpenSSF
+Scorecard](https://github.com/ossf/scorecard) is a lightweight system focussed
+on metrics of "security health".
 
 ## Code of Conduct
 
