@@ -45,10 +45,9 @@ log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
         .groups = "keep"
     ) |>
     dplyr::ungroup ()
-```
 
-```{r}
 dates <- seq (min (log$ym), max (log$ym), by = "months")
+
 log_reg <- dplyr::group_by (log, gh_handle) |>
     tidyr::complete (ym = dates) |>
     tidyr::fill () |>
@@ -69,4 +68,100 @@ log_reg <- dplyr::group_by (log, gh_handle) |>
         ym = as.Date (ym)
     ) |>
     dplyr::ungroup ()
+
+log_reg <- tidyr::pivot_longer (
+    log_reg,
+    c ("nfiles_changed", "lines_added", "lines_removed", "ncontribs")
+)
+```
+
+```{r ojs-in-log, echo = FALSE}
+ojs_define (log_in = log_reg)
+```
+```{ojs log-transpose-and-filter}
+log = {
+    return transpose(log_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof name = Inputs.radio(
+    ["nfiles_changed", "lines_added", "lines_removed", "ncontribs"],
+    {
+        value: "ncontribs",
+        label: "Variable:",
+    }
+)
+logFiltered = log.filter(function(row) {
+  return name.includes(row.name)
+})
+```
+
+```{ojs log-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            logFiltered,
+            {
+                x: "date",
+                y: "value",
+                stroke: "measure",
+                fontSize: 18,
+                curve: "basis-open"
+            }
+        ),
+        Plot.text(
+            logFiltered,
+            Plot.selectFirst({
+                x: "date",
+                y: "value",
+                z: "measure",
+                text: "measure",
+                textAnchor: "end",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
 ```
