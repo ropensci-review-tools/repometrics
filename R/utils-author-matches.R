@@ -63,7 +63,7 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
             matches <- do.call (rbind, matches)
             matches <- matches [which (matches$match >= match_limit), ]
             if (nrow (matches) > 0L) {
-                ctbs_log$gh_handle [index_na] [matches$i] <- ctbs_gh$login [matches$match]
+                ctbs_log$gh_handle [index_na] [matches$i] <- ctbs_gh$login [matches$index]
             }
         }
 
