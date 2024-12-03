@@ -33,49 +33,64 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
     index <- match (tolower (ctbs_log$name [index_na]), tolower (ctbs_gh$login))
     ctbs_log$gh_handle [index_na] <- ctbs_gh$login [index]
 
-    # Function to match pairs of name strings, either from names or email
-    # addresses, and to insert GitHub login details to git log contributors:
-    match_one_pair <- function (name_src1, name_src2, ctbs_log) {
+    # The apply `match_string_pairs()` to fill in any missing values based on
+    # the explicitly combinations in the following calls:
+    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$name, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$email, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$login, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$name, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$email, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$login, ctbs_log)
 
-        match_limit <- 0.9
+    return (ctbs_log)
+}
 
-        index_na <- which (is.na (ctbs_log$gh_handle))
+#' Match pairs of strings by greatest extent of overlapping sequences,
+#' potentially with gaps in between.
+#'
+#' This is intended to match either names, github handles, or emails. It
+#' matches two sets of input strings, and identifies the closest match in the
+#' second source to each value in the first. Matches have the greatest absolute
+#' length of overlapping sequences, regardless of non-matching parts which may
+#' intervene in either string. This is important to be able to match, for
+#' example, "My Name" to "M. Name". Matches are only accepted where the
+#' proportion of overlapping string exceeds the fixed value set immediately
+#' below.
+#'
+#' @return A modified version of `ctbs_log` with an additional `gh_handle`
+#' values found by succeessful matching appended to the input log.
+#' @noRd
+match_string_pairs <- function (name_src1, name_src2, ctbs_log) {
 
-        if (length (index_na) > 0) {
-            if (all (grepl ("@", name_src1))) {
-                names1 <- gsub ("\\@.*$", "", name_src1 [index_na]) |>
-                    strsplit ("\\.|\\||\\-")
-            } else {
-                names1 <- strsplit (name_src1 [index_na], "\\s+")
-            }
-            if (all (grepl ("@", name_src2))) {
-                names2 <- gsub ("\\@.*$", "", name_src2) |>
-                    strsplit ("\\.|\\||\\-")
-            } else {
-                names2 <- strsplit (name_src2, "\\s+")
-            }
+    match_limit <- 0.9
 
-            matches <- lapply (seq_along (names1), function (i) {
-                res <- unique (match_names (names1 [[i]], names2) [, 2:3])
-                res$i <- i
-                return (res)
-            })
-            matches <- do.call (rbind, matches)
-            matches <- matches [which (matches$match >= match_limit), ]
-            if (nrow (matches) > 0L) {
-                ctbs_log$gh_handle [index_na] [matches$i] <- ctbs_gh$login [matches$index]
-            }
+    index_na <- which (is.na (ctbs_log$gh_handle))
+
+    if (length (index_na) > 0) {
+        if (all (grepl ("@", name_src1))) {
+            names1 <- gsub ("\\@.*$", "", name_src1 [index_na]) |>
+                strsplit ("\\.|\\||\\-")
+        } else {
+            names1 <- strsplit (name_src1 [index_na], "\\s+")
+        }
+        if (all (grepl ("@", name_src2))) {
+            names2 <- gsub ("\\@.*$", "", name_src2) |>
+                strsplit ("\\.|\\||\\-")
+        } else {
+            names2 <- strsplit (name_src2, "\\s+")
         }
 
-        return (ctbs_log)
+        matches <- lapply (seq_along (names1), function (i) {
+            res <- unique (match_names (names1 [[i]], names2) [, 2:3])
+            res$i <- i
+            return (res)
+        })
+        matches <- do.call (rbind, matches)
+        matches <- matches [which (matches$match >= match_limit), ]
+        if (nrow (matches) > 0L) {
+            ctbs_log$gh_handle [index_na] [matches$i] <- ctbs_gh$login [matches$index]
+        }
     }
-
-    ctbs_log <- match_one_pair (ctbs_log$name, ctbs_gh$name, ctbs_log)
-    ctbs_log <- match_one_pair (ctbs_log$name, ctbs_gh$email, ctbs_log)
-    ctbs_log <- match_one_pair (ctbs_log$name, ctbs_gh$login, ctbs_log)
-    ctbs_log <- match_one_pair (ctbs_log$email, ctbs_gh$name, ctbs_log)
-    ctbs_log <- match_one_pair (ctbs_log$email, ctbs_gh$email, ctbs_log)
-    ctbs_log <- match_one_pair (ctbs_log$email, ctbs_gh$login, ctbs_log)
 
     return (ctbs_log)
 }
