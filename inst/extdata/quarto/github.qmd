@@ -14,3 +14,22 @@ library (repometrics)
 ```
 This page includes several graphs providing insight into the historical
 development of the package.
+
+```{r load-data}
+dat <- readRDS ("results.Rds")
+```
+```{r ctbs-git-data}
+ctbs <- dat$cm$contributors
+log <- dat$cm$gitlog
+
+# Insert gh handles in git log:
+log$gh_handle <- NA_character_
+
+# Match by log$aut_name:
+index <- match (log$aut_name, ctbs$name)
+log$gh_handle <- ctbs$gh_handle [index]
+# Match by log$aut_email:
+index <- which (is.na (log$gh_handle))
+index_email <- match (log$aut_email [index], ctbs$email)
+log$gh_handle [index] <- ctbs$gh_handle [index_email]
+```
