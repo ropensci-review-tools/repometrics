@@ -82,7 +82,7 @@ check_dashboard_arg <- function (data) {
         "dependencies_downstream", "gh_repo_workflow", "gitlog",
         "issue_comments_from_gh_api", "issues_from_gh_api", "libyears",
         "prs_from_gh_api", "releases_from_gh_api", "repo_forks",
-        "repo_from_gh_api", "repo_stargazers"
+        "repo_from_gh_api", "repo_stargazers", "contributors"
     )
     checkmate::assert_names (names (data$cm), identical.to = nms)
 
@@ -123,7 +123,8 @@ check_dashboard_arg <- function (data) {
         "releases_from_gh_api" = 10L,
         "repo_forks" = 2L,
         "repo_from_gh_api" = 18L,
-        "repo_stargazers" = 2L
+        "repo_stargazers" = 2L,
+        "contributors" = 3L
     )
     if (!identical (ncols, ncols_expected)) {
         cli::cli_abort (paste0 (
