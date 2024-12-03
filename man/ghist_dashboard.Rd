@@ -5,10 +5,10 @@
 \title{Start quarto dashboard with results of main \link{repo_pkgstats_history}
 function.}
 \usage{
-ghist_dashboard(results, action = "preview")
+ghist_dashboard(data, action = "preview")
 }
 \arguments{
-\item{results}{Results of main \link{repo_pkgstats_history} function applied
+\item{data}{Results of main \link{repometrics_data} function applied
 to one package.}
 
 \item{action}{One of "preview", to start and open a live preview of the
