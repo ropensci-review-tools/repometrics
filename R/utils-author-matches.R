@@ -35,12 +35,12 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
 
     # The apply `match_string_pairs()` to fill in any missing values based on
     # the explicitly combinations in the following calls:
-    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$name, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$email, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$login, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$name, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$email, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$login, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$name, ctbs_gh, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$email, ctbs_gh, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$login, ctbs_gh, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$name, ctbs_gh, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$email, ctbs_gh, ctbs_log)
+    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$login, ctbs_gh, ctbs_log)
 
     return (ctbs_log)
 }
@@ -60,7 +60,7 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
 #' @return A modified version of `ctbs_log` with an additional `gh_handle`
 #' values found by succeessful matching appended to the input log.
 #' @noRd
-match_string_pairs <- function (name_src1, name_src2, ctbs_log) {
+match_string_pairs <- function (name_src1, name_src2, ctbs_gh, ctbs_log) {
 
     match_limit <- 0.9
 
