@@ -55,6 +55,10 @@ mock_cm_data <- function () {
         do.call (i, list (path = path))
     })
     names (res) <- gsub ("^cm\\_data\\_", "", data_fns)
+    res$contributors <- get_all_contribs (
+        res$contribs_from_log,
+        res$contribs_from_gh_api
+    )
 
     fs::dir_delete (path)
 
