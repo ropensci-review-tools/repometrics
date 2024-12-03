@@ -21,6 +21,7 @@ dat <- readRDS ("results.Rds")
 ```{r ctbs-git-data}
 ctbs <- dat$cm$contributors
 log <- dat$cm$gitlog
+log <- log [which (!log$aut_name == "GitHub"), ]
 
 # Insert gh handles in git log:
 log$gh_handle <- NA_character_
@@ -32,4 +33,40 @@ log$gh_handle <- ctbs$gh_handle [index]
 index <- which (is.na (log$gh_handle))
 index_email <- match (log$aut_email [index], ctbs$email)
 log$gh_handle [index] <- ctbs$gh_handle [index_email]
+
+log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
+    dplyr::mutate (ym = as.Date (gsub ("\\-[0-9]{2}$", "-01", date))) |>
+    dplyr::group_by (gh_handle, ym) |>
+    dplyr::summarise (
+        nfiles_changed = sum (nfiles_changed),
+        lines_added = sum (lines_added) - sum (whitespace_added),
+        lines_removed = sum (lines_removed) - sum (whitespace_removed),
+        ncontribs = dplyr::n (),
+        .groups = "keep"
+    ) |>
+    dplyr::ungroup ()
+```
+
+```{r}
+dates <- seq (min (log$ym), max (log$ym), by = "months")
+log_reg <- dplyr::group_by (log, gh_handle) |>
+    tidyr::complete (ym = dates) |>
+    tidyr::fill () |>
+    dplyr::arrange (by = ym) |>
+    dplyr::ungroup () |>
+    tidyr::replace_na (list (
+        nfiles_changed = 0L,
+        lines_added = 0L,
+        lines_removed = 0L,
+        ncontribs = 0L
+    )) |>
+    dplyr::group_by (gh_handle) |>
+    dplyr::mutate (
+        nfiles_changed = cumsum (nfiles_changed),
+        lines_added = cumsum (lines_added),
+        lines_removed = cumsum (lines_removed),
+        ncontribs = cumsum (ncontribs),
+        ym = as.Date (ym)
+    ) |>
+    dplyr::ungroup ()
 ```
