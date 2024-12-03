@@ -1,51 +1,44 @@
 pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
-
-res0 <- repo_pkgstats_history (path, num_cores = 1L)
+pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
+cm_data <- mock_cm_data ()
+data0 <- list (pkgstats = pkgstats, cm = cm_data)
 
 test_that ("dashboard input errors", {
 
-    res <- res0
-    res$desc_data <- NULL
+    data <- data0
     expect_error (
-        ghist_dashboard (res, action = "build"),
-        "Assertion on 'results' failed: Must have length 3"
+        ghist_dashboard (data, action = "noarg"),
+        "\\'arg\\' should be one of"
+    )
+    names (data) [1] <- "changed"
+    expect_error (
+        ghist_dashboard (data, action = "render"),
+        "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
-    res <- res0
-    names (res) [1] <- "desc"
+    data$pkgstats$stats <- data$pkgstats$stats [, -1]
     expect_error (
-        ghist_dashboard (res, action = "build"),
-        "Assertion on 'names\\(results\\)' failed\\: Names must be a identical to set"
+        ghist_dashboard (data, action = "render"),
+        "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
-    res <- res0
+    data <- data0
+    data$pkgstats$stats <- data$pkgstats$stats [-seq_len (nrow (data$pkgstats$stats)), ]
     expect_error (
-        ghist_dashboard (res, action = "build"),
-        "'arg' should be one of"
-    )
-
-    res$stats <- res$stats [, -1]
-    expect_error (
-        ghist_dashboard (res, action = "render"),
-        "'results' has wrong number of columns"
-    )
-    res <- res0
-    res$stats <- res$stats [-seq_len (nrow (res$stats)), ]
-    expect_error (
-        ghist_dashboard (res, action = "render"),
-        "'results' contains empty tables."
+        ghist_dashboard (data, action = "render"),
+        "\\'data\\' contains empty tables."
     )
 })
 
 test_that ("dashboard build", {
 
-    res <- res0
-    ghist_dashboard (res, action = "render")
+    data <- data0
+    ghist_dashboard (data, action = "render")
 
     # Expect quarto docs to have been modified with package name:
-    pkg_name <- res0$desc_data$package [1]
+    pkg_name <- data0$pkgstats$desc_data$package [1]
     path_tmp <- fs::path (fs::path_temp (), "quarto")
     expect_true (fs::dir_exists (path_tmp))
 

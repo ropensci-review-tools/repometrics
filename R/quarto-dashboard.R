@@ -88,7 +88,7 @@ check_dashboard_arg <- function (data) {
 
     # ------ pkgstats structure ------
     ncols <- vapply (data$pkgstats, ncol, integer (1L))
-    ncols_expected <- c (desc_data = 8L, loc = 14L, stats = 7L)
+    ncols_expected <- c (desc_data = 9L, loc = 15L, stats = 8L)
     if (!identical (ncols, ncols_expected)) {
         cli::cli_abort (paste0 (
             "'data' has wrong number of columns; ",
@@ -105,7 +105,9 @@ check_dashboard_arg <- function (data) {
     # ------ cm structure ------
     classes <- vapply (data$cm, class, character (1L))
     index <- which (classes == "data.frame")
-    expect_length (index, length (classes) - 1L)
+    if (length (index) != (length (classes) - 1L)) {
+        cli::cli_abort ("Chaoss metrics data have wrong length; should be {length(index)}.")
+    }
 
     ncols <- vapply (data$cm [index], ncol, integer (1L))
     ncols_expected <- c (

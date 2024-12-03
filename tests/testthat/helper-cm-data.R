@@ -49,5 +49,14 @@ mock_cm_data <- function () {
         cm_metric_cran_downloads (path, end_date = end_date)
     })
 
+    # The return full mocked data set:
+    data_fns <- get_cm_data_fns ()
+    res <- lapply (data_fns, function (i) {
+        do.call (i, list (path = path))
+    })
+    names (res) <- gsub ("^cm\\_data\\_", "", data_fns)
+
     fs::dir_delete (path)
+
+    return (res)
 }
