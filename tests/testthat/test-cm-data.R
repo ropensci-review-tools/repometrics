@@ -1,7 +1,7 @@
 test_that ("cm data full", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    mock_cm_data ()
+    dat <- mock_cm_data ()
     path <- generate_test_pkg ()
 
     dat <- cm_data (path)
@@ -46,7 +46,7 @@ test_that ("cm data dependencies", {
 test_that ("cm data reverse dependencies", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    mock_cm_data ()
+    dat <- mock_cm_data ()
     path <- generate_test_pkg ()
 
     revdeps <- cm_data_dependencies_downstream (path)

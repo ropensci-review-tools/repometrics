@@ -3,4 +3,5 @@
 export(cm_data)
 export(ghist_dashboard)
 export(repo_pkgstats_history)
+export(repometrics_data)
 importFrom(memoise,memoise)

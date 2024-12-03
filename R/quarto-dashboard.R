@@ -1,7 +1,7 @@
 #' Start quarto dashboard with results of main \link{repo_pkgstats_history}
 #' function.
 #'
-#' @param results Results of main \link{repo_pkgstats_history} function applied
+#' @param data Results of main \link{repometrics_data} function applied
 #' to one package.
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
@@ -10,10 +10,10 @@
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #' @export
-ghist_dashboard <- function (results, action = "preview") {
+ghist_dashboard <- function (data, action = "preview") {
 
-    check_dashboard_arg (results)
-    results <- timestamps_to_dates (results)
+    check_dashboard_arg (data)
+    data$pkgstats <- timestamps_to_dates (data$pkgstats)
 
     requireNamespace ("brio")
     requireNamespace ("quarto")
@@ -25,9 +25,9 @@ ghist_dashboard <- function (results, action = "preview") {
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
-    saveRDS (results, fs::path (dir, "results.Rds"))
+    saveRDS (data, fs::path (dir, "results.Rds"))
 
-    pkg_name <- results$desc_data$package [1]
+    pkg_name <- data$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {
@@ -35,9 +35,9 @@ ghist_dashboard <- function (results, action = "preview") {
     })
 }
 
-timestamps_to_dates <- function (results) {
+timestamps_to_dates <- function (data) {
 
-    lapply (results, function (i) {
+    lapply (data, function (i) {
 
         i$date <- as.Date (i$date)
 
@@ -72,23 +72,69 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
     brio::write_lines (y, f_yaml)
 }
 
-check_dashboard_arg <- function (results) {
+check_dashboard_arg <- function (data) {
 
-    checkmate::assert_list (results, len = 3L, names = "named")
-    checkmate::assert_names (names (results), identical.to = c ("desc_data", "loc", "stats"))
+    checkmate::assert_list (data, len = 2L, names = "named")
+    checkmate::assert_names (names (data), identical.to = c ("pkgstats", "cm"))
+    checkmate::assert_names (names (data$pkgstats), identical.to = c ("desc_data", "loc", "stats"))
+    nms <- c (
+        "contribs_from_gh_api", "contribs_from_log", "dependencies",
+        "dependencies_downstream", "gh_repo_workflow", "gitlog",
+        "issue_comments_from_gh_api", "issues_from_gh_api", "libyears",
+        "prs_from_gh_api", "releases_from_gh_api", "repo_forks",
+        "repo_from_gh_api", "repo_stargazers"
+    )
+    checkmate::assert_names (names (data$cm), identical.to = nms)
 
-    ncols <- vapply (results, ncol, integer (1L))
+    # ------ pkgstats structure ------
+    ncols <- vapply (data$pkgstats, ncol, integer (1L))
     ncols_expected <- c (desc_data = 9L, loc = 15L, stats = 8L)
     if (!identical (ncols, ncols_expected)) {
         cli::cli_abort (paste0 (
-            "'results' has wrong number of columns; ",
+            "'data' has wrong number of columns; ",
             "should be [{ncols_expected}] but is ",
             "[{ncols}]"
         ))
     }
 
-    nrows <- vapply (results, nrow, integer (1L))
+    nrows <- vapply (data$pkgstats, nrow, integer (1L))
     if (!all (nrows > 0L)) {
-        cli::cli_abort ("'results' contains empty tables.")
+        cli::cli_abort ("'data' contains empty tables.")
+    }
+
+    # ------ cm structure ------
+    classes <- vapply (data$cm, class, character (1L))
+    index <- which (classes == "data.frame")
+    if (length (index) != (length (classes) - 1L)) {
+        cli::cli_abort ("Chaoss metrics data have wrong length; should be {length(index)}.")
+    }
+
+    ncols <- vapply (data$cm [index], ncol, integer (1L))
+    ncols_expected <- c (
+        "contribs_from_gh_api" = 17L,
+        "contribs_from_log" = 2L,
+        "dependencies" = 3L,
+        "gh_repo_workflow" = 7L,
+        "gitlog" = 10L,
+        "issue_comments_from_gh_api" = 9L,
+        "issues_from_gh_api" = 24L,
+        "libyears" = 6L,
+        "prs_from_gh_api" = 23L,
+        "releases_from_gh_api" = 10L,
+        "repo_forks" = 2L,
+        "repo_from_gh_api" = 18L,
+        "repo_stargazers" = 2L
+    )
+    if (!identical (ncols, ncols_expected)) {
+        cli::cli_abort (paste0 (
+            "'data' has wrong number of columns; ",
+            "should be [{ncols_expected}] but is ",
+            "[{ncols}]"
+        ))
+    }
+
+    nrows <- vapply (data$cm [index], nrow, integer (1L))
+    if (!all (nrows > 0L)) {
+        cli::cli_abort ("'data' contains empty tables.")
     }
 }

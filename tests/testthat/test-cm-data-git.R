@@ -35,7 +35,7 @@ skip_on_os ("mac")
 
 test_that ("cm data libyears", {
 
-    mock_cm_data ()
+    dat <- mock_cm_data ()
 
     path <- generate_test_pkg ()
     libyears <- cm_data_libyears (path)
