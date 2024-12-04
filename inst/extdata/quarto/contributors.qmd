@@ -11,9 +11,10 @@ format:
 
 ```{r load-pkg, echo = FALSE, message = FALSE}
 library (repometrics)
+requireNamespace ("dplyr", quietly = TRUE)
+requireNamespace ("tidyr", quietly = TRUE)
 ```
-This page includes several graphs providing insight into the historical
-development of the package.
+## Git log
 
 ```{r load-data}
 dat <- readRDS ("results.Rds")
@@ -22,6 +23,8 @@ dat <- readRDS ("results.Rds")
 ctbs <- dat$cm$contributors
 log <- dat$cm$gitlog
 log <- log [which (!log$aut_name == "GitHub"), ]
+
+dayOne <- min (as.Date (log$timestamp))
 
 # Insert gh handles in git log:
 log$gh_handle <- NA_character_
@@ -81,6 +84,11 @@ log_reg <- tidyr::pivot_longer (
     c ("nfiles_changed", "lines_added", "lines_removed", "ncommits")
 )
 ```
+
+This graph shows several metrics for contributions to the git log of the
+repository. Lines show cumulative values since the initial commit on
+`r dayOne` for four variables, and a selected number of top contributors.
+
 
 ```{r ojs-in-log, echo = FALSE}
 ojs_define (log_in = log_reg)
@@ -232,4 +240,47 @@ Plot.plot({
         ),
     ]
 })
+```
+
+## GitHub Issues and Pull Requests
+
+```{r issue-data-preprocess}
+issues_by_date <- dat$cm$issues_from_gh_api |>
+    dplyr::mutate (date = as.Date (created_at)) |>
+    dplyr::mutate (date = as.Date (gsub ("\\-[0-9]{2}$", "-01", date))) |>
+    dplyr::group_by (date) |>
+    dplyr::summarise (issues = dplyr::n ()) |>
+    dplyr::ungroup ()
+issue_cmts <- dat$cm$issue_comments_from_gh_api |>
+    dplyr::mutate (date = as.Date (created_at)) |>
+    dplyr::mutate (date = as.Date (gsub ("\\-[0-9]{2}$", "-01", date))) |>
+    dplyr::group_by (date) |>
+    dplyr::summarise (comments = dplyr::n ()) |>
+    dplyr::ungroup ()
+prs <- dat$cm$prs_from_gh_api |>
+    dplyr::mutate (date = as.Date (created_at)) |>
+    dplyr::mutate (date = as.Date (gsub ("\\-[0-9]{2}$", "-01", date))) |>
+    dplyr::group_by (date) |>
+    dplyr::summarise (prs = dplyr::n ()) |>
+    dplyr::ungroup ()
+
+issue_data <- dplyr::left_join (issues_by_date, issue_cmts, by = "date") |>
+    dplyr::left_join (prs, by = "date")
+
+# Then fill missing dates, replace NA with 0, convert to cumsum, and pivot
+dates <- seq (min (issue_data$date), max (issue_data$date), by = "months")
+issue_data <- tidyr::complete (issue_data, date = dates) |>
+    tidyr::fill () |>
+    dplyr::arrange (by = date) |>
+    tidyr::replace_na (list (
+        issues = 0L,
+        comments = 0L,
+        prs = 0L
+    )) |>
+    dplyr::mutate (
+        issues = cumsum (issues),
+        comments = cumsum (comments),
+        prs = cumsum (prs)
+    ) |>
+    tidyr::pivot_longer (c ("issues", "comments", "prs"))
 ```
