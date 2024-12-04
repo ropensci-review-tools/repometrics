@@ -34,6 +34,12 @@ index <- which (is.na (log$gh_handle))
 index_email <- match (log$aut_email [index], ctbs$email)
 log$gh_handle [index] <- ctbs$gh_handle [index_email]
 
+is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+if (is_test_env) {
+    log$gh_handle <- "mpadge"
+}
+
+
 log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
     dplyr::mutate (date = as.Date (gsub ("\\-[0-9]{2}$", "-01", date))) |>
     dplyr::group_by (gh_handle, date) |>
