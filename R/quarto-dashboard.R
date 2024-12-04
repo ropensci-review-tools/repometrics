@@ -62,6 +62,12 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
     index_qmd <- brio::read_lines (f_index)
     i <- grep ("^title\\:", index_qmd)
     index_qmd [i] <- paste0 ("title: The {", pkg_name, "} package")
+    index_qmd <- gsub (
+        "the XXX repository",
+        paste ("the", pkg_name, "repository"),
+        index_qmd,
+        fixed = TRUE
+    )
     brio::write_lines (index_qmd, f_index)
 
     f_yaml <- fs::path (dir, "_quarto.yml")
@@ -82,7 +88,7 @@ check_dashboard_arg <- function (data) {
         "dependencies_downstream", "gh_repo_workflow", "gitlog",
         "issue_comments_from_gh_api", "issues_from_gh_api", "libyears",
         "prs_from_gh_api", "releases_from_gh_api", "repo_forks",
-        "repo_from_gh_api", "repo_stargazers"
+        "repo_from_gh_api", "repo_stargazers", "contributors"
     )
     checkmate::assert_names (names (data$cm), identical.to = nms)
 
@@ -123,7 +129,8 @@ check_dashboard_arg <- function (data) {
         "releases_from_gh_api" = 10L,
         "repo_forks" = 2L,
         "repo_from_gh_api" = 18L,
-        "repo_stargazers" = 2L
+        "repo_stargazers" = 2L,
+        "contributors" = 3L
     )
     if (!identical (ncols, ncols_expected)) {
         cli::cli_abort (paste0 (

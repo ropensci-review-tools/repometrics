@@ -18,6 +18,7 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L) {
         num_cores = num_cores
     )
     cm <- cm_data (path)
+    cm$contributors <- get_all_contribs (cm$contribs_from_log, cm$contribs_from_gh_api)
 
     list (pkgstats = pkgstats, cm = cm)
 }

@@ -1,5 +1,5 @@
 ---
-title: "Metrics from GitHub "
+title: "Contributors"
 execute:
   echo: false
 format: 
@@ -14,3 +14,222 @@ library (repometrics)
 ```
 This page includes several graphs providing insight into the historical
 development of the package.
+
+```{r load-data}
+dat <- readRDS ("results.Rds")
+```
+```{r ctbs-git-data}
+ctbs <- dat$cm$contributors
+log <- dat$cm$gitlog
+log <- log [which (!log$aut_name == "GitHub"), ]
+
+# Insert gh handles in git log:
+log$gh_handle <- NA_character_
+
+# Match by log$aut_name:
+index <- match (log$aut_name, ctbs$name)
+log$gh_handle <- ctbs$gh_handle [index]
+# Match by log$aut_email:
+index <- which (is.na (log$gh_handle))
+index_email <- match (log$aut_email [index], ctbs$email)
+log$gh_handle [index] <- ctbs$gh_handle [index_email]
+
+is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+if (is_test_env) {
+    log$gh_handle <- "mpadge"
+}
+
+
+log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
+    dplyr::mutate (date = as.Date (gsub ("\\-[0-9]{2}$", "-01", date))) |>
+    dplyr::group_by (gh_handle, date) |>
+    dplyr::summarise (
+        nfiles_changed = sum (nfiles_changed),
+        lines_added = sum (lines_added) - sum (whitespace_added),
+        lines_removed = sum (lines_removed) - sum (whitespace_removed),
+        ncommits = dplyr::n (),
+        .groups = "keep"
+    ) |>
+    dplyr::ungroup () |>
+    dplyr::filter (!is.na (gh_handle))
+
+dates <- seq (min (log$date), max (log$date), by = "months")
+
+log_reg <- dplyr::group_by (log, gh_handle) |>
+    tidyr::complete (date = dates) |>
+    tidyr::fill () |>
+    dplyr::arrange (by = date) |>
+    dplyr::ungroup () |>
+    tidyr::replace_na (list (
+        nfiles_changed = 0L,
+        lines_added = 0L,
+        lines_removed = 0L,
+        ncommits = 0L
+    )) |>
+    dplyr::group_by (gh_handle) |>
+    dplyr::mutate (
+        nfiles_changed = cumsum (nfiles_changed),
+        lines_added = cumsum (lines_added),
+        lines_removed = cumsum (lines_removed),
+        ncommits = cumsum (ncommits),
+        date = as.Date (date)
+    ) |>
+    dplyr::ungroup ()
+
+log_reg <- tidyr::pivot_longer (
+    log_reg,
+    c ("nfiles_changed", "lines_added", "lines_removed", "ncommits")
+)
+```
+
+```{r ojs-in-log, echo = FALSE}
+ojs_define (log_in = log_reg)
+```
+```{ojs log-transpose-and-filter}
+log = {
+    return transpose(log_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof varName = Inputs.radio(
+    new Map([
+        ["Nr. files changed", "nfiles_changed"],
+        ["Lines added", "lines_added"],
+        ["Lines removed", "lines_removed"],
+        ["Nr. commits", "ncommits"],
+    ]),
+    {
+        label: "Variable:",
+        value: "ncommits"
+    }
+)
+logFiltered = log.filter(function(row) {
+    return varName.includes(row.name)
+})
+```
+
+```{ojs count-contributors}
+function getMaxValues(log, varName) {
+    const ctbs = log.map((item) => item.gh_handle);
+    const uniqueCtbs = [... new Set(ctbs)];
+
+    const maxValues = {};
+    uniqueCtbs.forEach(handle => {
+        const logHandle = log.filter(item => item.gh_handle === handle);
+        if (logHandle.some(item => item.name === varName)) {
+            maxValues[handle] = Math.max(...logHandle
+                .filter(item => item.name === varName)
+                .map(item => item.value));
+        } else {
+            console.warn(`No entry found with name ${varName} for handle: ${handle}`);
+        }
+    })
+
+    const sortedMaxValues = Object.fromEntries(
+        Object.entries(maxValues).sort((a, b) => b[1] - a[1])
+    );
+
+    return sortedMaxValues;
+}
+maxValues = getMaxValues(log, varName);
+numUniqueCtbs = Object.keys(maxValues).length;
+```
+
+```{ojs num-contribs-selector}
+viewof numContribs = Inputs.range(
+    [1, numUniqueCtbs],
+    {
+        step: 1,
+        label: "Num. of Top Contributors",
+        value: 5
+    }
+)
+function reduceLogToCtbs(log, maxValues, numContribs) {
+    const topCtbs = Object.keys(maxValues).slice(0, numContribs);
+    const logReduced = log.filter(row => topCtbs.includes(row.gh_handle));
+    return logReduced;
+}
+logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribs);
+```
+
+```{ojs log-scale-checkbox}
+viewof logScale = Inputs.radio(["true", "false"],
+    {
+        value: "true",
+        label: "Log Scale:"
+    }
+)
+logType = logScale === "true" ? "log" : "linear";
+```
+
+
+
+```{ojs log-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 90,
+    marginBottom: 50,
+    x: { grid: true },
+    y: { grid: true, type: logType },
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            logReduced,
+            {
+                x: "date",
+                y: "value",
+                stroke: "gh_handle",
+                fontSize: 18,
+                curve: "basis-open"
+            },
+        ),
+        Plot.text(
+            logReduced,
+            Plot.selectLast({
+                x: "date",
+                y: "value",
+                z: "gh_handle",
+                text: "gh_handle",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 85,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
