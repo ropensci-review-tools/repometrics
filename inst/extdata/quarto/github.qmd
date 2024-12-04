@@ -104,10 +104,15 @@ function getMaxValues(log) {
 
     const maxValues = {};
     uniqueCtbs.forEach(handle => {
-        maxValues[handle] = Math.max(...log
-            .filter(item => item.gh_handle == handle)
-            .filter(item => item.name == "nfiles_changed")
-            .map(item => item.value));
+        const logHandle = log.filter(item => item.gh_handle === handle)
+        if (logHandle.some(item => item.name === "nfiles_changed")) {
+            maxValues[handle] = Math.max(...logHandle
+                .filter(item => item.name === "nfiles_changed")
+                .map(item => item.value));
+        } else {
+            console.warn(`No entry found with name "nfiles_changed" for handle: ${handle}`);
+            maxValues[handle] = null;
+        }
     })
     return maxValues;
 }
