@@ -97,6 +97,29 @@ logFiltered = log.filter(function(row) {
 })
 ```
 
+```{ojs count-contributors}
+function getMaxValues(log) {
+    const ctbs = log.map((item) => item.gh_handle);
+    const uniqueCtbs = [... new Set(ctbs)];
+
+    const maxValues = {};
+    uniqueCtbs.forEach(handle => {
+        maxValues[handle] = Math.max(...log
+            .filter(item => item.gh_handle == handle)
+            .filter(item => item.name == "nfiles_changed")
+            .map(item => item.value));
+    })
+    return maxValues;
+}
+function getLength(x) {
+    return x.length;
+}
+maxValues = getMaxValues(log);
+uniqueCtbs = Object.keys(maxValues);
+numUniqueCtbs = getLength(uniqueCtbs);
+```
+
+
 ```{ojs log-plot}
 Plot.plot({
     style: `
