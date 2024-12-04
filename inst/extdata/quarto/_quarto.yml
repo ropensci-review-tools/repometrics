@@ -8,7 +8,7 @@ website:
   navbar:
     left:
       - fn-stats.qmd
-      - github.qmd
+      - contributors.qmd
     right:
       - icon: "github"
         menu:
