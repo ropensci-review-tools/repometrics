@@ -100,7 +100,7 @@ log = {
         date: new Date(row.date)
     }));
 }
-viewof varName = Inputs.radio(
+viewof varNameGitLog = Inputs.radio(
     new Map([
         ["Nr. files changed", "nfiles_changed"],
         ["Lines added", "lines_added"],
@@ -113,24 +113,24 @@ viewof varName = Inputs.radio(
     }
 )
 logFiltered = log.filter(function(row) {
-    return varName.includes(row.name)
+    return varNameGitLog.includes(row.name)
 })
 ```
 
 ```{ojs count-contributors}
-function getMaxValues(log, varName) {
+function getMaxValues(log, varNameGitLog) {
     const ctbs = log.map((item) => item.gh_handle);
     const uniqueCtbs = [... new Set(ctbs)];
 
     const maxValues = {};
     uniqueCtbs.forEach(handle => {
         const logHandle = log.filter(item => item.gh_handle === handle);
-        if (logHandle.some(item => item.name === varName)) {
+        if (logHandle.some(item => item.name === varNameGitLog)) {
             maxValues[handle] = Math.max(...logHandle
-                .filter(item => item.name === varName)
+                .filter(item => item.name === varNameGitLog)
                 .map(item => item.value));
         } else {
-            console.warn(`No entry found with name ${varName} for handle: ${handle}`);
+            console.warn(`No entry found with name ${varNameGitLog} for handle: ${handle}`);
         }
     })
 
@@ -140,12 +140,12 @@ function getMaxValues(log, varName) {
 
     return sortedMaxValues;
 }
-maxValues = getMaxValues(log, varName);
+maxValues = getMaxValues(log, varNameGitLog);
 numUniqueCtbs = Object.keys(maxValues).length;
 ```
 
 ```{ojs num-contribs-selector}
-viewof numContribs = Inputs.range(
+viewof numContribsGitLog = Inputs.range(
     [1, numUniqueCtbs],
     {
         step: 1,
@@ -153,22 +153,22 @@ viewof numContribs = Inputs.range(
         value: 5
     }
 )
-function reduceLogToCtbs(log, maxValues, numContribs) {
-    const topCtbs = Object.keys(maxValues).slice(0, numContribs);
+function reduceLogToCtbs(log, maxValues, numContribsGitLog) {
+    const topCtbs = Object.keys(maxValues).slice(0, numContribsGitLog);
     const logReduced = log.filter(row => topCtbs.includes(row.gh_handle));
     return logReduced;
 }
-logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribs);
+logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribsGitLog);
 ```
 
 ```{ojs log-scale-checkbox}
-viewof logScale = Inputs.radio(["true", "false"],
+viewof logScaleGitLog = Inputs.radio(["true", "false"],
     {
         value: "true",
         label: "Log Scale:"
     }
 )
-logType = logScale === "true" ? "log" : "linear";
+logTypeGitLog = logScaleGitLog === "true" ? "log" : "linear";
 ```
 
 
@@ -181,7 +181,7 @@ Plot.plot({
     marginLeft: 90,
     marginBottom: 50,
     x: { grid: true },
-    y: { grid: true, type: logType },
+    y: { grid: true, type: logTypeGitLog },
     marks: [
         Plot.ruleY([0]),
         Plot.lineY(
