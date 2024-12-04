@@ -142,15 +142,27 @@ function reduceLogToCtbs(log, maxValues, numContribs) {
 logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribs);
 ```
 
+```{ojs log-scale-checkbox}
+viewof logScale = Inputs.radio(["true", "false"],
+    {
+        value: "true",
+        label: "Log Scale:"
+    }
+)
+logType = logScale === "true" ? "log" : "linear";
+```
+
+
+
 ```{ojs log-plot}
 Plot.plot({
     style: `
         overflow: visible;
     `,
-    marginLeft: 60,
+    marginLeft: 90,
     marginBottom: 50,
-    x: {grid: true},
-    y: {grid: true},
+    x: { grid: true },
+    y: { grid: true, type: logType },
     marks: [
         Plot.ruleY([0]),
         Plot.lineY(
@@ -161,7 +173,7 @@ Plot.plot({
                 stroke: "gh_handle",
                 fontSize: 18,
                 curve: "basis-open"
-            }
+            },
         ),
         Plot.text(
             logReduced,
@@ -170,7 +182,7 @@ Plot.plot({
                 y: "value",
                 z: "gh_handle",
                 text: "gh_handle",
-                textAnchor: "end",
+                textAnchor: "start",
                 dx: 3,
                 fontSize: 18
             })
@@ -203,7 +215,7 @@ Plot.plot({
                 fontSize: 24,
                 label: "Value",
                 labelAnchor: "center",
-                labelOffset: 55,
+                labelOffset: 85,
                 ticks: []
             }
         ),
