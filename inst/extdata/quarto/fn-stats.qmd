@@ -276,7 +276,7 @@ loc <- tidyr::pivot_longer (
         "ndoc" ~ "doc"
     )) |>
     dplyr::group_by (date, dir, loc_measure) |>
-    dplyr::summarise (value = mean (value)) |>
+    dplyr::summarise (value = mean (value), .groups = "keep") |>
     dplyr::ungroup () |>
     dplyr::arrange (by = dplyr::desc (date))
 
