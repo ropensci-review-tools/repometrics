@@ -41,7 +41,7 @@ log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
         nfiles_changed = sum (nfiles_changed),
         lines_added = sum (lines_added) - sum (whitespace_added),
         lines_removed = sum (lines_removed) - sum (whitespace_removed),
-        ncontribs = dplyr::n (),
+        ncommits = dplyr::n (),
         .groups = "keep"
     ) |>
     dplyr::ungroup () |>
@@ -58,21 +58,21 @@ log_reg <- dplyr::group_by (log, gh_handle) |>
         nfiles_changed = 0L,
         lines_added = 0L,
         lines_removed = 0L,
-        ncontribs = 0L
+        ncommits = 0L
     )) |>
     dplyr::group_by (gh_handle) |>
     dplyr::mutate (
         nfiles_changed = cumsum (nfiles_changed),
         lines_added = cumsum (lines_added),
         lines_removed = cumsum (lines_removed),
-        ncontribs = cumsum (ncontribs),
+        ncommits = cumsum (ncommits),
         date = as.Date (date)
     ) |>
     dplyr::ungroup ()
 
 log_reg <- tidyr::pivot_longer (
     log_reg,
-    c ("nfiles_changed", "lines_added", "lines_removed", "ncontribs")
+    c ("nfiles_changed", "lines_added", "lines_removed", "ncommits")
 )
 ```
 
@@ -87,10 +87,15 @@ log = {
     }));
 }
 viewof varName = Inputs.radio(
-    ["nfiles_changed", "lines_added", "lines_removed", "ncontribs"],
+    new Map([
+        ["Nr. files changed", "nfiles_changed"],
+        ["Lines added", "lines_added"],
+        ["Lines removed", "lines_removed"],
+        ["Nr. commits", "ncommits"],
+    ]),
     {
-        value: "ncontribs",
         label: "Variable:",
+        value: "ncommits"
     }
 )
 logFiltered = log.filter(function(row) {
