@@ -62,6 +62,12 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
     index_qmd <- brio::read_lines (f_index)
     i <- grep ("^title\\:", index_qmd)
     index_qmd [i] <- paste0 ("title: The {", pkg_name, "} package")
+    index_qmd <- gsub (
+        "the XXX repository",
+        paste ("the", pkg_name, "repository"),
+        index_qmd,
+        fixed = TRUE
+    )
     brio::write_lines (index_qmd, f_index)
 
     f_yaml <- fs::path (dir, "_quarto.yml")

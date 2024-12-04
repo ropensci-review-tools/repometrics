@@ -1,5 +1,5 @@
 ---
-title: "Metrics from git commit history "
+title: "Git history"
 execute:
   echo: false
 format: 

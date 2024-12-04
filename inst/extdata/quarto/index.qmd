@@ -2,4 +2,4 @@
 title: "Historical Package Development"
 ---
 
-This site contains stuff.
+This is a dashboard for the XXX repository.
