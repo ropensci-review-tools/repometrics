@@ -113,18 +113,18 @@ Plot.plot({
             {
                 x: "date",
                 y: "value",
-                stroke: "measure",
+                stroke: "gh_handle",
                 fontSize: 18,
                 curve: "basis-open"
             }
         ),
         Plot.text(
             logFiltered,
-            Plot.selectFirst({
+            Plot.selectLast({
                 x: "date",
                 y: "value",
-                z: "measure",
-                text: "measure",
+                z: "gh_handle",
+                text: "gh_handle",
                 textAnchor: "end",
                 dx: 3,
                 fontSize: 18
