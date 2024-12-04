@@ -44,7 +44,8 @@ log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
         ncontribs = dplyr::n (),
         .groups = "keep"
     ) |>
-    dplyr::ungroup ()
+    dplyr::ungroup () |>
+    dplyr::filter (!is.na (handle))
 
 dates <- seq (min (log$date), max (log$date), by = "months")
 
@@ -104,19 +105,22 @@ function getMaxValues(log) {
 
     const maxValues = {};
     uniqueCtbs.forEach(handle => {
-        const logHandle = log.filter(item => item.gh_handle === handle)
+        const logHandle = log.filter(item => item.gh_handle === handle);
         if (logHandle.some(item => item.name === "nfiles_changed")) {
             maxValues[handle] = Math.max(...logHandle
                 .filter(item => item.name === "nfiles_changed")
                 .map(item => item.value));
         } else {
             console.warn(`No entry found with name "nfiles_changed" for handle: ${handle}`);
-            maxValues[handle] = null;
         }
     })
+    console.log("------MAX VALUES = " + JSON.stringify(maxValues));
+
     const sortedMaxValues = Object.fromEntries(
         Object.entries(maxValues).sort((a, b) => b[1] - a[1])
     );
+    console.log("------SORTED MAX VALUES = " + JSON.stringify(sortedMaxValues));
+
     return sortedMaxValues;
 }
 function getLength(x) {
@@ -125,6 +129,9 @@ function getLength(x) {
 maxValues = getMaxValues(log);
 uniqueCtbs = Object.keys(maxValues);
 numUniqueCtbs = getLength(uniqueCtbs);
+console.log("-----max values = " + JSON.stringify(maxValues));
+console.log("-----unique contribs = " + uniqueCtbs);
+console.log("-----Number of unique contribs = " + numUniqueCtbs);
 ```
 
 
