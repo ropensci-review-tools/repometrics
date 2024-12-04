@@ -278,11 +278,13 @@ issue_data <- tidyr::complete (issue_data, date = dates) |>
         prs = 0L
     )) |>
     dplyr::mutate (
-        issues = cumsum (issues),
-        comments = cumsum (comments),
-        prs = cumsum (prs)
+        issues_cum = cumsum (issues),
+        comments_cum = cumsum (comments),
+        prs_cum = cumsum (prs)
     ) |>
-    tidyr::pivot_longer (c ("issues", "comments", "prs"))
+    tidyr::pivot_longer (
+        c ("issues", "comments", "prs", "issues_cum", "comments_cum", "prs_cum")
+    )
 ```
 
 ```{r ojs-in-issue-data, echo = FALSE}
@@ -306,20 +308,50 @@ viewof varNameIssues = Inputs.radio(
         value: "issues"
     }
 )
-issueDataFiltered = issueData.filter(function(row) {
-    return varNameIssues.includes(row.name)
-})
 ```
 
 ```{ojs log-scale-checkbox-issues}
-viewof logScaleIssues = Inputs.radio(["true", "false"],
+viewof cumulativeIssues = Inputs.radio(["true", "false"],
     {
         value: "true",
+        label: "Cumulative Values:"
+    }
+)
+```
+
+
+```{ojs cumulative-checkbox-issues}
+viewof logScaleIssues = Inputs.radio(["true", "false"],
+    {
+        value: "false",
         label: "Log Scale:"
     }
 )
 logTypeIssues = logScaleIssues === "true" ? "log" : "linear";
+
+function replaceZeroWithOne(data) {
+    return data.map(row => {
+        const newRow = { ...row };
+        if (logTypeIssues === "log") {
+            Object.values(newRow).forEach(value => {
+                if (typeof value === "number" && value === 0) {
+                    newRow.value = 1;
+                }
+            });
+        }
+        return newRow;
+    });
+}
 ```
+
+```{ojs filter-issue-data}
+varNameIssuesActual = cumulativeIssues === "true" ? varNameIssues + "_cum" : varNameIssues;
+issueDataFiltered = issueData.filter(function(row) {
+    return row.name === varNameIssuesActual;
+})
+issueDataFiltered01 = replaceZeroWithOne(issueDataFiltered);
+```
+
 
 ```{ojs issues-plot}
 Plot.plot({
@@ -333,7 +365,7 @@ Plot.plot({
     marks: [
         Plot.ruleY([0]),
         Plot.lineY(
-            issueDataFiltered,
+            issueDataFiltered01,
             {
                 x: "date",
                 y: "value",
