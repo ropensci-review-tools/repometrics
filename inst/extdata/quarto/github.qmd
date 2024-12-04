@@ -45,7 +45,7 @@ log <- dplyr::mutate (log, date = as.Date (timestamp)) |>
         .groups = "keep"
     ) |>
     dplyr::ungroup () |>
-    dplyr::filter (!is.na (handle))
+    dplyr::filter (!is.na (gh_handle))
 
 dates <- seq (min (log$date), max (log$date), by = "months")
 
@@ -86,7 +86,7 @@ log = {
         date: new Date(row.date)
     }));
 }
-viewof name = Inputs.radio(
+viewof varName = Inputs.radio(
     ["nfiles_changed", "lines_added", "lines_removed", "ncontribs"],
     {
         value: "ncontribs",
@@ -94,32 +94,30 @@ viewof name = Inputs.radio(
     }
 )
 logFiltered = log.filter(function(row) {
-  return name.includes(row.name)
+    return varName.includes(row.name)
 })
 ```
 
 ```{ojs count-contributors}
-function getMaxValues(log) {
+function getMaxValues(log, varName) {
     const ctbs = log.map((item) => item.gh_handle);
     const uniqueCtbs = [... new Set(ctbs)];
 
     const maxValues = {};
     uniqueCtbs.forEach(handle => {
         const logHandle = log.filter(item => item.gh_handle === handle);
-        if (logHandle.some(item => item.name === "nfiles_changed")) {
+        if (logHandle.some(item => item.name === varName)) {
             maxValues[handle] = Math.max(...logHandle
-                .filter(item => item.name === "nfiles_changed")
+                .filter(item => item.name === varName)
                 .map(item => item.value));
         } else {
-            console.warn(`No entry found with name "nfiles_changed" for handle: ${handle}`);
+            console.warn(`No entry found with name ${varName} for handle: ${handle}`);
         }
     })
-    console.log("------MAX VALUES = " + JSON.stringify(maxValues));
 
     const sortedMaxValues = Object.fromEntries(
         Object.entries(maxValues).sort((a, b) => b[1] - a[1])
     );
-    console.log("------SORTED MAX VALUES = " + JSON.stringify(sortedMaxValues));
 
     return sortedMaxValues;
 }
@@ -129,10 +127,21 @@ function getLength(x) {
 maxValues = getMaxValues(log);
 uniqueCtbs = Object.keys(maxValues);
 numUniqueCtbs = getLength(uniqueCtbs);
-console.log("-----max values = " + JSON.stringify(maxValues));
-console.log("-----unique contribs = " + uniqueCtbs);
-console.log("-----Number of unique contribs = " + numUniqueCtbs);
 ```
+
+```{ojs num-contribs-selector}
+viewof numContribus = Inputs.range(
+    [1, numUniqueCtbs],
+    {
+        step: 1,
+        label: "Num. of Top Contributors",
+        value: 5
+    }
+)
+```
+
+
+
 
 
 ```{ojs log-plot}
