@@ -114,7 +114,10 @@ function getMaxValues(log) {
             maxValues[handle] = null;
         }
     })
-    return maxValues;
+    const sortedMaxValues = Object.fromEntries(
+        Object.entries(maxValues).sort((a, b) => b[1] - a[1])
+    );
+    return sortedMaxValues;
 }
 function getLength(x) {
     return x.length;
