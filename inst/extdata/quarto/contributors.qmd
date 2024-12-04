@@ -161,7 +161,7 @@ function reduceLogToCtbs(log, maxValues, numContribsGitLog) {
 logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribsGitLog);
 ```
 
-```{ojs log-scale-checkbox}
+```{ojs log-scale-checkbox-gitlog}
 viewof logScaleGitLog = Inputs.radio(["true", "false"],
     {
         value: "true",
@@ -283,4 +283,87 @@ issue_data <- tidyr::complete (issue_data, date = dates) |>
         prs = cumsum (prs)
     ) |>
     tidyr::pivot_longer (c ("issues", "comments", "prs"))
+```
+
+```{r ojs-in-issue-data, echo = FALSE}
+ojs_define (issue_data_in = issue_data)
+```
+```{ojs issue-data-transpose-and-filter}
+issueData = {
+    return transpose(issue_data_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof varNameIssues = Inputs.radio(
+    new Map([
+        ["Nr. issues", "issues"],
+        ["Nr. PRs", "prs"],
+        ["Nr. issue comments", "comments"],
+    ]),
+    {
+        label: "Variable:",
+        value: "issues"
+    }
+)
+issueDataFiltered = issueData.filter(function(row) {
+    return varNameIssues.includes(row.name)
+})
+```
+
+```{ojs log-scale-checkbox-issues}
+viewof logScaleIssues = Inputs.radio(["true", "false"],
+    {
+        value: "true",
+        label: "Log Scale:"
+    }
+)
+logTypeIssues = logScaleIssues === "true" ? "log" : "linear";
+```
+
+```{ojs issues-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 90,
+    marginBottom: 50,
+    x: { grid: true },
+    y: { grid: true, type: logTypeIssues },
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            issueDataFiltered,
+            {
+                x: "date",
+                y: "value",
+                fontSize: 18,
+                curve: "basis-open"
+            },
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+    ]
+})
 ```
