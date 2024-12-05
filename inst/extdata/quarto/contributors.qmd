@@ -71,17 +71,21 @@ log_reg <- dplyr::group_by (log, gh_handle) |>
     )) |>
     dplyr::group_by (gh_handle) |>
     dplyr::mutate (
-        nfiles_changed = cumsum (nfiles_changed),
-        lines_added = cumsum (lines_added),
-        lines_removed = cumsum (lines_removed),
-        ncommits = cumsum (ncommits),
+        nfiles_changed_cum = cumsum (nfiles_changed),
+        lines_added_cum = cumsum (lines_added),
+        lines_removed_cum = cumsum (lines_removed),
+        ncommits_cum = cumsum (ncommits),
         date = as.Date (date)
     ) |>
     dplyr::ungroup ()
 
 log_reg <- tidyr::pivot_longer (
     log_reg,
-    c ("nfiles_changed", "lines_added", "lines_removed", "ncommits")
+    c (
+        "nfiles_changed", "lines_added", "lines_removed", "ncommits",
+        "nfiles_changed_cum", "lines_added_cum", "lines_removed_cum",
+        "ncommits_cum"
+    )
 )
 ```
 
@@ -112,10 +116,49 @@ viewof varNameGitLog = Inputs.radio(
         value: "ncommits"
     }
 )
-logFiltered = log.filter(function(row) {
-    return varNameGitLog.includes(row.name)
-})
 ```
+
+```{ojs cumulative-checkbox-gitlog}
+viewof cumulativeGitLog = Inputs.radio(["true", "false"],
+    {
+        value: "true",
+        label: "Cumulative Values:"
+    }
+)
+```
+
+```{ojs log-scale-checkbox-gitlog}
+viewof logScaleGitLog = Inputs.radio(["true", "false"],
+    {
+        value: "true",
+        label: "Log Scale:"
+    }
+)
+logTypeGitLog = logScaleGitLog === "true" ? "log" : "linear";
+```
+
+```{ojs transform-gitlog-data}
+varNameGitLogActual = cumulativeGitLog === "true" ? varNameGitLog + "_cum" : varNameGitLog;
+logFiltered = log.filter(function(row) {
+    return row.name === varNameGitLogActual;
+})
+
+function replaceZeroWithOneLog(data) {
+    return data.map(row => {
+        const newRow = { ...row };
+        if (logTypeGitLog === "log") {
+            Object.values(newRow).forEach(value => {
+                if (typeof value === "number" && value === 0) {
+                    newRow.value = 1;
+                }
+            });
+        }
+        return newRow;
+    });
+}
+logFiltered01 = replaceZeroWithOneLog(logFiltered);
+```
+
 
 ```{ojs count-contributors}
 function getMaxValues(log, varNameGitLog) {
@@ -159,18 +202,8 @@ function reduceLogToCtbs(log, maxValues, numContribsGitLog) {
     return logReduced;
 }
 logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribsGitLog);
+logReduced01 = reduceLogToCtbs(logFiltered01, maxValues, numContribsGitLog);
 ```
-
-```{ojs log-scale-checkbox-gitlog}
-viewof logScaleGitLog = Inputs.radio(["true", "false"],
-    {
-        value: "true",
-        label: "Log Scale:"
-    }
-)
-logTypeGitLog = logScaleGitLog === "true" ? "log" : "linear";
-```
-
 
 
 ```{ojs log-plot}
@@ -185,7 +218,7 @@ Plot.plot({
     marks: [
         Plot.ruleY([0]),
         Plot.lineY(
-            logReduced,
+            logReduced01,
             {
                 x: "date",
                 y: "value",
@@ -195,7 +228,7 @@ Plot.plot({
             },
         ),
         Plot.text(
-            logReduced,
+            logReduced01,
             Plot.selectLast({
                 x: "date",
                 y: "value",
@@ -310,7 +343,7 @@ viewof varNameIssues = Inputs.radio(
 )
 ```
 
-```{ojs log-scale-checkbox-issues}
+```{ojs cumulative-checkbox-issues}
 viewof cumulativeIssues = Inputs.radio(["true", "false"],
     {
         value: "true",
@@ -320,7 +353,7 @@ viewof cumulativeIssues = Inputs.radio(["true", "false"],
 ```
 
 
-```{ojs cumulative-checkbox-issues}
+```{ojs log-scale-checkbox-issues}
 viewof logScaleIssues = Inputs.radio(["true", "false"],
     {
         value: "false",
@@ -329,7 +362,7 @@ viewof logScaleIssues = Inputs.radio(["true", "false"],
 )
 logTypeIssues = logScaleIssues === "true" ? "log" : "linear";
 
-function replaceZeroWithOne(data) {
+function replaceZeroWithOneIssues(data) {
     return data.map(row => {
         const newRow = { ...row };
         if (logTypeIssues === "log") {
@@ -349,7 +382,7 @@ varNameIssuesActual = cumulativeIssues === "true" ? varNameIssues + "_cum" : var
 issueDataFiltered = issueData.filter(function(row) {
     return row.name === varNameIssuesActual;
 })
-issueDataFiltered01 = replaceZeroWithOne(issueDataFiltered);
+issueDataFiltered01 = replaceZeroWithOneIssues(issueDataFiltered);
 ```
 
 
@@ -358,7 +391,7 @@ Plot.plot({
     style: `
         overflow: visible;
     `,
-    marginLeft: 90,
+    marginLeft: 80,
     marginBottom: 50,
     x: { grid: true },
     y: { grid: true, type: logTypeIssues },
@@ -394,6 +427,15 @@ Plot.plot({
                 fontSize: 14,
                 label: "",
                 labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 75,
+                ticks: []
             }
         ),
     ]
