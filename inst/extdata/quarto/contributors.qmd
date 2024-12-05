@@ -203,8 +203,6 @@ function reduceLogToCtbs(log, maxValues, numContribsGitLog) {
 }
 logReduced = reduceLogToCtbs(logFiltered, maxValues, numContribsGitLog);
 logReduced01 = reduceLogToCtbs(logFiltered01, maxValues, numContribsGitLog);
-console.log("------log" + JSON.stringify(logReduced));
-console.log("------log01" + JSON.stringify(logReduced01));
 ```
 
 
