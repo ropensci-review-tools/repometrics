@@ -96,7 +96,7 @@ Plot.plot({
                 y: "value",
                 z: "measure",
                 text: "measure",
-                textAnchor: "end",
+                textAnchor: "start",
                 dx: 3,
                 fontSize: 18
             })
@@ -139,7 +139,18 @@ Plot.plot({
 
 ## General data
 
-This plot shows some general data.
+This plot shows data on the following three aspects:
+
+- `authors` = Numbers of package authors, distinguishing between authors (with
+"aut" role) and contributors (with "ctb" role). These are extracted directly
+from the package `DESCRIPTION` file, whereas values displayed in the
+"Contributors" page are taken from both Git logs and GitHub, regardless of
+presence in the `DESCRIPTION` file.
+- `functions` = Numbers of functions in the package, distinguishing between
+exported functions and total number including both exported and non-exported
+functions.
+- `external` = Numbers of external calls to functions from other packages,
+distinguishing between calls to base R itself, and calls to all other packages.
 
 ```{r desc-data}
 cols <- names (dat$desc_data) [which (!names (dat$desc_data) %in% c ("package"))]
