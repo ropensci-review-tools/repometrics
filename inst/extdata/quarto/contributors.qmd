@@ -393,7 +393,7 @@ Plot.plot({
     style: `
         overflow: visible;
     `,
-    marginLeft: 90,
+    marginLeft: 80,
     marginBottom: 50,
     x: { grid: true },
     y: { grid: true, type: logTypeIssues },
@@ -429,6 +429,15 @@ Plot.plot({
                 fontSize: 14,
                 label: "",
                 labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 75,
+                ticks: []
             }
         ),
     ]
