@@ -1,4 +1,4 @@
-#' Start quarto dashboard with results of main \link{repo_pkgstats_history}
+#' Start quarto dashboard with results of main \link{repometrics_data}
 #' function.
 #'
 #' @param data Results of main \link{repometrics_data} function applied
@@ -10,7 +10,7 @@
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #' @export
-ghist_dashboard <- function (data, action = "preview") {
+repometrics_dashboard <- function (data, action = "preview") {
 
     check_dashboard_arg (data)
     data$pkgstats <- timestamps_to_dates (data$pkgstats)

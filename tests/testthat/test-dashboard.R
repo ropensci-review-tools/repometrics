@@ -9,25 +9,25 @@ test_that ("dashboard input errors", {
 
     data <- data0
     expect_error (
-        ghist_dashboard (data, action = "noarg"),
+        repometrics_dashboard (data, action = "noarg"),
         "\\'arg\\' should be one of"
     )
     names (data) [1] <- "changed"
     expect_error (
-        ghist_dashboard (data, action = "render"),
+        repometrics_dashboard (data, action = "render"),
         "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
     data$pkgstats$stats <- data$pkgstats$stats [, -1]
     expect_error (
-        ghist_dashboard (data, action = "render"),
+        repometrics_dashboard (data, action = "render"),
         "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
     data <- data0
     data$pkgstats$stats <- data$pkgstats$stats [-seq_len (nrow (data$pkgstats$stats)), ]
     expect_error (
-        ghist_dashboard (data, action = "render"),
+        repometrics_dashboard (data, action = "render"),
         "\\'data\\' contains empty tables."
     )
 })
@@ -35,7 +35,7 @@ test_that ("dashboard input errors", {
 test_that ("dashboard build", {
 
     data <- data0
-    ghist_dashboard (data, action = "render")
+    repometrics_dashboard (data, action = "render")
 
     # Expect quarto docs to have been modified with package name:
     pkg_name <- data0$pkgstats$desc_data$package [1]
