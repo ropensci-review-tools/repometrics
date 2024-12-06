@@ -12,13 +12,18 @@
 #' @export
 repometrics_data <- function (path, step_days = 1L, num_cores = -1L) {
 
+    cli::cli_alert_info ("Extract package statistics ...")
     pkgstats <- repo_pkgstats_history (
         path,
         step_days = step_days,
         num_cores = num_cores
     )
+    cli::cli_alert_success ("Done!")
+
+    cli::cli_alert_info ("Extract GitHub data ...")
     cm <- cm_data (path)
     cm$contributors <- get_all_contribs (cm$contribs_from_log, cm$contribs_from_gh_api)
+    cli::cli_alert_success ("Done!")
 
     list (pkgstats = pkgstats, cm = cm)
 }
