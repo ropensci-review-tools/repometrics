@@ -30,3 +30,26 @@ test_that ("author matches", { # R/cm-metric-cran-downloads.R
     expect_true ("mpadge" %in% ctbs_log$gh_handle)
     expect_true ("hfrick" %in% ctbs_log$gh_handle)
 })
+
+test_that ("url from path", {
+
+    path <- generate_test_pkg ()
+    url <- pkg_gh_url_from_path (path)
+    url_in_desc <- "https://github.com/ropensci-review-tools/goodpractice"
+    expect_equal (url, url_in_desc)
+
+    # Rm URL from desc:
+    desc_path <- fs::dir_ls (path, regexp = "DESCRIPTION", type = "file")
+    desc <- brio::readLines (desc_path)
+    desc <- desc [-grep ("^URL", desc)]
+    writeLines (desc, desc_path)
+    expect_length (pkg_gh_url_from_path (path), 0L)
+
+    # Add git remote:
+    gert::git_remote_add ("https://not.a.url", repo = path)
+    expect_length (pkg_gh_url_from_path (path), 0L)
+    gert::git_remote_set_url (url_in_desc, remote = "origin", repo = path)
+    expect_equal (pkg_gh_url_from_path (path), url_in_desc)
+
+    fs::dir_delete (path)
+})

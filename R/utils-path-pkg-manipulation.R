@@ -11,14 +11,26 @@ pkg_gh_url_from_path <- function (path) {
     checkmate::assert_file_exists (desc)
 
     desc <- read.dcf (desc)
-    ret <- NULL
-    if ("URL" %in% colnames (desc)) {
-        url <- strsplit (unname (desc [, "URL"]), "\\n|,") [[1]]
+    url <- NULL
+    strip_url <- function (url) {
+        url <- strsplit (unname (url), "\\n|,") [[1]]
         url <- gsub ("^[[:space:]]*", "", url)
         url <- gsub ("[[:space:]].*$", "", url)
-        ret <- grep ("github\\.com", url, value = TRUE)
+        grep ("github\\.com", url, value = TRUE)
     }
-    return (ret)
+    if ("URL" %in% colnames (desc)) {
+        url <- strip_url (desc [, "URL"])
+    }
+    if (length (url) == 0L && "BugReports" %in% colnames (desc)) {
+        url <- strip_url (desc [, "BugReports"])
+        url <- gsub ("\\/issues(\\/?)$", "", url)
+    }
+    # No url listed in DESC, try git remote:
+    if (length (url) == 0L) {
+        remotes <- gert::git_remote_list (path)
+        url <- grep ("github\\.com", remotes$url, value = TRUE)
+    }
+    return (url)
 }
 
 org_repo_from_path <- function (path) {
