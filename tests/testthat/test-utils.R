@@ -41,7 +41,19 @@ test_that ("url from path", {
     # Rm URL from desc:
     desc_path <- fs::dir_ls (path, regexp = "DESCRIPTION", type = "file")
     desc <- brio::readLines (desc_path)
+    url_line <- grep ("^URL", desc, value = TRUE)
     desc <- desc [-grep ("^URL", desc)]
+    writeLines (desc, desc_path)
+    expect_length (pkg_gh_url_from_path (path), 0L)
+
+    url_line <- gsub ("^URL", "BugReports", url_line)
+    url_line <- paste0 (url_line, "/issues")
+    desc <- c (desc, url_line)
+    writeLines (desc, desc_path)
+    url <- pkg_gh_url_from_path (path)
+    expect_equal (url, url_in_desc)
+    # Then remove again:
+    desc <- desc [-length (desc)]
     writeLines (desc, desc_path)
     expect_length (pkg_gh_url_from_path (path), 0L)
 
