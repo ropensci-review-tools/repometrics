@@ -69,7 +69,7 @@ test_that ("cm metric has CI internal", { # R/cm-metric-has-ci.R
     expect_false (org_repo_from_path (path))
 
     writeLines (desc [-i], desc_path)
-    expect_null (pkg_gh_url_from_path (path))
+    expect_length (pkg_gh_url_from_path (path), 0L)
     expect_false (org_repo_from_path (path))
 
     fs::dir_delete (path)
