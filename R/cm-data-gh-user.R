@@ -178,7 +178,6 @@ gh_user_contrib_collect_commits_qry <- function (login = "",
             contributionsCollection (from: \"", from, "\", to: \"", ended_at, "\") {
                 startedAt
                 endedAt
-                contributionYears
                 commitContributionsByRepository (maxRepositories: ", n_per_page, ") {
                     contributions (first: 1) {
                         pageInfo {
@@ -201,9 +200,9 @@ gh_user_contrib_collect_commits_qry <- function (login = "",
 }
 
 gh_user_contrib_collect_commits_internal <- function (login,
-                                             ended_at = Sys.time (),
-                                             nyears = 1,
-                                             n_per_page = 100L) {
+                                                      ended_at = Sys.time (),
+                                                      nyears = 1,
+                                                      n_per_page = 100L) {
 
     q <- gh_user_contrib_collect_commits_qry (
         login = login,
@@ -236,3 +235,179 @@ gh_user_contrib_collect_commits_internal <- function (login,
 }
 gh_user_contrib_collect_commits <-
     memoise::memoise (gh_user_contrib_collect_commits_internal)
+
+gh_user_contrib_collect_issues_qry <- function (login = "",
+                                                ended_at = Sys.time (),
+                                                nyears = 1,
+                                                n_per_page = 100L,
+                                                end_cursor = NULL) {
+
+    # GraphQL API here has restriction:
+    # "The total time spanned by 'from' and 'to' must not exceed 1 year"
+    checkmate::assert_numeric (nyears, len = 1L, upper = 1)
+
+    from <- format (ended_at - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
+    ended_at <- format (ended_at, "%Y-%m-%dT%H:%M:%S")
+
+    after_txt <- ""
+    if (!is.null (end_cursor)) {
+        after_txt <- paste0 (", after:\"", end_cursor, "\"")
+    }
+
+    q <- paste0 ("{
+        user(login:\"", login, "\") {
+            login
+            contributionsCollection (from: \"", from, "\", to: \"", ended_at, "\") {
+                startedAt
+                endedAt
+                issueContributions (first: ", n_per_page, after_txt, ") {
+                    pageInfo {
+                        hasNextPage
+                        endCursor
+                    }
+                    totalCount
+                    nodes {
+                        issue {
+                            createdAt
+                            closedAt
+                            number
+                            comments {
+                                totalCount
+                            }
+                            participants {
+                                totalCount
+                            }
+                            repository {
+                                nameWithOwner
+                                languages (first: ", n_per_page, ") {
+                                    totalCount
+                                    edges {
+                                        size
+                                        node {
+                                            name
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    }
+                }
+            }
+        }
+    }")
+
+    return (q)
+}
+
+gh_user_contrib_collect_issues_internal <- function (login,
+                                                     ended_at = Sys.time (),
+                                                     nyears = 1,
+                                                     n_per_page = 100L) {
+
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
+
+    created_at <- closed_at <- org_repo <- issue_num <- end_cursor <-
+        num_issue_comments <- num_issue_participants <- num_repo_languages <- NULL
+    repo_languages <- list ()
+    total_issue_contribs <- 0L
+    has_next_page <- TRUE
+
+    while (has_next_page) {
+
+        q <- gh_user_contrib_collect_issues_qry (
+            login = login,
+            ended_at = ended_at,
+            nyears = nyears,
+            n_per_page = n_per_page,
+            end_cursor = end_cursor
+        )
+        dat <- gh::gh_gql (query = q)
+
+        collection <- dat$data$user$contributionsCollection
+        collection_started_at <- collection$startedAt
+        collection_ended_at <- collection$endedAt
+
+        has_next_page <- collection$issueContributions$pageInfo$hasNextPage
+        end_cursor <- collection$issueContributions$pageInfo$endCursor
+
+        total_issue_contribs <-
+            total_issue_contribs + collection$issueContributions$totalCount
+        issues <- collection$issueContributions$nodes
+
+        created_at <- c (
+            created_at,
+            vapply (issues, function (i) i$issue$createdAt, character (1L))
+        )
+        closed_at <- c (
+            closed_at,
+            vapply (
+                issues,
+                function (i) null2na_char (i$issue$closedAt),
+                character (1L)
+            )
+        )
+        org_repo <- c (
+            org_repo,
+            vapply (
+                issues,
+                function (i) i$issue$repository$nameWithOwner,
+                character (1L)
+            )
+        )
+        issue_num <- c (
+            issue_num,
+            vapply (issues, function (i) i$issue$number, integer (1L))
+        )
+        num_issue_comments <- c (
+            num_issue_comments,
+            vapply (
+                issues,
+                function (i) i$issue$comments$totalCount,
+                integer (1L)
+            )
+        )
+        num_issue_participants <- c (
+            num_issue_participants,
+            vapply (
+                issues,
+                function (i) i$issue$participants$totalCount,
+                integer (1L)
+            )
+        )
+        num_repo_languages <- c (
+            num_repo_languages,
+            vapply (
+                issues,
+                function (i) i$issue$repository$languages$totalCount,
+                integer (1L)
+            )
+        )
+
+        repo_languages <- c (repo_languages, lapply (issues, function (i) {
+            langs <- i$issue$repository$languages$edges
+            names <- vapply (langs, function (j) j$node$name, character (1L))
+            sizes <- vapply (langs, function (j) j$size, integer (1L))
+            data.frame (name = names, size = sizes)
+        }))
+    }
+
+    res <- data.frame (
+        opened_at = created_at,
+        closed_at = closed_at,
+        org_repo = org_repo,
+        issue_num = issue_num,
+        num_issue_comments = num_issue_comments,
+        num_issue_participants = num_issue_participants,
+        num_repo_languages = num_repo_languages,
+        repo_languages = I (repo_languages)
+    )
+
+    attr (res, "started_at") <- collection_started_at
+    attr (res, "ended_at") <- collection_ended_at
+
+    return (res)
+}
+gh_user_contrib_collect_issues <-
+    memoise::memoise (gh_user_contrib_collect_issues_internal)
