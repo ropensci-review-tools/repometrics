@@ -1,0 +1,46 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "issueComments": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNC0xMi0wNlQxMToxODo0MCswMTowMM6WXhWY"
+                },
+                "totalCount": 5179,
+                "nodes": [
+                    {
+                        "createdAt": "2024-12-08T20:36:54Z",
+                        "issue": {
+                            "number": 258,
+                            "comments": {
+                                "totalCount": 4
+                            },
+                            "participants": {
+                                "totalCount": 2
+                            },
+                            "repository": {
+                                "nameWithOwner": "UrbanAnalyst/dodgr"
+                            }
+                        }
+                    },
+                    {
+                        "createdAt": "2024-12-06T10:18:40Z",
+                        "issue": {
+                            "number": 258,
+                            "comments": {
+                                "totalCount": 4
+                            },
+                            "participants": {
+                                "totalCount": 2
+                            },
+                            "repository": {
+                                "nameWithOwner": "UrbanAnalyst/dodgr"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

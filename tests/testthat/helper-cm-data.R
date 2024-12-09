@@ -39,6 +39,31 @@ mock_cm_data <- function () {
         cm_data_libyears (path)
     })
 
+    # cm-data-user:
+    login <- "mpadge"
+    ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+    general <- httptest2::with_mock_dir ("gh_user_general", {
+        gh_user_general (login)
+    })
+    followers <- httptest2::with_mock_dir ("gh_user_followers", {
+        gh_user_follow (login, followers = TRUE, n_per_page = 1)
+    })
+    following <- httptest2::with_mock_dir ("gh_user_following", {
+        gh_user_follow (login, followers = FALSE, n_per_page = 1)
+    })
+    user_commit_cmt <- httptest2::with_mock_dir ("gh_user_commit_cmt", {
+        gh_user_commit_cmt (login, n_per_page = 1)
+    })
+    user_commits <- httptest2::with_mock_dir ("gh_user_commits", {
+        gh_user_commits (login, n_per_page = 1, ended_at = ended_at)
+    })
+    user_issues <- httptest2::with_mock_dir ("gh_user_issues", {
+        gh_user_issues (login, n_per_page = 1, ended_at = ended_at)
+    })
+    user_issue_cmts <- httptest2::with_mock_dir ("gh_user_issue_cmts", {
+        gh_user_issue_cmts (login, n_per_page = 1)
+    })
+
     # cran_downloads fn needs modified DESC:
     desc_path <- fs::path (path, "DESCRIPTION")
     desc <- readLines (desc_path)
@@ -52,7 +77,12 @@ mock_cm_data <- function () {
     # The return full mocked data set:
     data_fns <- get_cm_data_fns ()
     res <- lapply (data_fns, function (i) {
-        do.call (i, list (path = path))
+        if (i == "cm_data_gh_user") {
+            args <- list (login = login, ended_at = ended_at)
+        } else {
+            args <- list (path = path)
+        }
+        do.call (i, args)
     })
     names (res) <- gsub ("^cm\\_data\\_", "", data_fns)
     res$contributors <- get_all_contribs (

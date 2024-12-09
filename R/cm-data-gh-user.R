@@ -251,10 +251,10 @@ gh_user_commit_cmt <- memoise::memoise (gh_user_commit_cmt_internal)
 
 # These are aggregated per repository, so no page cursors needed. Only
 # restriction is maxRepositories, but that also does not allow further paging.
-gh_user_contrib_collect_commits_qry <- function (login = "",
-                                                 ended_at = Sys.time (),
-                                                 nyears = 1,
-                                                 n_per_page = 100L) {
+gh_user_commits_qry <- function (login = "",
+                                 ended_at = Sys.time (),
+                                 nyears = 1,
+                                 n_per_page = 100L) {
 
     # GraphQL API here has restriction:
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
@@ -290,12 +290,12 @@ gh_user_contrib_collect_commits_qry <- function (login = "",
     return (q)
 }
 
-gh_user_contrib_collect_commits_internal <- function (login,
-                                                      ended_at = Sys.time (),
-                                                      nyears = 1,
-                                                      n_per_page = 100L) {
+gh_user_commits_internal <- function (login,
+                                      ended_at = Sys.time (),
+                                      nyears = 1,
+                                      n_per_page = 100L) {
 
-    q <- gh_user_contrib_collect_commits_qry (
+    q <- gh_user_commits_qry (
         login = login,
         ended_at = ended_at,
         nyears = nyears,
@@ -324,14 +324,13 @@ gh_user_contrib_collect_commits_internal <- function (login,
 
     return (res)
 }
-gh_user_contrib_collect_commits <-
-    memoise::memoise (gh_user_contrib_collect_commits_internal)
+gh_user_commits <- memoise::memoise (gh_user_commits_internal)
 
-gh_user_contrib_collect_issues_qry <- function (login = "",
-                                                ended_at = Sys.time (),
-                                                nyears = 1,
-                                                n_per_page = 100L,
-                                                end_cursor = NULL) {
+gh_user_issues_qry <- function (login = "",
+                                ended_at = Sys.time (),
+                                nyears = 1,
+                                n_per_page = 100L,
+                                end_cursor = NULL) {
 
     # GraphQL API here has restriction:
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
@@ -391,10 +390,10 @@ gh_user_contrib_collect_issues_qry <- function (login = "",
     return (q)
 }
 
-gh_user_contrib_collect_issues_internal <- function (login,
-                                                     ended_at = Sys.time (),
-                                                     nyears = 1,
-                                                     n_per_page = 100L) {
+gh_user_issues_internal <- function (login,
+                                     ended_at = Sys.time (),
+                                     nyears = 1,
+                                     n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -407,7 +406,7 @@ gh_user_contrib_collect_issues_internal <- function (login,
 
     while (has_next_page) {
 
-        q <- gh_user_contrib_collect_issues_qry (
+        q <- gh_user_issues_qry (
             login = login,
             ended_at = ended_at,
             nyears = nyears,
@@ -422,6 +421,9 @@ gh_user_contrib_collect_issues_internal <- function (login,
 
         has_next_page <- collection$issueContributions$pageInfo$hasNextPage
         end_cursor <- collection$issueContributions$pageInfo$endCursor
+        if (is_test_env) {
+            has_next_page <- FALSE
+        }
 
         total_issue_contribs <-
             total_issue_contribs + collection$issueContributions$totalCount
@@ -500,13 +502,12 @@ gh_user_contrib_collect_issues_internal <- function (login,
 
     return (res)
 }
-gh_user_contrib_collect_issues <-
-    memoise::memoise (gh_user_contrib_collect_issues_internal)
+gh_user_issues <- memoise::memoise (gh_user_issues_internal)
 
-gh_user_contrib_collect_issue_cmts_qry <- function (login = "",
-                                                    nyears = 1,
-                                                    n_per_page = 100L,
-                                                    end_cursor = NULL) {
+gh_user_issue_cmts_qry <- function (login = "",
+                                    nyears = 1,
+                                    n_per_page = 100L,
+                                    end_cursor = NULL) {
 
     after_txt <- ""
     if (!is.null (end_cursor)) {
@@ -544,9 +545,9 @@ gh_user_contrib_collect_issue_cmts_qry <- function (login = "",
     return (q)
 }
 
-gh_user_contrib_collect_issue_cmts_internal <- function (login,
-                                                         nyears = 1,
-                                                         n_per_page = 100L) {
+gh_user_issue_cmts_internal <- function (login,
+                                         nyears = 1,
+                                         n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -561,7 +562,7 @@ gh_user_contrib_collect_issue_cmts_internal <- function (login,
 
     while (has_next_page) {
 
-        q <- gh_user_contrib_collect_issue_cmts_qry (
+        q <- gh_user_issue_cmts_qry (
             login = login,
             n_per_page = n_per_page,
             end_cursor = end_cursor
@@ -570,6 +571,9 @@ gh_user_contrib_collect_issue_cmts_internal <- function (login,
 
         has_next_page <- dat$data$user$issueComments$pageInfo$hasNextPage
         end_cursor <- dat$data$user$issueComments$pageInfo$endCursor
+        if (is_test_env) {
+            has_next_page <- FALSE
+        }
 
         issue_comment_counts <-
             issue_comment_counts + dat$data$user$issueComments$totalCount
@@ -625,5 +629,25 @@ gh_user_contrib_collect_issue_cmts_internal <- function (login,
         num_participants = num_participants
     )
 }
-gh_user_contrib_collect_issue_cmts <-
-    memoise::memoise (gh_user_contrib_collect_issue_cmts_internal)
+gh_user_issue_cmts <- memoise::memoise (gh_user_issue_cmts_internal)
+
+cm_data_gh_user <- function (login = "", ended_at = ended_at) {
+
+    general <- gh_user_general (login)
+    followers <- gh_user_follow (login, followers = TRUE)
+    following <- gh_user_follow (login, followers = FALSE)
+    commit_cmt <- gh_user_commit_cmt (login)
+    commits <- gh_user_commits (login, ended_at = ended_at)
+    issues <- gh_user_issues (login, ended_at = ended_at)
+    issue_cmts <- gh_user_issue_cmts (login)
+
+    list (
+        general = general,
+        followers = followers,
+        following = following,
+        commit_cmt = commit_cmt,
+        commits = commits,
+        issues = issues,
+        issue_cmts = issue_cmts
+    )
+}

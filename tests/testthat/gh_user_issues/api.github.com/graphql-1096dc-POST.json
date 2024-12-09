@@ -1,0 +1,86 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "contributionsCollection": {
+                "startedAt": "2023-01-01T08:00:00Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "issueContributions": {
+                    "pageInfo": {
+                        "hasNextPage": true,
+                        "endCursor": "Mg"
+                    },
+                    "totalCount": 193,
+                    "nodes": [
+                        {
+                            "issue": {
+                                "createdAt": "2023-12-06T12:16:49Z",
+                                "closedAt": null,
+                                "number": 79,
+                                "comments": {
+                                    "totalCount": 0
+                                },
+                                "participants": {
+                                    "totalCount": 1
+                                },
+                                "repository": {
+                                    "nameWithOwner": "ropensci/statistical-software-review-book",
+                                    "languages": {
+                                        "totalCount": 6,
+                                        "edges": [
+                                            {
+                                                "size": 13207,
+                                                "node": {
+                                                    "name": "R"
+                                                }
+                                            },
+                                            {
+                                                "size": 154947,
+                                                "node": {
+                                                    "name": "TeX"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "issue": {
+                                "createdAt": "2023-12-06T09:56:10Z",
+                                "closedAt": "2024-02-22T15:21:46Z",
+                                "number": 52,
+                                "comments": {
+                                    "totalCount": 1
+                                },
+                                "participants": {
+                                    "totalCount": 1
+                                },
+                                "repository": {
+                                    "nameWithOwner": "mpadge/UrbanAnalyst",
+                                    "languages": {
+                                        "totalCount": 5,
+                                        "edges": [
+                                            {
+                                                "size": 8395,
+                                                "node": {
+                                                    "name": "JavaScript"
+                                                }
+                                            },
+                                            {
+                                                "size": 385080,
+                                                "node": {
+                                                    "name": "TypeScript"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "contributionsCollection": {
+                "startedAt": "2023-01-01T08:00:00Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "commitContributionsByRepository": [
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": true,
+                                "endCursor": "MQ"
+                            },
+                            "totalCount": 694,
+                            "nodes": [
+                                {
+                                    "repository": {
+                                        "url": "https://github.com/mpadge/UrbanAnalyst"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
