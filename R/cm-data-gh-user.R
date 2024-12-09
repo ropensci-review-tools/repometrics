@@ -21,7 +21,13 @@ gh_user_general_qry <- function (login = "") {
                 }
             }
             avatarUrl
-            repositories (isFork: false) {
+            repositories (isFork: false, first: 1) {
+                totalCount
+            }
+            repositoriesContributedTo (first: 1) {
+                totalCount
+            }
+            starredRepositories (first: 1) {
                 totalCount
             }
         }
@@ -45,7 +51,9 @@ gh_user_general_internal <- function (login = "") {
         company = user$company,
         bio = user$bio,
         avatarUrl = user$avatarUrl,
-        num_repositories = user$repositories$totalCount
+        num_repositories = user$repositories$totalCount,
+        repos_contributed_to = user$repositoriesContributedTo$totalCount,
+        num_starred_repos = user$starredRepositories$totalCount
     )
 
     orgs <- user$organizations$nodes
