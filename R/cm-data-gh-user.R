@@ -21,6 +21,9 @@ gh_user_general_qry <- function (login = "") {
                 }
             }
             avatarUrl
+            repositories (isFork: false) {
+                totalCount
+            }
         }
     }")
 
@@ -41,7 +44,8 @@ gh_user_general_internal <- function (login = "") {
         location = user$location,
         company = user$company,
         bio = user$bio,
-        avatarUrl = user$avatarUrl
+        avatarUrl = user$avatarUrl,
+        num_repositories = user$repositories$totalCount
     )
 
     orgs <- user$organizations$nodes
