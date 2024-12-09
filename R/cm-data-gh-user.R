@@ -34,7 +34,7 @@ gh_user_general_internal <- function (login = "") {
 
     user <- dat$data$user
 
-    res <- data.frame (
+    user_dat <- data.frame (
         login = user$login,
         name = user$name,
         email = user$email,
@@ -73,7 +73,7 @@ gh_user_general_internal <- function (login = "") {
         num_members = org_num_members
     )
 
-    list (user = user, orgs = orgs)
+    list (user = user_dat, orgs = orgs)
 }
 gh_user_general <- memoise::memoise (gh_user_general_internal)
 
