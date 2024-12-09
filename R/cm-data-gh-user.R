@@ -534,3 +534,5 @@ gh_user_contrib_collect_issue_cmts_internal <- function (login,
         num_participants = num_participants
     )
 }
+gh_user_contrib_collect_issue_cmts <-
+    memoise::memoise (gh_user_contrib_collect_issue_cmts_internal)
