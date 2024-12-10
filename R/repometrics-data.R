@@ -21,7 +21,7 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L) {
     cli::cli_alert_success ("Done!")
 
     cli::cli_alert_info ("Extracting GitHub data ...")
-    rm <- rm_data (path)
+    rm <- rm_data_repo (path)
     rm$contributors <- get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api)
     cli::cli_alert_success ("Done!")
 
