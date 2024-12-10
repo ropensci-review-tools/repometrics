@@ -42,26 +42,32 @@ mock_rm_data <- function (repo = TRUE) {
     # rm-data-user:
     login <- "mpadge"
     ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+    pars <- list (
+        login = login,
+        n_per_page = 1,
+        ended_at = ended_at,
+        nyears = 1
+    )
     general <- httptest2::with_mock_dir ("gh_user_general", {
-        gh_user_general (login)
+        do.call (gh_user_general, pars)
     })
     followers <- httptest2::with_mock_dir ("gh_user_followers", {
-        gh_user_follow (login, followers = TRUE, n_per_page = 1)
+        do.call (gh_user_follow, c (pars, followers = TRUE))
     })
     following <- httptest2::with_mock_dir ("gh_user_following", {
-        gh_user_follow (login, followers = FALSE, n_per_page = 1)
+        do.call (gh_user_follow, c (pars, followers = FALSE))
     })
     user_commit_cmt <- httptest2::with_mock_dir ("gh_user_commit_cmt", {
-        gh_user_commit_cmt (login, n_per_page = 1)
+        do.call (gh_user_commit_cmt, pars)
     })
     user_commits <- httptest2::with_mock_dir ("gh_user_commits", {
-        gh_user_commits (login, n_per_page = 1, ended_at = ended_at)
+        do.call (gh_user_commits, pars)
     })
     user_issues <- httptest2::with_mock_dir ("gh_user_issues", {
-        gh_user_issues (login, n_per_page = 1, ended_at = ended_at)
+        do.call (gh_user_issues, pars)
     })
     user_issue_cmts <- httptest2::with_mock_dir ("gh_user_issue_cmts", {
-        gh_user_issue_cmts (login, n_per_page = 1)
+        do.call (gh_user_issue_cmts, pars)
     })
 
     # cran_downloads fn needs modified DESC:
@@ -86,26 +92,24 @@ mock_rm_data <- function (repo = TRUE) {
             res$contribs_from_gh_api
         )
     } else {
-        data_fns <- get_rm_gh_user_fns () # length = 6
+        data_fns <- get_rm_gh_user_fns ()
         pars <- list (
-            gh_user_general = list (login = login),
-            gh_user_followers =
-                list (login = login, followers = TRUE, n_per_page = 1),
-            gh_user_following =
-                list (login = login, followers = FALSE, n_per_page = 1),
-            gh_user_commit_cmt = list (login = login, n_per_page = 1),
-            gh_user_commits =
-                list (login = login, n_per_page = 1, ended_at = ended_at),
-            gh_user_issues =
-                list (login = login, n_per_page = 1, ended_at = ended_at),
-            gh_user_issue_cmts = list (login = login, n_per_page = 1)
-        ) # length = 7
+            login = login,
+            n_per_page = 1,
+            ended_at = ended_at,
+            nyears = 1
+        )
 
-        res <- lapply (seq_along (pars), function (i) {
-            fn_i <- gsub ("follow.*$", "follow", names (pars) [i])
-            do.call (fn_i, pars [[i]])
+        res <- lapply (data_fns, function (i) {
+            do.call (i, pars)
         })
-        names (res) <- gsub ("^gh\\_user\\_", "", names (pars))
+        names (res) <- gsub ("^gh\\_user\\_", "", data_fns)
+
+        names (res) <- gsub ("follow", "followers", names (res))
+        res$following <- do.call (gh_user_follow, c (pars, followers = FALSE))
+
+        i <- grep ("general", names (res))
+        res <- c (res [i], res [-i] [order (names (res) [-i])])
     }
 
     fs::dir_delete (path)

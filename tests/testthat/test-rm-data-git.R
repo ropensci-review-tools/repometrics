@@ -1,4 +1,4 @@
-test_that ("cm data git", {
+test_that ("rm data git", {
 
     path <- generate_test_pkg ()
 
@@ -33,7 +33,7 @@ skip_on_cran ()
 # triggered with `rm_data_libyears()`?
 skip_on_os ("mac")
 
-test_that ("cm data libyears", {
+test_that ("rm data libyears", {
 
     dat <- mock_rm_data ()
 

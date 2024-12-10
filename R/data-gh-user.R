@@ -1,3 +1,6 @@
+# All functions accept same parameters, even through not all parameters are
+# used in all functions.
+
 gh_user_general_qry <- function (login = "") {
 
     q <- paste0 ("{
@@ -36,7 +39,11 @@ gh_user_general_qry <- function (login = "") {
     return (q)
 }
 
-gh_user_general_internal <- function (login = "") {
+# Only uses `login` param:
+gh_user_general_internal <- function (login = "",
+                                      ended_at = Sys.time (),
+                                      nyears = 1,
+                                      n_per_page = 100L) {
 
     q <- gh_user_general_qry (login = login)
     dat <- gh::gh_gql (query = q)
@@ -90,6 +97,7 @@ gh_user_general_internal <- function (login = "") {
 gh_user_general <- memoise::memoise (gh_user_general_internal)
 
 #' Query for both followers and following
+#'
 #' @noRd
 gh_user_follow_qry <- function (login = "",
                                 followers = TRUE,
@@ -124,7 +132,12 @@ gh_user_follow_qry <- function (login = "",
     return (q)
 }
 
-gh_user_follow_internal <- function (login, followers = TRUE, n_per_page = 100L) {
+# Uses all parameters except `ended_at` at `nyears`.
+gh_user_follow_internal <- function (login,
+                                     ended_at = Sys.time (),
+                                     nyears = 1,
+                                     n_per_page = 100L,
+                                     followers = TRUE) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -197,7 +210,11 @@ gh_user_commit_cmt_qry <- function (login = "",
     return (q)
 }
 
-gh_user_commit_cmt_internal <- function (login, n_per_page = 100L) {
+# Uses all params except `ended_at` and `nyears`:
+gh_user_commit_cmt_internal <- function (login,
+                                         ended_at = Sys.time (),
+                                         nyears = 1,
+                                         n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -251,6 +268,8 @@ gh_user_commit_cmt <- memoise::memoise (gh_user_commit_cmt_internal)
 
 # These are aggregated per repository, so no page cursors needed. Only
 # restriction is maxRepositories, but that also does not allow further paging.
+#
+# Uses all parameters
 gh_user_commits_qry <- function (login = "",
                                  ended_at = Sys.time (),
                                  nyears = 1,
@@ -326,6 +345,7 @@ gh_user_commits_internal <- function (login,
 }
 gh_user_commits <- memoise::memoise (gh_user_commits_internal)
 
+# Uses all parameters
 gh_user_issues_qry <- function (login = "",
                                 ended_at = Sys.time (),
                                 nyears = 1,
@@ -390,6 +410,7 @@ gh_user_issues_qry <- function (login = "",
     return (q)
 }
 
+# Uses all parameters
 gh_user_issues_internal <- function (login,
                                      ended_at = Sys.time (),
                                      nyears = 1,
@@ -545,7 +566,9 @@ gh_user_issue_cmts_qry <- function (login = "",
     return (q)
 }
 
+# Uses all parameters except `ended_at`
 gh_user_issue_cmts_internal <- function (login,
+                                         ended_at = Sys.time (),
                                          nyears = 1,
                                          n_per_page = 100L) {
 
