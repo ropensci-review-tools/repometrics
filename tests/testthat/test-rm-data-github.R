@@ -15,7 +15,7 @@
 #' - [x] "releases_from_gh_api"
 #' - [x] "repo_from_gh_api"
 
-test_that ("cm data gh contribs", {
+test_that ("rm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -53,7 +53,7 @@ test_that ("cm data gh contribs", {
 
 # dependencies are in 'test-cm-data-git.R'
 
-test_that ("cm data gh workflow", {
+test_that ("rm data gh workflow", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -76,7 +76,7 @@ test_that ("cm data gh workflow", {
 
 # gitlog is in 'test-cm-data.git'
 
-test_that ("cm data gh issue comments", {
+test_that ("rm data gh issue comments", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -106,7 +106,7 @@ test_that ("cm data gh issue comments", {
     }
 })
 
-test_that ("cm data gh issues", {
+test_that ("rm data gh issues", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -142,7 +142,7 @@ test_that ("cm data gh issues", {
 
 # libyears is in 'test-cm-data.git'
 
-test_that ("cm data gh prs", {
+test_that ("rm data gh prs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -184,7 +184,7 @@ test_that ("cm data gh prs", {
     }
 })
 
-test_that ("cm data gh releases", {
+test_that ("rm data gh releases", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -217,7 +217,7 @@ test_that ("cm data gh releases", {
     }
 })
 
-test_that ("cm data gh repo", {
+test_that ("rm data gh repo", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -249,7 +249,7 @@ test_that ("cm data gh repo", {
     }
 })
 
-test_that ("cm data gh forks", {
+test_that ("rm data gh forks", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -267,7 +267,7 @@ test_that ("cm data gh forks", {
     expect_type (forks$created, "double")
 })
 
-test_that ("cm data gh stars", {
+test_that ("rm data gh stars", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -285,7 +285,7 @@ test_that ("cm data gh stars", {
     expect_type (stars$starred_at, "double")
 })
 
-test_that ("cm data main contributors", {
+test_that ("rm data main contributors", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()

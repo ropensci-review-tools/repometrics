@@ -1,4 +1,4 @@
-test_that ("cm data full", {
+test_that ("rm data full", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -27,7 +27,7 @@ test_that ("cm data full", {
 # Individual components are tested in test-cm-data-github.R and *-git.R
 # except for these which use cran_pkg_db:
 
-test_that ("cm data dependencies", {
+test_that ("rm data dependencies", {
 
     path <- generate_test_pkg ()
     deps <- rm_data_dependencies (path)
@@ -43,7 +43,7 @@ test_that ("cm data dependencies", {
     }
 })
 
-test_that ("cm data reverse dependencies", {
+test_that ("rm data reverse dependencies", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
