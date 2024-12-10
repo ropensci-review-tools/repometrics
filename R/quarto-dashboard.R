@@ -25,7 +25,7 @@ repometrics_dashboard <- function (data, action = "preview") {
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
-    saveRDS (data, fs::path (dir, "results.Rds"))
+    saveRDS (data, fs::path (dir, "results-pkg.Rds"))
 
     pkg_name <- data$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
