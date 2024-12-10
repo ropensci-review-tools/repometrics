@@ -62,9 +62,12 @@ rm_data_libyears <- function (path) {
     deps <- deps [which (!is.na (deps$published)), ]
 
     rel <- rm_data_releases_from_gh_api (path, latest_only = TRUE)
-    rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
+    dt <- NA_real_
+    if (nrow (rel) > 0L) {
+        rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
+        dt <- difftime (deps$published, rel_date, units = "days")
 
-    dt <- difftime (deps$published, rel_date, units = "days")
+    }
     deps$libyears <- as.numeric (dt) / 365.25 # In years
 
     return (deps)

@@ -1,3 +1,33 @@
+#' Collate 'repometrics' data for a local R package
+#'
+#' @inheritParams repo_pkgstats_history
+#' @return A list with two main items:
+#' \enumerate{
+#' \item "pkgstats" Containing summary data from apply `pkgstats` routines
+#' across the git history of the repository.
+#' \item "cm" Containing data used to derive "CHAOSS metrics", primarily from
+#' GitHub data.
+#' }
+#'
+#' @export
+repometrics_data_pkg <- function (path, step_days = 1L, num_cores = -1L) {
+
+    cli::cli_alert_info ("Extracting package statistics ...")
+    pkgstats <- repo_pkgstats_history (
+        path,
+        step_days = step_days,
+        num_cores = num_cores
+    )
+    cli::cli_alert_success ("Done!")
+
+    cli::cli_alert_info ("Extracting GitHub data ...")
+    rm <- rm_data_repo (path)
+    rm$contributors <- get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api)
+    cli::cli_alert_success ("Done!")
+
+    list (pkgstats = pkgstats, rm = rm)
+}
+
 #' Calculate all repository data used in CHAOSS metrics
 #' \url{https://chaoss.community/kb-metrics-and-metrics-models/}.
 #'
@@ -23,7 +53,7 @@
 #' \item `repo_from_gh_api` A `data.frame` of a single line, with several key
 #' attributes of the repository on GitHub.
 #' }
-#' @export
+#' @noRd
 rm_data_repo <- function (path) {
 
     checkmate::assert_directory_exists (path)
@@ -50,9 +80,6 @@ get_rm_data_fns <- function () {
     data_fns <- grep ("^rm\\_data\\_", pkg_fns, value = TRUE)
     data_fns <- data_fns [which (!grepl ("\\_internal$", data_fns))]
     data_fns <- data_fns [which (!data_fns == "rm_data_repo")]
-
-    index <- grep ("user", data_fns)
-    data_fns <- data_fns [-index]
 
     return (data_fns)
 }

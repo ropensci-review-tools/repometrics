@@ -18,10 +18,10 @@
 #' \item `issues` with information on all issues opened by user
 #' }
 #' @export
-rm_data_user <- function (login,
-                          ended_at = Sys.time (),
-                          nyears = 1,
-                          n_per_page = 100) {
+repometrics_data_user <- function (login,
+                                   ended_at = Sys.time (),
+                                   nyears = 1,
+                                   n_per_page = 100) {
 
     checkmate::assert_character (login, len = 1L)
 
