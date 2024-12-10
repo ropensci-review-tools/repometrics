@@ -1,7 +1,7 @@
-#' Start quarto dashboard with results of main \link{repometrics_pkg_data}
+#' Start quarto dashboard with results of main \link{repometrics_data_pkg}
 #' function.
 #'
-#' @param data Results of main \link{repometrics_pkg_data} function applied to
+#' @param data Results of main \link{repometrics_data_pkg} function applied to
 #' one package.
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing

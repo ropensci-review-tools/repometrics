@@ -18,7 +18,7 @@
 #' \item `issues` with information on all issues opened by user
 #' }
 #' @export
-repometrics_user_data <- function (login,
+repometrics_data_user <- function (login,
                                    ended_at = Sys.time (),
                                    nyears = 1,
                                    n_per_page = 100) {

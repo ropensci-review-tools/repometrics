@@ -2,6 +2,6 @@
 
 export(repo_pkgstats_history)
 export(repometrics_dashboard)
-export(repometrics_pkg_data)
-export(repometrics_user_data)
+export(repometrics_data_pkg)
+export(repometrics_data_user)
 importFrom(memoise,memoise)
