@@ -47,7 +47,7 @@ rm_data_repo <- function (path) {
 get_rm_data_fns <- function (repo = TRUE) {
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
-    data_fns <- grep ("^cm\\_data\\_", pkg_fns, value = TRUE)
+    data_fns <- grep ("^rm\\_data\\_", pkg_fns, value = TRUE)
     data_fns <- data_fns [which (!grepl ("\\_internal$", data_fns))]
     data_fns <- data_fns [which (!data_fns == "rm_data_repo")]
 

@@ -81,7 +81,7 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
 check_dashboard_arg <- function (data) {
 
     checkmate::assert_list (data, len = 2L, names = "named")
-    checkmate::assert_names (names (data), identical.to = c ("pkgstats", "cm"))
+    checkmate::assert_names (names (data), identical.to = c ("pkgstats", "rm"))
     checkmate::assert_names (names (data$pkgstats), identical.to = c ("desc_data", "loc", "stats"))
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
@@ -90,7 +90,7 @@ check_dashboard_arg <- function (data) {
         "prs_from_gh_api", "releases_from_gh_api", "repo_forks",
         "repo_from_gh_api", "repo_stargazers", "contributors"
     )
-    checkmate::assert_names (names (data$cm), identical.to = nms)
+    checkmate::assert_names (names (data$rm), identical.to = nms)
 
     # ------ pkgstats structure ------
     ncols <- vapply (data$pkgstats, ncol, integer (1L))
@@ -108,14 +108,14 @@ check_dashboard_arg <- function (data) {
         cli::cli_abort ("'data' contains empty tables.")
     }
 
-    # ------ cm structure ------
-    classes <- vapply (data$cm, class, character (1L))
+    # ------ rm structure ------
+    classes <- vapply (data$rm, class, character (1L))
     index <- which (classes == "data.frame")
     if (length (index) != (length (classes) - 1L)) {
         cli::cli_abort ("Chaoss metrics data have wrong length; should be {length(index)}.")
     }
 
-    ncols <- vapply (data$cm [index], ncol, integer (1L))
+    ncols <- vapply (data$rm [index], ncol, integer (1L))
     ncols_expected <- c (
         "contribs_from_gh_api" = 17L,
         "contribs_from_log" = 2L,
@@ -140,7 +140,7 @@ check_dashboard_arg <- function (data) {
         ))
     }
 
-    nrows <- vapply (data$cm [index], nrow, integer (1L))
+    nrows <- vapply (data$rm [index], nrow, integer (1L))
     if (!all (nrows > 0L)) {
         cli::cli_abort ("'data' contains empty tables.")
     }
