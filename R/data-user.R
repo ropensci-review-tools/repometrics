@@ -5,6 +5,8 @@
 #' the end date of data collection. Defaults to `Sys.time()`.
 #' @param nyears Parameter <= 1 determining fraction of a year over which data
 #' up until `end_date` are collected.
+#' @param n_per_page Number of items per page to pass to GitHub GraphQL API
+#' requests. This should never need to be changed.
 #' @return A list of the following `data.frame` objects:
 #' \enumerate{
 #' \item `commit_cmt` with details of commits made on commits
