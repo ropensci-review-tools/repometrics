@@ -75,8 +75,8 @@ mock_rm_data <- function (repo = TRUE) {
     })
 
     # The return full mocked data set:
-    data_fns <- get_rm_data_fns (repo = repo)
     if (repo) {
+        data_fns <- get_rm_data_fns ()
         res <- lapply (data_fns, function (i) {
             do.call (i, list (path = path))
         })
@@ -86,6 +86,26 @@ mock_rm_data <- function (repo = TRUE) {
             res$contribs_from_gh_api
         )
     } else {
+        data_fns <- get_rm_gh_user_fns () # length = 6
+        pars <- list (
+            gh_user_general = list (login = login),
+            gh_user_followers =
+                list (login = login, followers = TRUE, n_per_page = 1),
+            gh_user_following =
+                list (login = login, followers = FALSE, n_per_page = 1),
+            gh_user_commit_cmt = list (login = login, n_per_page = 1),
+            gh_user_commits =
+                list (login = login, n_per_page = 1, ended_at = ended_at),
+            gh_user_issues =
+                list (login = login, n_per_page = 1, ended_at = ended_at),
+            gh_user_issue_cmts = list (login = login, n_per_page = 1)
+        ) # length = 7
+
+        res <- lapply (seq_along (pars), function (i) {
+            fn_i <- gsub ("follow.*$", "follow", names (pars) [i])
+            do.call (fn_i, pars [[i]])
+        })
+        names (res) <- gsub ("^gh\\_user\\_", "", names (pars))
     }
 
     fs::dir_delete (path)

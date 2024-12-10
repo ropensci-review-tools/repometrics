@@ -630,24 +630,3 @@ gh_user_issue_cmts_internal <- function (login,
     )
 }
 gh_user_issue_cmts <- memoise::memoise (gh_user_issue_cmts_internal)
-
-rm_data_gh_user <- function (login = "", ended_at = ended_at) {
-
-    general <- gh_user_general (login)
-    followers <- gh_user_follow (login, followers = TRUE)
-    following <- gh_user_follow (login, followers = FALSE)
-    commit_cmt <- gh_user_commit_cmt (login)
-    commits <- gh_user_commits (login, ended_at = ended_at)
-    issues <- gh_user_issues (login, ended_at = ended_at)
-    issue_cmts <- gh_user_issue_cmts (login)
-
-    list (
-        general = general,
-        followers = followers,
-        following = following,
-        commit_cmt = commit_cmt,
-        commits = commits,
-        issues = issues,
-        issue_cmts = issue_cmts
-    )
-}

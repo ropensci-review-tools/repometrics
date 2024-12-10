@@ -20,7 +20,7 @@ test_that ("cm data full", {
     expect_equal (names (dat), nms)
 
     data_fns <- get_rm_data_fns ()
-    data_fn_nms <- gsub ("^cm\\_data\\_", "", data_fns)
+    data_fn_nms <- gsub ("^rm\\_data\\_", "", data_fns)
     expect_identical (names (dat), data_fn_nms)
 })
 

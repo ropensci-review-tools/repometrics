@@ -1,5 +1,4 @@
-#' Calculate all repository data used in CHAOSS metrics
-#' \url{https://chaoss.community/kb-metrics-and-metrics-models/}.
+#' Extract and combine all user data
 #'
 #' @param path Path to local source repository.
 #' @return A list of the following `data.frame` objects:
@@ -24,19 +23,19 @@
 #' attributes of the repository on GitHub.
 #' }
 #' @export
-rm_data_repo <- function (path) {
+rm_data_user <- function (login) {
 
-    checkmate::assert_directory_exists (path)
+    checkmate::assert_character (login, len = 1L)
 
-    data_fns <- get_rm_data_fns ()
+    data_fns <- get_rm_gh_user_fns ()
 
-    if (all_rm_data_fns_memoised (data_fns, path)) {
+    if (all_gh_user_fns_memoised (data_fns, path)) {
         res <- lapply (data_fns, function (i) {
-            do.call (i, list (path = path))
+            do.call (i, list (login = login))
         })
     } else {
         res <- pbapply::pblapply (data_fns, function (i) {
-            do.call (i, list (path = path))
+            do.call (i, list (login = login))
         })
     }
     names (res) <- gsub ("^rm\\_data\\_", "", data_fns)
@@ -44,23 +43,19 @@ rm_data_repo <- function (path) {
     return (res)
 }
 
-get_rm_data_fns <- function () {
+get_rm_gh_user_fns <- function () {
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
-    data_fns <- grep ("^rm\\_data\\_", pkg_fns, value = TRUE)
-    data_fns <- data_fns [which (!grepl ("\\_internal$", data_fns))]
-    data_fns <- data_fns [which (!data_fns == "rm_data_repo")]
-
-    index <- grep ("user", data_fns)
-    data_fns <- data_fns [-index]
+    data_fns <- grep ("^gh\\_user\\_", pkg_fns, value = TRUE)
+    data_fns <- data_fns [which (!grepl ("\\_(internal|qry)$", data_fns))]
 
     return (data_fns)
 }
 
-all_rm_data_fns_memoised <- function (data_fns, path) {
+all_gh_user_fns_memoised <- function (data_fns, login) {
     is_memoised <- vapply (data_fns, function (i) {
         tryCatch (
-            memoise::has_cache (get (i)) (path),
+            memoise::has_cache (get (i)) (login),
             error = function (e) FALSE
         )
     }, logical (1L))
