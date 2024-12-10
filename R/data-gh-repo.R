@@ -2,7 +2,7 @@
 #'
 #' @param path Local path to repository
 #' @noRd
-cm_data_repo_from_gh_api_internal <- function (path) {
+rm_data_repo_from_gh_api_internal <- function (path) {
 
     or <- org_repo_from_path (path)
 
@@ -40,4 +40,4 @@ cm_data_repo_from_gh_api_internal <- function (path) {
         default_branch = null2na_char (body$default_branch)
     )
 }
-cm_data_repo_from_gh_api <- memoise::memoise (cm_data_repo_from_gh_api_internal)
+rm_data_repo_from_gh_api <- memoise::memoise (rm_data_repo_from_gh_api_internal)

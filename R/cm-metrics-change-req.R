@@ -29,7 +29,7 @@ cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
 
 get_prs_in_period <- function (path, end_date = Sys.Date ()) {
 
-    prs <- cm_data_prs_from_gh_api (path)
+    prs <- rm_data_prs_from_gh_api (path)
     prs <- prs [which (prs$merged), ]
     closed_dates <- as.Date (prs$closed_at)
     start_date <- end_date - get_repometrics_period ()

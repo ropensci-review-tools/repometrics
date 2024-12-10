@@ -3,7 +3,7 @@
 test_that ("cm data gh general", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
 
     user <- dat$gh_user
     expect_type (user, "list")

@@ -2,7 +2,7 @@ test_that ("cm data git", {
 
     path <- generate_test_pkg ()
 
-    log <- cm_data_gitlog (path)
+    log <- rm_data_gitlog (path)
 
     expect_s3_class (log, "data.frame")
     expect_equal (ncol (log), 10L)
@@ -30,15 +30,15 @@ test_that ("cm data git", {
 skip_on_cran ()
 # The `releases_from_gh_api()` call fails here on mac, I guess because of
 # httptest2, and some interaction with the `cran_package_db()` call also
-# triggered with `cm_data_libyears()`?
+# triggered with `rm_data_libyears()`?
 skip_on_os ("mac")
 
 test_that ("cm data libyears", {
 
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
 
     path <- generate_test_pkg ()
-    libyears <- cm_data_libyears (path)
+    libyears <- rm_data_libyears (path)
     fs::dir_delete (path)
 
     expect_s3_class (libyears, "data.frame")

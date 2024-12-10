@@ -5,7 +5,7 @@ cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
 
     start_date <- end_date - get_repometrics_period ()
 
-    releases <- cm_data_releases_from_gh_api (path) |>
+    releases <- rm_data_releases_from_gh_api (path) |>
         dplyr::mutate (published_at = as.Date (published_at)) |>
         dplyr::filter (published_at <= end_date)
 

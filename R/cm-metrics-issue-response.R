@@ -7,9 +7,9 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     ctbs_main_all <- main_contributors (path, end_date = end_date, period = NULL)
     ctbs_main <- unique (c (ctbs_main_recent, ctbs_main_all))
 
-    issues <- cm_data_issues_from_gh_api (path)
+    issues <- rm_data_issues_from_gh_api (path)
     issues <- issues [grep ("issues", issues$url), ]
-    comments <- cm_data_issue_comments_from_gh_api (path)
+    comments <- rm_data_issue_comments_from_gh_api (path)
 
     cmt_responses <- dplyr::filter (comments, user_login %in% ctbs_main) |>
         dplyr::group_by (issue_number) |>
@@ -40,7 +40,7 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
 
-    issues <- cm_data_issues_from_gh_api (path)
+    issues <- rm_data_issues_from_gh_api (path)
     index <- grep ("bug|defect|fix", issues$label, ignore.case = TRUE)
     index <- index [which (!grepl ("wontfix", issues$label [index]))]
     bugs <- issues [index, ]
@@ -113,7 +113,7 @@ cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
     # suppress no visible binding notes:
     closed <- NULL
 
-    prs <- cm_data_prs_from_gh_api (path)
+    prs <- rm_data_prs_from_gh_api (path)
     prs$created_at <- as.Date (prs$created_at)
     prs$closed_at <- as.Date (prs$closed_at)
 
@@ -136,7 +136,7 @@ cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
 
     start_date <- end_date - get_repometrics_period ()
 
-    issues <- cm_data_issues_from_gh_api (path) |>
+    issues <- rm_data_issues_from_gh_api (path) |>
         dplyr::mutate (
             created_at = as.Date (created_at), closed_at = as.Date (closed_at)
         ) |>

@@ -30,7 +30,7 @@ gh_stargazers_qry <- function (org = "ropensci-review-tools",
     return (q)
 }
 
-cm_data_repo_stargazers_internal <- function (path, n_per_page = 100L) {
+rm_data_repo_stargazers_internal <- function (path, n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -66,4 +66,4 @@ cm_data_repo_stargazers_internal <- function (path, n_per_page = 100L) {
         starred_at = as.Date (starred_at)
     )
 }
-cm_data_repo_stargazers <- memoise::memoise (cm_data_repo_stargazers_internal)
+rm_data_repo_stargazers <- memoise::memoise (rm_data_repo_stargazers_internal)

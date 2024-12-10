@@ -1,7 +1,7 @@
 #' Retrieve latest GitHub workflow results from Rest API
 #'
 #' @noRd
-cm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
+rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
 
     n_per_page <- n_per_page_in_tests (n_per_page)
     or <- org_repo_from_path (path)
@@ -50,4 +50,4 @@ cm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
         created = created
     )
 }
-cm_data_gh_repo_workflow <- memoise::memoise (cm_data_gh_repo_workflow_internal)
+rm_data_gh_repo_workflow <- memoise::memoise (rm_data_gh_repo_workflow_internal)

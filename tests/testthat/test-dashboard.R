@@ -2,8 +2,8 @@ pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
-cm_data <- mock_cm_data ()
-data0 <- list (pkgstats = pkgstats, cm = cm_data)
+rm_data <- mock_rm_data ()
+data0 <- list (pkgstats = pkgstats, rm = rm_data)
 
 test_that ("dashboard input errors", {
 

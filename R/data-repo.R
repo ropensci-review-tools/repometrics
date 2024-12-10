@@ -24,13 +24,13 @@
 #' attributes of the repository on GitHub.
 #' }
 #' @export
-cm_data_repo <- function (path) {
+rm_data_repo <- function (path) {
 
     checkmate::assert_directory_exists (path)
 
-    data_fns <- get_cm_data_fns ()
+    data_fns <- get_rm_data_fns ()
 
-    if (all_cm_data_fns_memoised (data_fns, path)) {
+    if (all_rm_data_fns_memoised (data_fns, path)) {
         res <- lapply (data_fns, function (i) {
             do.call (i, list (path = path))
         })
@@ -44,12 +44,12 @@ cm_data_repo <- function (path) {
     return (res)
 }
 
-get_cm_data_fns <- function (repo = TRUE) {
+get_rm_data_fns <- function (repo = TRUE) {
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     data_fns <- grep ("^cm\\_data\\_", pkg_fns, value = TRUE)
     data_fns <- data_fns [which (!grepl ("\\_internal$", data_fns))]
-    data_fns <- data_fns [which (!data_fns == "cm_data_repo")]
+    data_fns <- data_fns [which (!data_fns == "rm_data_repo")]
 
     index <- grep ("user", data_fns)
     if (repo) {
@@ -61,7 +61,7 @@ get_cm_data_fns <- function (repo = TRUE) {
     return (data_fns)
 }
 
-all_cm_data_fns_memoised <- function (data_fns, path) {
+all_rm_data_fns_memoised <- function (data_fns, path) {
     is_memoised <- vapply (data_fns, function (i) {
         tryCatch (
             memoise::has_cache (get (i)) (path),

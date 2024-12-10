@@ -1,4 +1,4 @@
-cm_data_releases_from_gh_api_internal <- function (path,
+rm_data_releases_from_gh_api_internal <- function (path,
                                                    n_per_page = 100L,
                                                    latest_only = FALSE) {
 
@@ -53,5 +53,5 @@ cm_data_releases_from_gh_api_internal <- function (path,
             vapply (body, function (i) i$published_at, character (1L))
     )
 }
-cm_data_releases_from_gh_api <-
-    memoise::memoise (cm_data_releases_from_gh_api_internal)
+rm_data_releases_from_gh_api <-
+    memoise::memoise (rm_data_releases_from_gh_api_internal)

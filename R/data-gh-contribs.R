@@ -2,9 +2,9 @@
 #'
 #' @param path Local path to repository
 #' @noRd
-cm_data_contribs_from_log <- function (path) {
+rm_data_contribs_from_log <- function (path) {
 
-    log <- cm_data_gitlog (path)
+    log <- rm_data_gitlog (path)
 
     gh_handle <- unique (log$aut_name)
     gh_email <- log$aut_email [match (gh_handle, log$aut_name)]
@@ -40,7 +40,7 @@ cm_data_contribs_from_log <- function (path) {
 #' @param n_per_page Not used here, but needed so all functions can safely be
 #' called with this parameter.
 #' @noRd
-cm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) {
+rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -94,8 +94,8 @@ cm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) {
 
     return (ctbs)
 }
-cm_data_contribs_from_gh_api <-
-    memoise::memoise (cm_data_contribs_from_gh_api_internal)
+rm_data_contribs_from_gh_api <-
+    memoise::memoise (rm_data_contribs_from_gh_api_internal)
 
 user_from_gh_api <- function (user) {
 
@@ -134,9 +134,9 @@ main_contributors <- function (path, end_date = Sys.Date (), threshold = 0.9, pe
         checkmate::assert_integerish (period, min = 1L)
         log <- git_log_in_period (path, end_date = end_date, period = period)
     } else {
-        log <- cm_data_gitlog (path)
+        log <- rm_data_gitlog (path)
     }
-    contribs <- cm_data_contribs_from_gh_api (path)
+    contribs <- rm_data_contribs_from_gh_api (path)
 
     index <- match (log$aut_email, contribs$email)
     log$login <- contribs$login [index]

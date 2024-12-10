@@ -18,11 +18,11 @@
 test_that ("cm data gh contribs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
 
     path <- generate_test_pkg ()
-    ctbs_api <- cm_data_contribs_from_gh_api (path)
-    ctbs_log <- cm_data_contribs_from_log (path)
+    ctbs_api <- rm_data_contribs_from_gh_api (path)
+    ctbs_log <- rm_data_contribs_from_log (path)
     fs::dir_delete (path)
 
     expect_s3_class (ctbs_api, "data.frame")
@@ -56,9 +56,9 @@ test_that ("cm data gh contribs", {
 test_that ("cm data gh workflow", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    wf <- cm_data_gh_repo_workflow (path)
+    wf <- rm_data_gh_repo_workflow (path)
     fs::dir_delete (path)
 
     expect_s3_class (wf, "data.frame")
@@ -79,9 +79,9 @@ test_that ("cm data gh workflow", {
 test_that ("cm data gh issue comments", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    cmts <- cm_data_issue_comments_from_gh_api (path)
+    cmts <- rm_data_issue_comments_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (cmts, "data.frame")
@@ -109,9 +109,9 @@ test_that ("cm data gh issue comments", {
 test_that ("cm data gh issues", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    issues <- cm_data_issues_from_gh_api (path)
+    issues <- rm_data_issues_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (issues, "data.frame")
@@ -145,9 +145,9 @@ test_that ("cm data gh issues", {
 test_that ("cm data gh prs", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    prs <- cm_data_prs_from_gh_api (path)
+    prs <- rm_data_prs_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (prs, "data.frame")
@@ -187,9 +187,9 @@ test_that ("cm data gh prs", {
 test_that ("cm data gh releases", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    releases <- cm_data_releases_from_gh_api (path, latest_only = TRUE)
+    releases <- rm_data_releases_from_gh_api (path, latest_only = TRUE)
     fs::dir_delete (path)
 
     expect_s3_class (releases, "data.frame")
@@ -220,9 +220,9 @@ test_that ("cm data gh releases", {
 test_that ("cm data gh repo", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    repo <- cm_data_repo_from_gh_api (path)
+    repo <- rm_data_repo_from_gh_api (path)
     fs::dir_delete (path)
 
     expect_s3_class (repo, "data.frame")
@@ -252,9 +252,9 @@ test_that ("cm data gh repo", {
 test_that ("cm data gh forks", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    forks <- cm_data_repo_forks (path)
+    forks <- rm_data_repo_forks (path)
     fs::dir_delete (path)
 
     expect_s3_class (forks, "data.frame")
@@ -270,9 +270,9 @@ test_that ("cm data gh forks", {
 test_that ("cm data gh stars", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    stars <- cm_data_repo_stargazers (path)
+    stars <- rm_data_repo_stargazers (path)
     fs::dir_delete (path)
 
     expect_s3_class (stars, "data.frame")
@@ -288,7 +288,7 @@ test_that ("cm data gh stars", {
 test_that ("cm data main contributors", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
     end_date <- as.Date ("2024-08-01")

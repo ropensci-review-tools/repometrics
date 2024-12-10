@@ -631,7 +631,7 @@ gh_user_issue_cmts_internal <- function (login,
 }
 gh_user_issue_cmts <- memoise::memoise (gh_user_issue_cmts_internal)
 
-cm_data_gh_user <- function (login = "", ended_at = ended_at) {
+rm_data_gh_user <- function (login = "", ended_at = ended_at) {
 
     general <- gh_user_general (login)
     followers <- gh_user_follow (login, followers = TRUE)

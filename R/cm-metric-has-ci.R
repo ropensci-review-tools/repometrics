@@ -21,7 +21,7 @@ repo_has_ci_files <- function (path) {
 
 has_gh_ci_tests <- function (path) {
 
-    ci_data <- cm_data_repo_from_gh_api (path)
+    ci_data <- rm_data_repo_from_gh_api (path)
     h <- gert::git_log (repo = path, max = 1e6)
     any (ci_data$sha %in% h$commit)
 }
