@@ -2,14 +2,14 @@
 % Please edit documentation in R/quarto-dashboard.R
 \name{repometrics_dashboard}
 \alias{repometrics_dashboard}
-\title{Start quarto dashboard with results of main \link{repometrics_data}
+\title{Start quarto dashboard with results of main \link{repometrics_pkg_data}
 function.}
 \usage{
 repometrics_dashboard(data, action = "preview")
 }
 \arguments{
-\item{data}{Results of main \link{repometrics_data} function applied
-to one package.}
+\item{data}{Results of main \link{repometrics_pkg_data} function applied to
+one package.}
 
 \item{action}{One of "preview", to start and open a live preview of the
 dashboard website, or "render" to render a static version without previewing
@@ -21,6 +21,6 @@ that the site must be served with \code{action = "preview"}, and will not work b
 simply opening this "index.html" file.
 }
 \description{
-Start quarto dashboard with results of main \link{repometrics_data}
+Start quarto dashboard with results of main \link{repometrics_pkg_data}
 function.
 }
