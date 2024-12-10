@@ -141,6 +141,9 @@ check_dashboard_arg <- function (data) {
     }
 
     nrows <- vapply (data$rm [index], nrow, integer (1L))
+    # These tables may be empty
+    maybe_empty <- c ("dependencies", "releases_from_gh_api", "repo_forks")
+    nrows <- nrows [which (!names (nrows) %in% maybe_empty)]
     if (!all (nrows > 0L)) {
         cli::cli_abort ("'data' contains empty tables.")
     }
