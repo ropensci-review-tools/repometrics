@@ -7,7 +7,10 @@ test_that ("cm data gh general", {
 
     expect_type (dat, "list")
     expect_length (dat, 7L)
-    nms <- c ("general", "followers", "following", "commit_cmt", "commits", "issues", "issue_cmts")
+    nms <- c (
+        "general", "commit_cmt", "commits", "followers", "following",
+        "issue_cmts", "issues"
+    )
     expect_named (dat, nms)
 
     expect_type (dat$general, "list")
