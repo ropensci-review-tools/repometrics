@@ -18,7 +18,8 @@ rm_data_dependencies <- function (path) {
                 vers <- regmatches (i, regexpr ("\\s\\(.*$", i))
                 null2na_char (gsub ("^\\s|\\(|\\)", "", vers))
             }, character (1L), USE.NAMES = FALSE)
-            name <- gsub ("(\\s|\\().*$", "", name)
+            name <- gsub ("\\s*", "", name)
+            name <- gsub ("\\(.*$", "", name)
             n <- length (name)
 
             cbind (name, type = rep (f, n), version)
