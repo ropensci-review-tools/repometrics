@@ -3,15 +3,15 @@ cm_metric_popularity <- function (path, end_date = Sys.Date ()) {
     # suppress no visible binding notes:
     timestamp <- aut_email <- aut_name <- created <- starred_at <- NULL
 
-    revdeps <- cm_data_dependencies_downstream (path)
+    revdeps <- rm_data_dependencies_downstream (path)
 
-    forks <- cm_data_repo_forks (path) |>
+    forks <- rm_data_repo_forks (path) |>
         dplyr::filter (created <= end_date)
 
-    stars <- cm_data_repo_stargazers (path) |>
+    stars <- rm_data_repo_stargazers (path) |>
         dplyr::filter (starred_at <= end_date)
 
-    log <- cm_data_gitlog (path) |>
+    log <- rm_data_gitlog (path) |>
         dplyr::mutate (timestamp = as.Date (timestamp)) |>
         dplyr::filter (timestamp <= end_date)
     log_ctbs <- unique (log [, c ("aut_name", "aut_email")]) |>

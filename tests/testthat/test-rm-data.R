@@ -1,10 +1,10 @@
 test_that ("cm data full", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    dat <- cm_data (path)
+    dat <- rm_data_repo (path)
 
     fs::dir_delete (path)
 
@@ -19,8 +19,8 @@ test_that ("cm data full", {
     )
     expect_equal (names (dat), nms)
 
-    data_fns <- get_cm_data_fns ()
-    data_fn_nms <- gsub ("^cm\\_data\\_", "", data_fns)
+    data_fns <- get_rm_data_fns ()
+    data_fn_nms <- gsub ("^rm\\_data\\_", "", data_fns)
     expect_identical (names (dat), data_fn_nms)
 })
 
@@ -30,7 +30,7 @@ test_that ("cm data full", {
 test_that ("cm data dependencies", {
 
     path <- generate_test_pkg ()
-    deps <- cm_data_dependencies (path)
+    deps <- rm_data_dependencies (path)
     fs::dir_delete (path)
 
     expect_s3_class (deps, "data.frame")
@@ -46,10 +46,10 @@ test_that ("cm data dependencies", {
 test_that ("cm data reverse dependencies", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    revdeps <- cm_data_dependencies_downstream (path)
+    revdeps <- rm_data_dependencies_downstream (path)
 
     fs::dir_delete (path)
 

@@ -36,7 +36,7 @@ repo_pkgstats_history <- function (path,
 
     num_cores <- set_num_cores (num_cores)
 
-    log <- cm_data_gitlog (path)
+    log <- rm_data_gitlog (path)
     log <- filter_git_log (log, step_days)
 
     if (num_cores == 1L) {

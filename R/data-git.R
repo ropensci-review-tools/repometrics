@@ -2,7 +2,7 @@
 #'
 #' @param path Local path to repository
 #' @noRd
-cm_data_gitlog_internal <- function (path) {
+rm_data_gitlog_internal <- function (path) {
 
     cmt <- git2r::commits (repo = path)
 
@@ -54,7 +54,7 @@ cm_data_gitlog_internal <- function (path) {
         whitespace_removed = whitespace [2, ]
     )
 }
-cm_data_gitlog <- memoise::memoise (cm_data_gitlog_internal)
+rm_data_gitlog <- memoise::memoise (rm_data_gitlog_internal)
 
 git_log_in_period <- function (path, end_date = Sys.Date (), period = 90) {
 
@@ -62,7 +62,7 @@ git_log_in_period <- function (path, end_date = Sys.Date (), period = 90) {
     checkmate::assert_directory (path)
     checkmate::assert_date (end_date)
 
-    log <- cm_data_gitlog (path)
+    log <- rm_data_gitlog (path)
 
     if (nrow (log) == 0) {
         return (log)

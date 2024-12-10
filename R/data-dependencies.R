@@ -2,7 +2,7 @@
 #'
 #' @param path Local path to repository
 #' @noRd
-cm_data_dependencies <- function (path) {
+rm_data_dependencies <- function (path) {
 
     desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
     checkmate::assert_file_exists (desc_path)
@@ -32,7 +32,7 @@ cm_data_dependencies <- function (path) {
 #'
 #' Note that this all works even for packages which aren't on CRAN.
 #' @noRd
-cm_data_dependencies_downstream <- function (path) {
+rm_data_dependencies_downstream <- function (path) {
 
     cran_db <- cran_pkg_db ()
     pkg_name <- pkg_name_from_path (path)
@@ -52,16 +52,16 @@ cm_data_dependencies_downstream <- function (path) {
 #'
 #' @param path Local path to repository
 #' @noRd
-cm_data_libyears <- function (path) {
+rm_data_libyears <- function (path) {
 
-    deps <- cm_data_dependencies (path)
+    deps <- rm_data_dependencies (path)
     cran_db <- data.frame (cran_pkg_db ())
     index <- match (deps$name, cran_db$Package)
     deps$cran_version <- cran_db$Version [index]
     deps$published <- as.Date (cran_db$Published [index])
     deps <- deps [which (!is.na (deps$published)), ]
 
-    rel <- cm_data_releases_from_gh_api (path, latest_only = TRUE)
+    rel <- rm_data_releases_from_gh_api (path, latest_only = TRUE)
     rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
 
     dt <- difftime (deps$published, rel_date, units = "days")

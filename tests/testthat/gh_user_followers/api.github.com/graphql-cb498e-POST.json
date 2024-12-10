@@ -1,0 +1,22 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "followers": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNC0xMi0wMlQxMzoxOToxNCswMTowMM4LCRJQ"
+                },
+                "totalCount": 295,
+                "nodes": [
+                    {
+                        "login": "realHenningLorenzen"
+                    },
+                    {
+                        "login": "TuQmano"
+                    }
+                ]
+            }
+        }
+    }
+}

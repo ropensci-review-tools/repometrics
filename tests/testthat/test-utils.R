@@ -1,6 +1,6 @@
 test_that ("author matches", { # R/cm-metric-cran-downloads.R
 
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
 
     ctbs_gh <- dat$contribs_from_gh_api
     ctbs_log <- dat$contribs_from_log

@@ -1,0 +1,266 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "name": "mark padgham",
+            "location": "Münster, Germany",
+            "bio": "rOpenSci software research scientist",
+            "company": "@rOpenSci",
+            "email": "mark.padgham@email.com",
+            "organizations": {
+                "nodes": [
+                    {
+                        "location": null,
+                        "name": "rOpenSci",
+                        "resourcePath": "/ropensci",
+                        "url": "https://github.com/ropensci",
+                        "websiteUrl": "https://ropensci.org/",
+                        "membersWithRole": {
+                            "totalCount": 292
+                        }
+                    },
+                    {
+                        "location": "New York, NY",
+                        "name": "EcoHealth Alliance",
+                        "resourcePath": "/ecohealthalliance",
+                        "url": "https://github.com/ecohealthalliance",
+                        "websiteUrl": "http://ecohealthalliance.org/",
+                        "membersWithRole": {
+                            "totalCount": 50
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "rOpenSci Labs",
+                        "resourcePath": "/ropenscilabs",
+                        "url": "https://github.com/ropenscilabs",
+                        "websiteUrl": "https://ropensci.org",
+                        "membersWithRole": {
+                            "totalCount": 10
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "osmdatar",
+                        "resourcePath": "/osmdatar",
+                        "url": "https://github.com/osmdatar",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 5
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "osm-router",
+                        "resourcePath": "/osm-router",
+                        "url": "https://github.com/osm-router",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 3
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "R Epidemics Consortium",
+                        "resourcePath": "/reconhub",
+                        "url": "https://github.com/reconhub",
+                        "websiteUrl": "http://www.repidemicsconsortium.org",
+                        "membersWithRole": {
+                            "totalCount": 24
+                        }
+                    },
+                    {
+                        "location": "Leeds, UK",
+                        "name": "Cycling Infrastructure Prioritisation Toolkit",
+                        "resourcePath": "/cyipt",
+                        "url": "https://github.com/cyipt",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 13
+                        }
+                    },
+                    {
+                        "location": "Hobart, Australia",
+                        "name": "hypertidy",
+                        "resourcePath": "/hypertidy",
+                        "url": "https://github.com/hypertidy",
+                        "websiteUrl": "https://hypertidy.r-universe.dev/",
+                        "membersWithRole": {
+                            "totalCount": 2
+                        }
+                    },
+                    {
+                        "location": "Worldwide",
+                        "name": "Active Transport Futures",
+                        "resourcePath": "/ATFutures",
+                        "url": "https://github.com/ATFutures",
+                        "websiteUrl": "https://atfutures.github.io/",
+                        "membersWithRole": {
+                            "totalCount": 8
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "Reproducible Sustainable Transport Research Journal",
+                        "resourcePath": "/rstrj",
+                        "url": "https://github.com/rstrj",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 2
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "opensafetymap",
+                        "resourcePath": "/opensafetymap",
+                        "url": "https://github.com/opensafetymap",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 1
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "diminutive",
+                        "resourcePath": "/diminutive",
+                        "url": "https://github.com/diminutive",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 2
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "r-transit",
+                        "resourcePath": "/r-transit",
+                        "url": "https://github.com/r-transit",
+                        "websiteUrl": "https://r-transit.github.io/",
+                        "membersWithRole": {
+                            "totalCount": 4
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "Flexible Transport Models: Modular, Open and Data Driven",
+                        "resourcePath": "/ftmod",
+                        "url": "https://github.com/ftmod",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 3
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "urban-futures",
+                        "resourcePath": "/urban-futures",
+                        "url": "https://github.com/urban-futures",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 1
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "moveability",
+                        "resourcePath": "/moveability",
+                        "url": "https://github.com/moveability",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 3
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "atfutures-labs",
+                        "resourcePath": "/atfutures-labs",
+                        "url": "https://github.com/atfutures-labs",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 2
+                        }
+                    },
+                    {
+                        "location": "Berkeley, CA",
+                        "name": "rOpenSci",
+                        "resourcePath": "/ropensci-org",
+                        "url": "https://github.com/ropensci-org",
+                        "websiteUrl": "ropensci.org",
+                        "membersWithRole": {
+                            "totalCount": 9
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "rOpenSci Archive",
+                        "resourcePath": "/ropensci-archive",
+                        "url": "https://github.com/ropensci-archive",
+                        "websiteUrl": "ropensci.org",
+                        "membersWithRole": {
+                            "totalCount": 5
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "reconverse",
+                        "resourcePath": "/reconverse",
+                        "url": "https://github.com/reconverse",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 5
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "Pre-processing R code",
+                        "resourcePath": "/pre-processing-r",
+                        "url": "https://github.com/pre-processing-r",
+                        "websiteUrl": "https://rpreprocess.netlify.app",
+                        "membersWithRole": {
+                            "totalCount": 5
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "ropensci-review-tools",
+                        "resourcePath": "/ropensci-review-tools",
+                        "url": "https://github.com/ropensci-review-tools",
+                        "websiteUrl": "https://ropensci-review-tools.readthedocs.io/",
+                        "membersWithRole": {
+                            "totalCount": 7
+                        }
+                    },
+                    {
+                        "location": "Germany",
+                        "name": "Urban Analyst",
+                        "resourcePath": "/UrbanAnalyst",
+                        "url": "https://github.com/UrbanAnalyst",
+                        "websiteUrl": "https://UrbanAnalyst.city",
+                        "membersWithRole": {
+                            "totalCount": 1
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "Open Source Observatory",
+                        "resourcePath": "/OSObs",
+                        "url": "https://github.com/OSObs",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 1
+                        }
+                    }
+                ]
+            },
+            "avatarUrl": "https://avatars.githubusercontent.com/u/6697851?u=0f8c9fc5b04de2485164e2cde5b62d45b4e684a0&v=4",
+            "repositories": {
+                "totalCount": 170
+            },
+            "repositoriesContributedTo": {
+                "totalCount": 63
+            },
+            "starredRepositories": {
+                "totalCount": 1611
+            }
+        }
+    }
+}

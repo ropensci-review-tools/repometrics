@@ -2,7 +2,7 @@ end_date <- as.Date ("2024-08-01")
 
 test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
 
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
 
     path <- generate_test_pkg () # has URL of "goodpractice"
     desc_path <- fs::path (path, "DESCRIPTION")
@@ -92,7 +92,7 @@ test_that ("cm metrics num_commits num_contribs", {
 test_that ("cm metric change req frequency", { # R/cm-metrics-change-req.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     dat <- cm_metric_change_req (path, end_date = end_date)
     fs::dir_delete (path)
@@ -105,7 +105,7 @@ test_that ("cm metric change req frequency", { # R/cm-metrics-change-req.R
 test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     x <- cm_metric_issues_to_prs (path, end_date = end_date)
     fs::dir_delete (path)
@@ -118,7 +118,7 @@ test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     revs <- cm_metric_pr_reviews (path, end_date = end_date)
     fs::dir_delete (path)
@@ -140,7 +140,7 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     forks <- cm_metric_num_forks (path, end_date = end_date)
     fs::dir_delete (path)
@@ -174,7 +174,7 @@ test_that ("cm metric code change lines", { # R/cm-metrics-code-change.R
 test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     revs <- cm_metric_pr_review_duration (path, end_date = end_date)
     fs::dir_delete (path)
@@ -189,7 +189,7 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
 test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     res <- cm_metric_issue_response_time (path, end_date = end_date)
     fs::dir_delete (path)
@@ -205,7 +205,7 @@ test_that ("cm metric defect resolution duration", {
     # R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     res <- cm_metric_defect_resolution_dur (path, end_date = end_date)
     fs::dir_delete (path)
@@ -221,7 +221,7 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
 
     end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     res <- cm_metric_label_inclusivity (path, end_date = end_date)
     fs::dir_delete (path)
@@ -239,7 +239,7 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 
     end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     res <- cm_metric_time_to_close (path, end_date = end_date)
     fs::dir_delete (path)
@@ -254,7 +254,7 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     # Test prs only grab first two which are years old
     op <- getOption ("repometrics_period")
@@ -273,7 +273,7 @@ test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
 test_that ("cm metric popularity", { # R/cm-metric-popularity.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
     res <- cm_metric_popularity (path, end_date = end_date)
@@ -290,7 +290,7 @@ test_that ("cm metric popularity", { # R/cm-metric-popularity.R
 test_that ("cm metric libyears", { # R/cm-metric-libyears.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
     res <- cm_metric_libyears (path)
@@ -307,7 +307,7 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
 test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
     res <- cm_metric_issue_age (path, end_date = end_date)
@@ -324,7 +324,7 @@ test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
 test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    dat <- mock_cm_data ()
+    dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
     # Need to extend period to capture enough releases:

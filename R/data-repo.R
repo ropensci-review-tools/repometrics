@@ -24,13 +24,13 @@
 #' attributes of the repository on GitHub.
 #' }
 #' @export
-cm_data <- function (path) {
+rm_data_repo <- function (path) {
 
     checkmate::assert_directory_exists (path)
 
-    data_fns <- get_cm_data_fns ()
+    data_fns <- get_rm_data_fns ()
 
-    if (all_cm_data_fns_memoised (data_fns, path)) {
+    if (all_rm_data_fns_memoised (data_fns, path)) {
         res <- lapply (data_fns, function (i) {
             do.call (i, list (path = path))
         })
@@ -39,19 +39,25 @@ cm_data <- function (path) {
             do.call (i, list (path = path))
         })
     }
-    names (res) <- gsub ("^cm\\_data\\_", "", data_fns)
+    names (res) <- gsub ("^rm\\_data\\_", "", data_fns)
 
     return (res)
 }
 
-get_cm_data_fns <- function () {
+get_rm_data_fns <- function () {
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
-    data_fns <- grep ("^cm\\_data\\_", pkg_fns, value = TRUE)
-    data_fns [which (!grepl ("\\_internal$", data_fns))]
+    data_fns <- grep ("^rm\\_data\\_", pkg_fns, value = TRUE)
+    data_fns <- data_fns [which (!grepl ("\\_internal$", data_fns))]
+    data_fns <- data_fns [which (!data_fns == "rm_data_repo")]
+
+    index <- grep ("user", data_fns)
+    data_fns <- data_fns [-index]
+
+    return (data_fns)
 }
 
-all_cm_data_fns_memoised <- function (data_fns, path) {
+all_rm_data_fns_memoised <- function (data_fns, path) {
     is_memoised <- vapply (data_fns, function (i) {
         tryCatch (
             memoise::has_cache (get (i)) (path),
