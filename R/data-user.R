@@ -1,26 +1,15 @@
 #' Extract and combine all user data
 #'
-#' @param path Path to local source repository.
+#' @param login GitHub login of user
 #' @return A list of the following `data.frame` objects:
 #' \enumerate{
-#' \item `contribs_from_gh_api` with details of all code contributors from GitHub
-#' \item `contribs_from_log` with details of all code contributors from the local git log
-#' \item `dependencies` A simple `data.frame` of all package dependencies
-#' \item `gh_repo_workflow` with details of all workflows run on GitHub,
-#' including status of most recent runs
-#' \item `gitlog` with one row for each git commit, and associated statistics
-#' \item `issue_comments_from_gh_api` with details of all comments from all
-#' repository issues on GitHub
-#' \item `issues_from_gh_api` with details of all issues on GitHub
-#' \item `libyears` The CHAOSS metric described at
-#' \url{https://chaoss.community/kb/metric-libyears/}, measuring the relative
-#' age of a project's dependencies, with lower values indicating more
-#' up-to-date projects. This is the only item which is not a `data.frame`,
-#' rather a named numerical vector of mean and median "libyears"
-#' \item `prs_from_gh_api` with details of all pull requests on GitHub
-#' \item `releases_from_gh_api` with details of all repository releases on GitHub
-#' \item `repo_from_gh_api` A `data.frame` of a single line, with several key
-#' attributes of the repository on GitHub.
+#' \item `commit_cmt` with details of commits made on commits
+#' \item `commits` with summaries of all repositories to which user made commits
+#' \item `followers` A list of followers of specified user
+#' \item `following` A list of other people who nominated user is following
+#' \item `general` with some general information about specified user
+#' \item `issue_cmts` with information on all issue comments made by user
+#' \item `issues` with information on all issues opened by user
 #' }
 #' @export
 rm_data_user <- function (login) {
@@ -29,7 +18,7 @@ rm_data_user <- function (login) {
 
     data_fns <- get_rm_gh_user_fns ()
 
-    if (all_gh_user_fns_memoised (data_fns, path)) {
+    if (all_gh_user_fns_memoised (data_fns, login)) {
         res <- lapply (data_fns, function (i) {
             do.call (i, list (login = login))
         })
@@ -38,7 +27,8 @@ rm_data_user <- function (login) {
             do.call (i, list (login = login))
         })
     }
-    names (res) <- gsub ("^rm\\_data\\_", "", data_fns)
+    names (res) <- gsub ("^gh\\_user\\_", "", data_fns)
+    gsub ("^gh\\_user\\_", "", data_fns)
 
     return (res)
 }

@@ -7,29 +7,18 @@
 rm_data_user(login)
 }
 \arguments{
-\item{path}{Path to local source repository.}
+\item{login}{GitHub login of user}
 }
 \value{
 A list of the following \code{data.frame} objects:
 \enumerate{
-\item \code{contribs_from_gh_api} with details of all code contributors from GitHub
-\item \code{contribs_from_log} with details of all code contributors from the local git log
-\item \code{dependencies} A simple \code{data.frame} of all package dependencies
-\item \code{gh_repo_workflow} with details of all workflows run on GitHub,
-including status of most recent runs
-\item \code{gitlog} with one row for each git commit, and associated statistics
-\item \code{issue_comments_from_gh_api} with details of all comments from all
-repository issues on GitHub
-\item \code{issues_from_gh_api} with details of all issues on GitHub
-\item \code{libyears} The CHAOSS metric described at
-\url{https://chaoss.community/kb/metric-libyears/}, measuring the relative
-age of a project's dependencies, with lower values indicating more
-up-to-date projects. This is the only item which is not a \code{data.frame},
-rather a named numerical vector of mean and median "libyears"
-\item \code{prs_from_gh_api} with details of all pull requests on GitHub
-\item \code{releases_from_gh_api} with details of all repository releases on GitHub
-\item \code{repo_from_gh_api} A \code{data.frame} of a single line, with several key
-attributes of the repository on GitHub.
+\item \code{commit_cmt} with details of commits made on commits
+\item \code{commits} with summaries of all repositories to which user made commits
+\item \code{followers} A list of followers of specified user
+\item \code{following} A list of other people who nominated user is following
+\item \code{general} with some general information about specified user
+\item \code{issue_cmts} with information on all issue comments made by user
+\item \code{issues} with information on all issues opened by user
 }
 }
 \description{
