@@ -1,6 +1,6 @@
 # Extends from 'cm-data-github.R' to test the user-specific data
 
-test_that ("cm data gh general", {
+test_that ("rm user data internal structures", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data (repo = FALSE)
@@ -67,4 +67,21 @@ test_that ("cm data gh general", {
     expect_equal (ncol (dat$issue_cmts), 5L)
     nms <- c ("org_repo", "issue_num", "created_at", "num_comments", "num_participants")
     expect_named (dat$issue_cmts, nms)
+})
+
+test_that ("rm_data_user fn", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat_mocked <- mock_rm_data (repo = FALSE)
+
+    login <- "mpadge"
+    ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+
+    dat <- rm_data_user (
+        login = login,
+        n_per_page = 1,
+        ended_at = ended_at,
+        nyears = 1
+    )
+    expect_identical (dat, dat_mocked)
 })
