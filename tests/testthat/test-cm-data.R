@@ -4,7 +4,7 @@ test_that ("cm data full", {
     dat <- mock_cm_data ()
     path <- generate_test_pkg ()
 
-    dat <- cm_data (path)
+    dat <- cm_data_repo (path)
 
     fs::dir_delete (path)
 

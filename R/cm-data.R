@@ -24,7 +24,7 @@
 #' attributes of the repository on GitHub.
 #' }
 #' @export
-cm_data <- function (path) {
+cm_data_repo <- function (path) {
 
     checkmate::assert_directory_exists (path)
 
@@ -44,11 +44,21 @@ cm_data <- function (path) {
     return (res)
 }
 
-get_cm_data_fns <- function () {
+get_cm_data_fns <- function (repo = TRUE) {
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     data_fns <- grep ("^cm\\_data\\_", pkg_fns, value = TRUE)
-    data_fns [which (!grepl ("\\_internal$", data_fns))]
+    data_fns <- data_fns [which (!grepl ("\\_internal$", data_fns))]
+    data_fns <- data_fns [which (!data_fns == "cm_data_repo")]
+
+    index <- grep ("user", data_fns)
+    if (repo) {
+        data_fns <- data_fns [-index]
+    } else {
+        data_fns <- data_fns [index]
+    }
+
+    return (data_fns)
 }
 
 all_cm_data_fns_memoised <- function (data_fns, path) {
