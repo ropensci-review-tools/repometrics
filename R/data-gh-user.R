@@ -616,7 +616,7 @@ gh_user_issue_cmts_internal <- function (login,
             )
         )
 
-        if (tail (as.POSIXct (created_at), 1) < start_timestamp) {
+        if (utils::tail (as.POSIXct (created_at), 1) < start_timestamp) {
             has_next_page <- FALSE
         }
     }
