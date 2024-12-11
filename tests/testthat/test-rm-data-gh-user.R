@@ -48,8 +48,8 @@ test_that ("rm user data internal structures", {
 
     expect_s3_class (dat$commits, "data.frame")
     expect_true (nrow (dat$commits) > 0L)
-    expect_equal (ncol (dat$commits), 2L)
-    nms <- c ("repo", "num_commits")
+    expect_equal (ncol (dat$commits), 3L)
+    nms <- c ("repo", "num_commits", "date")
     expect_named (dat$commits, nms)
 
     expect_s3_class (dat$issues, "data.frame")
