@@ -322,6 +322,9 @@ gh_user_commits_internal <- function (login,
                                       nyears = 1,
                                       n_per_page = 100L) {
 
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
+
     repos <- num_commits <- dates <- end_cursor <- end_cursors <- NULL
 
     has_next_page <- TRUE
@@ -375,7 +378,7 @@ gh_user_commits_internal <- function (login,
         }, character (1L))
         end_cursors_these <- unique (end_cursors_these [which (has_next_pages)])
         end_cursors <- c (end_cursors, end_cursors_these)
-        has_next_page <- length (end_cursors) > 0L
+        has_next_page <- length (end_cursors) > 0L && !is_test_env
         if (has_next_page) {
             end_cursor <- end_cursors [1L]
             end_cursors <- end_cursors [-1L]

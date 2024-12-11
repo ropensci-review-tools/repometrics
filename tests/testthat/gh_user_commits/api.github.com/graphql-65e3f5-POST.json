@@ -1,0 +1,64 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "contributionsCollection": {
+                "startedAt": "2023-01-01T08:00:00Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "totalCommitContributions": 3188,
+                "commitContributionsByRepository": [
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": true,
+                                "endCursor": "Mg"
+                            },
+                            "totalCount": 694,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2023-12-31T08:00:00Z",
+                                    "commitCount": 8,
+                                    "repository": {
+                                        "nameWithOwner": "mpadge/UrbanAnalyst"
+                                    }
+                                },
+                                {
+                                    "occurredAt": "2023-12-29T08:00:00Z",
+                                    "commitCount": 8,
+                                    "repository": {
+                                        "nameWithOwner": "mpadge/UrbanAnalyst"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": true,
+                                "endCursor": "Mg"
+                            },
+                            "totalCount": 547,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2023-12-05T08:00:00Z",
+                                    "commitCount": 6,
+                                    "repository": {
+                                        "nameWithOwner": "ropenscilabs/deposits"
+                                    }
+                                },
+                                {
+                                    "occurredAt": "2023-11-06T08:00:00Z",
+                                    "commitCount": 4,
+                                    "repository": {
+                                        "nameWithOwner": "ropenscilabs/deposits"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
