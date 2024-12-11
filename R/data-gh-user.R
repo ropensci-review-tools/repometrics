@@ -52,8 +52,8 @@ gh_user_general_internal <- function (login = "",
 
     user_dat <- data.frame (
         login = user$login,
-        name = user$name,
-        email = user$email,
+        name = null2na_char (user$name),
+        email = null2na_char (user$email),
         location = null2na_char (user$location),
         company = null2na_char (user$company),
         bio = null2na_char (user$bio),
