@@ -57,10 +57,10 @@ gh_user_general_internal <- function (login = "",
         location = null2na_char (user$location),
         company = null2na_char (user$company),
         bio = null2na_char (user$bio),
-        avatarUrl = user$avatarUrl,
-        num_repositories = user$repositories$totalCount,
-        repos_contributed_to = user$repositoriesContributedTo$totalCount,
-        num_starred_repos = user$starredRepositories$totalCount
+        avatarUrl = null2na_char (user$avatarUrl),
+        num_repositories = null2na_int (user$repositories$totalCount),
+        repos_contributed_to = null2na_int (user$repositoriesContributedTo$totalCount),
+        num_starred_repos = null2na_int (user$starredRepositories$totalCount)
     )
 
     orgs <- user$organizations$nodes
