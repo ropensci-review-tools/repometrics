@@ -388,6 +388,8 @@ gh_user_commits_internal <- function (login,
     started_at <- dat$data$user$contributionsCollection$startedAt
     ended_at <- dat$data$user$contributionsCollection$endedAt
 
+    # suppress no visible binding note:
+    repo <- date <- NULL
     res <- data.frame (
         repo = repos,
         num_commits = num_commits,
