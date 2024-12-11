@@ -39,7 +39,7 @@ repometrics_data_user <- function (login,
         })
     } else {
         res <- pbapply::pblapply (data_fns, function (i) {
-            do.call (i, list (login = login))
+            do.call (i, pars)
         })
     }
     names (res) <- gsub ("^gh\\_user\\_", "", data_fns)
