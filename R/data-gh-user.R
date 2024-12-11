@@ -198,7 +198,7 @@ gh_user_commit_cmt_qry <- function (login = "",
                     }
                     createdAt
                     repository {
-                        url
+                        nameWithOwner
                         stargazerCount
                     }
                     url
@@ -238,7 +238,7 @@ gh_user_commit_cmt_internal <- function (login,
         )
         repourl <- c (
             repourl,
-            vapply (nodes, function (i) i$repository$url, character (1L))
+            vapply (nodes, function (i) i$repository$nameWithOwner, character (1L))
         )
         repo_stargazers <- c (
             repo_stargazers,
@@ -252,7 +252,6 @@ gh_user_commit_cmt_internal <- function (login,
         }
     }
 
-    repourl <- gsub ("https://github.com/", "", repourl, fixed = TRUE)
     repourl <- strsplit (repourl, "\\/")
     org <- vapply (repourl, function (i) i [1], character (1L))
     repo <- vapply (repourl, function (i) i [2], character (1L))
@@ -273,7 +272,8 @@ gh_user_commit_cmt <- memoise::memoise (gh_user_commit_cmt_internal)
 gh_user_commits_qry <- function (login = "",
                                  ended_at = Sys.time (),
                                  nyears = 1,
-                                 n_per_page = 100L) {
+                                 n_per_page = 100L,
+                                 end_cursor = NULL) {
 
     # GraphQL API here has restriction:
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
@@ -282,22 +282,30 @@ gh_user_commits_qry <- function (login = "",
     from <- format (ended_at - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
     ended_at <- format (ended_at, "%Y-%m-%dT%H:%M:%S")
 
+    after_txt <- ""
+    if (!is.null (end_cursor)) {
+        after_txt <- paste0 (", after:\"", end_cursor, "\"")
+    }
+
     q <- paste0 ("{
         user(login:\"", login, "\") {
             login
             contributionsCollection (from: \"", from, "\", to: \"", ended_at, "\") {
                 startedAt
                 endedAt
+                totalCommitContributions
                 commitContributionsByRepository (maxRepositories: ", n_per_page, ") {
-                    contributions (first: 1) {
+                    contributions (first: ", n_per_page, after_txt, ") {
                         pageInfo {
                             hasNextPage
                             endCursor
                         }
                         totalCount
                         nodes {
+                            occurredAt
+                            commitCount
                             repository {
-                                url
+                                nameWithOwner
                             }
                         }
                     }
@@ -314,30 +322,80 @@ gh_user_commits_internal <- function (login,
                                       nyears = 1,
                                       n_per_page = 100L) {
 
-    q <- gh_user_commits_qry (
-        login = login,
-        ended_at = ended_at,
-        nyears = nyears,
-        n_per_page = n_per_page
-    )
-    dat <- gh::gh_gql (query = q)
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    n_per_page <- n_per_page_in_tests (n_per_page)
+
+    repos <- num_commits <- dates <- end_cursor <- end_cursors <- NULL
+
+    has_next_page <- TRUE
+
+    while (has_next_page) {
+
+        q <- gh_user_commits_qry (
+            login = login,
+            ended_at = ended_at,
+            nyears = nyears,
+            n_per_page = n_per_page,
+            end_cursor = end_cursor
+        )
+        dat <- gh::gh_gql (query = q)
+
+        collection <- dat$data$user$contributionsCollection
+        commits <- collection$commitContributionsByRepository
+
+        # Query always returns `n_per_page` items, even when empty, so empty
+        # ones must first be removed:
+        lens <- vapply (
+            commits,
+            function (i) length (i$contributions$nodes),
+            integer (1L)
+        )
+        commits <- commits [which (lens > 0)]
+
+        repos_i <- vapply (
+            commits,
+            function (i) i$contributions$nodes [[1]]$repository$nameWithOwner,
+            character (1L)
+        )
+
+        dates_i <- lapply (commits, function (i) {
+            vapply (i$contributions$nodes, function (j) j$occurredAt, character (1L))
+        })
+        n_i <- vapply (dates_i, length, integer (1L))
+        dates <- c (dates, unlist (dates_i))
+        commit_count_i <- lapply (commits, function (i) {
+            vapply (i$contributions$nodes, function (j) j$commitCount, integer (1L))
+        })
+        num_commits <- c (num_commits, unlist (commit_count_i))
+
+        repos <- c (repos, rep (repos_i, times = n_i))
+
+        has_next_pages <- vapply (commits, function (i) {
+            i$contributions$pageInfo$hasNextPage
+        }, logical (1L))
+        end_cursors_these <- vapply (commits, function (i) {
+            i$contributions$pageInfo$endCursor
+        }, character (1L))
+        end_cursors_these <- unique (end_cursors_these [which (has_next_pages)])
+        end_cursors <- c (end_cursors, end_cursors_these)
+        has_next_page <- length (end_cursors) > 0L && !is_test_env
+        if (has_next_page) {
+            end_cursor <- end_cursors [1L]
+            end_cursors <- end_cursors [-1L]
+        }
+    }
 
     started_at <- dat$data$user$contributionsCollection$startedAt
     ended_at <- dat$data$user$contributionsCollection$endedAt
 
-    commits <- dat$data$user$contributionsCollection$commitContributionsByRepository
-
-    repos <- vapply (
-        commits,
-        function (i) i$contributions$nodes [[1]]$repository$url,
-        character (1L)
-    )
-    num_commits <- vapply (commits, function (i) i$contributions$totalCount, integer (1L))
-
+    # suppress no visible binding note:
+    repo <- date <- NULL
     res <- data.frame (
-        repo = gsub ("https://github.com/", "", repos, fixed = TRUE),
-        num_commits = num_commits
-    )
+        repo = repos,
+        num_commits = num_commits,
+        date = dates
+    ) |>
+        dplyr::arrange (repo, date)
     attr (res, "started_at") <- started_at
     attr (res, "ended_at") <- ended_at
 
