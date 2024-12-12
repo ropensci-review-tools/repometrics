@@ -14,6 +14,44 @@ from commit histories and GitHub interactions, converts it all to standardised
 metrics, and displays the result as a single, interactive dashboard of your
 repository.
 
+## How?
+
+### Installation
+
+First, install the package either via [`r-universe`](https://r-universe.dev):
+
+``` r
+options (repos = c (
+    ropenscireviewtools = "https://ropensci-review-tools.r-universe.dev",
+    CRAN = "https://cloud.r-project.org"
+))
+install.packages ("repometrics")
+```
+or directly from GitHub with one of these two lines:
+
+``` r
+remotes::install_github ("ropensci-review-tools/repometrics")
+pak::pkg_install ("ropensci-review-tools/repometrics")
+```
+
+### Use
+
+The main data-gathering function requires just one parameter specifying the
+path to a local source repository:
+
+``` r
+data <- repometrics_data_pkg (path)
+```
+
+The results can then be visualised as an interactive dashboard by running this
+line:
+
+``` r
+repometrics_dashboard (data)
+```
+
+The dashboard will automatically open in your default browser.
+
 ## Prior Art
 
 There are lots of tools for collating metrics of software repositories, most of
