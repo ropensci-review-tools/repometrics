@@ -25,17 +25,26 @@ empty_user_mat <- function (user_data, n = 4L) {
 #' @noRd
 add_user_login_cols <- function (user_data) {
 
-    is_df <- vapply (user_data [[1]], is.data.frame, logical (1L))
-    index <- which (is_df)
-
-    lapply (seq_along (user_data), function (u) {
-        lapply (user_data [[u]] [index], function (i) {
-            if (nrow (i) > 0L) {
-                i$login <- names (user_data) [u]
+    nms <- names (user_data)
+    res <- lapply (seq_along (user_data), function (u) {
+        nms_u <- names (user_data [[u]])
+        res_u <- lapply (seq_along (user_data [[u]]), function (i) {
+            ud <- user_data [[u]] [[i]]
+            if (is.data.frame (ud) && nrow (ud) > 0L) {
+                    ud$login <- names (user_data) [u]
+            } else if (is.character (ud)) {
+                ud <- data.frame (ud, login = names (user_data) [u])
+                names (ud) [1] <- names (user_data [[u]]) [i]
             }
-            return (i)
+            return (ud)
         })
+        names (res_u) <- nms_u
+
+        return (res_u)
     })
+    names (res) <- nms
+
+    return (res)
 }
 
 user_relate_commits <- function (user_data) {
