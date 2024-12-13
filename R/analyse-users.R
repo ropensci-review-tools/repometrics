@@ -2,6 +2,16 @@
 #' users.
 #'
 #' @param user_data Result of `lapply(logins, repometrics_data_user)`.
+#' Contains the following fields:
+#' \enumerate{
+#' \item general (not considered here)
+#' \item commit_cmt Comments on commits
+#' \item commits Commits to different repositories
+#' \item followers GitHub followers
+#' \item following Logins of people/orgs followed by user on GitHub
+#' \item issue_cmts Comments on issues
+#' \item issues Issues opened by user.
+#' }
 #' @noRd
 user_relation_matrices <- function (user_data) {
 
@@ -9,20 +19,7 @@ user_relation_matrices <- function (user_data) {
     user_data <- add_user_login_cols (user_data) |>
         combine_user_data ()
 
-    dat <- empty_user_mat (user_data, user_names)
-
-
-}
-
-empty_user_mat <- function (user_data, user_names) {
-
-    n_users <- length (user_names)
-    n_fields <- length (user_data)
-    m <- array (NA_real_, dim = c (n_users, n_users, n_fields))
-    rownames (m) <- colnames (m) <- user_names
-    attr (m, "dimnames") [[3]] <- names (user_data)
-
-    return (m)
+    cmts <- user_relate_commits (user_data, user_names)
 }
 
 #' Add 'login' columns to all user data, so each element can be combined.
@@ -70,10 +67,31 @@ combine_user_data <- function (user_data) {
     return (data)
 }
 
-user_relate_commits <- function (user_data) {
+user_relate_commits <- function (user_data, user_names) {
 
-    commits <- lapply (seq_along (user_data), function (u) {
+    user_combs <- t (combn (user_names, m = 2L))
 
+    res <- apply (user_combs, 1, function (i) {
+        cmt1 <- dplyr::filter (user_data$commits, login == i [1]) |>
+            dplyr::group_by (repo) |>
+            dplyr::summarise (n1 = sum (num_commits))
+        cmt2 <- dplyr::filter (user_data$commits, login == i [2]) |>
+            dplyr::group_by (repo) |>
+            dplyr::summarise (n2 = sum (num_commits))
+        overlap <- dplyr::inner_join (cmt1, cmt2, by = "repo")
 
+        res <- 0
+        if (nrow (overlap) > 0L) {
+            res <- (sum (overlap$n1) + sum (overlap$n2)) /
+                (sum (cmt1$n1) + sum (cmt2$n2))
+        }
+        return (res)
     })
+
+    data.frame (
+        login1 = user_combs [, 1],
+        login2 = user_combs [, 2],
+        overlap = res,
+        what = "commits"
+    )
 }
