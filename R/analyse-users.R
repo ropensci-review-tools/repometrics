@@ -5,18 +5,22 @@
 #' @noRd
 user_relation_matrices <- function (user_data) {
 
-    user_data <- add_user_login_cols (user_data)
+    user_names <- names (user_data)
+    user_data <- add_user_login_cols (user_data) |>
+        combine_user_data ()
 
-    dat <- empty_user_mat (user_data, n = 4L)
+    dat <- empty_user_mat (user_data, user_names)
 
 
 }
 
-empty_user_mat <- function (user_data, n = 4L) {
+empty_user_mat <- function (user_data, user_names) {
 
-    n_users <- length (user_data)
-    m <- array (NA_real_, dim = c (n_users, n_users, n))
-    rownames (m) <- colnames (m) <- names (user_data)
+    n_users <- length (user_names)
+    n_fields <- length (user_data)
+    m <- array (NA_real_, dim = c (n_users, n_users, n_fields))
+    rownames (m) <- colnames (m) <- user_names
+    attr (m, "dimnames") [[3]] <- names (user_data)
 
     return (m)
 }
@@ -31,7 +35,7 @@ add_user_login_cols <- function (user_data) {
         res_u <- lapply (seq_along (user_data [[u]]), function (i) {
             ud <- user_data [[u]] [[i]]
             if (is.data.frame (ud) && nrow (ud) > 0L) {
-                    ud$login <- names (user_data) [u]
+                ud$login <- names (user_data) [u]
             } else if (is.character (ud)) {
                 ud <- data.frame (ud, login = names (user_data) [u])
                 names (ud) [1] <- names (user_data [[u]]) [i]
@@ -45,6 +49,25 @@ add_user_login_cols <- function (user_data) {
     names (res) <- nms
 
     return (res)
+}
+
+#' Combine all individual elements of 'user_data' for all users.
+#'
+#' The `add_user_login_cols` enables all data to be `rbind`-ed here.
+#' @noRd
+combine_user_data <- function (user_data) {
+
+    data <- lapply (names (user_data [[1]]), function (n) {
+        these <- lapply (user_data, function (i) i [[n]])
+        res <- do.call (rbind, these)
+        rownames (res) <- NULL
+        return (res)
+    })
+
+    names (data) <- names (user_data [[1]])
+    data$general <- NULL
+
+    return (data)
 }
 
 user_relate_commits <- function (user_data) {
