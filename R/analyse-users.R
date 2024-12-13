@@ -12,6 +12,8 @@
 #' \item issue_cmts Comments on issues
 #' \item issues Issues opened by user.
 #' }
+#' @return A `data.frame` of pairwise user logins, and proportions of overlap
+#' betwen repositories in the six variables described above.
 #' @noRd
 user_relation_matrices <- function (user_data) {
 
@@ -19,7 +21,36 @@ user_relation_matrices <- function (user_data) {
     user_data <- add_user_login_cols (user_data) |>
         combine_user_data ()
 
-    cmts <- user_relate_commits (user_data, user_names)
+    # Pre-processing to name grouping column "repo" and count column "n":
+    user_data$commit_cmt$repo <-
+        paste0 (user_data$commit_cmt$org, user_data$commit_cmt$repo)
+
+    user_data$followers <-
+        dplyr::rename (user_data$followers, repo = followers) |>
+        dplyr::mutate (n = 1L)
+    user_data$following <-
+        dplyr::rename (user_data$following, repo = following) |>
+        dplyr::mutate (n = 1L)
+
+    user_data$issue_cmts <-
+        dplyr::rename (user_data$issue_cmts, repo = org_repo) |>
+        dplyr::group_by (repo, login) |>
+        dplyr::summarise (n = sum (num_comments), .groups = "keep")
+    user_data$issues <- dplyr::rename (user_data$issues, repo = org_repo) |>
+        dplyr::group_by (repo, login) |>
+        dplyr::summarise (n = dplyr::n (), .groups = "keep")
+
+    overlap <- lapply (names (user_data), function (n) {
+        user_data [[n]] <- user_relate_fields (user_data, user_names, what = n)
+    })
+
+    res <- dplyr::left_join (overlap [[1]], overlap [[2]], by = c ("login1", "login2")) |>
+        dplyr::left_join (overlap [[3]], by = c ("login1", "login2")) |>
+        dplyr::left_join (overlap [[4]], by = c ("login1", "login2")) |>
+        dplyr::left_join (overlap [[5]], by = c ("login1", "login2")) |>
+        dplyr::left_join (overlap [[6]], by = c ("login1", "login2"))
+
+    return (res)
 }
 
 #' Add 'login' columns to all user data, so each element can be combined.
@@ -67,17 +98,22 @@ combine_user_data <- function (user_data) {
     return (data)
 }
 
-user_relate_commits <- function (user_data, user_names) {
+user_relate_fields <- function (user_data, user_names, what = "commits") {
 
     user_combs <- t (combn (user_names, m = 2L))
+    if (what == "commits") {
+        user_data [[what]] <- dplyr::rename (user_data [[what]], n = num_commits)
+    } else if (what == "commit_cmt") {
+        user_data$commit_cmt$n <- 1L
+    }
 
     res <- apply (user_combs, 1, function (i) {
-        cmt1 <- dplyr::filter (user_data$commits, login == i [1]) |>
+        cmt1 <- dplyr::filter (user_data [[what]], login == i [1]) |>
             dplyr::group_by (repo) |>
-            dplyr::summarise (n1 = sum (num_commits))
-        cmt2 <- dplyr::filter (user_data$commits, login == i [2]) |>
+            dplyr::summarise (n1 = sum (n))
+        cmt2 <- dplyr::filter (user_data [[what]], login == i [2]) |>
             dplyr::group_by (repo) |>
-            dplyr::summarise (n2 = sum (num_commits))
+            dplyr::summarise (n2 = sum (n))
         overlap <- dplyr::inner_join (cmt1, cmt2, by = "repo")
 
         res <- 0
@@ -88,10 +124,12 @@ user_relate_commits <- function (user_data, user_names) {
         return (res)
     })
 
-    data.frame (
+    res <- data.frame (
         login1 = user_combs [, 1],
         login2 = user_combs [, 2],
-        overlap = res,
-        what = "commits"
+        res
     )
+    names (res) [3] <- what
+
+    return (res)
 }
