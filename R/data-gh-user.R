@@ -87,8 +87,8 @@ gh_user_general_internal <- function (login = "",
         name = org_name,
         gh_org = org_gh_org,
         url = org_url,
-        web_url = org_web_url,
-        location = org_location,
+        web_url = null2na_char (org_web_url),
+        location = null2na_char (org_location),
         num_members = org_num_members
     )
 
