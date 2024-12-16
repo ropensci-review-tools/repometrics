@@ -35,14 +35,13 @@ mock_user_rel_data <- function () {
     timestamp_minus_year <- as.POSIXct ("2023-01-01T00:00:01")
 
     commits <- data.frame (
-        org = rep ("org", 2L),
-        repo = c ("one", "two"),
-        timestamp = rep (timestamp, 2L),
-        stargazers = 1:2
+        repo = paste0 ("org", c ("one", "two")),
+        num_commits = 1:2,
+        date = rep (timestamp, 2L)
     )
 
     commit_cmt <- data.frame (
-        repo = paste0 (commits$org, commits$repo, collapse = "/"),
+        repo = commits$repo,
         num_commits = 1:2,
         date = rep (timestamp, 2L)
     )
@@ -52,7 +51,7 @@ mock_user_rel_data <- function () {
     issues <- data.frame (
         opened_at = rep (timestamp, 2L),
         closed_at = rep (timestamp, 2L),
-        org_repo = paste0 (commits$org, commits$repo, collapse = "/"),
+        org_repo = commits$repo,
         issue_num = 1:2,
         num_issue_comments = 3:4,
         num_issue_participants = 5:6,
@@ -63,7 +62,7 @@ mock_user_rel_data <- function () {
     attr (issues, "ended_at") <- timestamp
 
     issue_cmts <- data.frame (
-        org_repo = paste0 (commits$org, commits$repo, collapse = "/"),
+        org_repo = commits$repo,
         issue_num = 1:2,
         created_at = rep (timestamp, 2L),
         num_comments = 1:2,
