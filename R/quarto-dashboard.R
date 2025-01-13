@@ -31,7 +31,7 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     saveRDS (data_repo, fs::path (dir, "results-repo.Rds"))
     saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
-    dat_user_network <- get_user_network (data_users)
+    dat_user_network <- get_user_network (data_repo, data_users)
     jsonlite::write_json (dat_user_network, fs::path (dir, "results-user-network.json"))
 
     pkg_name <- data_repo$pkgstats$desc_data$package [1]
@@ -42,7 +42,7 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     })
 }
 
-get_user_network <- function (data_users, maxval = 20) {
+get_user_network <- function (data_repo, data_users, maxval = 20) {
 
     rels <- user_relation_matrices (data_users)
     index <- which (!grepl ("^login", names (rels)))
@@ -64,6 +64,13 @@ get_user_network <- function (data_users, maxval = 20) {
         ),
         links = reldf
     )
+
+    # Then append num. commits to node data:
+    login <- contributions <- id <- NULL
+    user_commits <- data_repo$rm$contribs_from_gh_api |>
+        dplyr::select (login, contributions) |>
+        dplyr::rename (id = login)
+    netdat$nodes <- dplyr::left_join (netdat$nodes, user_commits, by = dplyr::join_by (id))
 
     return (netdat)
 }
