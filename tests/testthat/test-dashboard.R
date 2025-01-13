@@ -42,7 +42,7 @@ test_that ("dashboard build", {
     repometrics_dashboard (data_repo, data_users, action = "render")
 
     # Expect quarto docs to have been modified with package name:
-    pkg_name <- data$pkgstats$desc_data$package [1]
+    pkg_name <- data_repo$pkgstats$desc_data$package [1]
     path_tmp <- fs::path (fs::path_temp (), "quarto")
     expect_true (fs::dir_exists (path_tmp))
 
