@@ -47,6 +47,10 @@ get_user_network <- function (data_users) {
     rels <- user_relation_matrices (data_users)
     index <- which (!grepl ("^login", names (rels)))
     relmat <- apply (as.matrix (rels [, index]), 2, function (i) i / sum (i))
+    if (!is.matrix (relmat)) {
+        relmat <- matrix (relmat, nrow = 1L)
+    }
+    relmat [which (is.na (relmat))] <- 0
     relvec <- 20 * rowSums (relmat) / ncol (relmat)
     reldf <- cbind (rels [, 1:2], value = relvec)
     names (reldf) <- c ("source", "target", "value")
