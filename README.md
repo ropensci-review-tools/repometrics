@@ -40,7 +40,7 @@ The main data-gathering function requires just one parameter specifying the
 path to a local source repository:
 
 ``` r
-data <- repometrics_data_pkg (path)
+data <- repometrics_data_repo (path)
 ```
 
 The results can then be visualised as an interactive dashboard by running this

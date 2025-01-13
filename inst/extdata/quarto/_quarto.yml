@@ -9,6 +9,7 @@ website:
     left:
       - fn-stats.qmd
       - contributors.qmd
+      - network.qmd
     right:
       - icon: "github"
         menu:

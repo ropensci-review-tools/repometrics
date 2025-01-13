@@ -31,7 +31,7 @@ per function, along with the sum over all functions within the package. These
 the other measures.
 
 ```{r load-data}
-dat <- readRDS ("results-pkg.Rds")$pkgstats
+dat <- readRDS ("results-repo.Rds")$pkgstats
 ```
 ```{r stats-data}
 cols <- names (dat$stats) [which (!names (dat$stats) %in% c ("package", "version"))]

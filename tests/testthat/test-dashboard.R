@@ -5,6 +5,9 @@ pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
 rm_data <- mock_rm_data ()
 data0 <- list (pkgstats = pkgstats, rm = rm_data)
 
+user_data <- lapply (1:2, function (i) mock_user_rel_data ())
+names (user_data) <- c ("a", "b")
+
 test_that ("dashboard input errors", {
 
     data <- data0
@@ -34,11 +37,12 @@ test_that ("dashboard input errors", {
 
 test_that ("dashboard build", {
 
-    data <- data0
-    repometrics_dashboard (data, action = "render")
+    data_repo <- data0
+    data_users <- user_data
+    repometrics_dashboard (data_repo, data_users, action = "render")
 
     # Expect quarto docs to have been modified with package name:
-    pkg_name <- data$pkgstats$desc_data$package [1]
+    pkg_name <- data_repo$pkgstats$desc_data$package [1]
     path_tmp <- fs::path (fs::path_temp (), "quarto")
     expect_true (fs::dir_exists (path_tmp))
 
