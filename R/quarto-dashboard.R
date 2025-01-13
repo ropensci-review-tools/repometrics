@@ -44,7 +44,7 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
 
 get_user_network <- function (data_users) {
 
-    rels <- user_relation_matrices (dat_users)
+    rels <- user_relation_matrices (data_users)
     index <- which (!grepl ("^login", names (rels)))
     relmat <- apply (as.matrix (rels [, index]), 2, function (i) i / sum (i))
     relvec <- 20 * rowSums (relmat) / ncol (relmat)

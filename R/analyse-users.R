@@ -17,6 +17,9 @@
 #' @noRd
 user_relation_matrices <- function (user_data) {
 
+    # Suppress no visible binding notes:
+    followers <- following <- org_repo <- repo <- login <- num_comments <- NULL
+
     user_names <- names (user_data)
     user_data <- add_user_login_cols (user_data) |>
         combine_user_data ()
@@ -99,6 +102,9 @@ combine_user_data <- function (user_data) {
 }
 
 user_relate_fields <- function (user_data, user_names, what = "commits") {
+
+    # Suppress no visible binding notes:
+    num_commits <- login <- repo <- n <- NULL
 
     user_combs <- t (utils::combn (user_names, m = 2L))
     if (what == "commits") {
