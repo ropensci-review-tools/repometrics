@@ -100,7 +100,7 @@ combine_user_data <- function (user_data) {
 
 user_relate_fields <- function (user_data, user_names, what = "commits") {
 
-    user_combs <- t (combn (user_names, m = 2L))
+    user_combs <- t (utils::combn (user_names, m = 2L))
     if (what == "commits") {
         user_data [[what]] <- dplyr::rename (user_data [[what]], n = num_commits)
     } else if (what == "commit_cmt") {
