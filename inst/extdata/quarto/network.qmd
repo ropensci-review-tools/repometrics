@@ -45,10 +45,11 @@ chart = ForceGraph(network, {
     nodeId: d => d.id,
     nodeGroup: d => d.group,
     nodeTitle: d => d.id,
-    nodeRadius: 10,
+    nodeRadius: d => 10 * Math.log10(d.contributions + 1),
     linkStrokeWidth: l => Math.sqrt(l.value),
     width,
-    height: 200,
+    height: 400,
+    linkStrength: 0.001,
     invalidation // a promise to stop the simulation when the cell is re-run
 })
 ```
