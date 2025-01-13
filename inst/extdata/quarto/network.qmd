@@ -40,7 +40,7 @@ function ForceGraph({
   nodes, // an iterable of node objects (typically [{id}, …])
   links // an iterable of link objects (typically [{source, target}, …])
 }, {
-  nodeId = d => d.id, // given d in nodes, returns a unique identifier (string)
+  nodeId, // given d in nodes, returns a unique identifier (string)
   nodeGroup, // given d in nodes, returns an (ordinal) value for color
   nodeGroups, // an array of ordinal values representing the node groups
   nodeTitle, // given d in nodes, a title string
@@ -48,7 +48,7 @@ function ForceGraph({
   nodeStroke = "#fff", // node stroke color
   nodeStrokeWidth = 1.5, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
-  nodeRadius = 5, // node radius, in pixels
+  nodeRadius, // node radius, in pixels
   nodeStrength,
   linkSource = ({source}) => source, // given d in links, returns a node identifier string
   linkTarget = ({target}) => target, // given d in links, returns a node identifier string
@@ -64,11 +64,10 @@ function ForceGraph({
 } = {}) {
   // Compute values.
   const N = d3.map(nodes, nodeId).map(intern);
-  const R = typeof nodeRadius !== "function" ? null : d3.map(nodes, nodeRadius);
+  const R = d3.map(nodes, nodeRadius);
   const LS = d3.map(links, linkSource).map(intern);
   const LT = d3.map(links, linkTarget).map(intern);
-  if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
-  const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
+  const T = d3.map(nodes, nodeTitle);
   const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
   const W = typeof linkStrokeWidth !== "function" ? null : d3.map(links, linkStrokeWidth);
   const L = typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
@@ -100,7 +99,7 @@ function ForceGraph({
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [-width / 2, -height / 2, width, height])
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+      .attr("style", "max-width: 100%; height: auto; height: intrinsic; font: 12px sans-serif;");
 
   const link = svg.append("g")
       .attr("stroke", typeof linkStroke !== "function" ? linkStroke : null)
@@ -125,8 +124,8 @@ function ForceGraph({
   if (W) link.attr("stroke-width", ({index: i}) => W[i]);
   if (L) link.attr("stroke", ({index: i}) => L[i]);
   if (G) node.attr("fill", ({index: i}) => color(G[i]));
-  if (R) node.attr("r", ({index: i}) => R[i]);
-  if (T) node.append("title").text(({index: i}) => T[i]);
+  node.attr("r", ({index: i}) => R[i]);
+  node.append("title").text(({index: i}) => T[i]);
   if (invalidation != null) invalidation.then(() => simulation.stop());
 
   function intern(value) {
