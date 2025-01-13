@@ -32,7 +32,10 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
     dat_user_network <- get_user_network (data_repo, data_users)
-    jsonlite::write_json (dat_user_network, fs::path (dir, "results-user-network.json"))
+    jsonlite::write_json (
+        dat_user_network,
+        fs::path (dir, "results-user-network.json")
+    )
 
     pkg_name <- data_repo$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
@@ -70,7 +73,11 @@ get_user_network <- function (data_repo, data_users, maxval = 20) {
     user_commits <- data_repo$rm$contribs_from_gh_api |>
         dplyr::select (login, contributions) |>
         dplyr::rename (id = login)
-    netdat$nodes <- dplyr::left_join (netdat$nodes, user_commits, by = dplyr::join_by (id))
+    netdat$nodes <- dplyr::left_join (
+        netdat$nodes,
+        user_commits,
+        by = dplyr::join_by (id)
+    )
 
     return (netdat)
 }
@@ -122,7 +129,10 @@ check_dashboard_arg <- function (data) {
 
     checkmate::assert_list (data, len = 2L, names = "named")
     checkmate::assert_names (names (data), identical.to = c ("pkgstats", "rm"))
-    checkmate::assert_names (names (data$pkgstats), identical.to = c ("desc_data", "loc", "stats"))
+    checkmate::assert_names (
+        names (data$pkgstats),
+        identical.to = c ("desc_data", "loc", "stats")
+    )
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
         "dependencies_downstream", "gh_repo_workflow", "gitlog",
@@ -152,7 +162,9 @@ check_dashboard_arg <- function (data) {
     classes <- vapply (data$rm, class, character (1L))
     index <- which (classes == "data.frame")
     if (length (index) != (length (classes) - 1L)) {
-        cli::cli_abort ("Chaoss metrics data have wrong length; should be {length(index)}.")
+        cli::cli_abort (
+            "Chaoss metrics data have wrong length; should be {length(index)}."
+        )
     }
 
     ncols <- vapply (data$rm [index], ncol, integer (1L))
