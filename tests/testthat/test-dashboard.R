@@ -38,8 +38,8 @@ test_that ("dashboard input errors", {
 test_that ("dashboard build", {
 
     data_repo <- data0
-    data_user <- user_data
-    repometrics_dashboard (data_repo, data_user, action = "render")
+    data_users <- user_data
+    repometrics_dashboard (data_repo, data_users, action = "render")
 
     # Expect quarto docs to have been modified with package name:
     pkg_name <- data$pkgstats$desc_data$package [1]
