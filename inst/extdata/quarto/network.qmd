@@ -1,0 +1,53 @@
+---
+title: "Network"
+execute:
+  echo: false
+format: 
+  html:
+    fig-width: 8
+    fig-height: 4
+    code-fold: false
+---
+
+```{r load-pkg, echo = FALSE, message = FALSE}
+library (repometrics)
+requireNamespace ("dplyr", quietly = TRUE)
+requireNamespace ("tidyr", quietly = TRUE)
+```
+```{r load-data}
+dat_pkg <- readRDS ("results-repo.Rds")
+dat_users <- readRDS ("results-users.Rds")
+
+deps <- dat_pkg$rm$dependencies
+get_dep_df <- function (deps, type = "Imports", group = 1L) {
+    index <- which (deps$type == type)
+    data.frame (id = deps$name [index], group = rep (group, length (index)))
+}
+
+nodes_pkg_ <- rbind (
+    get_dep_df (deps, "Imports", 1L),
+    get_dep_df (deps, "Suggests", 2L)
+)
+nodes_user <- data.frame (id = dat_pkg$rm$contribs_from_gh_api$login, group = 4L)
+nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
+```
+
+```{ojs ForceGraph-import}
+import {ForceGraph} from "@d3/force-directed-graph-component"
+```
+
+```{ojs import-network-data}
+network = FileAttachment("results-user-network.json").json()
+```
+
+```{ojs ForceGraph-plot}
+chart = ForceGraph(network, {
+    nodeId: d => d.id,
+    nodeGroup: d => d.group,
+    nodeTitle: d => `${d.id}\n${d.group}`,
+    linkStrokeWidth: l => Math.sqrt(l.value),
+    width,
+    height: 600,
+    invalidation // a promise to stop the simulation when the cell is re-run
+})
+```
