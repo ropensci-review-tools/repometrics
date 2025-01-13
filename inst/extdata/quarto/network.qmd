@@ -44,7 +44,7 @@ network = FileAttachment("results-user-network.json").json()
 chart = ForceGraph(network, {
     nodeId: d => d.id,
     nodeGroup: d => d.group,
-    nodeTitle: d => `${d.id}\n${d.group}`,
+    nodeTitle: d => d.id,
     linkStrokeWidth: l => Math.sqrt(l.value),
     width,
     height: 600,
