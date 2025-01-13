@@ -31,7 +31,7 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     saveRDS (data_repo, fs::path (dir, "results-repo.Rds"))
     saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
-    dat_user_network <- get_user_network (dat_users)
+    dat_user_network <- get_user_network (data_users)
     jsonlite::write_json (dat_user_network, fs::path (dir, "results-user-network.json"))
 
     pkg_name <- data_repo$pkgstats$desc_data$package [1]
