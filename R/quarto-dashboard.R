@@ -1,8 +1,10 @@
 #' Start quarto dashboard with results of main \link{repometrics_data_pkg}
 #' function.
 #'
-#' @param data Results of main \link{repometrics_data_pkg} function applied to
-#' one package.
+#' @param data_repo Data on repository as returned from
+#' \link{repometrics_data_pkg} function applied to one package.
+#' @param data_users Data on repository developers ("users" in GitHub terms), as
+#' returned from \link{repometrics_data_user} function applied to one package.
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.
@@ -10,12 +12,13 @@
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #' @export
-repometrics_dashboard <- function (data, action = "preview") {
+repometrics_dashboard <- function (data_pkg, data_users, action = "preview") {
 
-    check_dashboard_arg (data)
-    data$pkgstats <- timestamps_to_dates (data$pkgstats)
+    check_dashboard_arg (data_pkg)
+    data_pkg$pkgstats <- timestamps_to_dates (data_pkg$pkgstats)
 
     requireNamespace ("brio")
+    requireNamespace ("jsonlite")
     requireNamespace ("quarto")
     requireNamespace ("withr")
 
@@ -25,14 +28,38 @@ repometrics_dashboard <- function (data, action = "preview") {
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
-    saveRDS (data, fs::path (dir, "results-pkg.Rds"))
+    saveRDS (data_pkg, fs::path (dir, "results-pkg.Rds"))
+    saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
-    pkg_name <- data$pkgstats$desc_data$package [1]
+    dat_user_network <- get_user_network (dat_users)
+    jsonlite::write_json (dat_user_network, fs::path (dir, "results-user-network.json"))
+
+    pkg_name <- data_pkg$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
     })
+}
+
+get_user_network <- function (data_users) {
+
+    rels <- user_relation_matrices (dat_users)
+    index <- which (!grepl ("^login", names (rels)))
+    relmat <- apply (as.matrix (rels [, index]), 2, function (i) i / sum (i))
+    relvec <- 20 * rowSums (relmat) / ncol (relmat)
+    reldf <- cbind (rels [, 1:2], value = relvec)
+    names (reldf) <- c ("source", "target", "value")
+
+    netdat <- list (
+        nodes = data.frame (
+            id = unique (c (rels$login1, rels$login2)),
+            group = 1L
+        ),
+        links = reldf
+    )
+
+    return (netdat)
 }
 
 timestamps_to_dates <- function (data) {
