@@ -42,7 +42,7 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     })
 }
 
-get_user_network <- function (data_users) {
+get_user_network <- function (data_users, maxval = 20) {
 
     rels <- user_relation_matrices (data_users)
     index <- which (!grepl ("^login", names (rels)))
@@ -51,9 +51,11 @@ get_user_network <- function (data_users) {
         relmat <- matrix (relmat, nrow = 1L)
     }
     relmat [which (is.na (relmat))] <- 0
-    relvec <- 20 * rowSums (relmat) / ncol (relmat)
+    relvec <- rowSums (relmat) / ncol (relmat)
     reldf <- cbind (rels [, 1:2], value = relvec)
     names (reldf) <- c ("source", "target", "value")
+
+    reldf$value <- reldf$value * maxval / max (reldf$value)
 
     netdat <- list (
         nodes = data.frame (
