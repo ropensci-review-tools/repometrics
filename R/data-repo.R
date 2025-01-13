@@ -10,7 +10,7 @@
 #' }
 #'
 #' @export
-repometrics_data_pkg <- function (path, step_days = 1L, num_cores = -1L) {
+repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 
     cli::cli_alert_info ("Extracting package statistics ...")
     pkgstats <- repo_pkgstats_history (

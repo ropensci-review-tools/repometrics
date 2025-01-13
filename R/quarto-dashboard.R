@@ -1,8 +1,8 @@
-#' Start quarto dashboard with results of main \link{repometrics_data_pkg}
+#' Start quarto dashboard with results of main \link{repometrics_data_repo}
 #' function.
 #'
 #' @param data_repo Data on repository as returned from
-#' \link{repometrics_data_pkg} function applied to one package.
+#' \link{repometrics_data_repo} function applied to one package.
 #' @param data_users Data on repository developers ("users" in GitHub terms), as
 #' returned from \link{repometrics_data_user} function applied to one package.
 #' @param action One of "preview", to start and open a live preview of the
@@ -12,10 +12,10 @@
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #' @export
-repometrics_dashboard <- function (data_pkg, data_users, action = "preview") {
+repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
 
-    check_dashboard_arg (data_pkg)
-    data_pkg$pkgstats <- timestamps_to_dates (data_pkg$pkgstats)
+    check_dashboard_arg (data_repo)
+    data_repo$pkgstats <- timestamps_to_dates (data_repo$pkgstats)
 
     requireNamespace ("brio")
     requireNamespace ("jsonlite")
@@ -28,13 +28,13 @@ repometrics_dashboard <- function (data_pkg, data_users, action = "preview") {
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
-    saveRDS (data_pkg, fs::path (dir, "results-pkg.Rds"))
+    saveRDS (data_repo, fs::path (dir, "results-repo.Rds"))
     saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
     dat_user_network <- get_user_network (dat_users)
     jsonlite::write_json (dat_user_network, fs::path (dir, "results-user-network.json"))
 
-    pkg_name <- data_pkg$pkgstats$desc_data$package [1]
+    pkg_name <- data_repo$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {

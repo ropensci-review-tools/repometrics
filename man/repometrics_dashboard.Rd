@@ -2,21 +2,21 @@
 % Please edit documentation in R/quarto-dashboard.R
 \name{repometrics_dashboard}
 \alias{repometrics_dashboard}
-\title{Start quarto dashboard with results of main \link{repometrics_data_pkg}
+\title{Start quarto dashboard with results of main \link{repometrics_data_repo}
 function.}
 \usage{
-repometrics_dashboard(data_pkg, data_users, action = "preview")
+repometrics_dashboard(data_repo, data_users, action = "preview")
 }
 \arguments{
+\item{data_repo}{Data on repository as returned from
+\link{repometrics_data_repo} function applied to one package.}
+
 \item{data_users}{Data on repository developers ("users" in GitHub terms), as
 returned from \link{repometrics_data_user} function applied to one package.}
 
 \item{action}{One of "preview", to start and open a live preview of the
 dashboard website, or "render" to render a static version without previewing
 or opening.}
-
-\item{data_repo}{Data on repository as returned from
-\link{repometrics_data_pkg} function applied to one package.}
 }
 \value{
 (Invisibly) Path to main "index.html" document of quarto site. Note
@@ -24,6 +24,6 @@ that the site must be served with \code{action = "preview"}, and will not work b
 simply opening this "index.html" file.
 }
 \description{
-Start quarto dashboard with results of main \link{repometrics_data_pkg}
+Start quarto dashboard with results of main \link{repometrics_data_repo}
 function.
 }

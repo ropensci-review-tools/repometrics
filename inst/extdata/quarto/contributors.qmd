@@ -17,7 +17,7 @@ requireNamespace ("tidyr", quietly = TRUE)
 ## Git log
 
 ```{r load-data}
-dat <- readRDS ("results-pkg.Rds")
+dat <- readRDS ("results-repo.Rds")
 ```
 ```{r ctbs-git-data}
 ctbs <- dat$rm$contributors
