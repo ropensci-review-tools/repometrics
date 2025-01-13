@@ -45,9 +45,10 @@ chart = ForceGraph(network, {
     nodeId: d => d.id,
     nodeGroup: d => d.group,
     nodeTitle: d => d.id,
+    nodeRadius: 10,
     linkStrokeWidth: l => Math.sqrt(l.value),
     width,
-    height: 600,
+    height: 200,
     invalidation // a promise to stop the simulation when the cell is re-run
 })
 ```
