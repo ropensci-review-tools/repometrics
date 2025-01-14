@@ -32,13 +32,10 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
     dat_user_network <- get_user_network (data_repo, data_users)
-    dat_user_network$links$type <- "person"
     jsonlite::write_json (
         dat_user_network,
         fs::path (dir, "results-user-network.json")
     )
-
-    dat_user_repo_network <- get_user_repo_network (data_users)
 
     pkg_name <- data_repo$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
@@ -63,6 +60,7 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
     relvec <- rowSums (relmat) / ncol (relmat)
     reldf <- cbind (rels [, 1:2], value = relvec)
     names (reldf) <- c ("source", "target", "value")
+    reldf$type <- "person"
 
     reldf$value <- reldf$value * range [2] / max (reldf$value)
     reldf <- reldf [which (reldf$value >= range [1]), ]
@@ -70,7 +68,7 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
     netdat <- list (
         nodes = data.frame (
             id = unique (c (reldf$source, reldf$target)),
-            group = 1L
+            group = "person"
         ),
         links = reldf
     )
@@ -84,7 +82,24 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
         netdat$nodes,
         user_commits,
         by = dplyr::join_by (id)
-    )
+    ) |>
+        dplyr::mutate (contributions = range [2] * contributions / max (contributions))
+
+    # Then expand to include repos as well as users:
+    dat_user_repo_network <- get_user_repo_network (data_users)
+    nodes <- dat_user_repo_network$repos |>
+        dplyr::rename (id = repo, contributions = num_commits) |>
+        dplyr::mutate (group = "repo", .after = id)
+    netdat$nodes <- rbind (netdat$nodes, nodes)
+
+    links <- dat_user_repo_network$users |>
+        dplyr::rename (source = user, target = repo, value = num_commits) |>
+        dplyr::mutate (
+            value = range [2] * value / max (value),
+            type = "person_repo"
+        ) |>
+        dplyr::filter (target %in% nodes$id & source %in% netdat$nodes$id)
+    netdat$links <- dplyr::bind_rows (netdat$links, links)
 
     return (netdat)
 }
