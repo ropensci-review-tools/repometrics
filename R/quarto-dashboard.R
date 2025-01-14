@@ -38,6 +38,8 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
         fs::path (dir, "results-user-network.json")
     )
 
+    dat_user_repo_network <- get_user_repo_network (data_users)
+
     pkg_name <- data_repo$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
@@ -85,6 +87,30 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
     )
 
     return (netdat)
+}
+
+get_user_repo_network <- function (data_users, rm_personal = TRUE, range = c (1, 20)) {
+
+    commits_users <- lapply (data_users, function (i) {
+        dplyr::group_by (i$commits, repo) |>
+            dplyr::summarise (num_commits = sum (num_commits)) |>
+            dplyr::mutate (user = i$general$user$login)
+    })
+    commits_users <- do.call (rbind, commits_users)
+
+    if (rm_personal) {
+
+        repo_org <- gsub ("\\/.*$", "", commits_users$repo)
+        commits_users <- dplyr::filter (commits_users, user != repo_org)
+    }
+
+    commits_repos <- dplyr::group_by (commits_users, repo) |>
+        dplyr::summarise (num_commits = sum (num_commits)) |>
+        dplyr::mutate (num_commits = num_commits * range [2] / max (num_commits)) |>
+        dplyr::filter (num_commits >= range [1]) |>
+        dplyr::arrange (dplyr::desc (num_commits))
+
+    return (list (users = commits_users, repos = commits_repos))
 }
 
 timestamps_to_dates <- function (data) {
