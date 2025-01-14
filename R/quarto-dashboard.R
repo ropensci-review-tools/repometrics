@@ -104,6 +104,10 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
         dplyr::filter (target %in% nodes$id & source %in% netdat$nodes$id)
     netdat$links <- dplyr::bind_rows (netdat$links, links)
 
+    # Remove any nodes which then have no links:
+    netdat$nodes <- netdat$nodes |>
+        dplyr::filter (id %in% c (netdat$links$source, netdat$links$target))
+
     # Finally add focal repo to those data (if not already there)
     this_repo <- data_repo$rm$repo_from_gh_api$full_name
     if (this_repo %in% netdat$nodes$id) {
