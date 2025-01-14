@@ -40,6 +40,7 @@ network = FileAttachment("results-user-network.json").json()
 ```
 
 ```{ojs ForceGraph-plot}
+import {Swatches} from "@d3/color-legend"
 Swatches(chart.scales.color)
 chart = {
 
@@ -54,7 +55,7 @@ chart = {
 
   const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(d => d.id))
-      .force("charge", d3.forceManyBody().strength(-400))
+      .force("charge", d3.forceManyBody().strength(-1000))
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
@@ -62,7 +63,7 @@ chart = {
       .attr("viewBox", [-width / 2, -height / 2, width, height])
       .attr("width", width)
       .attr("height", height)
-      .attr("style", "max-width: 100%; height: auto; font: 12px sans-serif;");
+      .attr("style", "max-width: 100%; height: auto; font: 14px sans-serif;");
 
   // Per-type markers, as they don't inherit styles.
   svg.append("defs").selectAll("marker")
@@ -159,5 +160,4 @@ drag = simulation => {
       .on("drag", dragged)
       .on("end", dragended);
 }
-import {Swatches} from "@d3/color-legend"
 ```
