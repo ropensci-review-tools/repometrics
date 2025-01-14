@@ -108,7 +108,7 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
     return (q)
 }
 
-rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
+rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) { # nolint
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -197,7 +197,12 @@ rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) {
 
         num_comments <- i$totalCommentsCount
 
-        lens <- c (length (login), length (state), length (created_at), length (submitted_at))
+        lens <- c (
+            length (login),
+            length (state),
+            length (created_at),
+            length (submitted_at)
+        )
         has_content <- any (lens > 0L) | num_comments > 0L
 
         if (has_content) {

@@ -40,7 +40,7 @@ rm_data_contribs_from_log <- function (path) {
 #' @param n_per_page Not used here, but needed so all functions can safely be
 #' called with this parameter.
 #' @noRd
-rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) {
+rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # nolint
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -125,7 +125,10 @@ user_from_gh_api <- function (user) {
     )
 }
 
-main_contributors <- function (path, end_date = Sys.Date (), threshold = 0.9, period = NULL) {
+main_contributors <- function (path,
+                               end_date = Sys.Date (),
+                               threshold = 0.9,
+                               period = NULL) {
 
     # suppress no visible warning notes:
     login <- n <- NULL
@@ -152,7 +155,8 @@ main_contributors <- function (path, end_date = Sys.Date (), threshold = 0.9, pe
 
     index <- which (log_contribs$sum <= threshold)
     # Then include the next entry as well, if it exists, because for example
-    # with only two entries the first may be skipped if it's below the threshold.
+    # with only two entries the first may be skipped if it's below the
+    # threshold.
     index <- c (index, length (index) + 1L)
 
     return (log_contribs$login [index])

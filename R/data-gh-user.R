@@ -59,7 +59,8 @@ gh_user_general_internal <- function (login = "",
         bio = null2na_char (user$bio),
         avatarUrl = null2na_char (user$avatarUrl),
         num_repositories = null2na_int (user$repositories$totalCount),
-        repos_contributed_to = null2na_int (user$repositoriesContributedTo$totalCount),
+        repos_contributed_to =
+            null2na_int (user$repositoriesContributedTo$totalCount),
         num_starred_repos = null2na_int (user$starredRepositories$totalCount)
     )
 
@@ -238,11 +239,19 @@ gh_user_commit_cmt_internal <- function (login,
         )
         repourl <- c (
             repourl,
-            vapply (nodes, function (i) i$repository$nameWithOwner, character (1L))
+            vapply (
+                nodes,
+                function (i) i$repository$nameWithOwner,
+                character (1L)
+            )
         )
         repo_stargazers <- c (
             repo_stargazers,
-            vapply (nodes, function (i) i$repository$stargazerCount, integer (1L))
+            vapply (
+                nodes,
+                function (i) i$repository$stargazerCount,
+                integer (1L)
+            )
         )
 
         has_next_page <- dat$data$user$commitComments$pageInfo$hasNextPage
@@ -359,12 +368,20 @@ gh_user_commits_internal <- function (login,
         )
 
         dates_i <- lapply (commits, function (i) {
-            vapply (i$contributions$nodes, function (j) j$occurredAt, character (1L))
+            vapply (
+                i$contributions$nodes,
+                function (j) j$occurredAt,
+                character (1L)
+            )
         })
         n_i <- vapply (dates_i, length, integer (1L))
         dates <- c (dates, unlist (dates_i))
         commit_count_i <- lapply (commits, function (i) {
-            vapply (i$contributions$nodes, function (j) j$commitCount, integer (1L))
+            vapply (
+                i$contributions$nodes,
+                function (j) j$commitCount,
+                integer (1L)
+            )
         })
         num_commits <- c (num_commits, unlist (commit_count_i))
 
@@ -478,7 +495,8 @@ gh_user_issues_internal <- function (login,
     n_per_page <- n_per_page_in_tests (n_per_page)
 
     created_at <- closed_at <- org_repo <- issue_num <- end_cursor <-
-        num_issue_comments <- num_issue_participants <- num_repo_languages <- NULL
+        num_issue_comments <- num_issue_participants <-
+        num_repo_languages <- NULL
     repo_languages <- list ()
     total_issue_contribs <- 0L
     has_next_page <- TRUE
@@ -638,7 +656,8 @@ gh_user_issue_cmts_internal <- function (login,
         num_comments <- num_participants <- NULL
     has_next_page <- TRUE
 
-    start_timestamp <- format (Sys.time () - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
+    start_timestamp <-
+        format (Sys.time () - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
     start_timestamp <- as.POSIXct (start_timestamp)
 
     while (has_next_page) {

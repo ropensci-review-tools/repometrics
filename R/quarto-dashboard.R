@@ -31,8 +31,11 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     saveRDS (data_repo, fs::path (dir, "results-repo.Rds"))
     saveRDS (data_users, fs::path (dir, "results-users.Rds"))
 
-    dat_user_network <- get_user_network (data_users)
-    jsonlite::write_json (dat_user_network, fs::path (dir, "results-user-network.json"))
+    dat_user_network <- get_user_network (data_repo, data_users)
+    jsonlite::write_json (
+        dat_user_network,
+        fs::path (dir, "results-user-network.json")
+    )
 
     pkg_name <- data_repo$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
@@ -42,28 +45,130 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     })
 }
 
-get_user_network <- function (data_users) {
+# `range` is used to scale values, and restrict to sufficiently large values.
+# Total range is first re-scaled to maximum of `range[2]`, then values below
+# `range[1]` are removed.
+get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
 
-    rels <- user_relation_matrices (data_users)
+    # Suppress no visible binding notes:
+    repo <- num_commits <- user <- value <- target <- NULL
+
+    rels <- user_relation_matrices (data_users) # in R/analyse-users.R
     index <- which (!grepl ("^login", names (rels)))
     relmat <- apply (as.matrix (rels [, index]), 2, function (i) i / sum (i))
     if (!is.matrix (relmat)) {
         relmat <- matrix (relmat, nrow = 1L)
     }
     relmat [which (is.na (relmat))] <- 0
-    relvec <- 20 * rowSums (relmat) / ncol (relmat)
+    relvec <- rowSums (relmat) / ncol (relmat)
     reldf <- cbind (rels [, 1:2], value = relvec)
     names (reldf) <- c ("source", "target", "value")
+    reldf$type <- "person"
+
+    reldf$value <- reldf$value * range [2] / max (reldf$value)
+    reldf <- reldf [which (reldf$value >= range [1]), ]
 
     netdat <- list (
         nodes = data.frame (
-            id = unique (c (rels$login1, rels$login2)),
-            group = 1L
+            id = unique (c (reldf$source, reldf$target)),
+            group = "person"
         ),
         links = reldf
     )
 
+    # Then append num. commits to node data:
+    login <- contributions <- id <- NULL
+    user_commits <- data_repo$rm$contribs_from_gh_api |>
+        dplyr::select (login, contributions) |>
+        dplyr::rename (id = login)
+    netdat$nodes <- dplyr::left_join (
+        netdat$nodes,
+        user_commits,
+        by = dplyr::join_by (id)
+    ) |>
+        dplyr::mutate (
+            contributions = range [2] * contributions / max (contributions)
+        )
+
+    # Then expand to include repos as well as users:
+    dat_user_repo_network <- get_user_repo_network (data_users)
+    nodes <- dat_user_repo_network$repos |>
+        dplyr::rename (id = repo, contributions = num_commits) |>
+        dplyr::mutate (group = "repo", .after = id)
+    netdat$nodes <- rbind (netdat$nodes, nodes)
+
+    links <- dat_user_repo_network$users |>
+        dplyr::rename (source = user, target = repo, value = num_commits) |>
+        dplyr::mutate (
+            value = range [2] * value / max (value),
+            type = "person_repo"
+        ) |>
+        dplyr::filter (target %in% nodes$id & source %in% netdat$nodes$id)
+    netdat$links <- dplyr::bind_rows (netdat$links, links)
+
+    # Remove any nodes which then have no links:
+    netdat$nodes <- netdat$nodes |>
+        dplyr::filter (id %in% c (netdat$links$source, netdat$links$target))
+
+    # Finally add focal repo to those data (if not already there)
+    this_repo <- data_repo$rm$repo_from_gh_api$full_name
+    if (this_repo %in% netdat$nodes$id) {
+        netdat$nodes$group [which (netdat$nodes$id == this_repo)] <- "this_repo"
+    } else {
+        netdat$nodes <- dplyr::bind_rows (
+            netdat$nodes,
+            data.frame (
+                id = this_repo,
+                group = "this_repo",
+                contributions = range [2]
+            )
+        )
+    }
+    if (!this_repo %in% netdat$links$target) {
+        ctbs <- data_repo$rm$contribs_from_gh_api |>
+            dplyr::select (login, contributions) |>
+            dplyr::rename (value = contributions, source = login) |>
+            dplyr::mutate (
+                target = this_repo,
+                value = range [2] * value / max (value),
+                type = "person_this_repo"
+            ) |>
+            dplyr::filter (source %in% netdat$nodes$id)
+        netdat$links <- dplyr::bind_rows (netdat$links, ctbs)
+    }
+
     return (netdat)
+}
+
+get_user_repo_network <- function (data_users,
+                                   rm_personal = TRUE,
+                                   range = c (1, 20)) {
+
+    # Suppress no visible binding notes:
+    repo <- num_commits <- user <- repo <- NULL
+
+    commits_users <- lapply (data_users, function (i) {
+        dplyr::group_by (i$commits, repo) |>
+            dplyr::summarise (num_commits = sum (num_commits)) |>
+            dplyr::mutate (user = i$general$user$login)
+    })
+    commits_users <- do.call (rbind, commits_users)
+
+    if (rm_personal) {
+
+        repo_org <- gsub ("\\/.*$", "", commits_users$repo)
+        commits_users <- dplyr::filter (commits_users, user != repo_org)
+    }
+
+    commits_repos <- dplyr::group_by (commits_users, repo) |>
+        dplyr::summarise (num_commits = sum (num_commits)) |>
+        dplyr::mutate (
+            num_commits = num_commits * range [2] / max (num_commits)
+        ) |>
+        dplyr::filter (num_commits >= range [1]) |>
+        dplyr::arrange (dplyr::desc (num_commits))
+
+    return (list (users = commits_users, repos = commits_repos))
 }
 
 timestamps_to_dates <- function (data) {
@@ -107,13 +212,26 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
     i <- grep ("^(\\s+?)title", y)
     y [i] <- gsub ("Package", pkg_name, y [i])
     brio::write_lines (y, f_yaml)
+
+    f_network <- fs::path (dir, "network.qmd")
+    network_qmd <- brio::read_lines (f_network)
+    network_qmd <- gsub (
+        "the XXX repository",
+        paste0 ("the `", pkg_name, "` repository"),
+        network_qmd,
+        fixed = TRUE
+    )
+    brio::write_lines (network_qmd, f_network)
 }
 
 check_dashboard_arg <- function (data) {
 
     checkmate::assert_list (data, len = 2L, names = "named")
     checkmate::assert_names (names (data), identical.to = c ("pkgstats", "rm"))
-    checkmate::assert_names (names (data$pkgstats), identical.to = c ("desc_data", "loc", "stats"))
+    checkmate::assert_names (
+        names (data$pkgstats),
+        identical.to = c ("desc_data", "loc", "stats")
+    )
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
         "dependencies_downstream", "gh_repo_workflow", "gitlog",
@@ -143,7 +261,9 @@ check_dashboard_arg <- function (data) {
     classes <- vapply (data$rm, class, character (1L))
     index <- which (classes == "data.frame")
     if (length (index) != (length (classes) - 1L)) {
-        cli::cli_abort ("Chaoss metrics data have wrong length; should be {length(index)}.")
+        cli::cli_abort (
+            "Chaoss metrics data have wrong length; should be {length(index)}."
+        )
     }
 
     ncols <- vapply (data$rm [index], ncol, integer (1L))

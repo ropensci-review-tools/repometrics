@@ -32,23 +32,140 @@ nodes_user <- data.frame (id = dat_pkg$rm$contribs_from_gh_api$login, group = 4L
 nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
 ```
 
-```{ojs ForceGraph-import}
-import {ForceGraph} from "@d3/force-directed-graph-component"
-```
+This page shows an interactive network diagram of the main developers of 
+the XXX repository, including all other repositories they have contributed to.
+Links are shown between developers and repositories, as well as between
+developers themselves. Thickness of lines connecting developers are scaled
+according to relative efforts in joint repositories.
+
+The "person" nodes show main developers of the XXX repository, which is shown
+in the centre of the graph as "this_repo". The lines connecting "this_repo"
+with developers are scaled according to proportional contributions to other
+repositories on which they have worked (over the default time-span of the
+previous year), with circles for those repositories scaled by total numbers of
+commits made by the core developer team of the XXX repository.
 
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
 ```
 
 ```{ojs ForceGraph-plot}
-chart = ForceGraph(network, {
-    nodeId: d => d.id,
-    nodeGroup: d => d.group,
-    nodeTitle: d => d.id,
-    nodeRadius: 10,
-    linkStrokeWidth: l => Math.sqrt(l.value),
-    width,
-    height: 200,
-    invalidation // a promise to stop the simulation when the cell is re-run
-})
+import {Swatches} from "@d3/color-legend"
+Swatches(chart.scales.color)
+chart = {
+
+  const width = 928;
+  const height = 600;
+
+  const nodes = network.nodes;
+  const links = network.links;
+  const types = Array.from(new Set(links.map(d => d.type)));
+
+  const color = d3.scaleOrdinal(types, d3.schemeCategory10);
+
+  const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(d => d.id))
+      .force("charge", d3.forceManyBody().strength(-400))
+      .force("x", d3.forceX())
+      .force("y", d3.forceY());
+
+  const svg = d3.create("svg")
+      .attr("viewBox", [-width / 2, -height / 2, width, height])
+      .attr("width", width)
+      .attr("height", height)
+      .attr("style", "max-width: 100%; height: auto; font: 14px sans-serif;");
+
+  // Per-type markers, as they don't inherit styles.
+  svg.append("defs").selectAll("marker")
+    .data(types)
+    .join("marker")
+      .attr("id", d => `arrow-${d}`)
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 15)
+      .attr("refY", -0.5)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+    .append("path")
+      .attr("fill", color)
+      .attr("d", "M0,-5L10,0L0,5");
+
+  const link = svg.append("g")
+      .attr("fill", "none")
+      .attr("stroke-width", 1.5)
+    .selectAll("path")
+    .data(links)
+    .join("path")
+      .attr("stroke", d => color(d.type))
+      .attr("stroke-width", d => Math.sqrt(d.value));
+
+  const node = svg.append("g")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+      .call(drag(simulation));
+
+  node.append("circle")
+      .attr("stroke", "white")
+      .attr("stroke-width", 1.5)
+      .data(nodes)
+      .join("circle")
+        .attr("fill", d => color(d.group))
+        .attr("r", d => 10 * Math.log10(d.contributions + 1));
+
+  node.append("text")
+      .attr("x", 8)
+      .attr("y", "0.31em")
+      .text(d => d.id)
+    .clone(true).lower()
+      .attr("fill", "none")
+      .attr("stroke", "white")
+      .attr("stroke-width", 3);
+
+  simulation.on("tick", () => {
+    link.attr("d", linkArc);
+    node.attr("transform", d => `translate(${d.x},${d.y})`);
+  });
+
+  invalidation.then(() => simulation.stop());
+
+  return Object.assign(svg.node(), {scales: {color}});
+}
+```
+
+```{ojs}
+function linkArc(d) {
+  const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
+  return `
+    M${d.source.x},${d.source.y}
+    A${r},${r} 0 0,1 ${d.target.x},${d.target.y}
+  `;
+}
+```
+
+```{ojs}
+drag = simulation => {
+
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
+  return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+}
 ```

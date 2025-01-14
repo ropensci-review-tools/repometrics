@@ -3,7 +3,7 @@
 
     op <- options ()
 
-    op.repometrics <- list (
+    op.repometrics <- list ( # nolint
         repometrics_period = 90
     )
 

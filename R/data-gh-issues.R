@@ -1,4 +1,4 @@
-rm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) {
+rm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) { # nolint
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
@@ -95,7 +95,7 @@ get_issue_reactions <- function (body) {
     return (reaction_counts)
 }
 
-rm_data_issue_comments_from_gh_api_internal <- function (path,
+rm_data_issue_comments_from_gh_api_internal <- function (path, # nolint
                                                          n_per_page = 100) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
@@ -148,5 +148,5 @@ rm_data_issue_comments_from_gh_api_internal <- function (path,
         issue_body = issue_body
     )
 }
-rm_data_issue_comments_from_gh_api <-
+rm_data_issue_comments_from_gh_api <- # nolint
     memoise::memoise (rm_data_issue_comments_from_gh_api_internal)

@@ -33,14 +33,15 @@ rm_data_dependencies <- function (path) {
 #'
 #' Note that this all works even for packages which aren't on CRAN.
 #' @noRd
-rm_data_dependencies_downstream <- function (path) {
+rm_data_dependencies_downstream <- function (path) { # nolint
 
     cran_db <- cran_pkg_db ()
     pkg_name <- pkg_name_from_path (path)
     i <- which (cran_db$Package == pkg_name)
     revdep_cols <- grep ("reverse", names (cran_db), ignore.case = TRUE)
     revdeps <- unname (do.call (c, cran_db [i, revdep_cols]))
-    revdeps <- unlist (lapply (revdeps, function (i) strsplit (i, ",\\s*") [[1]]))
+    revdeps <-
+        unlist (lapply (revdeps, function (i) strsplit (i, ",\\s*") [[1]]))
     revdeps <- revdeps [which (!is.na (revdeps))]
     if (is.null (revdeps)) {
         revdeps <- character (0L)

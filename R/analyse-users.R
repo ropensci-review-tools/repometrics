@@ -47,7 +47,11 @@ user_relation_matrices <- function (user_data) {
         user_data [[n]] <- user_relate_fields (user_data, user_names, what = n)
     })
 
-    res <- dplyr::left_join (overlap [[1]], overlap [[2]], by = c ("login1", "login2")) |>
+    res <- dplyr::left_join (
+        overlap [[1]],
+        overlap [[2]],
+        by = c ("login1", "login2")
+    ) |>
         dplyr::left_join (overlap [[3]], by = c ("login1", "login2")) |>
         dplyr::left_join (overlap [[4]], by = c ("login1", "login2")) |>
         dplyr::left_join (overlap [[5]], by = c ("login1", "login2")) |>
@@ -108,7 +112,8 @@ user_relate_fields <- function (user_data, user_names, what = "commits") {
 
     user_combs <- t (utils::combn (user_names, m = 2L))
     if (what == "commits") {
-        user_data [[what]] <- dplyr::rename (user_data [[what]], n = num_commits)
+        user_data [[what]] <-
+            dplyr::rename (user_data [[what]], n = num_commits)
     } else if (what == "commit_cmt") {
         user_data$commit_cmt$n <- 1L
     }

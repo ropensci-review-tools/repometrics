@@ -30,7 +30,7 @@ gh_stargazers_qry <- function (org = "ropensci-review-tools",
     return (q)
 }
 
-rm_data_repo_stargazers_internal <- function (path, n_per_page = 100L) {
+rm_data_repo_stargazers_internal <- function (path, n_per_page = 100L) { # nolint
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)

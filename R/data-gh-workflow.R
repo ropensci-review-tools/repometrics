@@ -1,7 +1,7 @@
 #' Retrieve latest GitHub workflow results from Rest API
 #'
 #' @noRd
-rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) {
+rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) { # nolint
 
     n_per_page <- n_per_page_in_tests (n_per_page)
     or <- org_repo_from_path (path)

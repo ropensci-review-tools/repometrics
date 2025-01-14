@@ -22,7 +22,8 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 
     cli::cli_alert_info ("Extracting GitHub data ...")
     rm <- rm_data_repo (path)
-    rm$contributors <- get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api)
+    rm$contributors <-
+        get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api)
     cli::cli_alert_success ("Done!")
 
     list (pkgstats = pkgstats, rm = rm)
@@ -34,8 +35,10 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 #' @param path Path to local source repository.
 #' @return A list of the following `data.frame` objects:
 #' \enumerate{
-#' \item `contribs_from_gh_api` with details of all code contributors from GitHub
-#' \item `contribs_from_log` with details of all code contributors from the local git log
+#' \item `contribs_from_gh_api` with details of all code contributors from
+#' GitHub
+#' \item `contribs_from_log` with details of all code contributors from the
+#' local git log
 #' \item `dependencies` A simple `data.frame` of all package dependencies
 #' \item `gh_repo_workflow` with details of all workflows run on GitHub,
 #' including status of most recent runs
@@ -49,7 +52,8 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 #' up-to-date projects. This is the only item which is not a `data.frame`,
 #' rather a named numerical vector of mean and median "libyears"
 #' \item `prs_from_gh_api` with details of all pull requests on GitHub
-#' \item `releases_from_gh_api` with details of all repository releases on GitHub
+#' \item `releases_from_gh_api` with details of all repository releases on
+#' GitHub
 #' \item `repo_from_gh_api` A `data.frame` of a single line, with several key
 #' attributes of the repository on GitHub.
 #' }
