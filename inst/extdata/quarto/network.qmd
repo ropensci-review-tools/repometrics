@@ -32,9 +32,6 @@ nodes_user <- data.frame (id = dat_pkg$rm$contribs_from_gh_api$login, group = 4L
 nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
 ```
 
-here is some text
-
-
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
 ```
@@ -103,7 +100,7 @@ chart = {
       .attr("stroke-width", 1.5)
       .data(nodes)
       .join("circle")
-        .attr("r", d => 5 * Math.log10(d.contributions + 1));
+        .attr("r", d => 10 * Math.log10(d.contributions + 1));
 
   node.append("text")
       .attr("x", 8)

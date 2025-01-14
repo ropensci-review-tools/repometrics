@@ -46,7 +46,10 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     })
 }
 
-get_user_network <- function (data_repo, data_users, maxval = 20) {
+# `range` is used to scale values, and restrict to sufficiently large values.
+# Total range is first re-scaled to maximum of `range[2]`, then values below
+# `range[1]` are removed.
+get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
 
     rels <- user_relation_matrices (data_users)
     index <- which (!grepl ("^login", names (rels)))
@@ -59,11 +62,12 @@ get_user_network <- function (data_repo, data_users, maxval = 20) {
     reldf <- cbind (rels [, 1:2], value = relvec)
     names (reldf) <- c ("source", "target", "value")
 
-    reldf$value <- reldf$value * maxval / max (reldf$value)
+    reldf$value <- reldf$value * range [2] / max (reldf$value)
+    reldf <- reldf [which (reldf$value >= range [1]), ]
 
     netdat <- list (
         nodes = data.frame (
-            id = unique (c (rels$login1, rels$login2)),
+            id = unique (c (reldf$source, reldf$target)),
             group = 1L
         ),
         links = reldf
