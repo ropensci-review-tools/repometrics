@@ -29,7 +29,8 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     prs$review_decision [which (is.na (prs$review_decision))] <- "NA"
 
     index_approved <- which (prs$review_decision == "APPROVED")
-    index_rejected <- which (prs$review_decision != "APPROVED" & !prs$merged & prs$closed)
+    index_rejected <-
+        which (prs$review_decision != "APPROVED" & !prs$merged & prs$closed)
     index_other <- which (prs$review_decision != "APPROVED" & prs$merged)
     index_open <- which (!prs$merged)
 
@@ -67,8 +68,10 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     n_commenters_per_approved <- mean_to_na (num_commenters [index_approved])
     n_commenters_per_rejected <- mean_to_na (num_commenters [index_rejected])
     n_commenters_per_other <- mean_to_na (num_commenters [index_other])
-    n_iterations_per_approved <- mean_to_na (num_comment_iterations [index_approved])
-    n_iterations_per_rejected <- mean_to_na (num_comment_iterations [index_rejected])
+    n_iterations_per_approved <-
+        mean_to_na (num_comment_iterations [index_approved])
+    n_iterations_per_rejected <-
+        mean_to_na (num_comment_iterations [index_rejected])
     n_iterations_per_other <- mean_to_na (num_comment_iterations [index_other])
 
     ret <- data.frame (

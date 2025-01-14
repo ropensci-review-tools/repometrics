@@ -1,9 +1,11 @@
-# Utility functions to match authors based on emails, GitHub logins, and git commit names
+# Utility functions to match authors based on emails, GitHub logins, and git
+# commit names
 
 #' List all contributors from git log, with matches to GitHub login handles.
 #'
 #' @param ctbs_log The `cm$contribs_from_log` component of Chaoss metrics data.
-#' @param ctbs_gh The `cm$contribs_from_gh_api` component of Chaoss metrics data.
+#' @param ctbs_gh The `cm$contribs_from_gh_api` component of Chaoss metrics
+#' data.
 #' @return A modified version of `ctbs_log`, with GitHub handlees assocaited
 #' with each git contributors.
 #'
@@ -35,12 +37,18 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
 
     # The apply `match_string_pairs()` to fill in any missing values based on
     # the explicitly combinations in the following calls:
-    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$name, ctbs_gh, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$email, ctbs_gh, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$name, ctbs_gh$login, ctbs_gh, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$name, ctbs_gh, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$email, ctbs_gh, ctbs_log)
-    ctbs_log <- match_string_pairs (ctbs_log$email, ctbs_gh$login, ctbs_gh, ctbs_log)
+    ctbs_log <-
+        match_string_pairs (ctbs_log$name, ctbs_gh$name, ctbs_gh, ctbs_log)
+    ctbs_log <-
+        match_string_pairs (ctbs_log$name, ctbs_gh$email, ctbs_gh, ctbs_log)
+    ctbs_log <-
+        match_string_pairs (ctbs_log$name, ctbs_gh$login, ctbs_gh, ctbs_log)
+    ctbs_log <-
+        match_string_pairs (ctbs_log$email, ctbs_gh$name, ctbs_gh, ctbs_log)
+    ctbs_log <-
+        match_string_pairs (ctbs_log$email, ctbs_gh$email, ctbs_gh, ctbs_log)
+    ctbs_log <-
+        match_string_pairs (ctbs_log$email, ctbs_gh$login, ctbs_gh, ctbs_log)
 
     return (ctbs_log)
 }
@@ -88,7 +96,8 @@ match_string_pairs <- function (name_src1, name_src2, ctbs_gh, ctbs_log) {
         matches <- do.call (rbind, matches)
         matches <- matches [which (matches$match >= match_limit), ]
         if (nrow (matches) > 0L) {
-            ctbs_log$gh_handle [index_na] [matches$i] <- ctbs_gh$login [matches$index]
+            ctbs_log$gh_handle [index_na] [matches$i] <-
+                ctbs_gh$login [matches$index]
         }
     }
 
@@ -113,7 +122,8 @@ permute_names <- function (names) {
     names <- names_initial <- get_permutations (names)
     if (length (names) > 1L) {
         first_name <- names [, 1]
-        names_initial [which (names_initial == first_name)] <- substr (first_name, 1, 1)
+        names_initial [which (names_initial == first_name)] <-
+            substr (first_name, 1, 1)
         names <- tolower (rbind (names, names_initial))
         names <- apply (names, 1, function (i) paste0 (i, collapse = ""))
     }
@@ -155,7 +165,11 @@ match_names <- function (name1, names2) {
             )
         })
 
-        matches_val <- vapply (matches_n, function (i) max (i$match), numeric (1L))
+        matches_val <- vapply (
+            matches_n,
+            function (i) max (i$match),
+            numeric (1L)
+        )
         matches_val_max <- max (matches_val)
         matches_val_i <- which (matches_val == matches_val_max)
         res <- do.call (rbind, matches_n [matches_val_i])

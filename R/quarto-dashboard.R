@@ -53,7 +53,7 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
     # Suppress no visible binding notes:
     repo <- num_commits <- user <- value <- target <- NULL
 
-    rels <- user_relation_matrices (data_users)
+    rels <- user_relation_matrices (data_users) # in R/analyse-users.R
     index <- which (!grepl ("^login", names (rels)))
     relmat <- apply (as.matrix (rels [, index]), 2, function (i) i / sum (i))
     if (!is.matrix (relmat)) {
@@ -86,7 +86,9 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
         user_commits,
         by = dplyr::join_by (id)
     ) |>
-        dplyr::mutate (contributions = range [2] * contributions / max (contributions))
+        dplyr::mutate (
+            contributions = range [2] * contributions / max (contributions)
+        )
 
     # Then expand to include repos as well as users:
     dat_user_repo_network <- get_user_repo_network (data_users)
@@ -138,7 +140,9 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
     return (netdat)
 }
 
-get_user_repo_network <- function (data_users, rm_personal = TRUE, range = c (1, 20)) {
+get_user_repo_network <- function (data_users,
+                                   rm_personal = TRUE,
+                                   range = c (1, 20)) {
 
     # Suppress no visible binding notes:
     repo <- num_commits <- user <- repo <- NULL
@@ -158,7 +162,9 @@ get_user_repo_network <- function (data_users, rm_personal = TRUE, range = c (1,
 
     commits_repos <- dplyr::group_by (commits_users, repo) |>
         dplyr::summarise (num_commits = sum (num_commits)) |>
-        dplyr::mutate (num_commits = num_commits * range [2] / max (num_commits)) |>
+        dplyr::mutate (
+            num_commits = num_commits * range [2] / max (num_commits)
+        ) |>
         dplyr::filter (num_commits >= range [1]) |>
         dplyr::arrange (dplyr::desc (num_commits))
 

@@ -81,7 +81,7 @@ extract_pkgstats_data_single <- function (log, path) {
     }
 
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-        flist <- reset_repo (path_cp, log$hash [i])
+        flist <- reset_repo (path_cp, log$hash [i]) # nolint
         run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
     })
 
@@ -102,7 +102,7 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
     )
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
-        flist <- reset_repo (path_cp, log$hash [i])
+        flist <- reset_repo (path_cp, log$hash [i]) # nolint
         s <- run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
         fs::dir_delete (path_cp)
         return (s)
@@ -116,7 +116,7 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
 
 reset_repo <- function (path, hash) {
 
-    g <- gert::git_reset_hard (ref = hash, repo = path)
+    g <- gert::git_reset_hard (ref = hash, repo = path) # nolint
     flist <- fs::dir_ls (path, recurse = TRUE, type = "file")
     # Reduce to paths relative to 'path' itself:
     flist <- fs::path_rel (flist, path)
@@ -148,10 +148,15 @@ run_one_pkgstats <- function (path, pkg_date) {
             !is.na (s$objects$npars)
     )
     # Empty results do not contain all columns:
-    nms <- c ("fn_name", "language", "loc", "npars", "has_dots", "exported", "num_doclines")
+    nms <- c (
+        "fn_name", "language", "loc", "npars",
+        "has_dots", "exported", "num_doclines"
+    )
+
     nms <- nms [which (nms %in% names (s$objects))]
     fns <- s$objects [index, ] |> dplyr::select (dplyr::all_of (nms))
-    doclines <- mn_med_sum (fns$num_doclines [which (!is.na (fns$num_doclines))])
+    doclines <-
+        mn_med_sum (fns$num_doclines [which (!is.na (fns$num_doclines))])
     npars <- mn_med_sum (fns$npars)
     loc <- mn_med_sum (fns$loc)
 

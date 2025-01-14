@@ -36,9 +36,12 @@ cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
 
     if (length (labels) > 0) {
         friendly_ptn <- "newcomer|first\\s*issue|welcome|help"
-        labels_newcomer_friendly <- grep (friendly_ptn, labels, value = TRUE, ignore.case = TRUE)
-        prop_labelled_friendly <- length (labels_newcomer_friendly) / length (labels)
-        prop_friendly_overall <- length (labels_newcomer_friendly) / nrow (issues_data)
+        labels_newcomer_friendly <-
+            grep (friendly_ptn, labels, value = TRUE, ignore.case = TRUE)
+        prop_labelled_friendly <-
+            length (labels_newcomer_friendly) / length (labels)
+        prop_friendly_overall <-
+            length (labels_newcomer_friendly) / nrow (issues_data)
     }
 
     c (

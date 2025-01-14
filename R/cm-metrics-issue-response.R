@@ -3,8 +3,10 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     # suppress no visible warning notes:
     user_login <- issue_number <- created_at <- response_date <- NULL
 
-    ctbs_main_recent <- main_contributors (path, end_date = end_date, period = 365)
-    ctbs_main_all <- main_contributors (path, end_date = end_date, period = NULL)
+    ctbs_main_recent <-
+        main_contributors (path, end_date = end_date, period = 365)
+    ctbs_main_all <-
+        main_contributors (path, end_date = end_date, period = NULL)
     ctbs_main <- unique (c (ctbs_main_recent, ctbs_main_all))
 
     issues <- rm_data_issues_from_gh_api (path)
@@ -17,7 +19,8 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
             response_date = as.Date (dplyr::first (created_at))
         ) |>
         dplyr::rename (number = issue_number)
-    issue_responses <- dplyr::left_join (issues, cmt_responses, by = "number") |>
+    issue_responses <-
+        dplyr::left_join (issues, cmt_responses, by = "number") |>
         dplyr::mutate (created_at = as.Date (created_at)) |>
         dplyr::mutate (
             response_time = difftime (response_date, created_at, units = "days")
@@ -31,14 +34,16 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     if (length (index) > 0L) {
         ret <- c (
             mean = mean (as.numeric (issue_responses$response_time [index])),
-            median = stats::median (as.numeric (issue_responses$response_time [index]))
+            median = stats::median (
+                as.numeric (issue_responses$response_time [index])
+            )
         )
     }
 
     return (ret)
 }
 
-cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
+cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
 
     issues <- rm_data_issues_from_gh_api (path)
     index <- grep ("bug|defect|fix", issues$label, ignore.case = TRUE)
@@ -53,7 +58,8 @@ cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
 
     bugs$created_at <- as.Date (bugs$created_at)
     bugs$closed_at <- as.Date (bugs$closed_at)
-    bugs$resolution_dur <- difftime (bugs$closed_at, bugs$created_at, units = "days")
+    bugs$resolution_dur <-
+        difftime (bugs$closed_at, bugs$created_at, units = "days")
     bugs$resolution_dur <- as.numeric (bugs$resolution_dur)
     start_date <- end_date - get_repometrics_period ()
     index <- which (bugs$created_at >= start_date & bugs$closed_at <= end_date)

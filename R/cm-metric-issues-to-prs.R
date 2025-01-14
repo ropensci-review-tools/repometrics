@@ -11,7 +11,9 @@ cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-get_issues_in_period <- function (path, end_date = Sys.Date (), closed_only = FALSE) {
+get_issues_in_period <- function (path,
+                                  end_date = Sys.Date (),
+                                  closed_only = FALSE) {
 
     issues <- rm_data_issues_from_gh_api (path)
     closed_dates <- as.Date (issues$closed_at)

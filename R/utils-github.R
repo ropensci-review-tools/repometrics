@@ -26,7 +26,9 @@ add_gh_token_to_req <- function (req) {
 }
 # nocov end
 
-gh_rest_api_endpoint <- function (path = NULL, orgrepo = NULL, endpoint = NULL) {
+gh_rest_api_endpoint <- function (path = NULL,
+                                  orgrepo = NULL,
+                                  endpoint = NULL) {
 
     checkmate::assert_character (endpoint, len = 1L)
 
@@ -43,7 +45,7 @@ gh_rest_api_endpoint <- function (path = NULL, orgrepo = NULL, endpoint = NULL) 
 }
 
 #' Pagination for Rest API. see
-#' https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api
+#' https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api # nolint
 #' @noRd
 gh_next_page <- function (resp) {
 

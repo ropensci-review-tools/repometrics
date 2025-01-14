@@ -1,4 +1,4 @@
-rm_data_releases_from_gh_api_internal <- function (path,
+rm_data_releases_from_gh_api_internal <- function (path, # nolint
                                                    n_per_page = 100L,
                                                    latest_only = FALSE) {
 

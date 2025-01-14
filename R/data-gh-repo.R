@@ -2,7 +2,7 @@
 #'
 #' @param path Local path to repository
 #' @noRd
-rm_data_repo_from_gh_api_internal <- function (path) {
+rm_data_repo_from_gh_api_internal <- function (path) { # nolint
 
     or <- org_repo_from_path (path)
 
