@@ -52,7 +52,7 @@ chart = {
 
   const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(d => d.id))
-      .force("charge", d3.forceManyBody().strength(-1000))
+      .force("charge", d3.forceManyBody().strength(-400))
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
@@ -87,9 +87,6 @@ chart = {
       .attr("stroke-width", d => Math.sqrt(d.value));
 
   const node = svg.append("g")
-      .attr("fill", "currentColor")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-linejoin", "round")
     .selectAll("g")
     .data(nodes)
     .join("g")
@@ -100,6 +97,7 @@ chart = {
       .attr("stroke-width", 1.5)
       .data(nodes)
       .join("circle")
+        .attr("fill", d => color(d.group))
         .attr("r", d => 10 * Math.log10(d.contributions + 1));
 
   node.append("text")
