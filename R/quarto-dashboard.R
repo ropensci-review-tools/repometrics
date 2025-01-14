@@ -101,6 +101,33 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
         dplyr::filter (target %in% nodes$id & source %in% netdat$nodes$id)
     netdat$links <- dplyr::bind_rows (netdat$links, links)
 
+    # Finally add focal repo to those data (if not already there)
+    this_repo <- data_repo$rm$repo_from_gh_api$full_name
+    if (this_repo %in% netdat$nodes$id) {
+        netdat$nodes$group [which (netdat$nodes$id == this_repo)] <- "this_repo"
+    } else {
+        netdat$nodes <- dplyr::bind_rows (
+            netdat$nodes,
+            data.frame (
+                id = this_repo,
+                group = "this_repo",
+                contributions = range [2]
+            )
+        )
+    }
+    if (!this_repo %in% netdat$links$target) {
+        ctbs <- data_repo$rm$contribs_from_gh_api |>
+            dplyr::select (login, contributions) |>
+            dplyr::rename (value = contributions, source = login) |>
+            dplyr::mutate (
+                target = this_repo,
+                value = range [2] * value / max (value),
+                type = "person_this_repo"
+            ) |>
+            dplyr::filter (source %in% netdat$nodes$id)
+        netdat$links <- dplyr::bind_rows (netdat$links, ctbs)
+    }
+
     return (netdat)
 }
 
