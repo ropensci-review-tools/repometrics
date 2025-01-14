@@ -202,6 +202,16 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
     i <- grep ("^(\\s+?)title", y)
     y [i] <- gsub ("Package", pkg_name, y [i])
     brio::write_lines (y, f_yaml)
+
+    f_network <- fs::path (dir, "network.qmd")
+    network_qmd <- brio::read_lines (f_network)
+    network_qmd <- gsub (
+        "the XXX repository",
+        paste0 ("the `", pkg_name, "` repository"),
+        network_qmd,
+        fixed = TRUE
+    )
+    brio::write_lines (network_qmd, f_network)
 }
 
 check_dashboard_arg <- function (data) {

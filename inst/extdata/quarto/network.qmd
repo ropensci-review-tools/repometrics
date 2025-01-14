@@ -32,6 +32,19 @@ nodes_user <- data.frame (id = dat_pkg$rm$contribs_from_gh_api$login, group = 4L
 nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
 ```
 
+This page shows an interactive network diagram of the main developers of
+the XXX repository, including all other repositories they have contributed to.
+Links are shown between developers and repositories, as well as between
+developers themselves. Thickness of lines connecting developers are scaled
+according to relative efforts in joint repositories.
+
+The "person" nodes show main developers of the XXX repository, which is shown
+in the centre of the graph as "this_repo". The lines connecting "this_repo"
+with developers are scaled according to proportional contributions to other
+repositories on which they have worked (over the default time-span of the
+previous year), with circles for those repositories scaled by total numbers of
+commits made by the core developer team of the XXX repository.
+
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
 ```
