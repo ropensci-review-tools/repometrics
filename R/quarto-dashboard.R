@@ -50,6 +50,9 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
 # `range[1]` are removed.
 get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
 
+    # Suppress no visible binding notes:
+    repo <- num_commits <- user <- value <- target <- NULL
+
     rels <- user_relation_matrices (data_users)
     index <- which (!grepl ("^login", names (rels)))
     relmat <- apply (as.matrix (rels [, index]), 2, function (i) i / sum (i))
@@ -132,6 +135,9 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
 }
 
 get_user_repo_network <- function (data_users, rm_personal = TRUE, range = c (1, 20)) {
+
+    # Suppress no visible binding notes:
+    repo <- num_commits <- user <- repo <- NULL
 
     commits_users <- lapply (data_users, function (i) {
         dplyr::group_by (i$commits, repo) |>
