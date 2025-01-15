@@ -45,9 +45,10 @@ repositories on which they have worked (over the default time-span of the
 previous year), with circles for those repositories scaled by total numbers of
 commits made by the core developer team of the `epicontacts` repository.
 
-The "Force Strength" slider can be used to modify the strength of the forces
-connecting the nodes of the graph. More negative values reduce the strength,
-and expand the graph.
+The nodes are all hyperlinked so that clicking on any one of them will open the
+corresponding GitHub page in a new tab. The "Force Strength" slider can be used
+to modify the strength of the forces connecting the nodes of the graph. More
+negative values reduce the strength, and expand the graph.
 
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
@@ -128,6 +129,7 @@ chart = {
       .attr("x", 8)
       .attr("y", "0.31em")
       .text(d => d.id)
+      .html(d => `<a href="https://github.com/${d.id}" style="text-decoration:none" target="_blank">${d.id}</a>`)
     .clone(true).lower()
       .attr("fill", "none")
       .attr("stroke", "white")
