@@ -33,25 +33,36 @@ nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
 ```
 
 This page shows an interactive network diagram of the main developers of 
-the XXX repository, including all other repositories they have contributed to.
+the `epicontacts` repository, including all other repositories they have contributed to.
 Links are shown between developers and repositories, as well as between
 developers themselves. Thickness of lines connecting developers are scaled
 according to relative efforts in joint repositories.
 
-The "person" nodes show main developers of the XXX repository, which is shown
+The "person" nodes show main developers of the `epicontacts` repository, which is shown
 in the centre of the graph as "this_repo". The lines connecting "this_repo"
 with developers are scaled according to proportional contributions to other
 repositories on which they have worked (over the default time-span of the
 previous year), with circles for those repositories scaled by total numbers of
-commits made by the core developer team of the XXX repository.
+commits made by the core developer team of the `epicontacts` repository.
+
+The "Force Strength" slider can be used to modify the strength of the forces
+connecting the nodes of the graph. More negative values reduce the strength,
+and expand the graph.
 
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
 ```
 
-```{ojs ForceGraph-plot}
+```{ojs strength-slider}
+viewof strength = Inputs.range([-2000,0], {value: -400, step: 100, label: "Force Strength"});
+```
+
+```{ojs swatches}
 import {Swatches} from "@d3/color-legend"
 Swatches(chart.scales.color)
+```
+
+```{ojs ForceGraph-plot}
 chart = {
 
   const width = 928;
@@ -65,7 +76,7 @@ chart = {
 
   const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(links).id(d => d.id))
-      .force("charge", d3.forceManyBody().strength(-400))
+      .force("charge", d3.forceManyBody().strength(strength))
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
