@@ -9,29 +9,6 @@ format:
     code-fold: false
 ---
 
-```{r load-pkg, echo = FALSE, message = FALSE}
-library (repometrics)
-requireNamespace ("dplyr", quietly = TRUE)
-requireNamespace ("tidyr", quietly = TRUE)
-```
-```{r load-data}
-dat_pkg <- readRDS ("results-repo.Rds")
-dat_users <- readRDS ("results-users.Rds")
-
-deps <- dat_pkg$rm$dependencies
-get_dep_df <- function (deps, type = "Imports", group = 1L) {
-    index <- which (deps$type == type)
-    data.frame (id = deps$name [index], group = rep (group, length (index)))
-}
-
-nodes_pkg_ <- rbind (
-    get_dep_df (deps, "Imports", 1L),
-    get_dep_df (deps, "Suggests", 2L)
-)
-nodes_user <- data.frame (id = dat_pkg$rm$contribs_from_gh_api$login, group = 4L)
-nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
-```
-
 This page shows an interactive network diagram of the main developers of 
 the `epicontacts` repository, including all other repositories they have contributed to.
 Links are shown between developers and repositories, as well as between
