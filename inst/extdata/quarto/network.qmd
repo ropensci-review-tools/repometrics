@@ -29,7 +29,34 @@ negative values reduce the strength, and expand the graph.
 
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
+
+node_orgs = Array.from(new Set(network.nodes.map(d => d.org).filter(org => org.length > 0)));
+link_orgs = Array.from(new Set(network.links.map(d => d.org).filter(org => org.length > 0)));
 ```
+
+```{ojs org-selector}
+viewof orgSelection = {
+    const input =  Inputs.checkbox(
+        node_orgs,
+        {
+            value: node_orgs,
+            label: htl.html`<b>GitHub org:</b>`,
+        }
+    );
+
+    // Modification ideas from
+    // https://talk.observablehq.com/t/what-is-the-best-way-to-style-an-input-checkbox/7690/2
+    const scope = DOM.uid().id;
+    input.classList.add(scope);
+
+    input.append(htl.html`<style>
+    .${scope} > div, .${scope} > div label { display: flex; flex-wrap: wrap; gap: 10px; width: 300px }
+    `)
+
+    return input;
+}
+```
+
 
 ```{ojs strength-slider}
 viewof strength = Inputs.range([-2000,0], {value: -400, step: 100, label: "Force Strength"});
@@ -46,8 +73,14 @@ chart = {
   const width = 928;
   const height = 600;
 
-  const nodes = network.nodes;
-  const links = network.links;
+  // const nodes = network.nodes;
+  // const links = network.links;
+  const nodes = network.nodes.filter(function(node) {
+    return orgSelection.includes(node.org) || node.org.length === 0
+  })
+  const links = network.links.filter(function(link) {
+    return orgSelection.includes(link.org) || link.org.length === 0
+  })
   const types = Array.from(new Set(links.map(d => d.type)));
 
   const color = d3.scaleOrdinal(types, d3.schemeCategory10);
