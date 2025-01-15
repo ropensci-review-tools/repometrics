@@ -23,9 +23,11 @@ previous year), with circles for those repositories scaled by total numbers of
 commits made by the core developer team of the `epicontacts` repository.
 
 The nodes are all hyperlinked so that clicking on any one of them will open the
-corresponding GitHub page in a new tab. The "Force Strength" slider can be used
-to modify the strength of the forces connecting the nodes of the graph. More
-negative values reduce the strength, and expand the graph.
+corresponding GitHub page in a new tab. The initial "GitHub org" selections
+enable nodes for individual GitHub organizations to be selected or removed from
+the network diagram. The "Force Strength" slider can be used to modify the
+strength of the forces connecting the nodes of the graph. More negative values
+reduce the strength, and expand the graph.
 
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
@@ -33,6 +35,7 @@ network = FileAttachment("results-user-network.json").json()
 node_orgs = Array.from(new Set(network.nodes.map(d => d.org).filter(org => org.length > 0)));
 link_orgs = Array.from(new Set(network.links.map(d => d.org).filter(org => org.length > 0)));
 ```
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{ojs org-selector}
 viewof orgSelection = {
@@ -57,10 +60,13 @@ viewof orgSelection = {
 }
 ```
 
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{ojs strength-slider}
 viewof strength = Inputs.range([-2000,0], {value: -400, step: 100, label: "Force Strength"});
 ```
+
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{ojs swatches}
 import {Swatches} from "@d3/color-legend"
