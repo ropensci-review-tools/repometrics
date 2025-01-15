@@ -63,7 +63,10 @@ viewof orgSelection = {
 <div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{ojs strength-slider}
-viewof strength = Inputs.range([-2000,0], {value: -400, step: 100, label: "Force Strength"});
+viewof strength = Inputs.range(
+    [-2000,0],
+    {value: -400, step: 100, label: htl.html`<b>Force Strength:</b>`}
+);
 ```
 
 <div style="margin-top: 20px; margin-bottom: 20px;"></div>
