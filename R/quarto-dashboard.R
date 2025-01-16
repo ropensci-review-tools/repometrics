@@ -137,6 +137,15 @@ get_user_network <- function (data_repo, data_users, range = c (1, 20)) {
         netdat$links <- dplyr::bind_rows (netdat$links, ctbs)
     }
 
+    # And add an "org" column to enable filtering:
+    org_node <- gsub ("\\/.*$", "", netdat$nodes$id)
+    org_node [which (org_node == netdat$nodes$id)] <- ""
+    netdat$nodes$org <- org_node
+
+    org_links <- gsub ("\\/.*$", "", netdat$links$target)
+    org_links [which (org_links == netdat$links$target)] <- ""
+    netdat$links$org <- org_links
+
     return (netdat)
 }
 

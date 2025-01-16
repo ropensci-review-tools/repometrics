@@ -2,4 +2,15 @@
 title: "Historical Package Development"
 ---
 
-This is a dashboard for the XXX repository.
+This is a dashboard for the XXX repository, containing the following
+three main pages:
+
+1. [_Package stats_](./fn-stats.html) displaying statistics on the internal
+   package structure, via a series of graphs tracing the development of
+   the XXX repository over time.
+2. [_Contributors_](./contributors.html) which traces individual contributions
+   to the repository over time, along with numbers of issues and pull requests
+   opened on GitHub.
+3. [_Network_](network.html) showing an interactive network diagram of the
+   ecosystem of developers of the XXX repository, and connections to
+   other repositories to which these developers have contributed.

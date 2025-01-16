@@ -9,29 +9,6 @@ format:
     code-fold: false
 ---
 
-```{r load-pkg, echo = FALSE, message = FALSE}
-library (repometrics)
-requireNamespace ("dplyr", quietly = TRUE)
-requireNamespace ("tidyr", quietly = TRUE)
-```
-```{r load-data}
-dat_pkg <- readRDS ("results-repo.Rds")
-dat_users <- readRDS ("results-users.Rds")
-
-deps <- dat_pkg$rm$dependencies
-get_dep_df <- function (deps, type = "Imports", group = 1L) {
-    index <- which (deps$type == type)
-    data.frame (id = deps$name [index], group = rep (group, length (index)))
-}
-
-nodes_pkg_ <- rbind (
-    get_dep_df (deps, "Imports", 1L),
-    get_dep_df (deps, "Suggests", 2L)
-)
-nodes_user <- data.frame (id = dat_pkg$rm$contribs_from_gh_api$login, group = 4L)
-nodes_user$group [which (nodes_user$id %in% names (dat_users))] <- 3L
-```
-
 This page shows an interactive network diagram of the main developers of 
 the `epicontacts` repository, including all other repositories they have contributed to.
 Links are shown between developers and repositories, as well as between
@@ -46,17 +23,60 @@ previous year), with circles for those repositories scaled by total numbers of
 commits made by the core developer team of the `epicontacts` repository.
 
 The nodes are all hyperlinked so that clicking on any one of them will open the
-corresponding GitHub page in a new tab. The "Force Strength" slider can be used
-to modify the strength of the forces connecting the nodes of the graph. More
-negative values reduce the strength, and expand the graph.
+corresponding GitHub page in a new tab. The initial "GitHub org" selections
+enable nodes for individual GitHub organizations to be selected or removed from
+the network diagram. The "Force Strength" slider can be used to modify the
+strength of the forces connecting the nodes of the graph. More negative values
+reduce the strength, and expand the graph.
 
 ```{ojs import-network-data}
 network = FileAttachment("results-user-network.json").json()
+
+node_orgs = Array.from(new Set(network.nodes.map(d => d.org).filter(org => org.length > 0)));
+link_orgs = Array.from(new Set(network.links.map(d => d.org).filter(org => org.length > 0)));
+```
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
+
+```{ojs org-selector}
+viewof orgSelection = {
+    const input =  Inputs.checkbox(
+        node_orgs,
+        {
+            value: node_orgs,
+            label: htl.html`<b>GitHub org:</b>`,
+        }
+    );
+
+    // Modification ideas from
+    // https://talk.observablehq.com/t/what-is-the-best-way-to-style-an-input-checkbox/7690/2
+    const scope = DOM.uid().id;
+    input.classList.add(scope);
+
+    input.append(htl.html`<style>
+    .${scope} > div, .${scope} > div label { display: flex; flex-wrap: wrap; gap: 10px; width: 300px }
+    `)
+
+    return input;
+}
 ```
 
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
+
 ```{ojs strength-slider}
-viewof strength = Inputs.range([-2000,0], {value: -400, step: 100, label: "Force Strength"});
+viewof strength = Inputs.range(
+    [-2000,0],
+    {value: -400, step: 100, label: htl.html`<b>Force Strength:</b>`}
+);
 ```
+
+```{ojs line-width-slider}
+viewof linewidth = Inputs.range(
+    [1,10],
+    {value: 1, step: 1, label: htl.html`<b>Line Thickness:</b>`}
+);
+```
+
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{ojs swatches}
 import {Swatches} from "@d3/color-legend"
@@ -69,8 +89,14 @@ chart = {
   const width = 928;
   const height = 600;
 
-  const nodes = network.nodes;
-  const links = network.links;
+  // const nodes = network.nodes;
+  // const links = network.links;
+  const nodes = network.nodes.filter(function(node) {
+    return orgSelection.includes(node.org) || node.org.length === 0
+  })
+  const links = network.links.filter(function(link) {
+    return orgSelection.includes(link.org) || link.org.length === 0
+  })
   const types = Array.from(new Set(links.map(d => d.type)));
 
   const color = d3.scaleOrdinal(types, d3.schemeCategory10);
@@ -109,7 +135,7 @@ chart = {
     .data(links)
     .join("path")
       .attr("stroke", d => color(d.type))
-      .attr("stroke-width", d => Math.sqrt(d.value));
+      .attr("stroke-width", d => Math.sqrt(d.value) * linewidth);
 
   const node = svg.append("g")
     .selectAll("g")
