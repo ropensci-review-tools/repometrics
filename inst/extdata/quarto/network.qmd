@@ -69,6 +69,13 @@ viewof strength = Inputs.range(
 );
 ```
 
+```{ojs line-width-slider}
+viewof linewidth = Inputs.range(
+    [1,10],
+    {value: 1, step: 1, label: htl.html`<b>Line Thickness:</b>`}
+);
+```
+
 <div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{ojs swatches}
@@ -128,7 +135,7 @@ chart = {
     .data(links)
     .join("path")
       .attr("stroke", d => color(d.type))
-      .attr("stroke-width", d => Math.sqrt(d.value));
+      .attr("stroke-width", d => Math.sqrt(d.value) * linewidth);
 
   const node = svg.append("g")
     .selectAll("g")
