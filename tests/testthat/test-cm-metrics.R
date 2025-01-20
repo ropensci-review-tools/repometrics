@@ -341,3 +341,18 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     expect_equal (names (res), c ("mean", "median"))
     expect_true (all (res > 0L))
 })
+
+test_that ("cm metric ctb absence", { # R/cm-metric-has-ci.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    dat <- mock_rm_data ()
+
+    res <- cm_metric_contrib_absence (path)
+    expect_type (res, "integer")
+    expect_length (res, 3L)
+    expect_named (res)
+    expect_equal (names (res), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_true (all (res > 0L))
+})

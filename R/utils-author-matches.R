@@ -188,6 +188,10 @@ match_names <- function (name1, names2) {
 #' @noRd
 find_duplicated_strings <- function (s, threshold = 0.9) {
 
+    if (length (s) < 2) {
+        return (NULL)
+    }
+
     s <- t (combn (s, 2))
     s_lower <- tolower (gsub ("\\s*", "", s))
     s_lower <- gsub ("@.*$", "", s_lower)
@@ -231,14 +235,19 @@ find_duplicated_strings <- function (s, threshold = 0.9) {
 #' @noRd
 index_partial_duplicates <- function (log) {
 
+    index_names <- index_emails <- NULL
     names_dup <- find_duplicated_strings (log$aut_name)
-    index_names <- apply (names_dup, 1, function (i) {
-        which (log$aut_name %in% i [1:2])
-    }, simplify = FALSE)
+    if (!is.null (names_dup)) {
+        index_names <- apply (names_dup, 1, function (i) {
+            which (log$aut_name %in% i [1:2])
+        }, simplify = FALSE)
+    }
     emails_dup <- find_duplicated_strings (log$aut_email)
-    index_emails <- apply (emails_dup, 1, function (i) {
-        which (log$aut_email %in% i [1:2])
-    }, simplify = FALSE)
+    if (!is.null (emails_dup)) {
+        index_emails <- apply (emails_dup, 1, function (i) {
+            which (log$aut_email %in% i [1:2])
+        }, simplify = FALSE)
+    }
 
     index_dup <- lapply (index_names, function (i) {
         also_in_email <- which (vapply (
