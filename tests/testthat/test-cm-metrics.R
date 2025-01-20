@@ -341,3 +341,46 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     expect_equal (names (res), c ("mean", "median"))
     expect_true (all (res > 0L))
 })
+
+test_that ("cm metric programming languages", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_languages (path)
+    expect_s3_class (res, "data.frame")
+    expect_true (nrow (res) > 0L)
+    expect_equal (ncol (res), 5L)
+    expect_identical (
+        names (res),
+        c ("language", "nfiles", "ncode", "nfiles_pc", "ncode_pc")
+    )
+    expect_equal (res$language [1], "R")
+    expect_type (res$nfiles, "integer")
+    expect_type (res$ncode, "integer")
+    expect_type (res$nfiles_pc, "double")
+    expect_type (res$ncode_pc, "double")
+})
+
+test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+
+    path <- generate_test_pkg ()
+    dat <- mock_rm_data ()
+
+    res1 <- cm_metric_contrib_absence (path) # bus factor
+    expect_type (res1, "integer")
+    expect_length (res1, 3L)
+    expect_named (res1)
+    expect_equal (names (res1), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_true (all (res1 > 0L))
+
+    res2 <- cm_metric_elephant_factor (path)
+    expect_type (res2, "integer")
+    expect_length (res2, 3L)
+    expect_named (res2)
+    expect_equal (names (res2), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_true (all (res2 > 0L))
+})
