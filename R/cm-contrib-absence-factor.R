@@ -25,7 +25,45 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
             lines_removed = sum (lines_removed)
         )
 
-    # Reconcile partially duplicated names or emails:
+    log$index <- index_partial_duplicates (log)
+    # Then use that index to group all unique contributors:
+    log <- dplyr::group_by (log, index) |>
+        dplyr::summarise (
+            aut_name = dplyr::first (aut_name),
+            aut_email = dplyr::first (aut_email),
+            ncommits = sum (ncommits),
+            nfiles_changed = sum (nfiles_changed),
+            lines_changed = sum (lines_added + lines_removed)
+        ) |>
+        dplyr::select (-index)
+
+    # Count number of unique contributors needed to exceed 50%:
+    absence_factor <- function (log, what = "ncommits") {
+        res <- dplyr::arrange (log, dplyr::desc (get (what))) |>
+            dplyr::mutate (prop = cumsum (get (what) / sum (get (what))))
+        length (which (res$prop < 0.5)) + 1L
+    }
+
+    numeric_cols <- vapply (
+        as.list (log),
+        is.numeric,
+        logical (1L),
+        USE.NAMES = TRUE
+    )
+    numeric_cols <- names (numeric_cols) [which (numeric_cols)]
+    vapply (
+        numeric_cols,
+        function (i) absence_factor (log, what = i),
+        integer (1L),
+        USE.NAMES = TRUE
+    )
+}
+
+#' Find partially duplicated names or emails, and return an index with repeated
+#' values for any partial duplicates of either.
+#' @noRd
+index_partial_duplicates <- function (log) {
+
     names_dup <- find_duplicated_strings (log$aut_name)
     index_names <- apply (names_dup, 1, function (i) {
         which (log$aut_name %in% i [1:2])
@@ -49,38 +87,10 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
 
     # use that index list of duplicate entries to construct a single index with
     # duplicates as repeated values:
-    log$index <- seq_len (nrow (log))
+    index <- seq_len (nrow (log))
     for (i in index_dup) {
-        log$index [i [-1]] <- log$index [i [1]]
-    }
-    # Then use that to group all unique contributors:
-    log <- dplyr::group_by (log, index) |>
-        dplyr::summarise (
-            aut_name = dplyr::first (aut_name),
-            aut_email = dplyr::first (aut_email),
-            ncommits = sum (ncommits),
-            nfiles_changed = sum (nfiles_changed),
-            lines_changed = sum (lines_added + lines_removed)
-        ) |>
-        dplyr::select (-index)
-
-    absence_factor <- function (log, what = "ncommits") {
-        res <- dplyr::arrange (log, dplyr::desc (get (what))) |>
-            dplyr::mutate (prop = cumsum (get (what) / sum (get (what))))
-        length (which (res$prop < 0.5)) + 1L
+        index [i [-1]] <- index [i [1]]
     }
 
-    numeric_cols <- vapply (
-        as.list (log),
-        is.numeric,
-        logical (1L),
-        USE.NAMES = TRUE
-    )
-    numeric_cols <- names (numeric_cols) [which (numeric_cols)]
-    vapply (
-        numeric_cols,
-        function (i) absence_factor (log, what = i),
-        integer (1L),
-        USE.NAMES = TRUE
-    )
+    return (index)
 }
