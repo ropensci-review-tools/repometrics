@@ -25,7 +25,7 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
             lines_removed = sum (lines_removed)
         )
 
-    log$index <- index_partial_duplicates (log)
+    log$index <- index_partial_duplicates (log) # in utils-author-matches.R
     # Then use that index to group all unique contributors:
     log <- dplyr::group_by (log, index) |>
         dplyr::summarise (
@@ -57,40 +57,4 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
         integer (1L),
         USE.NAMES = TRUE
     )
-}
-
-#' Find partially duplicated names or emails, and return an index with repeated
-#' values for any partial duplicates of either.
-#' @noRd
-index_partial_duplicates <- function (log) {
-
-    names_dup <- find_duplicated_strings (log$aut_name)
-    index_names <- apply (names_dup, 1, function (i) {
-        which (log$aut_name %in% i [1:2])
-    }, simplify = FALSE)
-    emails_dup <- find_duplicated_strings (log$aut_email)
-    index_emails <- apply (emails_dup, 1, function (i) {
-        which (log$aut_email %in% i [1:2])
-    }, simplify = FALSE)
-
-    index_dup <- lapply (index_names, function (i) {
-        also_in_email <- which (vapply (
-            index_emails,
-            function (j) any (j %in% i),
-            logical (1L)
-        ))
-        if (length (also_in_email) > 0) {
-            i <- unique (c (i, index_emails [[also_in_email]]))
-        }
-        return (i)
-    })
-
-    # use that index list of duplicate entries to construct a single index with
-    # duplicates as repeated values:
-    index <- seq_len (nrow (log))
-    for (i in index_dup) {
-        index [i [-1]] <- index [i [1]]
-    }
-
-    return (index)
 }
