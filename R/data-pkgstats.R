@@ -1,3 +1,28 @@
+repo_pkgstats_history_internal <- function (path, step_days = 1L, num_cores = -1L) {
+
+    checkmate::assert_character (path, len = 1L)
+    checkmate::assert_directory (path)
+    checkmate::assert_int (step_days, lower = 0L)
+    checkmate::assert_int (num_cores)
+
+    num_cores <- set_num_cores (num_cores)
+
+    log <- rm_data_gitlog (path)
+    log <- filter_git_log (log, step_days)
+
+    if (num_cores == 1L) {
+
+        res <- extract_pkgstats_data_single (log, path)
+
+    } else {
+
+        res <- extract_pkgstats_data_multi (log, path, num_cores)
+
+    }
+
+    collate_pkgstats (res)
+}
+
 #' Apply \pkg{pkgstats} across the git history of a package
 #'
 #' @param path Path to local repository containing an R package.
@@ -25,32 +50,7 @@
 #' }
 #'
 #' @export
-repo_pkgstats_history <- function (path,
-                                   step_days = 1L,
-                                   num_cores = -1L) {
-
-    checkmate::assert_character (path, len = 1L)
-    checkmate::assert_directory (path)
-    checkmate::assert_int (step_days, lower = 0L)
-    checkmate::assert_int (num_cores)
-
-    num_cores <- set_num_cores (num_cores)
-
-    log <- rm_data_gitlog (path)
-    log <- filter_git_log (log, step_days)
-
-    if (num_cores == 1L) {
-
-        res <- extract_pkgstats_data_single (log, path)
-
-    } else {
-
-        res <- extract_pkgstats_data_multi (log, path, num_cores)
-
-    }
-
-    collate_pkgstats (res)
-}
+repo_pkgstats_history <- memoise::memoise (repo_pkgstats_history_internal)
 
 filter_git_log <- function (log, step_days) {
 
