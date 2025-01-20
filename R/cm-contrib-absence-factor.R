@@ -15,6 +15,11 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
 
     log <- gitlog_unique_contributors (path, start_date, pkg_date)
 
+    gitlog_absence_factor (log)
+}
+
+gitlog_absence_factor <- function (log) {
+
     # Count number of unique contributors needed to exceed 50%:
     absence_factor <- function (log, what = "ncommits") {
         res <- dplyr::arrange (log, dplyr::desc (get (what))) |>
