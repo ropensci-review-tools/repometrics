@@ -342,6 +342,27 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     expect_true (all (res > 0L))
 })
 
+test_that ("cm metric programming languages", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_metric_languages (path)
+    expect_s3_class (res, "data.frame")
+    expect_true (nrow (res) > 0L)
+    expect_equal (ncol (res), 5L)
+    expect_identical (
+        names (res),
+        c ("language", "nfiles", "ncode", "nfiles_pc", "ncode_pc")
+    )
+    expect_equal (res$language [1], "R")
+    expect_type (res$nfiles, "integer")
+    expect_type (res$ncode, "integer")
+    expect_type (res$nfiles_pc, "double")
+    expect_type (res$ncode_pc, "double")
+})
+
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
