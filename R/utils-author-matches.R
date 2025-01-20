@@ -183,3 +183,45 @@ match_names <- function (name1, names2) {
 
     return (matches)
 }
+
+#' Find duplicate entries in a vector of strings
+#' @noRd
+find_duplicated_strings <- function (s, threshold = 0.9) {
+
+    s <- t (combn (s, 2))
+    s_lower <- tolower (gsub ("\\s*", "", s))
+    s_lower <- gsub ("@.*$", "", s_lower)
+
+    duplicated <- t (apply (s_lower, 1, function (i) {
+        i1 <- strsplit (i [1], "") [[1]]
+        i2 <- strsplit (i [2], "") [[1]]
+        i1_match <- pmatch (i1, i2)
+        i2_match <- pmatch (i2, i1)
+        longest_seq <- function (x) {
+            x <- x [which (!is.na (x))]
+            if (length (x) == 0) {
+                return (0L)
+            }
+            index <- rep (0, length (x))
+            index [which (diff (x) < 0) + 1] <- 1
+            max (table (cumsum (index)))
+        }
+
+        i12_len <- longest_seq (i1_match)
+        i21_len <- longest_seq (i2_match)
+        if (i12_len > i21_len) {
+            res <- c (i12_len, i12_len / length (i1))
+        } else {
+            res <- c (i21_len, i21_len / length (i2))
+        }
+        return (res)
+    }))
+
+    data.frame (
+        name1 = s [, 1],
+        name2 = s [, 2],
+        match_len = duplicated [, 1],
+        match_prop = duplicated [, 2]
+    ) |>
+        dplyr::filter (match_prop >= threshold)
+}
