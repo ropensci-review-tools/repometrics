@@ -13,29 +13,7 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
 
     start_date <- as.Date (pkg_date - round (nyears * 365.25))
 
-    log <- rm_data_gitlog (path) |>
-        dplyr::mutate (date = as.Date (timestamp)) |>
-        dplyr::filter (date >= start_date & date <= pkg_date) |>
-        dplyr::filter (aut_name != "GitHub") |>
-        dplyr::group_by (aut_name, aut_email) |>
-        dplyr::summarise (
-            ncommits = dplyr::n (),
-            nfiles_changed = sum (nfiles_changed),
-            lines_added = sum (lines_added),
-            lines_removed = sum (lines_removed)
-        )
-
-    log$index <- index_partial_duplicates (log) # in utils-author-matches.R
-    # Then use that index to group all unique contributors:
-    log <- dplyr::group_by (log, index) |>
-        dplyr::summarise (
-            aut_name = dplyr::first (aut_name),
-            aut_email = dplyr::first (aut_email),
-            ncommits = sum (ncommits),
-            nfiles_changed = sum (nfiles_changed),
-            lines_changed = sum (lines_added + lines_removed)
-        ) |>
-        dplyr::select (-index)
+    log <- gitlog_unique_contributors (path, start_date, pkg_date)
 
     # Count number of unique contributors needed to exceed 50%:
     absence_factor <- function (log, what = "ncommits") {
@@ -57,4 +35,32 @@ cm_metric_contrib_absence <- function (path, pkg_date = Sys.Date (), nyears = 1)
         integer (1L),
         USE.NAMES = TRUE
     )
+}
+
+gitlog_unique_contributors <- function (path, start_date, end_date) {
+
+    log <- rm_data_gitlog (path) |>
+        dplyr::mutate (date = as.Date (timestamp)) |>
+        dplyr::filter (date >= start_date & date <= end_date) |>
+        dplyr::filter (aut_name != "GitHub") |>
+        dplyr::group_by (aut_name, aut_email) |>
+        dplyr::summarise (
+            ncommits = dplyr::n (),
+            nfiles_changed = sum (nfiles_changed),
+            lines_added = sum (lines_added),
+            lines_removed = sum (lines_removed)
+        )
+
+    log$index <- index_partial_duplicates (log) # in utils-author-matches.R
+    # Then use that index to group all unique contributors:
+    dplyr::group_by (log, index) |>
+        dplyr::summarise (
+            aut_name = dplyr::first (aut_name),
+            aut_email = dplyr::first (aut_email),
+            ncommits = sum (ncommits),
+            nfiles_changed = sum (nfiles_changed),
+            lines_changed = sum (lines_added + lines_removed)
+        ) |>
+        dplyr::select (-index)
+
 }
