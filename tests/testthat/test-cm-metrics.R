@@ -128,8 +128,6 @@ test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 
 test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
-
-
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 10000)
@@ -385,8 +383,8 @@ test_that ("cm metric programming languages", {
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    path <- generate_test_pkg ()
     dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
 
     res1 <- cm_metric_contrib_absence (path, end_date = end_date)
     res2 <- cm_metric_elephant_factor (path, end_date = end_date)
@@ -407,8 +405,8 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    path <- generate_test_pkg ()
     dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
 
     counts <- cm_metric_ctb_count (path, end_date = end_date)
 
@@ -429,8 +427,8 @@ end_date <- as.Date ("2024-12-01") # issues need later end date
 test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    path <- generate_test_pkg ()
     dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
 
     num_updates <- cm_metric_issue_updates (path, end_date = end_date)
     comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
