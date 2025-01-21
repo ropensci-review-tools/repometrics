@@ -5,6 +5,10 @@
 #' @noRd
 cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding note:
+    user_login <- merged_by <- participants <- created_at <-
+        assignee <- closed_by <- NULL
+
     requireNamespace ("desc")
 
     checkmate::assert_date (end_date)
@@ -50,6 +54,9 @@ cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
 #' contributed in any recorded way in the default time period.
 #' @noRd
 match_repo_ctbs_to_desc <- function (path, desc_auts, gh_auts) {
+
+    # Suppress no visible binding note:
+    login <- name <- email <- handle <- NULL
 
     ctbs_from_log <- rm_data_contribs_from_log (path) |>
         dplyr::rename (name = handle) |>
