@@ -5,12 +5,11 @@
 #' issue authors, and issue comments participants over a certain period of
 #' time."
 #' @noRd
-cm_metric_ctb_count <- function (path, end_date = Sys.Date (), nyears = 1) {
+cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_date (end_date)
-    checkmate::assert_numeric (nyears, lower = 0L)
 
-    start_date <- as.Date (end_date - round (nyears * 365.25))
+    start_date <- end_date - get_repometrics_period ()
 
     log <- gitlog_unique_contributors (path, start_date, end_date)
     issues <- rm_data_issues_from_gh_api (path) |>

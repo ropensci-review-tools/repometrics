@@ -4,14 +4,12 @@
 #'
 #' @param path Local path to repository
 #' @param end_date Date at which metric is to be calculated.
-#' @param nyears Number of preceding years over which metric is to be calculated.
 #' @noRd
-cm_metric_contrib_absence <- function (path, end_date = Sys.Date (), nyears = 1) {
+cm_metric_contrib_absence <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_date (end_date)
-    checkmate::assert_numeric (nyears, lower = 0L)
 
-    start_date <- as.Date (end_date - round (nyears * 365.25))
+    start_date <- end_date - get_repometrics_period ()
 
     log <- gitlog_unique_contributors (path, start_date, end_date)
 

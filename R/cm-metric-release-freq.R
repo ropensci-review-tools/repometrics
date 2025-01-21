@@ -21,3 +21,7 @@ cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
         median = as.integer (stats::median (res))
     )
 }
+
+cm_metric_recent_releases <- function (path, end_date = Sys.Date ()) {
+
+}
