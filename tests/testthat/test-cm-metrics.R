@@ -91,7 +91,7 @@ test_that ("cm metrics num_commits num_contribs", {
     expect_named (n, expected = NULL)
     expect_equal (n, 1L)
 
-    n <- cm_metric_commit_freq (path)
+    n <- cm_metric_commit_freq (path, end_date = end_date)
     expect_type (n, "double")
     expect_length (n, 2L)
     expect_named (n, c ("mean", "median"))
