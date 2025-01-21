@@ -444,6 +444,7 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
 
     num_updates <- cm_metric_issue_updates (path, end_date = end_date)
     comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
+    issues_closed <- cm_metric_issues_closed (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -456,6 +457,11 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     expect_length (comment_freq, 2L)
     expect_named (comment_freq, expected = c ("mean", "median"))
     expect_true (all (comment_freq >= 0L))
+
+    expect_type (issues_closed, "integer")
+    expect_length (issues_closed, 1L)
+    expect_named (issues_closed, expected = NULL)
+    expect_true (issues_closed > 0L)
 })
 
 test_that ("cm metric maintainer count", {

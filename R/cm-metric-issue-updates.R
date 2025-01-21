@@ -50,3 +50,15 @@ cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
         median = stats::median (cmts, na.rm = TRUE)
     )
 }
+
+cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
+
+    checkmate::assert_date (end_date)
+
+    start_date <- end_date - get_repometrics_period ()
+
+    issues <- rm_data_issues_from_gh_api (path) |>
+        dplyr::filter (closed_at >= start_date & closed_at <= end_date)
+
+    nrow (issues)
+}
