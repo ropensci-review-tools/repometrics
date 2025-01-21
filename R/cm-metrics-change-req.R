@@ -38,3 +38,12 @@ get_prs_in_period <- function (path, end_date = Sys.Date ()) {
 
     return (prs)
 }
+
+#' https://chaoss.community/kb/metric-change-requests-accepted/
+#' @return Single integer counting number of merged PRs.
+#' @noRd
+cm_metric_change_req_accepted <- function (path, end_date = Sys.Date ()) {
+
+    prs <- get_prs_in_period (path, end_date)
+    length (which (prs$merged))
+}
