@@ -5,6 +5,9 @@
 #' @noRd
 cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding note:
+    name <- company <- ncommits <- nfiles_changed <- lines_changed <- NULL
+
     checkmate::assert_date (end_date)
 
     start_date <- end_date - get_repometrics_period ()

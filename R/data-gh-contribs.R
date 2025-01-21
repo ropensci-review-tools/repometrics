@@ -35,6 +35,10 @@ rm_data_contribs_from_log <- function (path) {
 
 gitlog_unique_contributors <- function (path, start_date, end_date) {
 
+    # Suppress no visible binding note:
+    timestamp <- aut_name <- aut_email <- nfiles_changed <- lines_added <-
+        lines_removed <- index <- ncommits <- NULL
+
     log <- rm_data_gitlog (path) |>
         dplyr::mutate (date = as.Date (timestamp)) |>
         dplyr::filter (date >= start_date & date <= end_date) |>

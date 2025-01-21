@@ -188,6 +188,9 @@ match_names <- function (name1, names2) {
 #' @noRd
 find_duplicated_strings <- function (s, threshold = 0.9) {
 
+    # Suppress no visible binding note:
+    match_prop <- NULL
+
     if (length (s) < 2) {
         return (NULL)
     }

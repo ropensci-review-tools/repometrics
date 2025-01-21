@@ -5,6 +5,9 @@
 #' @noRd
 cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding note:
+    created_at <- NULL
+
     checkmate::assert_date (end_date)
 
     start_date <- end_date - get_repometrics_period ()

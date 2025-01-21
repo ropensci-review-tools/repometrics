@@ -6,6 +6,9 @@
 #' @noRd
 cm_metric_languages <- function (path) {
 
+    # Suppress no visible binding note:
+    language <- nfiles <- ncode <- NULL
+
     loc_stats <- utils::getFromNamespace ("loc_stats", "pkgstats")
 
     s <- tryCatch (
