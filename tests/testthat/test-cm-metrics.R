@@ -10,7 +10,6 @@ test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
     desc [1] <- "Package: goodpractice"
     writeLines (desc, desc_path)
 
-    end_date <- as.Date ("2024-01-01")
     dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
     expect_type (dl, "integer")
     expect_length (dl, 1L)
@@ -117,10 +116,18 @@ test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 
 test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
+
+
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    op <- getOption ("repometrics_period")
+    options ("repometrics_period" = 10000)
+
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     revs <- cm_metric_pr_reviews (path, end_date = end_date)
+    cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
+
+    options ("repometrics_period" = op)
     fs::dir_delete (path)
 
     expect_s3_class (revs, "data.frame")
@@ -134,7 +141,12 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
         "n_iterations_per_approved", "n_iterations_per_rejected",
         "n_iterations_per_other"
     )
-    expect_equal (names (revs), nms)
+    expect_named (revs, nms)
+
+    expect_type (cmts, "double")
+    expect_length (cmts, 2L)
+    expect_named (cmts, c ("mean", "median"))
+    expect_true (all (cmts > 0))
 })
 
 test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
@@ -147,8 +159,7 @@ test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
 
     expect_type (forks, "integer")
     expect_length (forks, 2L)
-    expect_named (forks)
-    expect_equal (names (forks), c ("num_in_period", "num_total"))
+    expect_named (forks, c ("num_in_period", "num_total"))
     expect_true (forks [["num_total"]] > 0)
 })
 
@@ -181,9 +192,10 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
 
     expect_type (revs, "double")
     expect_length (revs, 4L)
-    expect_named (revs)
-    nms <- c ("cycle_dur_mn", "cycle_dur_md", "review_dur_mn", "review_dur_md")
-    expect_equal (names (revs), nms)
+    expect_named (
+        revs,
+        c ("cycle_dur_mn", "cycle_dur_md", "review_dur_mn", "review_dur_md")
+    )
 })
 
 test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
@@ -196,9 +208,7 @@ test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    nms <- c ("mean", "median")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("mean", "median"))
 })
 
 test_that ("cm metric defect resolution duration", {
@@ -212,14 +222,11 @@ test_that ("cm metric defect resolution duration", {
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    nms <- c ("mean", "median")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("mean", "median"))
 })
 
 test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
 
-    end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
@@ -228,16 +235,14 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
 
     expect_type (res, "double")
     expect_length (res, 3L)
-    expect_named (res)
-    nms <- c (
-        "prop_labelled", "prop_labelled_friendly", "prop_friendly_overall"
+    expect_named (
+        res,
+        c ("prop_labelled", "prop_labelled_friendly", "prop_friendly_overall")
     )
-    expect_equal (names (res), nms)
 })
 
 test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 
-    end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
@@ -246,9 +251,7 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    nms <- c ("mean", "median")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("mean", "median"))
 })
 
 test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
@@ -282,9 +285,7 @@ test_that ("cm metric popularity", { # R/cm-metric-popularity.R
 
     expect_type (res, "integer")
     expect_length (res, 4L)
-    expect_named (res)
-    nms <- c ("revdeps", "contribs", "forks", "stars")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("revdeps", "contribs", "forks", "stars"))
 })
 
 test_that ("cm metric libyears", { # R/cm-metric-libyears.R
@@ -299,8 +300,7 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    expect_equal (names (res), c ("mean", "median"))
+    expect_named (res, c ("mean", "median"))
     expect_true (all (res > 0))
 })
 
@@ -316,8 +316,7 @@ test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
 
     expect_type (res, "integer")
     expect_length (res, 3L)
-    expect_named (res)
-    expect_equal (names (res), c ("mean", "median", "n"))
+    expect_named (res, c ("mean", "median", "n"))
     expect_equal (res [["n"]], 0L)
 })
 
@@ -330,16 +329,21 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     # Need to extend period to capture enough releases:
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 1000)
-    res <- cm_metric_release_freq (path, end_date = end_date)
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+    rel_count <- cm_metric_recent_releases (path, end_date = end_date)
     options ("repometrics_period" = op)
 
     fs::dir_delete (path)
 
-    expect_type (res, "integer")
-    expect_length (res, 2L)
-    expect_named (res)
-    expect_equal (names (res), c ("mean", "median"))
-    expect_true (all (res > 0L))
+    expect_type (rel_freq, "integer")
+    expect_length (rel_freq, 2L)
+    expect_named (rel_freq, c ("mean", "median"))
+    expect_true (all (rel_freq > 0L))
+
+    expect_type (rel_count, "integer")
+    expect_length (rel_count, 1L)
+    expect_named (rel_count, expected = NULL)
+    expect_true (rel_count > 0L)
 })
 
 test_that ("cm metric programming languages", {
@@ -366,21 +370,50 @@ test_that ("cm metric programming languages", {
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
     path <- generate_test_pkg ()
     dat <- mock_rm_data ()
 
-    res1 <- cm_metric_contrib_absence (path) # bus factor
+    res1 <- cm_metric_contrib_absence (path, end_date = end_date)
     expect_type (res1, "integer")
     expect_length (res1, 3L)
-    expect_named (res1)
-    expect_equal (names (res1), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_named (res1, c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res1 > 0L))
 
-    res2 <- cm_metric_elephant_factor (path)
+    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
     expect_type (res2, "integer")
     expect_length (res2, 3L)
-    expect_named (res2)
-    expect_equal (names (res2), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_named (res2, c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res2 > 0L))
+})
+
+test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    path <- generate_test_pkg ()
+    dat <- mock_rm_data ()
+
+    counts <- cm_metric_ctb_count (path, end_date = end_date)
+    expect_type (counts, "integer")
+    expect_length (counts, 4L)
+    expect_named (
+        counts,
+        c ("code", "pr_authors", "issue_authors", "issue_cmt_authors")
+    )
+    expect_true (all (counts >= 0L))
+    expect_true (sum (counts) > 0L)
+})
+
+end_date <- as.Date ("2024-12-01") # issues need later end date
+
+test_that ("cm metric issue updates", { # R/cm-metric-issue-updates.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    path <- generate_test_pkg ()
+    dat <- mock_rm_data ()
+
+    num_updates <- cm_metric_issue_updates (path, end_date = end_date)
+    expect_type (num_updates, "integer")
+    expect_length (num_updates, 1L)
+    expect_named (num_updates, expected = NULL)
+    expect_true (num_updates > 0L)
 })

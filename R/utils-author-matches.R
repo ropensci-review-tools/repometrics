@@ -188,11 +188,14 @@ match_names <- function (name1, names2) {
 #' @noRd
 find_duplicated_strings <- function (s, threshold = 0.9) {
 
+    # Suppress no visible binding note:
+    match_prop <- NULL
+
     if (length (s) < 2) {
         return (NULL)
     }
 
-    s <- t (combn (s, 2))
+    s <- t (utils::combn (s, 2))
     s_lower <- tolower (gsub ("\\s*", "", s))
     s_lower <- gsub ("@.*$", "", s_lower)
 

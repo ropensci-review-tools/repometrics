@@ -3,14 +3,16 @@
 #' "cm_metric_contrib_absence()", but for organizations instead of individuals.
 #' \url{https://chaoss.community/kb/metric-elephant-factor/}.
 #' @noRd
-cm_metric_elephant_factor <- function (path, pkg_date = Sys.Date (), nyears = 1) {
+cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
 
-    checkmate::assert_date (pkg_date)
-    checkmate::assert_numeric (nyears, lower = 0L)
+    # Suppress no visible binding note:
+    name <- company <- ncommits <- nfiles_changed <- lines_changed <- NULL
 
-    start_date <- as.Date (pkg_date - round (nyears * 365.25))
+    checkmate::assert_date (end_date)
 
-    log <- gitlog_unique_contributors (path, start_date, pkg_date)
+    start_date <- end_date - get_repometrics_period ()
+
+    log <- gitlog_unique_contributors (path, start_date, end_date)
 
     # Then reduce log down to unique organizations instead of unique
     # contributors:
