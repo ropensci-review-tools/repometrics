@@ -398,3 +398,16 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
     expect_true (all (counts >= 0L))
     expect_true (sum (counts) > 0L)
 })
+
+test_that ("cm metric issue updates", { # R/cm-metric-issue-updates.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    path <- generate_test_pkg ()
+    dat <- mock_rm_data ()
+
+    num_updates <- cm_metric_issue_updates (path)
+    expect_type (num_updates, "integer")
+    expect_length (num_updates, 1L)
+    expect_named (num_updates, expected = NULL)
+    expect_true (num_updates > 0L)
+})
