@@ -20,3 +20,30 @@ cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
     issue_nums <- sort (unique (c (issues$number, issue_cmts$issue_number)))
     length (issue_nums)
 }
+
+cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
+
+    checkmate::assert_date (end_date)
+
+    start_date <- end_date - get_repometrics_period ()
+
+    issues <- rm_data_issues_from_gh_api (path) |>
+        dplyr::filter (created_at >= start_date & created_at <= end_date)
+    issue_cmts <- rm_data_issue_comments_from_gh_api (path) |>
+        dplyr::filter (created_at >= start_date & created_at <= end_date) |>
+        dplyr::filter (issue_number %in% issues$number) |>
+        dplyr::group_by (issue_number) |>
+        dplyr::summarise (ncomments = dplyr::n ())
+
+    cmts <- rep (0, nrow (issues))
+    index <- match (issue_cmts$issue_number, issues$number)
+    cmts [index] <- issue_cmts$ncomments
+    if (length (cmts) == 0) {
+        cmts <- 0
+    }
+
+    c (
+        mean = mean (cmts, na.rm = TRUE),
+        median = median (cmts, na.rm = TRUE)
+    )
+}

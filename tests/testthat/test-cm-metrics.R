@@ -417,7 +417,7 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
 
 end_date <- as.Date ("2024-12-01") # issues need later end date
 
-test_that ("cm metric issue updates", { # R/cm-metric-issue-updates.R
+test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     path <- generate_test_pkg ()
@@ -428,4 +428,10 @@ test_that ("cm metric issue updates", { # R/cm-metric-issue-updates.R
     expect_length (num_updates, 1L)
     expect_named (num_updates, expected = NULL)
     expect_true (num_updates > 0L)
+
+    comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
+    expect_type (comment_freq, "double")
+    expect_length (comment_freq, 2L)
+    expect_named (comment_freq, expected = c ("mean", "median"))
+    expect_true (all (comment_freq >= 0L))
 })
