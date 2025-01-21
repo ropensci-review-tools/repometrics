@@ -327,16 +327,22 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     # Need to extend period to capture enough releases:
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 1000)
-    res <- cm_metric_release_freq (path, end_date = end_date)
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+    rel_count <- cm_metric_recent_releases (path, end_date = end_date)
     options ("repometrics_period" = op)
 
     fs::dir_delete (path)
 
-    expect_type (res, "integer")
-    expect_length (res, 2L)
-    expect_named (res)
-    expect_equal (names (res), c ("mean", "median"))
-    expect_true (all (res > 0L))
+    expect_type (rel_freq, "integer")
+    expect_length (rel_freq, 2L)
+    expect_named (rel_freq)
+    expect_equal (names (rel_freq), c ("mean", "median"))
+    expect_true (all (rel_freq > 0L))
+
+    expect_type (rel_count, "integer")
+    expect_length (rel_count, 1L)
+    expect_named (rel_count, expected = NULL)
+    expect_true (rel_count > 0L)
 })
 
 test_that ("cm metric programming languages", {
