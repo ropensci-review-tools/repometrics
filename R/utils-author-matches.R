@@ -192,7 +192,7 @@ find_duplicated_strings <- function (s, threshold = 0.9) {
         return (NULL)
     }
 
-    s <- t (combn (s, 2))
+    s <- t (utils::combn (s, 2))
     s_lower <- tolower (gsub ("\\s*", "", s))
     s_lower <- gsub ("@.*$", "", s_lower)
 
