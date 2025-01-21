@@ -23,6 +23,9 @@ cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding note:
+    created_at <- issue_number <- NULL
+
     checkmate::assert_date (end_date)
 
     start_date <- end_date - get_repometrics_period ()
@@ -44,6 +47,6 @@ cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
 
     c (
         mean = mean (cmts, na.rm = TRUE),
-        median = median (cmts, na.rm = TRUE)
+        median = stats::median (cmts, na.rm = TRUE)
     )
 }
