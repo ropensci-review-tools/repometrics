@@ -365,6 +365,9 @@ test_that ("cm metric programming languages", {
     path <- generate_test_pkg ()
 
     res <- cm_metric_languages (path)
+
+    fs::dir_delete (path)
+
     expect_s3_class (res, "data.frame")
     expect_true (nrow (res) > 0L)
     expect_equal (ncol (res), 5L)
@@ -386,12 +389,15 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     dat <- mock_rm_data ()
 
     res1 <- cm_metric_contrib_absence (path, end_date = end_date)
+    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
     expect_type (res1, "integer")
     expect_length (res1, 3L)
     expect_named (res1, c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res1 > 0L))
 
-    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
     expect_type (res2, "integer")
     expect_length (res2, 3L)
     expect_named (res2, c ("ncommits", "nfiles_changed", "lines_changed"))
@@ -405,6 +411,9 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
     dat <- mock_rm_data ()
 
     counts <- cm_metric_ctb_count (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
     expect_type (counts, "integer")
     expect_length (counts, 4L)
     expect_named (
@@ -424,12 +433,15 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     dat <- mock_rm_data ()
 
     num_updates <- cm_metric_issue_updates (path, end_date = end_date)
+    comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
     expect_type (num_updates, "integer")
     expect_length (num_updates, 1L)
     expect_named (num_updates, expected = NULL)
     expect_true (num_updates > 0L)
 
-    comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
     expect_type (comment_freq, "double")
     expect_length (comment_freq, 2L)
     expect_named (comment_freq, expected = c ("mean", "median"))
