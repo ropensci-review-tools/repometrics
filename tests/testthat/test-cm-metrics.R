@@ -116,10 +116,18 @@ test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 
 test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
+
+
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    op <- getOption ("repometrics_period")
+    options ("repometrics_period" = 10000)
+
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     revs <- cm_metric_pr_reviews (path, end_date = end_date)
+    cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
+
+    options ("repometrics_period" = op)
     fs::dir_delete (path)
 
     expect_s3_class (revs, "data.frame")
@@ -133,7 +141,12 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
         "n_iterations_per_approved", "n_iterations_per_rejected",
         "n_iterations_per_other"
     )
-    expect_equal (names (revs), nms)
+    expect_named (revs, nms)
+
+    expect_type (cmts, "double")
+    expect_length (cmts, 2L)
+    expect_named (cmts, c ("mean", "median"))
+    expect_true (all (cmts > 0))
 })
 
 test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R

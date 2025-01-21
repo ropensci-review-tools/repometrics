@@ -126,3 +126,21 @@ cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
         review_dur_md = review_dur_md
     )
 }
+
+cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
+
+    pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
+    comment_counts <- c (
+        pr_dat$n_comments_per_approved,
+        pr_dat$n_comments_per_rejected,
+        pr_dat$n_comments_per_other
+    )
+    if (all (is.na (comment_counts))) {
+        comment_counts <- 0L
+    }
+
+    c (
+        mean = mean (comment_counts, na.rm = TRUE),
+        median = stats::median (comment_counts, na.rm = TRUE)
+    )
+}
