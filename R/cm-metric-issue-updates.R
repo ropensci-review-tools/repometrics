@@ -70,6 +70,9 @@ cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding note:
+    closed_at <- NULL
+
     checkmate::assert_date (end_date)
 
     start_date <- end_date - get_repometrics_period ()
