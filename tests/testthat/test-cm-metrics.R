@@ -366,7 +366,6 @@ test_that ("cm metric programming languages", {
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-
     path <- generate_test_pkg ()
     dat <- mock_rm_data ()
 
@@ -383,4 +382,19 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     expect_named (res2)
     expect_equal (names (res2), c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res2 > 0L))
+})
+
+test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    path <- generate_test_pkg ()
+    dat <- mock_rm_data ()
+
+    counts <- cm_metric_ctb_count (path)
+    expect_type (counts, "integer")
+    expect_length (counts, 4L)
+    expect_named (counts)
+    expect_equal (names (counts), c ("code", "pr_authors", "issue_authors", "issue_cmt_authors"))
+    expect_true (all (counts >= 0L))
+    expect_true (sum (counts) > 0L)
 })
