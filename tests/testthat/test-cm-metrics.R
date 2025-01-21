@@ -80,10 +80,22 @@ test_that ("cm metrics num_commits num_contribs", {
     path <- generate_test_pkg ()
 
     n <- cm_metric_num_commits (path, end_date = end_date)
+    expect_type (n, "integer")
+    expect_length (n, 1L)
+    expect_named (n, expected = NULL)
     expect_equal (n, 4L)
 
     n <- cm_metric_num_contributors (path, end_date = end_date)
+    expect_type (n, "integer")
+    expect_length (n, 1L)
+    expect_named (n, expected = NULL)
     expect_equal (n, 1L)
+
+    n <- cm_metric_commit_freq (path)
+    expect_type (n, "double")
+    expect_length (n, 2L)
+    expect_named (n, c ("mean", "median"))
+    expect_true (all (n > 0))
 
     fs::dir_delete (path)
 })
