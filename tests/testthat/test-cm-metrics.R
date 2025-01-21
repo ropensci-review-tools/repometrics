@@ -10,7 +10,6 @@ test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
     desc [1] <- "Package: goodpractice"
     writeLines (desc, desc_path)
 
-    end_date <- as.Date ("2024-01-01")
     dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
     expect_type (dl, "integer")
     expect_length (dl, 1L)
@@ -219,7 +218,6 @@ test_that ("cm metric defect resolution duration", {
 
 test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
 
-    end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
@@ -237,7 +235,6 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
 
 test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 
-    end_date <- as.Date ("2024-12-01")
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
@@ -369,14 +366,14 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     path <- generate_test_pkg ()
     dat <- mock_rm_data ()
 
-    res1 <- cm_metric_contrib_absence (path) # bus factor
+    res1 <- cm_metric_contrib_absence (path, end_date = end_date)
     expect_type (res1, "integer")
     expect_length (res1, 3L)
     expect_named (res1)
     expect_equal (names (res1), c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res1 > 0L))
 
-    res2 <- cm_metric_elephant_factor (path)
+    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
     expect_type (res2, "integer")
     expect_length (res2, 3L)
     expect_named (res2)
@@ -390,7 +387,7 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
     path <- generate_test_pkg ()
     dat <- mock_rm_data ()
 
-    counts <- cm_metric_ctb_count (path)
+    counts <- cm_metric_ctb_count (path, end_date = end_date)
     expect_type (counts, "integer")
     expect_length (counts, 4L)
     expect_named (counts)
@@ -399,13 +396,15 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
     expect_true (sum (counts) > 0L)
 })
 
+end_date <- as.Date ("2024-12-01") # issues need later end date
+
 test_that ("cm metric issue updates", { # R/cm-metric-issue-updates.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     path <- generate_test_pkg ()
     dat <- mock_rm_data ()
 
-    num_updates <- cm_metric_issue_updates (path)
+    num_updates <- cm_metric_issue_updates (path, end_date = end_date)
     expect_type (num_updates, "integer")
     expect_length (num_updates, 1L)
     expect_named (num_updates, expected = NULL)
