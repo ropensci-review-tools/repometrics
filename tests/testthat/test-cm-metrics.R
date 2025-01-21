@@ -445,3 +445,19 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     expect_named (comment_freq, expected = c ("mean", "median"))
     expect_true (all (comment_freq >= 0L))
 })
+
+test_that ("cm metric maintainer count", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    maintainers <- cm_metric_maintainer_count (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (maintainers, "integer")
+    expect_length (maintainers, 2L)
+    expect_named (maintainers, expected = c ("total", "recent"))
+    expect_true (all (maintainers >= 0L))
+})
