@@ -1,8 +1,9 @@
+rm_data <- mock_rm_data ()
+
 pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
-rm_data <- mock_rm_data ()
 data0 <- list (pkgstats = pkgstats, rm = rm_data)
 
 user_data <- lapply (1:2, function (i) mock_user_rel_data ())

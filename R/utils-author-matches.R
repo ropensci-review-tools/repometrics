@@ -104,6 +104,55 @@ match_string_pairs <- function (name_src1, name_src2, ctbs_gh, ctbs_log) {
     return (ctbs_log)
 }
 
+match_string_vecs <- function (str1, str2, threshold = 0.9) {
+
+    s1_lower <- tolower (gsub ("\\s*", "", str1))
+    s1_lower <- gsub ("@.*$", "", s1_lower)
+    s2_lower <- tolower (gsub ("\\s*", "", str2))
+    s2_lower <- gsub ("@.*$", "", s2_lower)
+
+    matches <- lapply (s1_lower, function (i) {
+
+        i1 <- strsplit (i, "") [[1]]
+
+        matches_i <- lapply (s2_lower, function (j) {
+
+            i2 <- strsplit (j, "") [[1]]
+            i1_match <- pmatch (i1, i2)
+            i2_match <- pmatch (i2, i1)
+            longest_seq <- function (x) {
+                x <- x [which (!is.na (x))]
+                if (length (x) == 0) {
+                    return (0L)
+                }
+                index <- rep (0, length (x))
+                index [which (diff (x) < 0) + 1] <- 1
+                max (table (cumsum (index)))
+            }
+
+            i12_len <- longest_seq (i1_match)
+            i21_len <- longest_seq (i2_match)
+            if (i12_len > i21_len) {
+                res <- c (i12_len, i12_len / length (i1))
+            } else {
+                res <- c (i21_len, i21_len / length (i2))
+            }
+            return (res)
+        })
+        matches_i <- do.call (rbind, matches_i)
+        match_i <- which.max (matches_i [, 2])
+        match_val <- matches_i [match_i, 2]
+
+        ret <- NA_character_
+        if (match_val > threshold) {
+            ret <- str2 [match_i]
+        }
+        return (ret)
+    })
+
+    return (unlist (matches))
+}
+
 #' Simple function to return all permutations of input vector, `x`.
 #' @noRd
 get_permutations <- function (x) {

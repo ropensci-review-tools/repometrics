@@ -80,10 +80,22 @@ test_that ("cm metrics num_commits num_contribs", {
     path <- generate_test_pkg ()
 
     n <- cm_metric_num_commits (path, end_date = end_date)
+    expect_type (n, "integer")
+    expect_length (n, 1L)
+    expect_named (n, expected = NULL)
     expect_equal (n, 4L)
 
     n <- cm_metric_num_contributors (path, end_date = end_date)
+    expect_type (n, "integer")
+    expect_length (n, 1L)
+    expect_named (n, expected = NULL)
     expect_equal (n, 1L)
+
+    n <- cm_metric_commit_freq (path, end_date = end_date)
+    expect_type (n, "double")
+    expect_length (n, 2L)
+    expect_named (n, c ("mean", "median"))
+    expect_true (all (n > 0))
 
     fs::dir_delete (path)
 })
@@ -115,8 +127,6 @@ test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
 })
 
 test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
-
-
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     op <- getOption ("repometrics_period")
@@ -353,6 +363,9 @@ test_that ("cm metric programming languages", {
     path <- generate_test_pkg ()
 
     res <- cm_metric_languages (path)
+
+    fs::dir_delete (path)
+
     expect_s3_class (res, "data.frame")
     expect_true (nrow (res) > 0L)
     expect_equal (ncol (res), 5L)
@@ -370,16 +383,19 @@ test_that ("cm metric programming languages", {
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    path <- generate_test_pkg ()
     dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
 
     res1 <- cm_metric_contrib_absence (path, end_date = end_date)
+    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
     expect_type (res1, "integer")
     expect_length (res1, 3L)
     expect_named (res1, c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res1 > 0L))
 
-    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
     expect_type (res2, "integer")
     expect_length (res2, 3L)
     expect_named (res2, c ("ncommits", "nfiles_changed", "lines_changed"))
@@ -389,10 +405,13 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
 test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    path <- generate_test_pkg ()
     dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
 
     counts <- cm_metric_ctb_count (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
     expect_type (counts, "integer")
     expect_length (counts, 4L)
     expect_named (
@@ -405,15 +424,40 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
 
 end_date <- as.Date ("2024-12-01") # issues need later end date
 
-test_that ("cm metric issue updates", { # R/cm-metric-issue-updates.R
+test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
-    path <- generate_test_pkg ()
     dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
 
     num_updates <- cm_metric_issue_updates (path, end_date = end_date)
+    comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
     expect_type (num_updates, "integer")
     expect_length (num_updates, 1L)
     expect_named (num_updates, expected = NULL)
     expect_true (num_updates > 0L)
+
+    expect_type (comment_freq, "double")
+    expect_length (comment_freq, 2L)
+    expect_named (comment_freq, expected = c ("mean", "median"))
+    expect_true (all (comment_freq >= 0L))
+})
+
+test_that ("cm metric maintainer count", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    maintainers <- cm_metric_maintainer_count (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (maintainers, "integer")
+    expect_length (maintainers, 2L)
+    expect_named (maintainers, expected = c ("total", "recent"))
+    expect_true (all (maintainers >= 0L))
 })
