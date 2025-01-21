@@ -146,8 +146,7 @@ test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
 
     expect_type (forks, "integer")
     expect_length (forks, 2L)
-    expect_named (forks)
-    expect_equal (names (forks), c ("num_in_period", "num_total"))
+    expect_named (forks, c ("num_in_period", "num_total"))
     expect_true (forks [["num_total"]] > 0)
 })
 
@@ -180,9 +179,10 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
 
     expect_type (revs, "double")
     expect_length (revs, 4L)
-    expect_named (revs)
-    nms <- c ("cycle_dur_mn", "cycle_dur_md", "review_dur_mn", "review_dur_md")
-    expect_equal (names (revs), nms)
+    expect_named (
+        revs,
+        c ("cycle_dur_mn", "cycle_dur_md", "review_dur_mn", "review_dur_md")
+    )
 })
 
 test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
@@ -195,9 +195,7 @@ test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    nms <- c ("mean", "median")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("mean", "median"))
 })
 
 test_that ("cm metric defect resolution duration", {
@@ -211,9 +209,7 @@ test_that ("cm metric defect resolution duration", {
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    nms <- c ("mean", "median")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("mean", "median"))
 })
 
 test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
@@ -226,11 +222,10 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
 
     expect_type (res, "double")
     expect_length (res, 3L)
-    expect_named (res)
-    nms <- c (
-        "prop_labelled", "prop_labelled_friendly", "prop_friendly_overall"
+    expect_named (
+        res,
+        c ("prop_labelled", "prop_labelled_friendly", "prop_friendly_overall")
     )
-    expect_equal (names (res), nms)
 })
 
 test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
@@ -243,9 +238,7 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    nms <- c ("mean", "median")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("mean", "median"))
 })
 
 test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
@@ -279,9 +272,7 @@ test_that ("cm metric popularity", { # R/cm-metric-popularity.R
 
     expect_type (res, "integer")
     expect_length (res, 4L)
-    expect_named (res)
-    nms <- c ("revdeps", "contribs", "forks", "stars")
-    expect_equal (names (res), nms)
+    expect_named (res, c ("revdeps", "contribs", "forks", "stars"))
 })
 
 test_that ("cm metric libyears", { # R/cm-metric-libyears.R
@@ -296,8 +287,7 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
 
     expect_type (res, "double")
     expect_length (res, 2L)
-    expect_named (res)
-    expect_equal (names (res), c ("mean", "median"))
+    expect_named (res, c ("mean", "median"))
     expect_true (all (res > 0))
 })
 
@@ -313,8 +303,7 @@ test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
 
     expect_type (res, "integer")
     expect_length (res, 3L)
-    expect_named (res)
-    expect_equal (names (res), c ("mean", "median", "n"))
+    expect_named (res, c ("mean", "median", "n"))
     expect_equal (res [["n"]], 0L)
 })
 
@@ -335,8 +324,7 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
 
     expect_type (rel_freq, "integer")
     expect_length (rel_freq, 2L)
-    expect_named (rel_freq)
-    expect_equal (names (rel_freq), c ("mean", "median"))
+    expect_named (rel_freq, c ("mean", "median"))
     expect_true (all (rel_freq > 0L))
 
     expect_type (rel_count, "integer")
@@ -375,15 +363,13 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     res1 <- cm_metric_contrib_absence (path, end_date = end_date)
     expect_type (res1, "integer")
     expect_length (res1, 3L)
-    expect_named (res1)
-    expect_equal (names (res1), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_named (res1, c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res1 > 0L))
 
     res2 <- cm_metric_elephant_factor (path, end_date = end_date)
     expect_type (res2, "integer")
     expect_length (res2, 3L)
-    expect_named (res2)
-    expect_equal (names (res2), c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_named (res2, c ("ncommits", "nfiles_changed", "lines_changed"))
     expect_true (all (res2 > 0L))
 })
 
@@ -396,8 +382,10 @@ test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
     counts <- cm_metric_ctb_count (path, end_date = end_date)
     expect_type (counts, "integer")
     expect_length (counts, 4L)
-    expect_named (counts)
-    expect_equal (names (counts), c ("code", "pr_authors", "issue_authors", "issue_cmt_authors"))
+    expect_named (
+        counts,
+        c ("code", "pr_authors", "issue_authors", "issue_cmt_authors")
+    )
     expect_true (all (counts >= 0L))
     expect_true (sum (counts) > 0L)
 })
