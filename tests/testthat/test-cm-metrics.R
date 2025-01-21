@@ -407,27 +407,34 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     expect_true (all (res2 > 0L))
 })
 
-test_that ("cm metric ctb count", { # R/cm-metric-ctb-count.R
+end_date <- as.Date ("2024-12-01")
+
+test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    counts <- cm_metric_ctb_count (path, end_date = end_date)
+    counts_ctb <- cm_metric_ctb_count (path, end_date = end_date)
+    counts_cmt <- cm_metric_committer_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
-    expect_type (counts, "integer")
-    expect_length (counts, 4L)
+    expect_type (counts_ctb, "integer")
+    expect_length (counts_ctb, 4L)
     expect_named (
-        counts,
+        counts_ctb,
         c ("code", "pr_authors", "issue_authors", "issue_cmt_authors")
     )
-    expect_true (all (counts >= 0L))
-    expect_true (sum (counts) > 0L)
-})
+    expect_true (all (counts_ctb >= 0L))
+    expect_true (sum (counts_ctb) > 0L)
 
-end_date <- as.Date ("2024-12-01") # issues need later end date
+    expect_type (counts_cmt, "integer")
+    expect_length (counts_cmt, 3L)
+    expect_named (counts_cmt, c ("watchers", "issues", "prs"))
+    expect_true (all (counts_cmt >= 0L))
+    expect_true (sum (counts_cmt) > 0L)
+})
 
 test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates.R
 
