@@ -129,7 +129,7 @@ cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 
-    prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
+    pr_dat <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
     comment_counts <- c (
         pr_dat$n_comments_per_approved,
         pr_dat$n_comments_per_rejected,

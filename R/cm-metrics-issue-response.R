@@ -24,20 +24,12 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
         )
 
     start_date <- end_date - get_repometrics_period ()
-    index <- which (issue_responses$created_at >= start_date &
-        issue_responses$response_date <= end_date)
+    issue_responses <- dplyr::filter (
+        issue_responses,
+        created_at >= start_date & response_date <= end_date
+    )
 
-    ret <- c (mean = NA_real_, median = NA_real_)
-    if (length (index) > 0L) {
-        ret <- c (
-            mean = mean (as.numeric (issue_responses$response_time [index])),
-            median = stats::median (
-                as.numeric (issue_responses$response_time [index])
-            )
-        )
-    }
-
-    return (ret)
+    return (issue_responses$response_time)
 }
 
 cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
