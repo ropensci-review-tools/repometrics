@@ -1,4 +1,4 @@
-#' Extract CHAOSS metric "Contributor Absence Factor"
+#' Extract CHAOSS metric "Contributor Absence Factor", or "bus factor"
 #'
 #' \url{https://chaoss.community/kb/metric-contributor-absence-factor/}.
 #'
