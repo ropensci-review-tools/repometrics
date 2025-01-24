@@ -148,7 +148,7 @@ cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 #' Measure response duration to PRs, but only from primary contributors.
 #' https://chaoss.community/kb/metric-time-to-first-response/
 #'
-#' @return Integer vector of response durations in days
+#' @return Difftime vector of response durations in days
 #' @noRd
 cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
 
@@ -183,8 +183,9 @@ cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
         dates_i <- c (cmt_dates [i], rev_dates [i], closed_dates [i])
         as.character (min (dates_i, na.rm = TRUE))
     }, character (1L))
+    first_date <- as.Date (first_date)
 
-    durations <- as.Date (first_date) - pr_opened
+    durations <- difftime (first_date, pr_opened, units = "days")
 
     return (durations)
 }
