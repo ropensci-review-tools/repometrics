@@ -6,5 +6,5 @@ cm_metric_libyears <- function (path) {
 
     deps <- rm_data_libyears (path)
 
-    c (mean = mean (deps$libyears), median = stats::median (deps$libyears))
+    return (mn_med_sum (deps$libyears))
 }

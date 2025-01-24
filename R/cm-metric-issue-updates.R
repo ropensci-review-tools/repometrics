@@ -45,10 +45,7 @@ cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
         cmts <- 0
     }
 
-    c (
-        mean = mean (cmts, na.rm = TRUE),
-        median = stats::median (cmts, na.rm = TRUE)
-    )
+    return (mn_med_sum (cmts))
 }
 
 cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {

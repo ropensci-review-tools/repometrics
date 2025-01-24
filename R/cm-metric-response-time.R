@@ -9,8 +9,5 @@ cm_metric_response_time <- function (path, end_date = Sys.Date ()) {
 
     durations <- as.integer (c (dur_prs, dur_issues))
 
-    c (
-        mean = mean (durations, na.rm = TRUE),
-        median = stats::median (durations, na.rm = TRUE)
-    )
+    return (mn_med_sum (durations))
 }

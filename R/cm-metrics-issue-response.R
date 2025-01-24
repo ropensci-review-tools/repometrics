@@ -82,10 +82,7 @@ cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
             as.integer ()
     }
 
-    c (
-        mean = mean (times_to_close),
-        median = stats::median (times_to_close)
-    )
+    return (mn_med_sum (times_to_close))
 }
 
 #' CHAOSS metric "Change Request Closure Ratio"

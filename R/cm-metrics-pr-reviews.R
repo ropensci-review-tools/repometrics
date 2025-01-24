@@ -139,10 +139,7 @@ cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
         comment_counts <- 0L
     }
 
-    c (
-        mean = mean (comment_counts, na.rm = TRUE),
-        median = stats::median (comment_counts, na.rm = TRUE)
-    )
+    return (mn_med_sum (comment_counts))
 }
 
 #' Measure response duration to PRs, but only from primary contributors.
