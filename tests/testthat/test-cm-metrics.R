@@ -493,12 +493,13 @@ test_that ("cm metric maintainer count", {
     expect_true (all (maintainers >= 0L))
 })
 
-test_that ("cm metric licenses declared", {
+test_that ("cm metric licenses declared + best practices", {
 
     path <- generate_test_pkg ()
 
     lic <- cm_metric_licenses_declared (path)
     n <- cm_metric_license_coverage (path)
+    bp <- cm_metric_best_practices (path)
 
     fs::dir_delete (path)
 
@@ -512,4 +513,9 @@ test_that ("cm metric licenses declared", {
     expect_length (n, 1L)
     expect_named (n, NULL)
     expect_true (n >= 0)
+
+    expect_type (bp, "logical")
+    expect_length (bp, 1L)
+    expect_named (bp, NULL)
+    expect_false (bp)
 })
