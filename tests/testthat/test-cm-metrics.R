@@ -497,9 +497,16 @@ test_that ("cm metric licenses declared", {
 
     path <- generate_test_pkg ()
 
-    n <- cm_metric_licenses_declared (path)
+    lic <- cm_metric_licenses_declared (path)
+    n <- cm_metric_license_coverage (path)
 
     fs::dir_delete (path)
+
+    expect_type (lic, "character")
+    expect_named (lic, NULL)
+    expect_true (length (lic) >= 1)
+    lic_ptn <- paste0 (included_licenses, collapse = "|")
+    expect_true (all (grepl (lic_ptn, lic)))
 
     expect_type (n, "double")
     expect_length (n, 1L)

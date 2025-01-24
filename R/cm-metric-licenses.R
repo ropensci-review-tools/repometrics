@@ -1,9 +1,21 @@
+#' Metric of licenses declared
+#'
+#' \url{https://chaoss.community/kb/metric-licenses-declared/}
+#' @noRd
+cm_metric_licenses_declared <- function (path, dirs = c ("R", "src", "inst/extdata")) {
+
+    requireNamespace ("desc")
+
+    lic <- unname (desc::desc_get ("License", path))
+    return (gsub ("^\\s*|\\s*$", "", strsplit (lic, ",") [[1]]))
+}
+
 #' Metric fo rnumber of files with declared licenses
 #'
 #' \url{https://chaoss.community/kb/metric-license-coverage/}
 #' @noRd
 #'
-cm_metric_licenses_declared <- function (path, dirs = c ("R", "src", "inst/extdata")) {
+cm_metric_license_coverage <- function (path, dirs = c ("R", "src", "inst/extdata")) {
 
     requireNamespace ("readr")
 
@@ -18,7 +30,7 @@ cm_metric_licenses_declared <- function (path, dirs = c ("R", "src", "inst/extda
     file_sep_char_n <- substr (dirs, nchar (dirs), nchar (dirs))
     index <- which (file_sep_char_n != .Platform$file.sep)
     dirs [index] <- paste0 (dirs [index], .Platform$file.sep)
-    ptn = paste0 (dirs, collapse = "|")
+    ptn <- paste0 (dirs, collapse = "|")
 
     flist <- fs::dir_ls (path, regexp = ptn, recurse = TRUE)
     flist <- flist [which (tolower (fs::path_ext (flist)) %in% included_exts)]
@@ -46,5 +58,6 @@ cm_metric_licenses_declared <- function (path, dirs = c ("R", "src", "inst/extda
 included_exts <- c ("r", "q", "qmd", "rmd", "c", "cpp", "h", "js", "py")
 
 # https://www.r-project.org/Licenses/
-included_licenses <-
-    c ("GNU", "(A|a)rtistic (L|l)icense", "BSD", "MIT", "(C|c)reative (C|c)ommons")
+included_licenses <- c (
+    "GPL", "GNU", "(A|a)rtistic (L|l)icense", "BSD", "MIT", "(C|c)reative (C|c)ommons"
+)
