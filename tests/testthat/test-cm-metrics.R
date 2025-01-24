@@ -218,12 +218,19 @@ test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    res <- cm_metric_issue_response_time (path, end_date = end_date)
+    dur_issues <- cm_metric_issue_response_time (path, end_date = end_date)
+    resp_time <- cm_metric_response_time (path, end_date = end_date)
     fs::dir_delete (path)
 
-    expect_type (res, "double")
-    expect_s3_class (res, "difftime")
-    expect_true (length (res) >= 0L)
+    # Vector of response durations:
+    expect_type (dur_issues, "double")
+    expect_s3_class (dur_issues, "difftime")
+    expect_true (length (dur_issues) >= 0L)
+
+    # Overall summary statistic on repsonse times from both issues and PRs:
+    expect_type (resp_time, "double")
+    expect_length (resp_time, 2L)
+    expect_named (resp_time, c ("mean", "median"))
 })
 
 test_that ("cm metric defect resolution duration", {
