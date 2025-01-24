@@ -280,7 +280,7 @@ check_dashboard_arg <- function (data) {
         "contribs_from_gh_api" = 17L,
         "contribs_from_log" = 2L,
         "dependencies" = 3L,
-        "gh_repo_workflow" = 7L,
+        "gh_repo_workflow" = 8L,
         "gitlog" = 10L,
         "issue_comments_from_gh_api" = 9L,
         "issues_from_gh_api" = 24L,

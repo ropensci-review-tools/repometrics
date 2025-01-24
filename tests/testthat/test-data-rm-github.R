@@ -63,8 +63,11 @@ test_that ("rm data gh workflow", {
 
     expect_s3_class (wf, "data.frame")
     expect_equal (nrow (wf), 2L)
-    expect_equal (ncol (wf), 7L)
-    nms <- c ("name", "id", "sha", "title", "status", "conclusion", "created")
+    expect_equal (ncol (wf), 8L)
+    nms <- c (
+        "name", "id", "sha", "logs_url", "title",
+        "status", "conclusion", "created"
+    )
     expect_equal (names (wf), nms)
 
     dbls <- c ("id", "created")
