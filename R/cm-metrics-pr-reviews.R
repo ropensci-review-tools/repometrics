@@ -145,9 +145,12 @@ cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
     )
 }
 
-# Measure response duration to PRs, but only from primary contributors.
-# https://chaoss.community/kb/metric-time-to-first-response/
-cm_metric_pr_response_duration <- function (path, end_date = Sys.Date ()) {
+#' Measure response duration to PRs, but only from primary contributors.
+#' https://chaoss.community/kb/metric-time-to-first-response/
+#'
+#' @return Integer vector of response durations in days
+#' @noRd
+cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
 
     contribs <- rm_data_contribs_from_gh_api (path)
     contribs <- unique (contribs$login)
@@ -183,8 +186,5 @@ cm_metric_pr_response_duration <- function (path, end_date = Sys.Date ()) {
 
     durations <- as.Date (first_date) - pr_opened
 
-    c (
-        mean = mean (durations, na.rm = TRUE),
-        median = stats::median (durations, na.rm = TRUE)
-    )
+    return (durations)
 }
