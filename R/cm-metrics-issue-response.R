@@ -3,11 +3,8 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     # suppress no visible warning notes:
     user_login <- issue_number <- created_at <- response_date <- NULL
 
-    ctbs_main_recent <-
-        main_contributors (path, end_date = end_date, period = 365)
-    ctbs_main_all <-
-        main_contributors (path, end_date = end_date, period = NULL)
-    ctbs_main <- unique (c (ctbs_main_recent, ctbs_main_all))
+    ctbs_main <- rm_data_contribs_from_gh_api (path)
+    ctbs_main <- unique (ctbs_main$login)
 
     issues <- rm_data_issues_from_gh_api (path)
     issues <- issues [grep ("issues", issues$url), ]
