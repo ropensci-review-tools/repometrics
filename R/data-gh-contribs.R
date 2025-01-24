@@ -191,5 +191,8 @@ main_contributors <- function (path,
     # threshold.
     index <- c (index, length (index) + 1L)
 
-    return (log_contribs$login [index])
+    logins <- log_contribs$login [index]
+    logins <- logins [which (!is.na (logins))]
+
+    return (logins)
 }

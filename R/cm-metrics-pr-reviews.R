@@ -129,7 +129,7 @@ cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 
-    pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
+    pr_dat <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
     comment_counts <- c (
         pr_dat$n_comments_per_approved,
         pr_dat$n_comments_per_rejected,
@@ -139,8 +139,50 @@ cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
         comment_counts <- 0L
     }
 
-    c (
-        mean = mean (comment_counts, na.rm = TRUE),
-        median = stats::median (comment_counts, na.rm = TRUE)
-    )
+    return (mn_med_sum (comment_counts))
+}
+
+#' Measure response duration to PRs, but only from primary contributors.
+#' https://chaoss.community/kb/metric-time-to-first-response/
+#'
+#' @return Difftime vector of response durations in days
+#' @noRd
+cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
+
+    contribs <- rm_data_contribs_from_gh_api (path)
+    contribs <- unique (contribs$login)
+
+    prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
+    pr_opened <- as.Date (prs$created_at)
+
+    # First comment by a repo contributor:
+    cmt_dates <- vapply (prs$comments, function (i) {
+        i <- i [which (i$author %in% contribs), ]
+        if (nrow (i) == 0L) {
+            return ("")
+        }
+        as.character (min (as.Date (i$created_at)))
+    }, character (1L))
+    cmt_dates <- as.Date (cmt_dates)
+
+    # First review by anybody:
+    rev_dates <- vapply (prs$reviews, function (i) {
+        if (nrow (i) == 0L) {
+            return ("")
+        }
+        as.character (min (as.Date (i$submitted_at)))
+    }, character (1L))
+    rev_dates <- as.Date (rev_dates)
+
+    closed_dates <- as.Date (prs$closed_at)
+
+    first_date <- vapply (seq_len (nrow (prs)), function (i) {
+        dates_i <- c (cmt_dates [i], rev_dates [i], closed_dates [i])
+        as.character (min (dates_i, na.rm = TRUE))
+    }, character (1L))
+    first_date <- as.Date (first_date)
+
+    durations <- difftime (first_date, pr_opened, units = "days")
+
+    return (durations)
 }

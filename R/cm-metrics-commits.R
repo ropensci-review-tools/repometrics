@@ -32,8 +32,5 @@ cm_metric_commit_freq <- function (path, end_date = Sys.Date ()) {
     index_log <- match (log$week, index)
     commits [index_log] <- log$ncommits
 
-    c (
-        mean = mean (commits, na.rm = TRUE),
-        median = stats::median (commits, na.rm = TRUE)
-    )
+    return (mn_med_sum (commits))
 }

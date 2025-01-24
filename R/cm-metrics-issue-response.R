@@ -3,11 +3,8 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     # suppress no visible warning notes:
     user_login <- issue_number <- created_at <- response_date <- NULL
 
-    ctbs_main_recent <-
-        main_contributors (path, end_date = end_date, period = 365)
-    ctbs_main_all <-
-        main_contributors (path, end_date = end_date, period = NULL)
-    ctbs_main <- unique (c (ctbs_main_recent, ctbs_main_all))
+    ctbs_main <- rm_data_contribs_from_gh_api (path)
+    ctbs_main <- unique (ctbs_main$login)
 
     issues <- rm_data_issues_from_gh_api (path)
     issues <- issues [grep ("issues", issues$url), ]
@@ -27,20 +24,12 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
         )
 
     start_date <- end_date - get_repometrics_period ()
-    index <- which (issue_responses$created_at >= start_date &
-        issue_responses$response_date <= end_date)
+    issue_responses <- dplyr::filter (
+        issue_responses,
+        created_at >= start_date & response_date <= end_date
+    )
 
-    ret <- c (mean = NA_real_, median = NA_real_)
-    if (length (index) > 0L) {
-        ret <- c (
-            mean = mean (as.numeric (issue_responses$response_time [index])),
-            median = stats::median (
-                as.numeric (issue_responses$response_time [index])
-            )
-        )
-    }
-
-    return (ret)
+    return (issue_responses$response_time)
 }
 
 cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
@@ -93,10 +82,7 @@ cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
             as.integer ()
     }
 
-    c (
-        mean = mean (times_to_close),
-        median = stats::median (times_to_close)
-    )
+    return (mn_med_sum (times_to_close))
 }
 
 #' CHAOSS metric "Change Request Closure Ratio"

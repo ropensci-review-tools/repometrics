@@ -93,9 +93,9 @@ test_that ("cm metrics num_commits num_contribs", {
 
     n <- cm_metric_commit_freq (path, end_date = end_date)
     expect_type (n, "double")
-    expect_length (n, 2L)
-    expect_named (n, c ("mean", "median"))
-    expect_true (all (n > 0))
+    expect_length (n, 4L)
+    expect_named (n, c ("mean", "sd", "median", "sum"))
+    expect_true (all (n [which (!is.na (n))] > 0))
 
     fs::dir_delete (path)
 })
@@ -159,9 +159,9 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_named (revs, nms)
 
     expect_type (cmts, "double")
-    expect_length (cmts, 2L)
-    expect_named (cmts, c ("mean", "median"))
-    expect_true (all (cmts > 0))
+    expect_length (cmts, 4L)
+    expect_named (cmts, c ("mean", "sd", "median", "sum"))
+    expect_true (all (cmts [which (!is.na (cmts))] >= 0))
 })
 
 test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
@@ -218,12 +218,19 @@ test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    res <- cm_metric_issue_response_time (path, end_date = end_date)
+    dur_issues <- cm_metric_issue_response_time (path, end_date = end_date)
+    resp_time <- cm_metric_response_time (path, end_date = end_date)
     fs::dir_delete (path)
 
-    expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
+    # Vector of response durations:
+    expect_type (dur_issues, "double")
+    expect_s3_class (dur_issues, "difftime")
+    expect_true (length (dur_issues) >= 0L)
+
+    # Overall summary statistic on repsonse times from both issues and PRs:
+    expect_type (resp_time, "double")
+    expect_length (resp_time, 4L)
+    expect_named (resp_time, c ("mean", "sd", "median", "sum"))
 })
 
 test_that ("cm metric defect resolution duration", {
@@ -265,8 +272,8 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
+    expect_length (res, 4L)
+    expect_named (res, c ("mean", "sd", "median", "sum"))
 })
 
 test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
@@ -314,9 +321,9 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
-    expect_true (all (res > 0))
+    expect_length (res, 4L)
+    expect_named (res, c ("mean", "sd", "median", "sum"))
+    expect_true (all (res [which (!is.na (res))] > 0))
 })
 
 test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
@@ -455,8 +462,8 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     expect_true (num_updates > 0L)
 
     expect_type (comment_freq, "double")
-    expect_length (comment_freq, 2L)
-    expect_named (comment_freq, expected = c ("mean", "median"))
+    expect_length (comment_freq, 4L)
+    expect_named (comment_freq, expected = c ("mean", "sd", "median", "sum"))
     expect_true (all (comment_freq >= 0L))
 
     expect_type (issues_closed, "integer")

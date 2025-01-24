@@ -1,12 +1,17 @@
-#' Return a tripartite vector of (mean, median, sum) of a given input vector
+#' Return a tripartite vector of (mean, sd, median, sum) of a given input vector
 #'
 #' @param x A numberic vector
 #' @return Named vector of three numeric values of (mean, median, sum)
 #' @noRd
 mn_med_sum <- function (x) {
-    ret <- c (mean = 0, median = 0, sum = 0)
+    ret <- c (mean = 0, sd = 0, median = 0, sum = 0)
     if (length (x) > 0) {
-        ret <- c (mean = mean (x), median = stats::median (x), sum = sum (x))
+        ret <- c (
+            mean = mean (x, na.rm = TRUE),
+            sd = stats::sd (x, na.rm = TRUE),
+            median = stats::median (x, na.rm = TRUE),
+            sum = sum (x, na.rm = TRUE)
+        )
     }
     return (ret)
 }
