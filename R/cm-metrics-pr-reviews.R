@@ -22,7 +22,7 @@
 #' @noRd
 cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
 
-    prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
+    prs <- get_prs_in_period (path, end_date) # in data-gh-prs.R
 
     prs$created_at <- as.Date (prs$created_at)
     prs$closed_at <- as.Date (prs$closed_at)

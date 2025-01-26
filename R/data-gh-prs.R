@@ -279,3 +279,15 @@ rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) { # nolint
     )
 }
 rm_data_prs_from_gh_api <- memoise::memoise (rm_data_prs_from_gh_api_internal)
+
+get_prs_in_period <- function (path, end_date = Sys.Date ()) {
+
+    prs <- rm_data_prs_from_gh_api (path)
+    prs <- prs [which (prs$merged), ]
+    closed_dates <- as.Date (prs$closed_at)
+    start_date <- end_date - get_repometrics_period ()
+    index <- which (closed_dates >= start_date & closed_dates <= end_date)
+    prs <- prs [index, ]
+
+    return (prs)
+}
