@@ -186,3 +186,17 @@ cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
 
     return (durations)
 }
+
+cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
+
+    pr_dat <- get_prs_in_period (path, end_date) |>
+        dplyr::mutate (
+            created_at = as.Date (created_at),
+            closed_at = as.Date (closed_at)
+        )
+    pr_dat$closed_at [which (is.na (pr_dat$closed_at))] <- end_date
+
+    ages <- difftime (pr_dat$closed_at, pr_dat$opened_at, units = "days")
+
+    return (mn_med_sum (ages))
+}
