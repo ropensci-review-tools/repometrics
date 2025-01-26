@@ -21,7 +21,7 @@ cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
     issue_aut <- issues$closed_by [which (!is.na (issues$closed_by))]
 
     issue_cmts <- rm_data_issue_comments_from_gh_api (path) |>
-        dplyr::mutate (updated_at = as.Date (updated_a)) |>
+        dplyr::mutate (updated_at = as.Date (updated_at)) |>
         dplyr::filter (updated_at >= start_date & updated_at <= end_date)
     cmt_aut <- unique (issue_cmts$user_login)
     cmt_aut <- cmt_aut [which (!is.na (cmt_aut))]

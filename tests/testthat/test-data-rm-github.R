@@ -92,7 +92,7 @@ test_that ("rm data gh issue comments", {
     expect_equal (ncol (cmts), 9L)
     nms <- c (
         "issue_url", "issue_number", "comment_url", "comment_id", "user_login",
-        "user_id", "created_at", "updated_a", "issue_body"
+        "user_id", "created_at", "updated_at", "issue_body"
     )
     expect_equal (names (cmts), nms)
 
