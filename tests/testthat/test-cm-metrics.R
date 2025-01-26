@@ -223,6 +223,7 @@ test_that ("cm metric issue numbers, durations, response times", {
     dur_issues <- cm_metric_issue_response_time (path, end_date = end_date)
     resp_time <- cm_metric_response_time (path, end_date = end_date)
     num_issues <- cm_metric_issues_active (path, end_date = end_date)
+    num_issue_cmts <- cm_metric_issue_comments (path, end_date = end_date)
     fs::dir_delete (path)
 
     # Vector of response durations:
@@ -239,6 +240,11 @@ test_that ("cm metric issue numbers, durations, response times", {
     expect_length (num_issues, 1L)
     expect_named (num_issues, NULL)
     expect_true (num_issues >= 0L)
+
+    expect_type (num_issue_cmts, "integer")
+    expect_length (num_issue_cmts, 1L)
+    expect_named (num_issue_cmts, NULL)
+    expect_true (num_issue_cmts >= 0L)
 })
 
 test_that ("cm metric defect resolution duration", {
