@@ -75,6 +75,8 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     n_iterations_per_other <- mean_to_na (num_comment_iterations [index_other])
 
     ret <- data.frame (
+        approved_count = length (index_approved),
+        rejected_count = length (index_rejected),
         approved_ratio = approved_ratio,
         rejected_ratio = rejected_ratio,
         approval_duration = approval_duration,

@@ -150,8 +150,9 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     expect_s3_class (revs, "data.frame")
     expect_equal (nrow (revs), 1L)
-    expect_equal (ncol (revs), 12L)
+    expect_equal (ncol (revs), 14L)
     nms <- c (
+        "approved_count", "rejected_count",
         "approved_ratio", "rejected_ratio", "approval_duration",
         "n_comments_per_approved", "n_comments_per_rejected",
         "n_comments_per_other", "n_commenters_per_approved",
