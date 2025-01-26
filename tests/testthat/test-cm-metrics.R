@@ -142,6 +142,7 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     path <- generate_test_pkg ()
     revs <- cm_metric_pr_reviews (path, end_date = end_date)
     cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
+    prop_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
     age <- cm_metric_pr_age (path, end_date = end_date)
 
     options ("repometrics_period" = op)
@@ -169,6 +170,10 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_length (age, 4L)
     expect_named (age, c ("mean", "sd", "median", "sum"))
     expect_true (all (age [which (!is.na (cmts))] >= 0))
+
+    expect_type (prop_approved, "double")
+    expect_length (prop_approved, 1L)
+    expect_named (prop_approved, NULL)
 })
 
 test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
