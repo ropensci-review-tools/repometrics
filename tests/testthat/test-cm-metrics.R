@@ -214,13 +214,15 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
     )
 })
 
-test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
+test_that ("cm metric issue numbers, durations, response times", {
+    # all in R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     dur_issues <- cm_metric_issue_response_time (path, end_date = end_date)
     resp_time <- cm_metric_response_time (path, end_date = end_date)
+    num_issues <- cm_metric_issues_active (path, end_date = end_date)
     fs::dir_delete (path)
 
     # Vector of response durations:
@@ -232,6 +234,11 @@ test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
     expect_type (resp_time, "double")
     expect_length (resp_time, 4L)
     expect_named (resp_time, c ("mean", "sd", "median", "sum"))
+
+    expect_type (num_issues, "integer")
+    expect_length (num_issues, 1L)
+    expect_named (num_issues, NULL)
+    expect_true (num_issues >= 0L)
 })
 
 test_that ("cm metric defect resolution duration", {

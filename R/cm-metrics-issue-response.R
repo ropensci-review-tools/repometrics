@@ -147,3 +147,24 @@ cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
         n = length (dt)
     )
 }
+
+#' CHAOSS metric for "Issues Active", which is simply the number of active
+#' issues during specified period.
+#'
+#' \url{https://chaoss.community/kb/metric-issues-active/}
+#' @noRd
+cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
+
+    # suppress no visible binding notes:
+    created_at <- closed_at <- NULL
+
+    start_date <- end_date - get_repometrics_period ()
+
+    issues <- rm_data_issues_from_gh_api (path) |>
+        dplyr::mutate (
+            created_at = as.Date (created_at), closed_at = as.Date (closed_at)
+        ) |>
+        dplyr::filter (updated_at >= start_date & updated_at <= end_date)
+
+    return (nrow (issues))
+}
