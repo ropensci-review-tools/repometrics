@@ -11,6 +11,9 @@
 #' @noRd
 cm_metric_burstiness <- function (path, end_date, band_len = 31L, band_width = 2) {
 
+    # Suppress no visible binding notes:
+    timestamp <- ncommits <- mn <- sd <- upper <- lower <- outlier <- NULL
+
     requireNamespace ("zoo")
 
     start_date <- end_date - get_repometrics_period ()

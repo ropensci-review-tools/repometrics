@@ -57,6 +57,9 @@ rm_data_gh_repo_workflow <- memoise::memoise (rm_data_gh_repo_workflow_internal)
 
 gh_workflow_test_coverage_internal <- function (path) {
 
+    # Suppress no visible binding notes:
+    name <- coverage <- NULL
+
     requireNamespace ("readr")
 
     or <- org_repo_from_path (path)
@@ -100,7 +103,7 @@ coverage_from_one_log <- function (log_url) {
 
     if (fs::file_exists (path)) {
         dirs_old <- fs::dir_ls (fs::path_temp (), type = "dir")
-        flist <- unzip (path, exdir = fs::path_temp ())
+        flist <- utils::unzip (path, exdir = fs::path_temp ())
         dirs_new <- fs::dir_ls (fs::path_temp (), type = "dir")
         dirs_new <- dirs_new [which (!dirs_new %in% dirs_old)]
 
