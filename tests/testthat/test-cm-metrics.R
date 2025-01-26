@@ -142,14 +142,17 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     path <- generate_test_pkg ()
     revs <- cm_metric_pr_reviews (path, end_date = end_date)
     cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
+    prop_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
+    age <- cm_metric_pr_age (path, end_date = end_date)
 
     options ("repometrics_period" = op)
     fs::dir_delete (path)
 
     expect_s3_class (revs, "data.frame")
     expect_equal (nrow (revs), 1L)
-    expect_equal (ncol (revs), 12L)
+    expect_equal (ncol (revs), 14L)
     nms <- c (
+        "approved_count", "rejected_count",
         "approved_ratio", "rejected_ratio", "approval_duration",
         "n_comments_per_approved", "n_comments_per_rejected",
         "n_comments_per_other", "n_commenters_per_approved",
@@ -163,6 +166,15 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_length (cmts, 4L)
     expect_named (cmts, c ("mean", "sd", "median", "sum"))
     expect_true (all (cmts [which (!is.na (cmts))] >= 0))
+
+    expect_type (age, "double")
+    expect_length (age, 4L)
+    expect_named (age, c ("mean", "sd", "median", "sum"))
+    expect_true (all (age [which (!is.na (cmts))] >= 0))
+
+    expect_type (prop_approved, "double")
+    expect_length (prop_approved, 1L)
+    expect_named (prop_approved, NULL)
 })
 
 test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
@@ -214,13 +226,16 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
     )
 })
 
-test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
+test_that ("cm metric issue numbers, durations, response times", {
+    # all in R/cm-metrics-issue-response.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     dur_issues <- cm_metric_issue_response_time (path, end_date = end_date)
     resp_time <- cm_metric_response_time (path, end_date = end_date)
+    num_issues <- cm_metric_issues_active (path, end_date = end_date)
+    num_issue_cmts <- cm_metric_issue_comments (path, end_date = end_date)
     fs::dir_delete (path)
 
     # Vector of response durations:
@@ -232,6 +247,16 @@ test_that ("cm metric issue response time", { # R/cm-metrics-issue-response.R
     expect_type (resp_time, "double")
     expect_length (resp_time, 4L)
     expect_named (resp_time, c ("mean", "sd", "median", "sum"))
+
+    expect_type (num_issues, "integer")
+    expect_length (num_issues, 1L)
+    expect_named (num_issues, NULL)
+    expect_true (num_issues >= 0L)
+
+    expect_type (num_issue_cmts, "integer")
+    expect_length (num_issue_cmts, 1L)
+    expect_named (num_issue_cmts, NULL)
+    expect_true (num_issue_cmts >= 0L)
 })
 
 test_that ("cm metric defect resolution duration", {

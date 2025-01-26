@@ -22,7 +22,7 @@
 #' @noRd
 cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
 
-    prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
+    prs <- get_prs_in_period (path, end_date) # in data-gh-prs.R
 
     prs$created_at <- as.Date (prs$created_at)
     prs$closed_at <- as.Date (prs$closed_at)
@@ -75,6 +75,8 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     n_iterations_per_other <- mean_to_na (num_comment_iterations [index_other])
 
     ret <- data.frame (
+        approved_count = length (index_approved),
+        rejected_count = length (index_rejected),
         approved_ratio = approved_ratio,
         rejected_ratio = rejected_ratio,
         approval_duration = approval_duration,
@@ -185,4 +187,41 @@ cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
     durations <- difftime (first_date, pr_opened, units = "days")
 
     return (durations)
+}
+
+cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
+
+    # Suppress no visible binding notes:
+    created_at <- closed_at <- NULL
+
+    pr_dat <- get_prs_in_period (path, end_date) |>
+        dplyr::mutate (
+            created_at = as.Date (created_at),
+            closed_at = as.Date (closed_at)
+        )
+    pr_dat$closed_at [which (is.na (pr_dat$closed_at))] <- end_date
+
+    ages <- difftime (pr_dat$closed_at, pr_dat$opened_at, units = "days")
+
+    return (mn_med_sum (ages))
+}
+
+#' CHAOSS metric "Change Request Reviews", which assesses "to what extent are
+#' change requests put through a formal review process using platform
+#' features?" This is assessed here as the simple propotion of all merged PRs
+#' which were officially "approved".
+#'
+#' \url{https://chaoss.community/kb/metric-change-request-reviews/}
+#'
+#' @noRd
+cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+
+    pr_dat <- get_prs_in_period (path, end_date)
+
+    ret <- NA_real_
+    if (nrow (pr_dat) > 0L) {
+        ret <- length (which (pr_dat$review_decision == "APPROVED")) /
+            nrow (pr_dat)
+    }
+    return (ret)
 }
