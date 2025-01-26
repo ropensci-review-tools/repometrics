@@ -156,7 +156,7 @@ cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
 cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
-    created_at <- closed_at <- NULL
+    created_at <- closed_at <- updated_at <- NULL
 
     start_date <- end_date - get_repometrics_period ()
 

@@ -191,6 +191,9 @@ cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
 
+    # Suppress no visible binding notes:
+    created_at <- closed_at <- NULL
+
     pr_dat <- get_prs_in_period (path, end_date) |>
         dplyr::mutate (
             created_at = as.Date (created_at),
