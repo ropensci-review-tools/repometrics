@@ -520,3 +520,19 @@ test_that ("cm metric licenses declared + best practices", {
     expect_named (bp, NULL)
     expect_false (bp)
 })
+
+test_that ("cm metric burstiness", {
+
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    b <- cm_metric_burstiness (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (b, "double")
+    expect_length (b, 1L)
+    expect_named (b, NULL)
+    # Test data have only one commit day, so no bustiness can be measured:
+    expect_true (is.na (b))
+})
