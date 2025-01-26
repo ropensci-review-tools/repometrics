@@ -10,8 +10,15 @@
 #' merge commits in the git log, even though these may not have been actual PRs
 #' on GitHub or similar, and may not have been reviewed.
 #'
-#' @return NA if no commits made in given period, otherwise the proportion of
-#' commits which came from merged branches.
+#' @return A vector of three named numeric values, each measured over the
+#' defined time period:
+#' \enumerate{
+#' \item n_opened = Number of change requests opened.
+#' \item n_merged = Number of change requests merged.
+#' \item prop_merged = Proportion of all change requests which were merged.
+#' \item prop_code_from_prs = Proportion of all code committed by change
+#' request.
+#' }
 #' @noRd
 cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
 
@@ -22,9 +29,19 @@ cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date)
 
-    res <- sum (prs$num_commits) / nrow (log)
+    ret <- c (
+        n_opened = 0, n_closed = 0, prop_merged = 0, prop_code_from_prs = 0
+    )
+    if (nrow (prs) > 0L) {
+        ret <- c (
+            n_opened = nrow (prs),
+            n_closed = length (which (prs$merged)),
+            prop_merged = length (which (prs$merged)) / nrow (prs),
+            prop_code_from_prs = sum (prs$num_commits) / nrow (log)
+        )
+    }
 
-    return (res)
+    return (ret)
 }
 
 get_prs_in_period <- function (path, end_date = Sys.Date ()) {
@@ -37,13 +54,4 @@ get_prs_in_period <- function (path, end_date = Sys.Date ()) {
     prs <- prs [index, ]
 
     return (prs)
-}
-
-#' https://chaoss.community/kb/metric-change-requests-accepted/
-#' @return Single integer counting number of merged PRs.
-#' @noRd
-cm_metric_change_req_accepted <- function (path, end_date = Sys.Date ()) {
-
-    prs <- get_prs_in_period (path, end_date)
-    length (which (prs$merged))
 }

@@ -105,17 +105,18 @@ test_that ("cm metric change reqests", { # R/cm-metrics-change-req.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
+    op <- getOption ("repometrics_period")
+    options ("repometrics_period" = 10000)
+
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
-    prs_accepted <- cm_metric_change_req_accepted (path, end_date = end_date)
+
+    options ("repometrics_period" = op)
     fs::dir_delete (path)
 
     expect_type (pr_dat, "double")
-    expect_length (pr_dat, 1L)
-    expect_equal (pr_dat, 0.)
-
-    expect_type (prs_accepted, "integer")
-    expect_length (prs_accepted, 1L)
-    expect_equal (prs_accepted, 0L)
+    expect_length (pr_dat, 4L)
+    expect_named (pr_dat, c ("n_opened", "n_closed", "prop_merged", "prop_code_from_prs"))
+    expect_true (all (pr_dat > 0))
 })
 
 test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
