@@ -221,3 +221,100 @@ cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
 
     return (sum (res, na.rm = TRUE))
 }
+
+#' CHAOSS model "oss project viability: starter"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-project-viability-starter/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/10}
+#'
+#' Higher values are better than lower values
+#'
+#' @noRd
+cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
+
+    abs <- cm_metric_contrib_absence (path, end_date = end_date)
+    # Only take absence factor for commits, as authors are be definition very
+    # highly correlcted.
+    abs <- abs [["ncommits"]]
+    ele <- cm_metric_elephant_factor (path) [["ncommits"]]
+    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+    libyears <- -cm_metric_libyears (path) [["mean"]]
+
+    res <- c (abs, ele, lic_declared, pr_dat, libyears)
+
+    return (sum (res, na.rm = TRUE))
+}
+
+#' CHAOSS model for "oss project viability: governance"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-governance/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/15}
+#'
+#' Higher values are better than lower values.
+#'
+#' @noRd
+cm_model_viability_gov <- function (path, end_date = Sys.Date ()) {
+
+    # ---- Higher values are better:
+    labs <- cm_metric_label_inclusivity (path, end_date = end_date)
+    labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
+
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+
+    pop <- cm_metric_popularity (path, end_date = end_date)
+    pop <- pop [c ("forks", "stars")] # [0, N >> 1]
+    # Convert to values that shouldn't generally exceed 1:
+    pop <- pop / c (100, 1000)
+
+    # ----- Lower values are better:
+    issues <- cm_metric_time_to_close (path, end_date = end_date)
+    iss_time_to_close <- issues [["mean"]] # [0, N >> 1]
+
+    libyears <- cm_metric_libyears (path) [["mean"]]
+
+    issue_age <- cm_metric_issue_age (path, end_date = end_date)
+    issue_age <- issue_age [["mean"]] # [0, N >> 1]
+
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
+
+    # These latter 3 are then inverted and added, so that higher values closer
+    # to one are better:
+    res <- c (
+        labs_prop_friendly, pr_closure_ratio, pop,
+        1 / c (iss_time_to_close, issue_age, rel_freq)
+    )
+    return (sum (res, na.rm = TRUE))
+}
+
+#' CHAOSS model for "oss project viability: strategy"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-strategy/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/16}
+#'
+#' Higher values are better than lower values.
+#'
+#' @noRd
+cm_model_viability_strategy <- function (path, end_date = Sys.Date ()) {
+
+    langs <- cm_metric_languages (path)
+    lang_dist_mn <- mean (langs$ncode_pc) # lower is better
+    # Re-scale this so that 4 languages translates to a value of 1:
+    lang_dist_mn <- 0.25 / lang_dist_mn
+
+    bus <- cm_metric_contrib_absence (path, end_date = end_date)
+    bus <- bus [["ncommits"]] # higher is better
+
+    ele <- cm_metric_elephant_factor (path, end_date = end_date)
+    ele <- ele [["ncommits"]] # higher is better
+
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+    rel_freq <- 1 / rel_freq [["mean"]] # higher is better
+
+    res <- c (lang_dist_mn, bus, ele, rel_freq)
+
+    return (sum (res, na.rm = TRUE))
+}

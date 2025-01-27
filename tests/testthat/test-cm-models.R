@@ -59,18 +59,23 @@ test_that ("cm model community activity + oss compliance", {
     expect_true (oss > 0)
 })
 
-test_that ("cm model viability: community", {
+test_that ("cm model viability", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_model_viability_community (path, end_date = end_date)
+    com <- cm_model_viability_community (path, end_date = end_date)
+    sta <- cm_model_viability_starter (path, end_date = end_date)
+    gov <- cm_model_viability_gov (path, end_date = end_date)
+    str <- cm_model_viability_strategy (path, end_date = end_date)
 
     fs::dir_delete (path)
 
-    expect_type (res, "double")
-    expect_length (res, 1L)
-    expect_named (res, NULL)
-    expect_true (res > 0)
+    for (i in list (com, sta, gov, str)) {
+        expect_type (i, "double")
+        expect_length (i, 1L)
+        expect_named (i, NULL)
+        expect_true (i > 0)
+    }
 })

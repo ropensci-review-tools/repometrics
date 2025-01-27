@@ -19,6 +19,15 @@ cm_metric_languages <- function (path) {
         return (NULL)
     }
 
+    # Consider all "Rmd" files to be "R" files:
+    s <- dplyr::mutate (
+        s,
+        language = dplyr::case_when (
+            language == "Rmd" ~ "R",
+            TRUE ~ language
+        )
+    )
+
     dplyr::group_by (s, language) |>
         dplyr::summarise (nfiles = sum (nfiles), ncode = sum (ncode)) |>
         dplyr::mutate (
