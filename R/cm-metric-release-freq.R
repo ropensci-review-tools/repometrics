@@ -1,3 +1,7 @@
+#' CHAOSS metric for release frequency, actually measured here as interval in
+#' days between releases.
+#'
+#' @noRd
 cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
@@ -9,10 +13,10 @@ cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
         dplyr::mutate (published_at = as.Date (published_at)) |>
         dplyr::filter (published_at <= end_date)
 
-    res <- difftime (end_date, max (releases$published_at))
-
-    releases <- dplyr::filter (releases, published_at >= start_date)
+    res <- NA_real_
     if (nrow (releases) > 1) {
+        res <- difftime (end_date, max (releases$published_at))
+        releases <- dplyr::filter (releases, published_at >= start_date)
         res <- c (res, diff (rev (releases$published_at), units = "days"))
     }
 

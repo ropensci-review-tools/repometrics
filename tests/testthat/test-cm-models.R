@@ -59,7 +59,7 @@ test_that ("cm model community activity + oss compliance", {
     expect_true (oss > 0)
 })
 
-test_that ("cm model viability: community + starter", {
+test_that ("cm model viability", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
@@ -67,10 +67,11 @@ test_that ("cm model viability: community + starter", {
 
     com <- cm_model_viability_community (path, end_date = end_date)
     sta <- cm_model_viability_starter (path, end_date = end_date)
+    gov <- cm_model_viability_gov (path, end_date = end_date)
 
     fs::dir_delete (path)
 
-    for (i in list (com, sta)) {
+    for (i in list (com, sta, gov)) {
         expect_type (i, "double")
         expect_length (i, 1L)
         expect_named (i, NULL)

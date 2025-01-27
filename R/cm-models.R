@@ -246,3 +246,44 @@ cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
 
     return (sum (res, na.rm = TRUE))
 }
+
+#' CHAOSS metric for "oss project viability: governance"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-governance/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/15}
+#'
+#' @noRd
+cm_model_viability_gov <- function (path, end_date = Sys.Date ()) {
+
+    # ---- Higher values are better:
+    labs <- cm_metric_label_inclusivity (path, end_date = end_date)
+    labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
+
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+
+    pop <- cm_metric_popularity (path, end_date = end_date)
+    pop <- pop [c ("forks", "stars")] # [0, N >> 1]
+    # Convert to values that shouldn't generally exceed 1:
+    pop <- pop / c (100, 1000)
+
+    # ----- Lower values are better:
+    issues <- cm_metric_time_to_close (path, end_date = end_date)
+    iss_time_to_close <- issues [["mean"]] # [0, N >> 1]
+
+    libyears <- cm_metric_libyears (path) [["mean"]]
+
+    issue_age <- cm_metric_issue_age (path, end_date = end_date)
+    issue_age <- issue_age [["mean"]] # [0, N >> 1]
+
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
+
+    # These latter 3 are then inverted and added, so that higher values closer
+    # to one are better:
+    res <- c (
+        labs_prop_friendly, pr_closure_ratio, pop,
+        1 / c (iss_time_to_close, issue_age, rel_freq)
+    )
+    return (sum (res, na.rm = TRUE))
+}
