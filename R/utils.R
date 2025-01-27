@@ -4,7 +4,7 @@
 #' @return Named vector of three numeric values of (mean, median, sum)
 #' @noRd
 mn_med_sum <- function (x) {
-    ret <- c (mean = 0, sd = 0, median = 0, sum = 0)
+    ret <- c (mean = NA_real_, sd = NA_real_, median = NA_real_, sum = NA_real_)
     if (length (x) > 0) {
         ret <- c (
             mean = mean (x, na.rm = TRUE),

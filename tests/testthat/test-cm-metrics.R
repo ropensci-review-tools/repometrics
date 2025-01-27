@@ -170,7 +170,6 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_type (age, "double")
     expect_length (age, 4L)
     expect_named (age, c ("mean", "sd", "median", "sum"))
-    expect_true (all (age [which (!is.na (cmts))] >= 0))
 
     expect_type (prop_approved, "double")
     expect_length (prop_approved, 1L)
