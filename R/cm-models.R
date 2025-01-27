@@ -44,3 +44,49 @@ cm_model_dev_reponsiveness <- function (path, end_date = Sys.Date ()) {
 
     return (vals)
 }
+
+#' CHAOSS model "project engagement"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-project-engagement/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/5}
+#'
+#' The final item of "review cycle duration" is not included here, as all the
+#' others can be used to form a simple numeric sum. These are:
+#' 1. Nr. change requests accepted
+#' 2. Nr. commiters, in 3 forms, each counting number of unique commiters who
+#'    (starred or forked, created issues or comments or reviews, and created or
+#'    merged PRs).
+#' 3. Nr. code contributors
+#' 4. Nr. issues closed
+#' 5. Nr. issues updated
+#' 6. Nr. comments in issues
+#'
+#' @noRd
+cm_model_proj_engagement <- function (path, end_date = Sys.Date ()) {
+
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    num_prs_merged <- ifelse (
+        length (pr_dat) > 1,
+        pr_dat [["n_closed"]],
+        0L
+    )
+
+    counts <- cm_metric_committer_count (path, end_date = end_date)
+    # has number of unique commiters for (watchers or forks, issues, prs)
+
+    num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date) [["code"]]
+
+    num_issues_closed <- cm_metric_issues_closed (path, end_date = end_date)
+    num_issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
+    num_issue_comments <- cm_metric_issue_cmt_count (path, end_date = end_date)
+
+    # Not included here:
+    # rev_cycle_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
+
+    res <- c (
+        num_prs_merged, counts, num_code_ctbs,
+        num_issues_closed, num_issues_updated, num_issue_comments
+    )
+
+    return (sum (res, na.rm = TRUE))
+}
