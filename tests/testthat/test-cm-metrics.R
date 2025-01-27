@@ -475,7 +475,6 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     path <- generate_test_pkg ()
 
     num_updates <- cm_metric_issue_updates (path, end_date = end_date)
-    comment_freq <- cm_metric_issue_cmt_freq (path, end_date = end_date)
     issues_closed <- cm_metric_issues_closed (path, end_date = end_date)
     num_issue_cmts <- cm_metric_issue_cmt_count (path, end_date = end_date)
 
@@ -486,20 +485,15 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     expect_named (num_updates, expected = NULL)
     expect_true (num_updates > 0L)
 
-    expect_type (comment_freq, "double")
-    expect_length (comment_freq, 4L)
-    expect_named (comment_freq, expected = c ("mean", "sd", "median", "sum"))
-    expect_true (all (comment_freq >= 0L))
-
     expect_type (issues_closed, "integer")
     expect_length (issues_closed, 1L)
     expect_named (issues_closed, expected = NULL)
     expect_true (issues_closed > 0L)
 
-    expect_type (num_issue_cmts, "integer")
-    expect_length (num_issue_cmts, 1L)
-    expect_named (num_issue_cmts, expected = NULL)
-    expect_true (num_issue_cmts >= 0L)
+    expect_type (num_issue_cmts, "double")
+    expect_length (num_issue_cmts, 4L)
+    expect_named (num_issue_cmts, expected = c ("mean", "sd", "median", "sum"))
+    expect_true (all (num_issue_cmts >= 0L))
 })
 
 test_that ("cm metric maintainer count", {

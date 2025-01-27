@@ -21,7 +21,7 @@ cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
     length (issue_nums)
 }
 
-cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
+cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- issue_number <- NULL
@@ -46,23 +46,6 @@ cm_metric_issue_cmt_freq <- function (path, end_date = Sys.Date ()) {
     }
 
     return (mn_med_sum (cmts))
-}
-
-cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
-
-    # Suppress no visible binding note:
-    created_at <- issue_number <- NULL
-
-    checkmate::assert_date (end_date)
-
-    start_date <- end_date - get_repometrics_period ()
-
-    issue_cmts <- rm_data_issue_comments_from_gh_api (path) |>
-        dplyr::filter (created_at >= start_date & created_at <= end_date) |>
-        dplyr::group_by (issue_number) |>
-        dplyr::summarise (ncomments = dplyr::n ())
-
-    sum (issue_cmts$ncomments)
 }
 
 cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
