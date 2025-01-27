@@ -318,3 +318,41 @@ cm_model_viability_strategy <- function (path, end_date = Sys.Date ()) {
 
     return (sum (res, na.rm = TRUE))
 }
+
+#' CHAOSS model for "collaboration development index"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-collaboration-development-index/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/11}
+#'
+#' Higher values are better than lower values.
+#'
+#' @noRd
+cm_model_collab_devel_index <- function (path, end_date = Sys.Date ()) {
+
+    # metrics that are in [0, 1]:
+    ci_test_data <- gh_workflow_test_coverage (path)
+    has_ci_tests <- nrow (ci_test_data)
+
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_prop_code <- pr_dat [["prop_code_from_prs"]]
+    issues_to_prs <- cm_metric_issues_to_prs (path, end_date = end_date)
+
+    # metrics that are in [0, N ~ O(1)]:
+    num_ctbs <- cm_metric_num_contributors (path, end_date = end_date)
+    pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
+    num_pr_reviews <- pr_dat [["approved_count"]]
+    num_forks <- cm_metric_num_forks (path, end_date = end_date)
+    num_forks <- num_forks [["num_in_period"]]
+
+    # matrics that are in [0, N >> 1]:
+    num_commits <- cm_metric_num_commits (path, end_date = end_date) # [0, N >> 1]
+    code_change_lines <- cm_metric_code_change_lines (path, end_date = end_date)
+
+    res_O1 <- c (has_ci_tests, pr_prop_code, issues_to_prs)
+    res_ON <- c (num_ctbs, num_pr_reviews, num_forks)
+    res_ON2 <- log10 (c (num_commits, code_change_lines))
+
+    res <- c (res_O1, res_ON, res_ON2)
+
+    return (sum (res, na.rm = TRUE))
+}

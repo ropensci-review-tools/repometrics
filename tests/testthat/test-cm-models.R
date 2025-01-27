@@ -69,10 +69,11 @@ test_that ("cm model viability", {
     sta <- cm_model_viability_starter (path, end_date = end_date)
     gov <- cm_model_viability_gov (path, end_date = end_date)
     str <- cm_model_viability_strategy (path, end_date = end_date)
+    dev <- cm_model_collab_devel_index (path, end_date = end_date)
 
     fs::dir_delete (path)
 
-    for (i in list (com, sta, gov, str)) {
+    for (i in list (com, sta, gov, str, dev)) {
         expect_type (i, "double")
         expect_length (i, 1L)
         expect_named (i, NULL)
