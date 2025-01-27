@@ -112,3 +112,36 @@ cm_model_proj_awareness <- function (path, end_date = Sys.Date ()) {
 
     return (num_forks + num_stars)
 }
+
+#' CHAOSS model for "community activity"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-community-activity/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/7}
+#'
+#' @noRd
+cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
+
+    # ----- Single integer results which can be directly added:
+    ctbs <- cm_metric_ctb_count (path, end_date = end_date)
+    # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each as
+    # number of unique authors.
+    prs <- cm_metric_pr_reviews (path, end_date = end_date)
+    prs_approved <- prs [["approved_count"]]
+
+    num_releases <- cm_metric_recent_releases (path, end_date = end_date)
+    issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
+    num_maintainers <- cm_metric_maintainer_count (path, end_date = end_date)
+
+    # ----- Model includes frequencies of both commits and comments, but these
+    # ----- are here treated instead as direct counts.
+    commit_count <- cm_metric_commit_freq (path, end_date = end_date) [["mean"]]
+    comment_counts <- cm_metric_issue_cmt_count (path, end_date = end_date)
+
+    res <- c (
+        ctbs, prs_approved, num_releases, issues_updated,
+        num_maintainers, commit_count, comment_counts
+    )
+
+    return (sum (res, na.rm = TRUE))
+
+}

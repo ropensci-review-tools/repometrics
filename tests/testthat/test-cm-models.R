@@ -8,11 +8,11 @@ test_that ("cm model developer responsiveness", {
 
     res <- cm_model_dev_reponsiveness (path, end_date = end_date)
 
+    fs::dir_delete (path)
+
     expect_type (res, "double")
     expect_length (res, 2L)
     expect_named (res, c ("mean", "median"))
-
-    fs::dir_delete (path)
 })
 
 test_that ("cm model project engagement and awareness", {
@@ -24,6 +24,8 @@ test_that ("cm model project engagement and awareness", {
     eng <- cm_model_proj_engagement (path, end_date = end_date)
     awa <- cm_model_proj_awareness (path, end_date = end_date)
 
+    fs::dir_delete (path)
+
     expect_type (eng, "double")
     expect_length (eng, 1L)
     expect_named (eng, NULL)
@@ -33,6 +35,20 @@ test_that ("cm model project engagement and awareness", {
     expect_length (awa, 1L)
     expect_named (awa, NULL)
     expect_true (awa > 0L)
+})
+
+test_that ("cm model community activity", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    res <- cm_model_community_activity (path, end_date = end_date)
+
+    expect_type (res, "double")
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (res > 0)
 
     fs::dir_delete (path)
 })

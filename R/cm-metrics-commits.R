@@ -5,6 +5,9 @@ cm_metric_num_commits <- function (path, end_date = Sys.Date ()) {
     return (nrow (log))
 }
 
+#' CHAOSS Metric for commit frequency, which is actually assessed here as
+#' average number of commits per week, so a direct count rather than frequency.
+#' @noRd
 cm_metric_commit_freq <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
