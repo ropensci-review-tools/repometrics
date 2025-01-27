@@ -151,26 +151,32 @@ cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-compliance-security/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/8}
 #'
+#' Unlike most other models, this one is easier to assemble so that lower
+#' values are better.
+#'
 #' @noRd
 cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
 
-    # All of these metrics are single numeric values which may be added:
-    bp_badge <- as.integer (cm_metric_best_practices (path))
-    lic_coverage <- cm_metric_license_coverage (path)
-    lic_declared <- length (cm_metric_licenses_declared (path) > 0L)
+    # All of these metrics are single numeric values which may be added, but
+    # first need to be negated or inverted, so that 0 or lower values are
+    # better:
+    bp_badge <- as.integer (!cm_metric_best_practices (path))
+    lic_coverage <- 1 - cm_metric_license_coverage (path)
+    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) == 0L)
 
+    # These are then directly measured so that lower values are better:
     defect_res_dur <-
         cm_metric_defect_resolution_dur (path, end_date = end_date) [["mean"]]
     libyears <- cm_metric_libyears (path) [["mean"]]
 
-    # Dependencies gives the number of deps, which is appended here in inverse
-    # form:
+    # Artbitrarily divide number of deps by 20 to put on roughly equal scale to
+    # the other metrics, with 20 dependencies giving a score of 1.:
     deps <- rm_data_dependencies (path)
-    num_deps <- nrow (deps)
+    num_deps <- nrow (deps) / 20
 
     res <- c (
         bp_badge, lic_coverage, lic_declared, defect_res_dur,
-        libyears, 1 / num_deps
+        libyears, num_deps
     )
 
     return (sum (res, na.rm = TRUE))
