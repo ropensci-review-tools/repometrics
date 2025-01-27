@@ -90,3 +90,25 @@ cm_model_proj_engagement <- function (path, end_date = Sys.Date ()) {
 
     return (sum (res, na.rm = TRUE))
 }
+
+#' CHAOSS model for "project awareness"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-project-awareness/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/6}
+#'
+#' This model is formed here from directly summing numbers of forks and stars
+#' (both within period only). The burstiness metric in the CHAOSS docs is
+#' intended to be applied to burstiness in awareness-type activities like
+#' starring, issue comments, and stuff like that, and not burstiness in actual
+#' commit activity, which is what is measured here in `cm_metric_burstiness`.
+#'
+#' @noRd
+cm_model_proj_awareness <- function (path, end_date = Sys.Date ()) {
+
+    num_forks <- cm_metric_num_forks (path, end_date = end_date)
+    num_forks <- num_forks [["num_in_period"]]
+
+    num_stars <- cm_metric_popularity (path, end_date = end_date) [["stars"]]
+
+    return (num_forks + num_stars)
+}
