@@ -3,6 +3,8 @@
 #' \url{https://chaoss.community/kb/metrics-model-development-responsiveness/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/4}.
 #'
+#' Lower value are better than higher values.
+#'
 #' This takes the four metrics of:
 #' 1. Review cycle duration within a change request (in days)
 #' 2. Change request duration (in days)
@@ -50,6 +52,8 @@ cm_model_dev_reponsiveness <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-project-engagement/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/5}
 #'
+#' Higher values are better than lower values.
+#'
 #' The final item of "review cycle duration" is not included here, as all the
 #' others can be used to form a simple numeric sum. These are:
 #' 1. Nr. change requests accepted
@@ -96,6 +100,8 @@ cm_model_proj_engagement <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-project-awareness/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/6}
 #'
+#' Higher values are better than lower values.
+#'
 #' This model is formed here from directly summing numbers of forks and stars
 #' (both within period only). The burstiness metric in the CHAOSS docs is
 #' intended to be applied to burstiness in awareness-type activities like
@@ -117,6 +123,8 @@ cm_model_proj_awareness <- function (path, end_date = Sys.Date ()) {
 #'
 #' \url{https://chaoss.community/kb/metrics-model-community-activity/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/7}
+#'
+#' Higher values are better than lower values.
 #'
 #' @noRd
 cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
@@ -151,8 +159,7 @@ cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-compliance-security/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/8}
 #'
-#' Unlike most other models, this one is easier to assemble so that lower
-#' values are better.
+#' Lower values are better than higher values.
 #'
 #' @noRd
 cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
@@ -178,6 +185,39 @@ cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
         bp_badge, lic_coverage, lic_declared, defect_res_dur,
         libyears, num_deps
     )
+
+    return (sum (res, na.rm = TRUE))
+}
+
+#' CHAOSS model for "oss project viability: community"
+#'
+#' Higher values are better than lower values
+#'
+#' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-community/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/9}
+#' @noRd
+cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
+
+    counts <- cm_metric_committer_count (path, end_date = end_date)
+    # has number of unique commiters for (watchers or forks, issues, prs)
+    counts <- counts [["watchers"]] # stars and forks, as unique users
+
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    # The model includes "Change Requests" (as direct count), and "Change
+    # Request Closure Ratio". The latter here is replaced by number of "closed"
+    # change requests, which is the number merged. Thus each opeend and merged
+    # PR counts for 2, while each unmerged counts onlyu for 1.
+    pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+
+    num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
+    num_auts <- num_auts [["recent"]]
+
+    libyears <- cm_metric_libyears (path) [["mean"]]
+    # lower libyears are better, and they can also be negative, so simply
+    # negate here:
+    libyears <- -libyears
+
+    res <- c (counts, pr_dat, num_auts, libyears)
 
     return (sum (res, na.rm = TRUE))
 }
