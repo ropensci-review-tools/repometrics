@@ -52,6 +52,8 @@ rm_data_dependencies_downstream <- function (path) { # nolint
 
 #' Data for CHAOSS "libyears" metric
 #'
+#' This is assessed against date of latest release from both GitHub and CRAN.
+#'
 #' @param path Local path to repository
 #' @noRd
 rm_data_libyears <- function (path) {
@@ -63,12 +65,26 @@ rm_data_libyears <- function (path) {
     deps$published <- as.Date (cran_db$Published [index])
     deps <- deps [which (!is.na (deps$published)), ]
 
+    rel_gh <- rel_cran <- NA_real_
     rel <- rm_data_releases_from_gh_api (path, latest_only = TRUE)
-    dt <- NA_real_
     if (nrow (rel) > 0L) {
-        rel_date <- as.Date (strftime (rel$published_at, format = "%Y-%m-%d"))
-        dt <- difftime (deps$published, rel_date, units = "days")
+        rel_gh <- rel$published_at
+    }
+    pkg_in_db <- match (pkg_name_from_path (path), cran_db$Package)
+    if (length (pkg_in_db) > 0) {
+        rel_cran <- cran_db$Date.Publication [pkg_in_db [1]]
+    }
+    rel_date <- c (rel_gh, rel_cran)
+    rel_date <- as.Date (strftime (rel_date, format = "%Y-%m-%d"))
+    if (all (is.na (rel_date))) {
+        rel_date <- rel_date [1]
+    } else {
+        rel_date <- max (rel_date, na.rm = TRUE)
+    }
 
+    dt <- NA_real_
+    if (!is.na (rel_date)) {
+        dt <- difftime (deps$published, rel_date, units = "days")
     }
     deps$libyears <- as.numeric (dt) / 365.25 # In years
 
