@@ -221,3 +221,28 @@ cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
 
     return (sum (res, na.rm = TRUE))
 }
+
+#' CHAOSS model "oss project viability: starter"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-project-viability-starter/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/10}
+#'
+#' Higher values are better than lower values
+#'
+#' @noRd
+cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
+
+    abs <- cm_metric_contrib_absence (path, end_date = end_date)
+    # Only take absence factor for commits, as authors are be definition very
+    # highly correlcted.
+    abs <- abs [["ncommits"]]
+    ele <- cm_metric_elephant_factor (path) [["ncommits"]]
+    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+    libyears <- -cm_metric_libyears (path) [["mean"]]
+
+    res <- c (abs, ele, lic_declared, pr_dat, libyears)
+
+    return (sum (res, na.rm = TRUE))
+}
