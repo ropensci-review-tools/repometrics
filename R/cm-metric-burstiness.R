@@ -52,7 +52,7 @@ cm_metric_burstiness <- function (path, end_date, band_len = 31L, band_width = 2
 
     ret <- NA_real_
     if (nrow (log_in_period) > 0L) {
-        ret <- sum (which (log_in_period$outlier)) / nrow (log_in_period)
+        ret <- length (which (log_in_period$outlier)) / nrow (log_in_period)
     }
 
     return (ret)
