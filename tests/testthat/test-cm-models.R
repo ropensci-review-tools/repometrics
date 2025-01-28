@@ -29,12 +29,12 @@ test_that ("cm model project engagement and awareness", {
     expect_type (eng, "double")
     expect_length (eng, 1L)
     expect_named (eng, NULL)
-    expect_true (eng > 0)
+    expect_true (eng >= 0)
 
-    expect_type (awa, "integer")
+    expect_type (awa, "double")
     expect_length (awa, 1L)
     expect_named (awa, NULL)
-    expect_true (awa > 0L)
+    expect_true (awa >= 0L)
 })
 
 test_that ("cm model community activity + oss compliance", {
@@ -80,6 +80,5 @@ test_that ("cm model viability", {
         expect_type (i, "double")
         expect_length (i, 1L)
         expect_named (i, NULL)
-        expect_true (i > 0)
     }
 })

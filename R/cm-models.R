@@ -3,7 +3,7 @@
 #' \url{https://chaoss.community/kb/metrics-model-development-responsiveness/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/4}.
 #'
-#' Lower value are better than higher values.
+#' Values are in days, with lower better than higher.
 #'
 #' This takes the four metrics of:
 #' 1. Review cycle duration within a change request (in days)
@@ -52,7 +52,8 @@ cm_model_dev_reponsiveness <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-project-engagement/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/5}
 #'
-#' Higher values are better than lower values.
+#' Values are counts in [0, N], with final value of log10(sum(...)), so that
+#' higher values are better than lower values.
 #'
 #' The final item of "review cycle duration" is not included here, as all the
 #' others can be used to form a simple numeric sum. These are:
@@ -91,6 +92,8 @@ cm_model_proj_engagement <- function (path, end_date = Sys.Date ()) {
         num_prs_merged, counts, num_code_ctbs,
         num_issues_closed, num_issues_updated, num_issue_comments
     )
+    res [which (res == 0)] <- 1
+    res <- sum (log10 (res), na.rm = TRUE)
 
     return (sum (res, na.rm = TRUE))
 }
@@ -116,7 +119,11 @@ cm_model_proj_awareness <- function (path, end_date = Sys.Date ()) {
 
     num_stars <- cm_metric_popularity (path, end_date = end_date) [["stars"]]
 
-    return (num_forks + num_stars)
+    res <- c (num_forks, num_stars)
+    res [which (res == 0)] <- 1
+    res <- sum (log10 (res), na.rm = TRUE)
+
+    return (res)
 }
 
 #' CHAOSS model for "community activity"
@@ -149,8 +156,10 @@ cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
         ctbs, prs_approved, num_releases, issues_updated,
         num_maintainers, commit_count, comment_counts
     )
+    res [which (res == 0)] <- 1
+    res <- sum (log10 (res), na.rm = TRUE)
 
-    return (sum (res, na.rm = TRUE))
+    return (res)
 
 }
 
@@ -159,34 +168,32 @@ cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-compliance-security/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/8}
 #'
-#' Lower values are better than higher values.
+#' Higher values are better than higher values.
 #'
 #' @noRd
 cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
 
-    # All of these metrics are single numeric values which may be added, but
-    # first need to be negated or inverted, so that 0 or lower values are
-    # better:
-    bp_badge <- as.integer (!cm_metric_best_practices (path))
-    lic_coverage <- 1 - cm_metric_license_coverage (path)
-    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) == 0L)
+    # All of these metrics are single numeric values which may be added, and
+    # for which higher values are better:
+    bp_badge <- as.integer (cm_metric_best_practices (path))
+    lic_coverage <- cm_metric_license_coverage (path)
+    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
 
     # These are then directly measured so that lower values are better:
     defect_res_dur <-
         cm_metric_defect_resolution_dur (path, end_date = end_date) [["mean"]]
+    defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
     libyears <- cm_metric_libyears (path) [["mean"]]
 
-    # Artbitrarily divide number of deps by 20 to put on roughly equal scale to
-    # the other metrics, with 20 dependencies giving a score of 1.:
     deps <- rm_data_dependencies (path)
-    num_deps <- nrow (deps) / 20
+    num_deps <- log10 (nrow (deps))
 
-    res <- c (
-        bp_badge, lic_coverage, lic_declared, defect_res_dur,
-        libyears, num_deps
-    )
+    res_0N <- sum (c (bp_badge, lic_coverage, lic_declared), na.rm = TRUE)
+    res_log <- sum (c (defect_res_dur, libyears, num_deps), na.rm = TRUE)
 
-    return (sum (res, na.rm = TRUE))
+    res <- res_0N - res_log
+
+    return (res)
 }
 
 #' CHAOSS model for "oss project viability: community"
@@ -212,14 +219,14 @@ cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
     num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
     num_auts <- num_auts [["recent"]]
 
+    # lower values of libyears are  better, so appended below in negated form:
     libyears <- cm_metric_libyears (path) [["mean"]]
-    # lower libyears are better, and they can also be negative, so simply
-    # negate here:
-    libyears <- -libyears
 
-    res <- c (counts, pr_dat, num_auts, libyears)
+    res <- c (counts, pr_dat, num_auts)
+    res [which (res == 0)] <- 1
+    res <- sum (c (log10 (res), -libyears), na.rm = TRUE)
 
-    return (sum (res, na.rm = TRUE))
+    return (res)
 }
 
 #' CHAOSS model "oss project viability: starter"
@@ -240,11 +247,13 @@ cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
     lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
     pr_dat <- pr_dat [c ("n_opened", "n_closed")]
-    libyears <- -cm_metric_libyears (path) [["mean"]]
+    libyears <- cm_metric_libyears (path) [["mean"]]
 
-    res <- c (abs, ele, lic_declared, pr_dat, libyears)
+    res <- c (abs, ele, lic_declared, pr_dat)
+    res [which (res == 0)] <- 1
+    res <- sum (c (log10 (res), -libyears), na.rm = TRUE)
 
-    return (sum (res, na.rm = TRUE))
+    return (res)
 }
 
 #' CHAOSS model for "oss project viability: governance"
@@ -266,8 +275,6 @@ cm_model_viability_gov <- function (path, end_date = Sys.Date ()) {
 
     pop <- cm_metric_popularity (path, end_date = end_date)
     pop <- pop [c ("forks", "stars")] # [0, N >> 1]
-    # Convert to values that shouldn't generally exceed 1:
-    pop <- pop / c (100, 1000)
 
     # ----- Lower values are better:
     issues <- cm_metric_time_to_close (path, end_date = end_date)
@@ -281,12 +288,15 @@ cm_model_viability_gov <- function (path, end_date = Sys.Date ()) {
     rel_freq <- cm_metric_release_freq (path, end_date = end_date)
     rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
 
-    # These latter 3 are then inverted and added, so that higher values closer
-    # to one are better:
-    res <- c (
-        labs_prop_friendly, pr_closure_ratio, pop,
-        1 / c (iss_time_to_close, issue_age, rel_freq)
-    )
+    # ------ Combine all:
+    res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
+    pop [which (pop == 0)] <- 1
+    pop <- log10 (pop) # higher is better
+    res_days <- c (iss_time_to_close, issue_age, rel_freq)
+    res_days [which (res_days == 0)] <- 1
+    res_days <- log10 (res_days) # lower is better
+
+    res <- c (res_01, pop, -res_days, -libyears)
     return (sum (res, na.rm = TRUE))
 }
 
@@ -306,17 +316,18 @@ cm_model_viability_strategy <- function (path, end_date = Sys.Date ()) {
     lang_dist_mn <- 0.25 / lang_dist_mn
 
     bus <- cm_metric_contrib_absence (path, end_date = end_date)
-    bus <- bus [["ncommits"]] # higher is better
+    bus <- log10 (bus [["ncommits"]]) # higher is better
 
     ele <- cm_metric_elephant_factor (path, end_date = end_date)
-    ele <- ele [["ncommits"]] # higher is better
+    ele <- log10 (ele [["ncommits"]]) # higher is better
 
-    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
-    rel_freq <- 1 / rel_freq [["mean"]] # higher is better
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date) [["mean"]]
+    rel_freq <- log10 (ifelse (rel_freq == 0, 1, rel_freq))
 
-    res <- c (lang_dist_mn, bus, ele, rel_freq)
+    res_0N <- c (bus, ele, -rel_freq)
+    res <- lang_dist_mn + sum (res_0N, na.rm = TRUE)
 
-    return (sum (res, na.rm = TRUE))
+    return (res)
 }
 
 #' CHAOSS model for "collaboration development index"
