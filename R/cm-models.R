@@ -470,7 +470,7 @@ cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
     pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
 
     val_01 <-
-        c (lic_coverage, lic_declared, bp_badge, test_cov, pr_acceptance_ratio)
+        c (lic_coverage, lic_declared, bp_badge, test_cov, pr_closure_ratio)
 
     # ----- Values in [0, N] for which higher are better:
     bus <- cm_metric_contrib_absence (path, end_date = end_date)
