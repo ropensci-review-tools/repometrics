@@ -46,6 +46,11 @@
         "updated_at": "2024-11-18T14:44:18Z",
         "closed_at": null,
         "author_association": "MEMBER",
+        "sub_issues_summary": {
+            "total": 0,
+            "completed": 0,
+            "percent_completed": 0
+        },
         "active_lock_reason": null,
         "body": "And include https://github.com/repo//pull/184#discussion_r1846546348",
         "closed_by": null,
@@ -112,6 +117,11 @@
         "updated_at": "2024-11-18T14:45:36Z",
         "closed_at": "2024-11-18T14:45:17Z",
         "author_association": "MEMBER",
+        "sub_issues_summary": {
+            "total": 0,
+            "completed": 0,
+            "percent_completed": 0
+        },
         "active_lock_reason": null,
         "draft": false,
         "pull_request": {

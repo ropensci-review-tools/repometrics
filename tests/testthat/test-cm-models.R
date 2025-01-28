@@ -29,12 +29,12 @@ test_that ("cm model project engagement and awareness", {
     expect_type (eng, "double")
     expect_length (eng, 1L)
     expect_named (eng, NULL)
-    expect_true (eng > 0)
+    expect_true (eng >= 0)
 
-    expect_type (awa, "integer")
+    expect_type (awa, "double")
     expect_length (awa, 1L)
     expect_named (awa, NULL)
-    expect_true (awa > 0L)
+    expect_true (awa >= 0L)
 })
 
 test_that ("cm model community activity + oss compliance", {
@@ -69,13 +69,16 @@ test_that ("cm model viability", {
     sta <- cm_model_viability_starter (path, end_date = end_date)
     gov <- cm_model_viability_gov (path, end_date = end_date)
     str <- cm_model_viability_strategy (path, end_date = end_date)
+    dev <- cm_model_collab_devel_index (path, end_date = end_date)
+    css <- cm_model_comm_serv_support (path, end_date = end_date)
+    sth <- cm_model_starter_health (path, end_date = end_date)
+    wel <- cm_model_comm_welcoming (path, end_date = end_date)
 
     fs::dir_delete (path)
 
-    for (i in list (com, sta, gov, str)) {
+    for (i in list (com, sta, gov, str, dev, css, sth, wel)) {
         expect_type (i, "double")
         expect_length (i, 1L)
         expect_named (i, NULL)
-        expect_true (i > 0)
     }
 })

@@ -5,37 +5,37 @@
             "issueComments": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNC0xMi0wNlQxMToxODo0MCswMTowMM6WXhWY"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMS0yOFQxMjo0MDowMSswMTowMM6cFxqR"
                 },
-                "totalCount": 5179,
+                "totalCount": 5209,
                 "nodes": [
                     {
-                        "createdAt": "2024-12-08T20:36:54Z",
+                        "createdAt": "2025-01-27T09:01:08Z",
                         "issue": {
-                            "number": 258,
+                            "number": 3,
                             "comments": {
-                                "totalCount": 4
-                            },
-                            "participants": {
                                 "totalCount": 2
                             },
+                            "participants": {
+                                "totalCount": 1
+                            },
                             "repository": {
-                                "nameWithOwner": "UrbanAnalyst/dodgr"
+                                "nameWithOwner": "ropensci-review-tools/repometrics"
                             }
                         }
                     },
                     {
-                        "createdAt": "2024-12-06T10:18:40Z",
+                        "createdAt": "2025-01-28T11:40:01Z",
                         "issue": {
-                            "number": 258,
+                            "number": 28,
                             "comments": {
-                                "totalCount": 4
+                                "totalCount": 2
                             },
                             "participants": {
                                 "totalCount": 2
                             },
                             "repository": {
-                                "nameWithOwner": "UrbanAnalyst/dodgr"
+                                "nameWithOwner": "bnicenboim/pangoling"
                             }
                         }
                     }
