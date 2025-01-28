@@ -399,3 +399,40 @@ cm_model_comm_serv_support <- function (path, end_date = Sys.Date ()) {
 
     return (res)
 }
+
+#' CHAOSS model for "starter project health"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-starter-project-health/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/13}
+#'
+#' Higher values are better than lower values.
+#'
+#' @noRd
+cm_model_starter_health <- function (path, end_date = Sys.Date ()) {
+
+    # Metrics measured in days, for which lower is better:
+    time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
+    time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
+    time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
+
+    # Metrics in [0, 1], for which higher is better:
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+
+    # Metrics in [0, N], for which higher is better:
+    abs <- cm_metric_contrib_absence (path, end_date = end_date)
+    abs <- abs [["ncommits"]]
+
+    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
+    rel_freq <- ifelse (rel_freq == 0, 1, rel_freq)
+
+    res_high <- c (pr_closure_ratio, log10 (abs), log10 (rel_freq))
+
+    res <- sum (res_high, na.rm = TRUE)
+    if (!is.na (time_first_resp)) {
+        res <- res - log10 (time_first_resp)
+    }
+
+    return (res)
+}
