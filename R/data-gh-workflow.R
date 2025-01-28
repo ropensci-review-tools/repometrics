@@ -6,12 +6,19 @@ rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) { # nolin
     n_per_page <- n_per_page_in_tests (n_per_page)
     or <- org_repo_from_path (path)
 
+    # The workflow run qquery needs an additional parameter to return full
+    # results. Easiest here is the default branch:
+    repo_dat <- rm_data_repo_from_gh_api (path)
+
     checkmate::assert_integer (n_per_page, lower = 1L)
     u_wf <- gh_rest_api_endpoint (orgrepo = or, endpoint = "actions/runs")
 
     req <- httr2::request (u_wf) |>
         add_gh_token_to_req () |>
-        httr2::req_url_query (per_page = n_per_page)
+        httr2::req_url_query (
+            per_page = n_per_page,
+            branch = repo_dat$default_branch
+        )
 
     resp <- httr2::req_perform (req)
     httr2::resp_check_status (resp)
@@ -66,17 +73,19 @@ gh_workflow_test_coverage_internal <- function (path) {
     wf_tests <- rm_data_gh_repo_workflow (path) |>
         dplyr::filter (grepl ("test|coverage", name))
 
-    cov <- vapply (wf_tests$logs_url, function (i) {
-        coverage_from_one_log (i)
-    }, numeric (1L))
-
+    # This returns the most recent test coverage value:
+    cov <- NA_real_
+    i <- 1L
+    while (is.na (cov) & i <= nrow (wf_tests)) {
+        cov <- coverage_from_one_log (wf_tests$logs_url [i])
+        i <- i + 1L
+    }
     res <- data.frame (
-        id = wf_tests$id,
-        created = wf_tests$created,
+        id = wf_tests$id [i - 1],
+        created = wf_tests$created [i - 1],
         coverage = cov,
         row.names = NULL
-    ) |>
-        dplyr::filter (!is.na (coverage))
+    )
 
     return (res)
 }

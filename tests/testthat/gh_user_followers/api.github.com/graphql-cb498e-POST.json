@@ -5,15 +5,15 @@
             "followers": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNC0xMi0wMlQxMzoxOToxNCswMTowMM4LCRJQ"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMS0xMVQxNjoyNzowMSswMTowMM4LXEwX"
                 },
-                "totalCount": 295,
+                "totalCount": 298,
                 "nodes": [
                     {
-                        "login": "realHenningLorenzen"
+                        "login": "GMarbuah"
                     },
                     {
-                        "login": "TuQmano"
+                        "login": "mowhn"
                     }
                 ]
             }

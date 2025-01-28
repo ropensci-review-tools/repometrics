@@ -66,7 +66,7 @@
     "releases_url": "ghrepos/repo//releases{/id}",
     "deployments_url": "ghrepos/repo//deployments",
     "created_at": "2016-01-31T16:46:37Z",
-    "updated_at": "2024-11-18T14:45:56Z",
+    "updated_at": "2025-01-15T15:42:05Z",
     "pushed_at": "2024-11-18T14:45:22Z",
     "git_url": "git://github.com/repo/.git",
     "ssh_url": "git@github.com:repo/.git",
@@ -74,8 +74,8 @@
     "svn_url": "https://github.com/repo/",
     "homepage": "https://docs.ropensci.org/goodpractice/",
     "size": 525,
-    "stargazers_count": 465,
-    "watchers_count": 465,
+    "stargazers_count": 467,
+    "watchers_count": 467,
     "language": "R",
     "has_issues": true,
     "has_projects": true,
@@ -104,7 +104,7 @@
     "visibility": "public",
     "forks": 37,
     "open_issues": 41,
-    "watchers": 465,
+    "watchers": 467,
     "default_branch": "main",
     "permissions": {
         "admin": true,
@@ -167,5 +167,5 @@
         }
     },
     "network_count": 37,
-    "subscribers_count": 15
+    "subscribers_count": 16
 }
