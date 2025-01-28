@@ -356,3 +356,46 @@ cm_model_collab_devel_index <- function (path, end_date = Sys.Date ()) {
 
     return (sum (res, na.rm = TRUE))
 }
+
+#' CHAOSS model for community service and support
+#'
+#' \url{https://chaoss.community/kb/metrics-model-community-service-and-support/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/12}
+#'
+#' Higher values are better than lower values.
+#'
+#' @noRd
+cm_model_comm_serv_support <- function (path, end_date = Sys.Date ()) {
+
+    # Metrics measured in days, for which lower is better:
+    issue_resp_time <- cm_metric_issue_response_time (path, end_date = end_date)
+    issue_resp_time <- as.numeric (mean (issue_resp_time))
+    issue_age <- cm_metric_issue_age (path, end_date = end_date) [["mean"]]
+    issue_res_duration <-
+        cm_metric_defect_resolution_dur (path, end_date = end_date)
+    issue_res_duration <- issue_res_duration [["mean"]]
+
+    pr_age <- cm_metric_pr_age (path, end_date = end_date) [["mean"]]
+    pr_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
+    pr_dur <- pr_dur [["review_dur_mn"]]
+
+    # Metrics measured in N > 1, for which higher is better:
+    issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
+    issues_active <- cm_metric_issues_active (path, end_date = end_date)
+    pr_num_revs <- cm_metric_pr_reviews (path, end_date = end_date)
+    pr_num_revs_approved <- pr_num_revs [["approved_count"]]
+    pr_num_revs_rejected <- pr_num_revs [["rejected_count"]]
+
+    res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur)
+    res_ON <-
+        c (issue_num_cmts, issues_active, pr_num_revs_approved, pr_num_revs_rejected)
+    res_log10 <- vapply (list (res_N_days, res_ON), function (i) {
+        i [which (i == 0)] <- 1
+        return (sum (log10 (i), na.rm = TRUE))
+    }, numeric (1L))
+    # res_log10[2] is then better for higher values, while res_log10[1] is
+    # better for lower values:
+    res <- 10^(res_log10 [2] - res_log10 [1])
+
+    return (res)
+}
