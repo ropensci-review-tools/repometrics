@@ -73,6 +73,16 @@ gh_workflow_test_coverage_internal <- function (path) {
     wf_tests <- rm_data_gh_repo_workflow (path) |>
         dplyr::filter (grepl ("test|coverage", name))
 
+    res0 <- data.frame (
+        id = integer (0),
+        created = double (0),
+        coverage = double (0),
+        row.names = NULL
+    )
+    if (nrow (wf_tests) == 0) {
+        return (res0)
+    }
+
     # This returns the most recent test coverage value:
     cov <- NA_real_
     i <- 1L
