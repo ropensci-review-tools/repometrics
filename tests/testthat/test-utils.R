@@ -65,3 +65,12 @@ test_that ("url from path", {
 
     fs::dir_delete (path)
 })
+
+test_that ("gh org repos", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    org <- "ropensci"
+    repo_names <- httptest2::with_mock_dir ("utils_gh_org", {
+        list_gh_org_repos (org)
+    })
+})
