@@ -436,3 +436,53 @@ cm_model_starter_health <- function (path, end_date = Sys.Date ()) {
 
     return (res)
 }
+
+#' CHAOSS model for "community welcomingness"
+#'
+#' \url{https://chaoss.community/kb/metrics-model-community-welcomingness/}
+#' \url{https://github.com/ropensci-review-tools/repometrics/issues/14}
+#'
+#' Higher values are better than lower values.
+#'
+#' @noRd
+cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
+
+    # ----- Values in days for which lower are better:
+    issue_age <- cm_metric_issue_age (path, end_date = end_date)
+    issue_age <- issue_age [["mean"]] # [0, N >> 1]
+    issue_age <- ifelse (issue_age == 0, 1, issue_age)
+
+    time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
+    time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
+    time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
+
+    val_days <- log10 (c (issue_age, time_first_resp))
+
+    # ----- Values in [0, 1] for which higher are better:
+    lic_coverage <- cm_metric_license_coverage (path)
+    lic_declared <-
+        as.integer (length (cm_metric_licenses_declared (path)) > 0L)
+    bp_badge <- as.integer (cm_metric_best_practices (path))
+    ci_test_data <- gh_workflow_test_coverage (path)
+    test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)
+    test_cov <- test_cov / 100
+    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+
+    val_01 <-
+        c (lic_coverage, lic_declared, bp_badge, test_cov, pr_acceptance_ratio)
+
+    # ----- Values in [0, N] for which higher are better:
+    bus <- cm_metric_contrib_absence (path, end_date = end_date)
+    bus <- bus [["ncommits"]]
+    ele <- cm_metric_elephant_factor (path) [["ncommits"]]
+    num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date) [["code"]]
+
+    val_0N <- log10 (c (bus, ele, num_code_ctbs))
+
+    res <- sum (val_01, na.rm = TRUE) +
+        sum (val_0N, na.rm = TRUE) -
+        sum (val_days, na.rm = TRUE)
+
+    return (res)
+}
