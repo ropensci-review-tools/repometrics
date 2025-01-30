@@ -33,3 +33,29 @@ list_gh_org_repos <- function (org = "ropensci", n_per_page = 100) {
 
     return (names)
 }
+
+clone_gh_org_repos <- function (dir = getwd (), orgs = NULL) {
+
+    checkmate::assert_directory_exists (dir)
+    checkmate::assert_character (orgs, min.len = 1L)
+
+    pkgs <- lapply (orgs, function (i) paste0 (i, "/", list_gh_org_repos (i)))
+    pkgs <- unlist (pkgs)
+    if (length (pkgs) == 0L) {
+        return (NULL)
+    }
+    for (p in pkgs) {
+        url <- paste0 ("https://github.com/", p)
+        dir <- fs::path (d0, gsub ("\\/.*$", "", p))
+        if (!fs::dir_exists (dir)) {
+            fs::dir_create (dir)
+        }
+        dest_dir <- fs::path (d0, p)
+        if (!fs::dir_exists (dest_dir)) {
+            withr::with_dir (
+                dir,
+                gert::git_clone (url)
+            )
+        }
+    }
+}
