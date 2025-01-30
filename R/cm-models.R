@@ -214,7 +214,11 @@ cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
     # Request Closure Ratio". The latter here is replaced by number of "closed"
     # change requests, which is the number merged. Thus each opeend and merged
     # PR counts for 2, while each unmerged counts onlyu for 1.
-    pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+    if (length (pr_dat) > 1L) {
+        pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+    } else {
+        pr_dat <- rep (NA_real_, 2L)
+    }
 
     num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
     num_auts <- num_auts [["recent"]]
@@ -246,7 +250,11 @@ cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
     ele <- cm_metric_elephant_factor (path) [["ncommits"]]
     lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
-    pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+    if (length (pr_dat) > 1L) {
+        pr_dat <- pr_dat [c ("n_opened", "n_closed")]
+    } else {
+        pr_dat <- rep (NA_real_, 2L)
+    }
     libyears <- cm_metric_libyears (path) [["mean"]]
 
     res <- c (abs, ele, lic_declared, pr_dat)
@@ -271,7 +279,10 @@ cm_model_viability_gov <- function (path, end_date = Sys.Date ()) {
     labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
 
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
-    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+    pr_closure_ratio <- NA_real_
+    if (length (pr_dat) > 1L) {
+        pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+    }
 
     pop <- cm_metric_popularity (path, end_date = end_date)
     pop <- pop [c ("forks", "stars")] # [0, N >> 1]
@@ -433,7 +444,10 @@ cm_model_starter_health <- function (path, end_date = Sys.Date ()) {
 
     # Metrics in [0, 1], for which higher is better:
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
-    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+    pr_closure_ratio <- NA_real_
+    if (length (pr_dat) > 1L) {
+        pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+    }
 
     # Metrics in [0, N], for which higher is better:
     abs <- cm_metric_contrib_absence (path, end_date = end_date)
