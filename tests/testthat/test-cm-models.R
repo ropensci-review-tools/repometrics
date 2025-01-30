@@ -11,8 +11,8 @@ test_that ("cm model developer responsiveness", {
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
+    expect_length (res, 1L)
+    expect_named (res, NULL)
 })
 
 test_that ("cm model project engagement and awareness", {
