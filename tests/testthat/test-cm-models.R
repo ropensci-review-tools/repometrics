@@ -6,7 +6,7 @@ test_that ("cm model developer responsiveness", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_model_dev_reponsiveness (path, end_date = end_date)
+    res <- cm_model_dev_responsiveness (path, end_date = end_date)
 
     fs::dir_delete (path)
 

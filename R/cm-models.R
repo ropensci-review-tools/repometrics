@@ -17,7 +17,7 @@
 #' response durations.
 #'
 #' @noRd
-cm_model_dev_reponsiveness <- function (path, end_date = Sys.Date ()) {
+cm_model_dev_responsiveness <- function (path, end_date = Sys.Date ()) {
 
     pr_durs <- cm_metric_pr_review_duration (path, end_date = end_date)
     issue_resp_time <- mn_med_sum (
@@ -44,7 +44,8 @@ cm_model_dev_reponsiveness <- function (path, end_date = Sys.Date ()) {
     names (vals) <- c ("mean", "median")
     vals [which (is.na (vals))] <- NA_real_
 
-    return (vals)
+    # But only return mean value, to align with all others:
+    return (vals [["mean"]])
 }
 
 #' CHAOSS model "project engagement"
