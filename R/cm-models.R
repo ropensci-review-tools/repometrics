@@ -186,7 +186,7 @@ cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
     libyears <- cm_metric_libyears (path) [["mean"]]
 
     deps <- rm_data_dependencies (path)
-    num_deps <- log10 (nrow (deps))
+    num_deps <- ifelse (nrow (deps) == 0L, 0, log10 (nrow (deps)))
 
     res_0N <- sum (c (bp_badge, lic_coverage, lic_declared), na.rm = TRUE)
     res_log <- sum (c (defect_res_dur, libyears, num_deps), na.rm = TRUE)
