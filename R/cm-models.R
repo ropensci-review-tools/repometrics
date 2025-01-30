@@ -345,7 +345,10 @@ cm_model_collab_devel_index <- function (path, end_date = Sys.Date ()) {
     has_ci_tests <- nrow (ci_test_data)
 
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
-    pr_prop_code <- pr_dat [["prop_code_from_prs"]]
+    pr_prop_code <- 0
+    if (length (pr_dat) > 1L) {
+        pr_prop_code <- pr_dat [["prop_code_from_prs"]]
+    }
     issues_to_prs <- cm_metric_issues_to_prs (path, end_date = end_date)
 
     # metrics that are in [0, N ~ O(1)]:
@@ -361,7 +364,9 @@ cm_model_collab_devel_index <- function (path, end_date = Sys.Date ()) {
 
     res_O1 <- c (has_ci_tests, pr_prop_code, issues_to_prs)
     res_ON <- c (num_ctbs, num_pr_reviews, num_forks)
-    res_ON2 <- log10 (c (num_commits, code_change_lines))
+    res_ON2 <- c (num_commits, code_change_lines)
+    res_ON2 [which (res_ON2 == 0)] <- 1
+    res_ON2 <- log10 (res_ON2)
 
     res <- c (res_O1, res_ON, res_ON2)
 
@@ -478,7 +483,10 @@ cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
     test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)
     test_cov <- test_cov / 100
     pr_dat <- cm_metric_change_req (path, end_date = end_date)
-    pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+    pr_closure_ratio <- NA
+    if (length (pr_dat) > 1L) {
+        pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
+    }
 
     val_01 <-
         c (lic_coverage, lic_declared, bp_badge, test_cov, pr_closure_ratio)
@@ -488,6 +496,7 @@ cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
     bus <- bus [["ncommits"]]
     ele <- cm_metric_elephant_factor (path) [["ncommits"]]
     num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date) [["code"]]
+    num_code_ctbs <- ifelse (num_code_ctbs == 0, 1, num_code_ctbs)
 
     val_0N <- log10 (c (bus, ele, num_code_ctbs))
 

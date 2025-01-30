@@ -89,15 +89,31 @@ match_repo_ctbs_to_desc <- function (path, desc_auts, gh_auts) {
 
 get_desc_authors <- function (path, roles = c ("cre", "aut")) {
 
-    desc <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
-    checkmate::assert_file_exists (desc)
+    desc_path <- fs::dir_ls (path, type = "file", regexp = "DESCRIPTION$")
+    checkmate::assert_file_exists (desc_path)
 
     roles <- paste0 (roles, collapse = "|")
-    auts <- desc::desc_get_authors (desc)
-    desc_roles <- gsub ("^.*\\[", "[", auts)
-    auts <- gsub ("(\\s*?)\\[.*$", "", auts [grep (roles, desc_roles)])
-    aut_names <- gsub ("(\\s*?)<.*$", "", auts)
-    aut_emails <- gsub ("^.*<|>(\\s?)$", "", auts)
+    auts <- tryCatch (
+        desc::desc_get_authors (desc_path),
+        error = function (e) NULL
+    )
+    if (is.null (auts)) {
+        desc_dcf <- read.dcf (desc_path)
+        aut <- grep ("^aut", colnames (desc_dcf), ignore.case = TRUE)
+        if (length (aut) == 1L) {
+            auts <- desc_dcf [aut]
+        }
+    }
+    aut_names <- auts
+    if (grepl ("\\[", auts)) {
+        desc_roles <- gsub ("^.*\\[", "[", auts)
+        auts <- gsub ("(\\s*?)\\[.*$", "", auts [grep (roles, desc_roles)])
+        aut_names <- gsub ("(\\s*?)<.*$", "", auts)
+    }
+    aut_emails <- ""
+    if (grepl ("<", auts)) {
+        aut_emails <- gsub ("^.*<|>(\\s?)$", "", auts)
+    }
 
     data.frame (name = aut_names, email = aut_emails)
 }
