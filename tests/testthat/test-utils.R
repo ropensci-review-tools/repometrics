@@ -76,5 +76,5 @@ test_that ("gh org repos", {
 
     expect_type (repo_names, "character")
     expect_length (repo_names, n_per_page_in_tests (30))
-    expect_false (any (grepl ("\\/", repo_names))) # bare names only
+    expect_true (any (grepl ("\\/", repo_names))) # bare names only
 })

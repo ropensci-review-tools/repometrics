@@ -25,6 +25,10 @@ cm_metric_commit_freq <- function (path, end_date = Sys.Date ()) {
         dplyr::group_by (week) |>
         dplyr::summarise (ncommits = dplyr::n ())
 
+    if (nrow (log) == 0L) {
+        return (mn_med_sum (0))
+    }
+
     week <- round (as.numeric (log$week), digits = 2)
     index <- seq (min (week), max (week), by = 0.01)
     index_years <- index - floor (index)

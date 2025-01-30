@@ -86,6 +86,9 @@ rm_data_libyears <- function (path) {
     if (!is.na (rel_date)) {
         dt <- difftime (deps$published, rel_date, units = "days")
     }
+    if (nrow (deps) == 0L) {
+        dt <- numeric (0L)
+    }
     deps$libyears <- as.numeric (dt) / 365.25 # In years
 
     return (deps)

@@ -6,13 +6,13 @@ test_that ("cm model developer responsiveness", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_model_dev_reponsiveness (path, end_date = end_date)
+    res <- cm_model_dev_responsiveness (path, end_date = end_date)
 
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
+    expect_length (res, 1L)
+    expect_named (res, NULL)
 })
 
 test_that ("cm model project engagement and awareness", {
