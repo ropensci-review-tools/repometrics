@@ -58,25 +58,15 @@ rm_data_gitlog <- memoise::memoise (rm_data_gitlog_internal)
 
 git_log_in_period <- function (path, end_date = Sys.Date ()) {
 
-    period <- get_repometrics_period ()
-
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
     checkmate::assert_date (end_date)
 
-    log <- rm_data_gitlog (path)
+    start_date <- end_date - get_repometrics_period ()
 
-    if (nrow (log) == 0) {
-        return (log)
-    }
-    dates <- as.Date (log$time)
-    today_minus_period <- as.Date (end_date - period)
-    index <- which (dates >= today_minus_period)
-    log <- log [index, ]
-
-    if (dates [1] > end_date) {
-        log <- log [which (dates <= end_date), ]
-    }
+    log <- rm_data_gitlog (path) |>
+        dplyr::mutate (date = as.Date (timestamp)) |>
+        dplyr::filter (date >= start_date & date <= end_date)
 
     return (log)
 }
