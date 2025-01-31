@@ -32,7 +32,13 @@ cran_downloads_internal <- function (pkg_name = NULL, end_date = Sys.Date (), ny
     checkmate::assert_character (pkg_name, len = 1L)
     checkmate::assert_integerish (nyears, min = 1L)
 
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+
     period <- 365.25 * nyears
+    if (is_test_env) {
+        period <- 2
+    }
+
     start_date <- as.Date (end_date - period)
     interval <- paste (start_date, sep = ":", end_date)
 
