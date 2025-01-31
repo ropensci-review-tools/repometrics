@@ -58,6 +58,9 @@ rm_data_gitlog <- memoise::memoise (rm_data_gitlog_internal)
 
 git_log_in_period <- function (path, end_date = Sys.Date ()) {
 
+    # suppress no visible warning note:
+    timestamp <- NULL
+
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
     checkmate::assert_date (end_date)
