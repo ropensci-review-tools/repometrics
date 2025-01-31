@@ -82,3 +82,20 @@ test_that ("cm model viability", {
         expect_named (i, NULL)
     }
 })
+
+test_that ("collate all models", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    mod_dat <- collate_all_models (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (mod_dat, "double")
+    expect_length (mod_dat, 13L)
+    nms <- gsub ("^cm\\_model\\_", "", get_cm_fns ("model"))
+    expect_named (mod_dat, nms)
+    expect_true (length (which (is.na (mod_dat))) <= 1L)
+})
