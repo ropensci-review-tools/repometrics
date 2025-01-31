@@ -670,29 +670,53 @@ cm_model_starter_health <- function (path,
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
+cm_model_comm_welcoming <- function (path,
+                                     end_date = Sys.Date (),
+                                     metrics_data = NULL) {
 
-    # ----- Values in days for which lower are better:
-    issue_age <- cm_metric_issue_age (path, end_date = end_date)
+    if (is.null (metrics_data)) {
+
+        # ----- Values in days for which lower are better:
+        issue_age <- cm_metric_issue_age (path, end_date = end_date)
+
+        time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
+
+        # ----- Values in [0, 1] for which higher are better:
+        lic_coverage <- cm_metric_license_coverage (path)
+        lic_declared <- cm_metric_licenses_declared (path)
+        ci_test_data <- cm_metric_test_coverage (path)
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+
+        bus <- cm_metric_contrib_absence (path, end_date = end_date)
+        ele <- cm_metric_elephant_factor (path)
+        num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date)
+
+    } else {
+
+        issue_age <- metrics_data$issue_age
+        time_first_resp <- metrics_data$issue_response_time
+        lic_coverage <- metrics_data$license_coverage
+        lic_declared <- metrics_data$licenses_declared
+        ci_test_data <- metrics_data$test_coverage
+        pr_dat <- metrics_data$change_req
+        bus <- metrics_data$contrib_absence
+        ele <- metrics_data$elephant_factor
+        num_code_ctbs <- metrics_data$ctb_count
+
+    }
+
     issue_age <- issue_age [["mean"]] # [0, N >> 1]
     issue_age <- ifelse (issue_age == 0, 1, issue_age)
-
-    time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
     time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
     val_days <- log10 (c (issue_age, time_first_resp))
 
-    # ----- Values in [0, 1] for which higher are better:
-    lic_coverage <- cm_metric_license_coverage (path)
-    lic_declared <-
-        as.integer (length (cm_metric_licenses_declared (path)) > 0L)
+    lic_declared <- as.integer (length (lic_declared) > 0L)
     bp_badge <- as.integer (cm_metric_best_practices (path))
-    ci_test_data <- cm_metric_test_coverage (path)
 
     test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)
     test_cov <- test_cov / 100
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
     pr_closure_ratio <- NA
     if (length (pr_dat) > 1L) {
         pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
@@ -702,10 +726,9 @@ cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
         c (lic_coverage, lic_declared, bp_badge, test_cov, pr_closure_ratio)
 
     # ----- Values in [0, N] for which higher are better:
-    bus <- cm_metric_contrib_absence (path, end_date = end_date)
+    ele <- ele [["ncommits"]]
     bus <- bus [["ncommits"]]
-    ele <- cm_metric_elephant_factor (path) [["ncommits"]]
-    num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date) [["code"]]
+    num_code_ctbs <- num_code_ctbs [["code"]]
     num_code_ctbs <- ifelse (num_code_ctbs == 0, 1, num_code_ctbs)
 
     val_0N <- log10 (c (bus, ele, num_code_ctbs))
