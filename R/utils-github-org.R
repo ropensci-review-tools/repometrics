@@ -36,6 +36,9 @@ list_gh_org_repos <- function (org = "ropensci", n_per_page = 100) {
 
 pkgs_are_r <- function (pkgs) {
 
+    # Supress no visible binding notes:
+    type <- NULL
+
     u_base <- "https://api.github.com/repos/"
     u_base <- "https://api.github.com/repos/reconhub/epicookbook/contents/{+path}"
 
@@ -80,6 +83,9 @@ write_pkgs_json <- function (pkgs, dir = getwd ()) {
 }
 
 clone_gh_org_repos <- function (dir = getwd (), orgs = NULL) {
+
+    # Supress no visible binding notes:
+    is_r <- NULL
 
     checkmate::assert_directory_exists (dir)
     checkmate::assert_character (orgs, min.len = 1L)
