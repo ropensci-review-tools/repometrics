@@ -3,13 +3,9 @@
 #'
 #' @param path Local path to repository.
 #' @param end_date The date up to which download counts are to be aggregated.
-#' @param n_per_page Not used here, but needed so all functions can safely be
-#' called with this parameter.
 #' @return A single integer counting the number of downloads.
 #' @noRd
-cm_metric_cran_downloads <- function (path,
-                                      end_date = Sys.Date (),
-                                      n_per_page) {
+cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_directory_exists (path)
     checkmate::assert_date (end_date)
@@ -27,7 +23,9 @@ cm_metric_cran_downloads <- function (path,
 #' Download the full daily log over `nyears`, and use memoised return value to
 #' filter to desired period for subsequent calls.
 #' @noRd
-cran_downloads_internal <- function (pkg_name = NULL, end_date = Sys.Date (), nyears = 10) {
+cran_downloads_internal <- function (pkg_name = NULL,
+                                     end_date = Sys.Date (),
+                                     nyears = 10) {
 
     checkmate::assert_character (pkg_name, len = 1L)
     checkmate::assert_integerish (nyears, min = 1L)

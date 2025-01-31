@@ -1,7 +1,9 @@
 #' The CHAOSS Metric "Elephant Factor", which is the number of distint
 #' organizations needed to reach 50 of contributions. This is akin to the
 #' "cm_metric_contrib_absence()", but for organizations instead of individuals.
+#'
 #' \url{https://chaoss.community/kb/metric-elephant-factor/}.
+#'
 #' @noRd
 cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
 
