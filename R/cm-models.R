@@ -688,7 +688,8 @@ cm_model_comm_welcoming <- function (path, end_date = Sys.Date ()) {
     lic_declared <-
         as.integer (length (cm_metric_licenses_declared (path)) > 0L)
     bp_badge <- as.integer (cm_metric_best_practices (path))
-    ci_test_data <- gh_workflow_test_coverage (path)
+    ci_test_data <- cm_metric_test_coverage (path)
+
     test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)
     test_cov <- test_cov / 100
     pr_dat <- cm_metric_change_req (path, end_date = end_date)

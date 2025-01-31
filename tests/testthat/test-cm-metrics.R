@@ -558,6 +558,20 @@ test_that ("cm metric burstiness", {
     expect_true (is.na (b))
 })
 
+test_that ("cm metric test coverage", {
+
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    cov <- cm_metric_test_coverage (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_s3_class (cov, "data.frame")
+    expect_named (cov, c ("id", "created", "coverage"))
+    expect_true (nrow (cov) > 0L)
+})
+
 test_that ("cm metric collate all", {
 
     dat <- mock_rm_data ()
@@ -568,7 +582,7 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 42L)
+    expect_length (metrics_data, 43L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
@@ -578,7 +592,7 @@ test_that ("cm metric collate all", {
         2, 3, 1, 3, 4, 1, 0, 1, 1, 1,
         1, 3, 5, 4, 1, 1, 2, 1, 1, 2,
         4, 4, 1, 4, 0, 4, 14, 1, 1, 2,
-        4, 4
+        4, 3, 4
     )
     expect_equal (lens, lens_expected)
 })

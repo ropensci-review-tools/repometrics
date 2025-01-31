@@ -5,6 +5,7 @@ get_cm_fns <- function (what = "metric") {
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     fns <- grep (ptn, pkg_fns, value = TRUE)
+    fns <- fns [which (!grepl ("internal", fns))]
 
     return (fns)
 }
