@@ -1,8 +1,11 @@
 #' Metric of licenses declared
 #'
 #' \url{https://chaoss.community/kb/metric-licenses-declared/}
+#'
+#' @param path Path to local repo
+#' @param end_date Not used here, but specified for consistent interface to all
 #' @noRd
-cm_metric_licenses_declared <- function (path, dirs = c ("R", "src", "inst/extdata")) {
+cm_metric_licenses_declared <- function (path, end_date = NULL) {
 
     requireNamespace ("desc")
 
@@ -13,9 +16,15 @@ cm_metric_licenses_declared <- function (path, dirs = c ("R", "src", "inst/extda
 #' Metric fo rnumber of files with declared licenses
 #'
 #' \url{https://chaoss.community/kb/metric-license-coverage/}
-#' @noRd
 #'
-cm_metric_license_coverage <- function (path, dirs = c ("R", "src", "inst/extdata")) {
+#' @param path Path to local repo
+#' @param end_date Not used here, but specified for consistent interface to all
+#' @param dirs Directories to include in assessing files for license coverage.
+#' metric fns.
+#' @noRd
+cm_metric_license_coverage <- function (path,
+                                        end_date = NULL,
+                                        dirs = c ("R", "src", "inst/extdata")) {
 
     requireNamespace ("readr")
 

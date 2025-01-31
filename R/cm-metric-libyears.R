@@ -4,8 +4,10 @@
 #' Lower or negatve values indicate that a project is more up-to-date.
 #'
 #' @param path Local path to repository
+#' @param end_date Not used here, but specified for consistent interface to all
+#' metric fns.
 #' @noRd
-cm_metric_libyears <- function (path) {
+cm_metric_libyears <- function (path, end_date = NULL) {
 
     deps <- rm_data_libyears (path)
 
