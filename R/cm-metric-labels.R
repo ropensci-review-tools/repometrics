@@ -16,6 +16,9 @@
 #' consider the "Newcomer friendly" labels, as the "skill labels" are too
 #' subjective to automate in a general way here.
 #'
+#' Note that this also does not consider a "start_date", because the labels may
+#' have been added at any time after an actual creation date of each issue.
+#'
 #' @noRd
 cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
 
