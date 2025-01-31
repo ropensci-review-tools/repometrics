@@ -296,8 +296,11 @@ test_that ("rm data main contributors", {
 
     end_date <- as.Date ("2024-08-01")
 
-    ctbs_main_recent <- main_contributors (path, end_date = end_date, period = 365)
-    ctbs_main_all <- main_contributors (path, end_date = end_date, period = NULL)
+    ctbs_main_recent <- withr::with_options (
+        list ("repometrics_period" = 365),
+        main_contributors (path, end_date = end_date, all_ctbs = FALSE)
+    )
+    ctbs_main_all <- main_contributors (path, end_date = end_date, all_ctbs = TRUE)
     expect_type (ctbs_main_recent, "character")
     expect_type (ctbs_main_all, "character")
 

@@ -56,7 +56,9 @@ rm_data_gitlog_internal <- function (path) {
 }
 rm_data_gitlog <- memoise::memoise (rm_data_gitlog_internal)
 
-git_log_in_period <- function (path, end_date = Sys.Date (), period = 90) {
+git_log_in_period <- function (path, end_date = Sys.Date ()) {
+
+    period <- get_repometrics_period ()
 
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)

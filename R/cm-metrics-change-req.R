@@ -22,7 +22,7 @@
 #' @noRd
 cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
 
-    log <- git_log_in_period (path, end_date, get_repometrics_period ())
+    log <- git_log_in_period (path, end_date)
     if (nrow (log) == 0) {
         return (0)
     }
