@@ -105,13 +105,13 @@ get_desc_authors <- function (path, roles = c ("cre", "aut")) {
         }
     }
     aut_names <- auts
-    if (grepl ("\\[", auts)) {
+    if (any (grepl ("\\[", auts))) {
         desc_roles <- gsub ("^.*\\[", "[", auts)
         auts <- gsub ("(\\s*?)\\[.*$", "", auts [grep (roles, desc_roles)])
         aut_names <- gsub ("(\\s*?)<.*$", "", auts)
     }
     aut_emails <- ""
-    if (grepl ("<", auts)) {
+    if (any (grepl ("<", auts))) {
         aut_emails <- gsub ("^.*<|>(\\s?)$", "", auts)
     }
 
