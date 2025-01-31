@@ -1,8 +1,12 @@
 #' CHAOSS metric for "Types of Contributions", which assesses the diversity of
-#' contribution types. This is greatly simplified here, to measure a single
-#' proportion of propoertions of unique GitHub users contributing to issues who
-#' are not otherwise main contributors.
+#' contribution types.
+#'
+#' This is greatly simplified here, to measure a single proportion of
+#' propoertions of unique GitHub users contributing to issues who are not
+#' otherwise main contributors.
+#'
 #' \url{https://chaoss.community/kb/metric-types-of-contributions/}.
+#'
 #' @noRd
 cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
 

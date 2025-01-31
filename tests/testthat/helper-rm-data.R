@@ -5,8 +5,6 @@ mock_rm_data <- function (repo = TRUE) {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
 
-    end_date <- as.Date ("2024-01-01")
-
     path <- generate_test_pkg ()
     ctbs <- httptest2::with_mock_dir ("gh_api_ctbs", {
         rm_data_contribs_from_gh_api (path)
@@ -76,6 +74,8 @@ mock_rm_data <- function (repo = TRUE) {
     desc [1] <- "Package: goodpractice"
     writeLines (desc, desc_path)
 
+    # test-cm-metrics.R only tests cran downloads for this one date:
+    end_date <- as.Date ("2024-08-01")
     dl <- httptest2::with_mock_dir ("cran_dl", {
         cm_metric_cran_downloads (path, end_date = end_date)
     })

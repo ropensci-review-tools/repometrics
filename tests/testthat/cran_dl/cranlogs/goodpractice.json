@@ -2,20 +2,20 @@
     {
         "downloads": [
             {
-                "day": "2023-12-30",
-                "downloads": 6
+                "day": "2024-07-30",
+                "downloads": 24
             },
             {
-                "day": "2023-12-31",
-                "downloads": 49
+                "day": "2024-07-31",
+                "downloads": 26
             },
             {
-                "day": "2024-01-01",
-                "downloads": 10
+                "day": "2024-08-01",
+                "downloads": 65
             }
         ],
-        "start": "2023-12-30",
-        "end": "2024-01-01",
+        "start": "2024-07-30",
+        "end": "2024-08-01",
         "package": "goodpractice"
     }
 ]

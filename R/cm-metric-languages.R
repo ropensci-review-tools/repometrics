@@ -3,8 +3,10 @@
 #' \url{https://chaoss.community/?p=3430}.
 #'
 #' @param path Local path to repository
+#' @param end_date Not used here, but specified for consistent interface to all
+#' metric fns.
 #' @noRd
-cm_metric_languages <- function (path) {
+cm_metric_languages <- function (path, end_date = NULL) {
 
     # Suppress no visible binding note:
     language <- nfiles <- ncode <- NULL

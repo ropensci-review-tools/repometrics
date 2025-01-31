@@ -1,3 +1,6 @@
+# Two end dates are used here, but these only affect mock results in the
+# cran_downloads function. That needs to be hard-coded in 'helper-rm-data.R' to
+# use the same value as here
 end_date <- as.Date ("2024-08-01")
 
 test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
@@ -553,4 +556,29 @@ test_that ("cm metric burstiness", {
     expect_named (b, NULL)
     # Test data have only one commit day, so no bustiness can be measured:
     expect_true (is.na (b))
+})
+
+test_that ("cm metric collate all", {
+
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    metrics_data <- collate_all_metrics (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_type (metrics_data, "list")
+    expect_length (metrics_data, 42L)
+    metric_fns <- get_cm_metric_fns ()
+    expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
+
+    lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
+    lens_expected <- c (
+        1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
+        2, 3, 1, 3, 4, 1, 0, 1, 1, 1,
+        1, 3, 5, 4, 1, 1, 2, 1, 1, 2,
+        4, 4, 1, 4, 0, 4, 14, 1, 1, 2,
+        4, 4
+    )
+    expect_equal (lens, lens_expected)
 })
