@@ -17,15 +17,24 @@
 #' response durations.
 #'
 #' @noRd
-cm_model_dev_responsiveness <- function (path, end_date = Sys.Date ()) {
+cm_model_dev_responsiveness <- function (path,
+                                         end_date = Sys.Date (),
+                                         metrics_data = NULL) {
 
-    pr_durs <- cm_metric_pr_review_duration (path, end_date = end_date)
-    issue_resp_time <- mn_med_sum (
-        cm_metric_issue_response_time (path, end_date = end_date)
-    )
+    if (is.null (metrics_data)) {
+        pr_durs <- cm_metric_pr_review_duration (path, end_date = end_date)
+        issue_resp_time <-
+            cm_metric_issue_response_time (path, end_date = end_date)
+        defect_resol_dur <-
+            cm_metric_defect_resolution_dur (path, end_date = end_date)
+    } else {
+        pr_durs <- metrics_data$pr_review_duration
+        issue_resp_time <- metrics_data$issue_response_time
+        defect_resol_dur <- metrics_data$defect_resolution_dur
+    }
+
+    issue_resp_time <- mn_med_sum (as.integer (issue_resp_time))
     names (issue_resp_time) <- paste0 ("issue_resp_", names (issue_resp_time))
-    defect_resol_dur <-
-        cm_metric_defect_resolution_dur (path, end_date = end_date)
     names (defect_resol_dur) <-
         paste0 ("defect_resol_", names (defect_resol_dur))
 
@@ -68,26 +77,44 @@ cm_model_dev_responsiveness <- function (path, end_date = Sys.Date ()) {
 #' 6. Nr. comments in issues
 #'
 #' @noRd
-cm_model_proj_engagement <- function (path, end_date = Sys.Date ()) {
+cm_model_proj_engagement <- function (path,
+                                      end_date = Sys.Date (),
+                                      metrics_data = NULL) {
 
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    if (is.null (metrics_data)) {
+
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        counts <- cm_metric_committer_count (path, end_date = end_date)
+        # has number of unique commiters for (watchers or forks, issues, prs)
+
+        num_code_ctbs <-
+            cm_metric_ctb_count (path, end_date = end_date) [["code"]]
+
+        num_issues_closed <-
+            cm_metric_issues_closed (path, end_date = end_date)
+        num_issues_updated <-
+            cm_metric_issue_updates (path, end_date = end_date)
+        num_issue_comments <-
+            cm_metric_issue_cmt_count (path, end_date = end_date)
+
+        # Not included here:
+        # rev_cycle_dur <-
+        #   cm_metric_pr_review_duration (path, end_date = end_date)
+    } else {
+
+        pr_dat <- metrics_data$pr_dat
+        counts <- metrics_data$committer_count
+        num_code_ctbs <- metrics_data$ctb_count
+        num_issues_closed <- metrics_data$issues_closed
+        num_issues_updated <- metrics_data$issue_updates
+        num_issue_comments <- metrics_data$issue_cmt_count
+    }
+
     num_prs_merged <- ifelse (
         length (pr_dat) > 1,
         pr_dat [["n_closed"]],
         0L
     )
-
-    counts <- cm_metric_committer_count (path, end_date = end_date)
-    # has number of unique commiters for (watchers or forks, issues, prs)
-
-    num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date) [["code"]]
-
-    num_issues_closed <- cm_metric_issues_closed (path, end_date = end_date)
-    num_issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
-    num_issue_comments <- cm_metric_issue_cmt_count (path, end_date = end_date)
-
-    # Not included here:
-    # rev_cycle_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
 
     res <- c (
         num_prs_merged, counts, num_code_ctbs,
@@ -113,12 +140,24 @@ cm_model_proj_engagement <- function (path, end_date = Sys.Date ()) {
 #' commit activity, which is what is measured here in `cm_metric_burstiness`.
 #'
 #' @noRd
-cm_model_proj_awareness <- function (path, end_date = Sys.Date ()) {
+cm_model_proj_awareness <- function (path,
+                                     end_date = Sys.Date (),
+                                     metrics_data = NULL) {
 
-    num_forks <- cm_metric_num_forks (path, end_date = end_date)
+    if (is.null (metrics_data)) {
+
+        num_forks <- cm_metric_num_forks (path, end_date = end_date)
+        num_stars <- cm_metric_popularity (path, end_date = end_date)
+
+    } else {
+
+        num_forks <- metrics_data$num_forks
+        num_stars <- metrics_data$popularity
+
+    }
+
+    num_stars <- num_stars [["stars"]]
     num_forks <- num_forks [["num_in_period"]]
-
-    num_stars <- cm_metric_popularity (path, end_date = end_date) [["stars"]]
 
     res <- c (num_forks, num_stars)
     res [which (res == 0)] <- 1
@@ -135,23 +174,44 @@ cm_model_proj_awareness <- function (path, end_date = Sys.Date ()) {
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_community_activity <- function (path, end_date = Sys.Date ()) {
+cm_model_community_activity <- function (path,
+                                         end_date = Sys.Date (),
+                                         metrics_data = NULL) {
 
-    # ----- Single integer results which can be directly added:
-    ctbs <- cm_metric_ctb_count (path, end_date = end_date)
-    # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each as
-    # number of unique authors.
-    prs <- cm_metric_pr_reviews (path, end_date = end_date)
+    if (is.null (metrics_data)) {
+
+
+        # ----- Single integer results which can be directly added:
+        ctbs <- cm_metric_ctb_count (path, end_date = end_date)
+        # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each
+        # as number of unique authors.
+        prs <- cm_metric_pr_reviews (path, end_date = end_date)
+
+        num_releases <- cm_metric_recent_releases (path, end_date = end_date)
+        issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
+        num_maintainers <-
+            cm_metric_maintainer_count (path, end_date = end_date)
+
+        # ----- Model includes frequencies of both commits and comments, but
+        # ----- these are here treated instead as direct counts.
+        commit_count <- cm_metric_commit_freq (path, end_date = end_date)
+        comment_counts <- cm_metric_issue_cmt_count (path, end_date = end_date)
+
+    } else {
+
+        ctbs <- metrics_data$ctb_count
+        prs <- metrics_data$pr_reviews
+        num_releases <- metrics_data$recent_releases
+        issues_updated <- metrics_data$issue_updates
+        num_maintainers <-
+            metrics_data$maintainer_count
+        commit_count <- metrics_data$commit_freq
+        comment_counts <- metrics_data$issue_cmt_count
+
+    }
+
+    commit_count <- commit_count [["mean"]]
     prs_approved <- prs [["approved_count"]]
-
-    num_releases <- cm_metric_recent_releases (path, end_date = end_date)
-    issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
-    num_maintainers <- cm_metric_maintainer_count (path, end_date = end_date)
-
-    # ----- Model includes frequencies of both commits and comments, but these
-    # ----- are here treated instead as direct counts.
-    commit_count <- cm_metric_commit_freq (path, end_date = end_date) [["mean"]]
-    comment_counts <- cm_metric_issue_cmt_count (path, end_date = end_date)
 
     res <- c (
         ctbs, prs_approved, num_releases, issues_updated,
