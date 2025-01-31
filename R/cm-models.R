@@ -446,20 +446,33 @@ cm_model_viability_gov <- function (path,
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_viability_strategy <- function (path, end_date = Sys.Date ()) {
+cm_model_viability_strategy <- function (path,
+                                         end_date = Sys.Date (),
+                                         metrics_data = NULL) {
 
-    langs <- cm_metric_languages (path)
+    if (is.null (metrics_data)) {
+
+        langs <- cm_metric_languages (path)
+        bus <- cm_metric_contrib_absence (path, end_date = end_date)
+        ele <- cm_metric_elephant_factor (path, end_date = end_date)
+        rel_freq <- cm_metric_release_freq (path, end_date = end_date) [["mean"]]
+
+    } else {
+
+        langs <- metrics_data$languages
+        bus <- metrics_data$contrib_absence
+        ele <- metrics_data$elephant_factor
+        rel_freq <- metrics_data$release_freq
+
+    }
+
     lang_dist_mn <- mean (langs$ncode_pc) # lower is better
     # Re-scale this so that 4 languages translates to a value of 1:
     lang_dist_mn <- 0.25 / lang_dist_mn
 
-    bus <- cm_metric_contrib_absence (path, end_date = end_date)
     bus <- log10 (bus [["ncommits"]]) # higher is better
-
-    ele <- cm_metric_elephant_factor (path, end_date = end_date)
     ele <- log10 (ele [["ncommits"]]) # higher is better
 
-    rel_freq <- cm_metric_release_freq (path, end_date = end_date) [["mean"]]
     rel_freq <- log10 (ifelse (rel_freq == 0, 1, rel_freq))
 
     res_0N <- c (bus, ele, -rel_freq)
@@ -476,29 +489,47 @@ cm_model_viability_strategy <- function (path, end_date = Sys.Date ()) {
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_collab_devel_index <- function (path, end_date = Sys.Date ()) {
+cm_model_collab_devel_index <- function (path,
+                                         end_date = Sys.Date (),
+                                         metrics_data = NULL) {
 
-    # metrics that are in [0, 1]:
-    ci_test_data <- gh_workflow_test_coverage (path)
-    has_ci_tests <- nrow (ci_test_data)
+    if (is.null (metrics_data)) {
 
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        # metrics that are in [0, 1]:
+        has_ci_tests <- cm_metric_has_ci (path, end_date = end_date)
+
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        issues_to_prs <- cm_metric_issues_to_prs (path, end_date = end_date)
+
+        # metrics that are in [0, N ~ O(1)]:
+        num_ctbs <- cm_metric_num_contributors (path, end_date = end_date)
+        pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
+        num_forks <- cm_metric_num_forks (path, end_date = end_date)
+
+        # matrics that are in [0, N >> 1]:
+        num_commits <- cm_metric_num_commits (path, end_date = end_date) # [0, N >> 1]
+        code_change_lines <- cm_metric_code_change_lines (path, end_date = end_date)
+
+    } else {
+
+        has_ci_tests <- metrics_data$has_ci
+        pr_dat <- metrics_data$change_req
+        issues_to_prs <- metrics_data$issues_to_prs
+        num_ctbs <- metrics_data$num_contributors
+        pr_dat <- metrics_data$pr_reviews
+        num_forks <- metrics_data$num_forks
+        num_commits <- metrics_data$num_commits
+        code_change_lines <- metrics_data$code_change_lines
+
+    }
+
     pr_prop_code <- 0
     if (length (pr_dat) > 1L) {
         pr_prop_code <- pr_dat [["prop_code_from_prs"]]
     }
-    issues_to_prs <- cm_metric_issues_to_prs (path, end_date = end_date)
 
-    # metrics that are in [0, N ~ O(1)]:
-    num_ctbs <- cm_metric_num_contributors (path, end_date = end_date)
-    pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
     num_pr_reviews <- pr_dat [["approved_count"]]
-    num_forks <- cm_metric_num_forks (path, end_date = end_date)
     num_forks <- num_forks [["num_in_period"]]
-
-    # matrics that are in [0, N >> 1]:
-    num_commits <- cm_metric_num_commits (path, end_date = end_date) # [0, N >> 1]
-    code_change_lines <- cm_metric_code_change_lines (path, end_date = end_date)
 
     res_O1 <- c (has_ci_tests, pr_prop_code, issues_to_prs)
     res_ON <- c (num_ctbs, num_pr_reviews, num_forks)
@@ -519,24 +550,45 @@ cm_model_collab_devel_index <- function (path, end_date = Sys.Date ()) {
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_comm_serv_support <- function (path, end_date = Sys.Date ()) {
+cm_model_comm_serv_support <- function (path,
+                                        end_date = Sys.Date (),
+                                        metrics_data = NULL) {
 
-    # Metrics measured in days, for which lower is better:
-    issue_resp_time <- cm_metric_issue_response_time (path, end_date = end_date)
+    if (is.null (metrics_data)) {
+
+        # Metrics measured in days, for which lower is better:
+        issue_resp_time <- cm_metric_issue_response_time (path, end_date = end_date)
+        issue_age <- cm_metric_issue_age (path, end_date = end_date)
+        issue_res_duration <-
+            cm_metric_defect_resolution_dur (path, end_date = end_date)
+
+        pr_age <- cm_metric_pr_age (path, end_date = end_date)
+        pr_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
+
+        # Metrics measured in N > 1, for which higher is better:
+        issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
+        issues_active <- cm_metric_issues_active (path, end_date = end_date)
+        pr_num_revs <- cm_metric_pr_reviews (path, end_date = end_date)
+
+    } else {
+
+        issue_resp_time <- metrics_data$issue_response_time
+        issue_age <- metrics_data$issue_age
+        issue_res_duration <- metrics_data$defect_resolution_dur
+        pr_age <- metrics_data$pr_age
+        pr_dur <- metrics_data$pr_review_duration
+        issue_num_cmts <- metrics_data$issue_comments
+        issues_active <- metrics_data$issues_active
+        pr_num_revs <- metrics_data$pr_reviews
+
+    }
+
     issue_resp_time <- as.numeric (mean (issue_resp_time))
-    issue_age <- cm_metric_issue_age (path, end_date = end_date) [["mean"]]
-    issue_res_duration <-
-        cm_metric_defect_resolution_dur (path, end_date = end_date)
+    issue_age <- issue_age [["mean"]]
     issue_res_duration <- issue_res_duration [["mean"]]
-
-    pr_age <- cm_metric_pr_age (path, end_date = end_date) [["mean"]]
-    pr_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
+    pr_age <- pr_age [["mean"]]
     pr_dur <- pr_dur [["review_dur_mn"]]
 
-    # Metrics measured in N > 1, for which higher is better:
-    issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
-    issues_active <- cm_metric_issues_active (path, end_date = end_date)
-    pr_num_revs <- cm_metric_pr_reviews (path, end_date = end_date)
     pr_num_revs_approved <- pr_num_revs [["approved_count"]]
     pr_num_revs_rejected <- pr_num_revs [["rejected_count"]]
 
@@ -562,25 +614,41 @@ cm_model_comm_serv_support <- function (path, end_date = Sys.Date ()) {
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_starter_health <- function (path, end_date = Sys.Date ()) {
+cm_model_starter_health <- function (path,
+                                     end_date = Sys.Date (),
+                                     metrics_data = NULL) {
 
-    # Metrics measured in days, for which lower is better:
-    time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
+    if (is.null (metrics_data)) {
+
+        # Metrics measured in days, for which lower is better:
+        time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
+
+        # Metrics in [0, 1], for which higher is better:
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+
+        # Metrics in [0, N], for which higher is better:
+        abs <- cm_metric_contrib_absence (path, end_date = end_date)
+        rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+
+    } else {
+
+        time_first_resp <- metrics_data$issue_response_time
+        pr_dat <- metrics_data$change_req
+        abs <- metrics_data$contrib_absence
+        rel_freq <- metrics_data$release_freq
+
+    }
+
     time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
-    # Metrics in [0, 1], for which higher is better:
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
     pr_closure_ratio <- NA_real_
     if (length (pr_dat) > 1L) {
         pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
     }
 
-    # Metrics in [0, N], for which higher is better:
-    abs <- cm_metric_contrib_absence (path, end_date = end_date)
     abs <- abs [["ncommits"]]
 
-    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
     rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
     rel_freq <- ifelse (rel_freq == 0, 1, rel_freq)
 
