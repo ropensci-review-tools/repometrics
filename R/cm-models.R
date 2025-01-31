@@ -232,19 +232,38 @@ cm_model_community_activity <- function (path,
 #' Higher values are better than higher values.
 #'
 #' @noRd
-cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
+cm_model_oss_compliance <- function (path,
+                                     end_date = Sys.Date (),
+                                     metrics_data = NULL) {
 
-    # All of these metrics are single numeric values which may be added, and
-    # for which higher values are better:
-    bp_badge <- as.integer (cm_metric_best_practices (path))
-    lic_coverage <- cm_metric_license_coverage (path)
-    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
+    if (is.null (metrics_data)) {
 
-    # These are then directly measured so that lower values are better:
-    defect_res_dur <-
-        cm_metric_defect_resolution_dur (path, end_date = end_date) [["mean"]]
+        # All of these metrics are single numeric values which may be added, and
+        # for which higher values are better:
+        bp_badge <- cm_metric_best_practices (path)
+        lic_coverage <- cm_metric_license_coverage (path)
+        lic_declared <- cm_metric_licenses_declared (path)
+
+        # These are then directly measured so that lower values are better:
+        defect_res_dur <-
+            cm_metric_defect_resolution_dur (path, end_date = end_date)
+        libyears <- cm_metric_libyears (path)
+
+    } else {
+
+        bp_badge <- metrics_data$best_practices
+        lic_coverage <- metrics_data$license_coverage
+        lic_declared <- metrics_data$licenses_declared
+        defect_res_dur <- metrics_data$defect_resolution_dur
+        libyears <- metrics_data$libyears
+
+    }
+
+    bp_badge <- as.integer (bp_badge)
+    lic_declared <- as.integer (length (lic_declared) > 0L)
+    defect_res_dur <- defect_res_dur [["mean"]]
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
-    libyears <- cm_metric_libyears (path) [["mean"]]
+    libyears <- libyears [["mean"]]
 
     deps <- rm_data_dependencies (path)
     num_deps <- ifelse (nrow (deps) == 0L, 0, log10 (nrow (deps)))
@@ -264,13 +283,28 @@ cm_model_oss_compliance <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-community/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/9}
 #' @noRd
-cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
+cm_model_viability_community <- function (path,
+                                          end_date = Sys.Date (),
+                                          metrics_data = NULL) {
 
-    counts <- cm_metric_committer_count (path, end_date = end_date)
-    # has number of unique commiters for (watchers or forks, issues, prs)
+    if (is.null (metrics_data)) {
+
+        counts <- cm_metric_committer_count (path, end_date = end_date)
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
+        libyears <- cm_metric_libyears (path)
+
+    } else {
+
+        counts <- metrics_data$committer_count
+        pr_dat <- metrics_data$change_req
+        num_auts <- metrics_data$maintainer_count
+        libyears <- metrics_data$libyears
+
+    }
+
+    # "counts" has number of unique commiters for (watchers or forks, issues, prs)
     counts <- counts [["watchers"]] # stars and forks, as unique users
-
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
     # The model includes "Change Requests" (as direct count), and "Change
     # Request Closure Ratio". The latter here is replaced by number of "closed"
     # change requests, which is the number merged. Thus each opeend and merged
@@ -281,11 +315,10 @@ cm_model_viability_community <- function (path, end_date = Sys.Date ()) {
         pr_dat <- rep (NA_real_, 2L)
     }
 
-    num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
     num_auts <- num_auts [["recent"]]
 
     # lower values of libyears are  better, so appended below in negated form:
-    libyears <- cm_metric_libyears (path) [["mean"]]
+    libyears <- libyears [["mean"]]
 
     res <- c (counts, pr_dat, num_auts)
     res [which (res == 0)] <- 1
