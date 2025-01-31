@@ -2,7 +2,7 @@ function (resp) {
 
     resp <- httptest2::gsub_response (
         resp,
-        "http://cranlogs.r-pkg.org/downloads/total/",
+        "http://cranlogs.r-pkg.org/downloads/daily/",
         "cranlogs/",
         fixed = TRUE
     )

@@ -160,14 +160,13 @@ user_from_gh_api <- function (user) {
 main_contributors <- function (path,
                                end_date = Sys.Date (),
                                threshold = 0.9,
-                               period = NULL) {
+                               all_ctbs = FALSE) {
 
     # suppress no visible warning notes:
     login <- n <- NULL
 
-    if (!is.null (period)) {
-        checkmate::assert_integerish (period, min = 1L)
-        log <- git_log_in_period (path, end_date = end_date, period = period)
+    if (!all_ctbs) {
+        log <- git_log_in_period (path, end_date = end_date)
     } else {
         log <- rm_data_gitlog (path)
     }

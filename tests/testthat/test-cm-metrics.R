@@ -13,7 +13,7 @@ test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
     dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
     expect_type (dl, "integer")
     expect_length (dl, 1L)
-    expect_true (dl > 1000)
+    expect_true (dl > 100)
 
     fs::dir_delete (path)
 })

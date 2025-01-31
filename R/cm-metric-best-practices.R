@@ -4,8 +4,12 @@
 #' include the core infrastructure best practices badge.
 #'
 #' \url{https://chaoss.community/kb/metric-open-source-security-foundation-openssf-best-practices-badge/}
+#'
+#' This metric does not use the `end_date` parameter (but includes it to
+#' provide a consistent interface).
+#'
 #' @noRd
-cm_metric_best_practices <- function (path) {
+cm_metric_best_practices <- function (path, end_date = NULL) {
     readme_path <- fs::dir_ls (path, regexp = "readme\\.md", ignore.case = TRUE)
     if (length (readme_path) == 0L) {
         return (FALSE)

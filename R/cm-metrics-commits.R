@@ -1,6 +1,6 @@
 cm_metric_num_commits <- function (path, end_date = Sys.Date ()) {
 
-    log <- git_log_in_period (path, end_date, get_repometrics_period ())
+    log <- git_log_in_period (path, end_date)
 
     return (nrow (log))
 }
@@ -17,7 +17,7 @@ cm_metric_commit_freq <- function (path, end_date = Sys.Date ()) {
 
     start_date <- end_date - get_repometrics_period ()
 
-    log <- git_log_in_period (path, end_date, get_repometrics_period ()) |>
+    log <- git_log_in_period (path, end_date) |>
         dplyr::mutate (date = as.Date (timestamp)) |>
         dplyr::mutate (
             week = paste0 (strftime (date, "%y"), ".", strftime (date, "%W"))
