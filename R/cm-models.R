@@ -303,7 +303,8 @@ cm_model_viability_community <- function (path,
 
     }
 
-    # "counts" has number of unique commiters for (watchers or forks, issues, prs)
+    # "counts" has number of unique commiters for
+    # (watchers or forks, issues, prs)
     counts <- counts [["watchers"]] # stars and forks, as unique users
     # The model includes "Change Requests" (as direct count), and "Change
     # Request Closure Ratio". The latter here is replaced by number of "closed"
@@ -335,21 +336,39 @@ cm_model_viability_community <- function (path,
 #' Higher values are better than lower values
 #'
 #' @noRd
-cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
+cm_model_viability_starter <- function (path,
+                                        end_date = Sys.Date (),
+                                        metrics_data = NULL) {
 
-    abs <- cm_metric_contrib_absence (path, end_date = end_date)
-    # Only take absence factor for commits, as authors are be definition very
+    if (is.null (metrics_data)) {
+
+        abs <- cm_metric_contrib_absence (path, end_date = end_date)
+        ele <- cm_metric_elephant_factor (path)
+        lic_declared <- cm_metric_licenses_declared (path)
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        libyears <- cm_metric_libyears (path)
+
+    } else {
+
+        abs <- metrics_data$contrib_absence
+        ele <- metrics_data$elephant_factor
+        lic_declared <- metrics_data$licenses_declared
+        pr_dat <- metrics_data$change_req
+        libyears <- metrics_data$libyears
+
+    }
+
+    # Only take absence factors for commits, as authors are be definition very
     # highly correlcted.
     abs <- abs [["ncommits"]]
-    ele <- cm_metric_elephant_factor (path) [["ncommits"]]
-    lic_declared <- as.integer (length (cm_metric_licenses_declared (path)) > 0L)
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
+    ele <- ele [["ncommits"]]
+    lic_declared <- as.integer (length (lic_declared) > 0L)
     if (length (pr_dat) > 1L) {
         pr_dat <- pr_dat [c ("n_opened", "n_closed")]
     } else {
         pr_dat <- rep (NA_real_, 2L)
     }
-    libyears <- cm_metric_libyears (path) [["mean"]]
+    libyears <- libyears [["mean"]]
 
     res <- c (abs, ele, lic_declared, pr_dat)
     res [which (res == 0)] <- 1
@@ -366,32 +385,46 @@ cm_model_viability_starter <- function (path, end_date = Sys.Date ()) {
 #' Higher values are better than lower values.
 #'
 #' @noRd
-cm_model_viability_gov <- function (path, end_date = Sys.Date ()) {
+cm_model_viability_gov <- function (path,
+                                    end_date = Sys.Date (),
+                                    metrics_data = NULL) {
 
-    # ---- Higher values are better:
-    labs <- cm_metric_label_inclusivity (path, end_date = end_date)
+
+    if (is.null (metrics_data)) {
+
+        # ---- Higher values are better:
+        labs <- cm_metric_label_inclusivity (path, end_date = end_date)
+        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        pop <- cm_metric_popularity (path, end_date = end_date)
+
+        # ----- Lower values are better:
+        issues <- cm_metric_time_to_close (path, end_date = end_date)
+        libyears <- cm_metric_libyears (path) [["mean"]]
+        issue_age <- cm_metric_issue_age (path, end_date = end_date)
+        rel_freq <- cm_metric_release_freq (path, end_date = end_date)
+
+    } else {
+
+        labs <- metrics_data$label_inclusivity
+        pr_dat <- metrics_data$change_req
+        pop <- metrics_data$popularity
+        issues <- metrics_data$time_to_close
+        libyears <- metrics_data$libyears
+        issue_age <- metrics_data$issue_age
+        rel_freq <- metrics_data$release_freq
+
+    }
+
+    iss_time_to_close <- issues [["mean"]] # [0, N >> 1]
+    issue_age <- issue_age [["mean"]] # [0, N >> 1]
+    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
+
     labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
-
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
     pr_closure_ratio <- NA_real_
     if (length (pr_dat) > 1L) {
         pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
     }
-
-    pop <- cm_metric_popularity (path, end_date = end_date)
     pop <- pop [c ("forks", "stars")] # [0, N >> 1]
-
-    # ----- Lower values are better:
-    issues <- cm_metric_time_to_close (path, end_date = end_date)
-    iss_time_to_close <- issues [["mean"]] # [0, N >> 1]
-
-    libyears <- cm_metric_libyears (path) [["mean"]]
-
-    issue_age <- cm_metric_issue_age (path, end_date = end_date)
-    issue_age <- issue_age [["mean"]] # [0, N >> 1]
-
-    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
-    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
 
     # ------ Combine all:
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
