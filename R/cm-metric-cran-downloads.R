@@ -14,14 +14,30 @@ cm_metric_cran_downloads <- function (path,
     checkmate::assert_directory_exists (path)
     checkmate::assert_date (end_date)
 
+    period <- get_repometrics_period ()
+    start_date <- as.Date (end_date - period)
     pkg_name <- pkg_name_from_path (path)
 
-    period <- get_repometrics_period ()
+    cran_dl <- cran_downloads_daily (pkg_name, end_date) |>
+        dplyr::filter (date >= start_date & date <= end_date)
+
+    return (sum (cran_dl$downloads))
+}
+
+#' Download the full daily log over `nyears`, and use memoised return value to
+#' filter to desired period for subsequent calls.
+#' @noRd
+cran_downloads_internal <- function (pkg_name = NULL, end_date = Sys.Date (), nyears = 10) {
+
+    checkmate::assert_character (pkg_name, len = 1L)
+    checkmate::assert_integerish (nyears, min = 1L)
+
+    period <- 365.25 * nyears
     start_date <- as.Date (end_date - period)
     interval <- paste (start_date, sep = ":", end_date)
 
     base_url <- "http://cranlogs.r-pkg.org/"
-    daily_url <- paste0 (base_url, "downloads/total/")
+    daily_url <- paste0 (base_url, "downloads/daily/")
     req_url <- paste0 (daily_url, interval, "/", pkg_name)
 
     req <- httr2::request (req_url)
@@ -29,5 +45,14 @@ cm_metric_cran_downloads <- function (path,
     httr2::resp_check_status (resp)
 
     body <- httr2::resp_body_json (resp)
-    return (body [[1]]$downloads)
+
+    downloads <- body [[1]]$downloads
+    dates <- vapply (downloads, function (i) i$day, character (1L))
+    downloads <- vapply (downloads, function (i) i$downloads, integer (1L))
+
+    res <- data.frame (date = dates, downloads = downloads)
+    res$date <- as.Date (res$date)
+
+    return (res)
 }
+cran_downloads_daily <- memoise::memoise (cran_downloads_internal)
