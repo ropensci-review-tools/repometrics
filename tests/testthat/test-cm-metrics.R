@@ -1,3 +1,6 @@
+# Two end dates are used here, but these only affect mock results in the
+# cran_downloads function. That needs to be hard-coded in 'helper-rm-data.R' to
+# use the same value as here
 end_date <- as.Date ("2024-08-01")
 
 test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
