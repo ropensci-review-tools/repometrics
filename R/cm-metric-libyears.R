@@ -13,3 +13,10 @@ cm_metric_libyears <- function (path, end_date = NULL) {
 
     return (mn_med_sum (deps$libyears))
 }
+
+cm_metric_dependency_count <- function (path, end_date = NULL) {
+
+    deps <- rm_data_libyears (path)
+
+    return (mn_med_sum (nrow (deps)))
+}
