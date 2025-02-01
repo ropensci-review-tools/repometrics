@@ -101,4 +101,6 @@ test_that ("collate all models", {
     nms <- gsub ("^cm\\_model\\_", "", get_cm_fns ("model"))
     expect_named (mod_dat, nms)
     expect_true (length (which (is.na (mod_dat))) <= 1L)
+
+    expect_identical (mod_dat, mod_dat_metrics)
 })

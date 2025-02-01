@@ -400,7 +400,7 @@ cm_model_viability_gov <- function (path,
 
         # ----- Lower values are better:
         issues <- cm_metric_time_to_close (path, end_date = end_date)
-        libyears <- cm_metric_libyears (path) [["mean"]]
+        libyears <- cm_metric_libyears (path)
         issue_age <- cm_metric_issue_age (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
@@ -426,6 +426,8 @@ cm_model_viability_gov <- function (path,
         pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
     }
     pop <- pop [c ("forks", "stars")] # [0, N >> 1]
+
+    libyears <- libyears [["mean"]]
 
     # ------ Combine all:
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
@@ -456,7 +458,7 @@ cm_model_viability_strategy <- function (path,
         langs <- cm_metric_languages (path)
         bus <- cm_metric_contrib_absence (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path, end_date = end_date)
-        rel_freq <- cm_metric_release_freq (path, end_date = end_date) [["mean"]]
+        rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
@@ -474,6 +476,7 @@ cm_model_viability_strategy <- function (path,
     bus <- log10 (bus [["ncommits"]]) # higher is better
     ele <- log10 (ele [["ncommits"]]) # higher is better
 
+    req_freq <- rel_freq [["mean"]]
     rel_freq <- log10 (ifelse (rel_freq == 0, 1, rel_freq))
 
     res_0N <- c (bus, ele, -rel_freq)
