@@ -91,6 +91,9 @@ test_that ("collate all models", {
 
     mod_dat <- collate_all_models (path, end_date = end_date)
 
+    metrics_data <- collate_all_metrics (path, end_date = end_date)
+    mod_dat_metrics <- collate_all_models (metrics_data = metrics_data)
+
     fs::dir_delete (path)
 
     expect_type (mod_dat, "double")
@@ -98,4 +101,6 @@ test_that ("collate all models", {
     nms <- gsub ("^cm\\_model\\_", "", get_cm_fns ("model"))
     expect_named (mod_dat, nms)
     expect_true (length (which (is.na (mod_dat))) <= 1L)
+
+    expect_identical (mod_dat, mod_dat_metrics)
 })

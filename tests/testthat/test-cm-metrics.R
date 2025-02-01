@@ -344,14 +344,20 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_metric_libyears (path)
+    ly <- cm_metric_libyears (path)
+    ndeps <- cm_metric_dependency_count (path)
 
     fs::dir_delete (path)
 
-    expect_type (res, "double")
-    expect_length (res, 4L)
-    expect_named (res, c ("mean", "sd", "median", "sum"))
-    expect_true (all (res [which (!is.na (res))] > 0))
+    expect_type (ly, "double")
+    expect_length (ly, 4L)
+    expect_named (ly, c ("mean", "sd", "median", "sum"))
+    expect_true (all (ly [which (!is.na (ly))] > 0))
+
+    expect_type (ndeps, "integer")
+    expect_length (ndeps, 1L)
+    expect_named (ndeps, NULL)
+    expect_true (ndeps > 0)
 })
 
 test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
@@ -558,6 +564,20 @@ test_that ("cm metric burstiness", {
     expect_true (is.na (b))
 })
 
+test_that ("cm metric test coverage", {
+
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
+    cov <- cm_metric_test_coverage (path, end_date = end_date)
+
+    fs::dir_delete (path)
+
+    expect_s3_class (cov, "data.frame")
+    expect_named (cov, c ("id", "created", "coverage"))
+    expect_true (nrow (cov) > 0L)
+})
+
 test_that ("cm metric collate all", {
 
     dat <- mock_rm_data ()
@@ -568,17 +588,17 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 42L)
+    expect_length (metrics_data, 44L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- c (
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
-        2, 3, 1, 3, 4, 1, 0, 1, 1, 1,
-        1, 3, 5, 4, 1, 1, 2, 1, 1, 2,
-        4, 4, 1, 4, 0, 4, 14, 1, 1, 2,
-        4, 4
+        2, 1, 3, 1, 3, 4, 1, 0, 1, 1,
+        1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
+        2, 4, 4, 1, 4, 0, 4, 14, 1, 1,
+        2, 4, 3, 4
     )
     expect_equal (lens, lens_expected)
 })
