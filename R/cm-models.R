@@ -248,6 +248,7 @@ cm_model_oss_compliance <- function (path,
         defect_res_dur <-
             cm_metric_defect_resolution_dur (path, end_date = end_date)
         libyears <- cm_metric_libyears (path)
+        depcount <- cm_metric_dependency_count (path)
 
     } else {
 
@@ -256,6 +257,7 @@ cm_model_oss_compliance <- function (path,
         lic_declared <- metrics_data$licenses_declared
         defect_res_dur <- metrics_data$defect_resolution_dur
         libyears <- metrics_data$libyears
+        depcount <- metrics_data$dependency_count
 
     }
 
@@ -265,8 +267,7 @@ cm_model_oss_compliance <- function (path,
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
     libyears <- libyears [["mean"]]
 
-    deps <- rm_data_dependencies (path)
-    num_deps <- ifelse (nrow (deps) == 0L, 0, log10 (nrow (deps)))
+    num_deps <- ifelse (depcount == 0L, 0, log10 (depcount))
 
     res_0N <- sum (c (bp_badge, lic_coverage, lic_declared), na.rm = TRUE)
     res_log <- sum (c (defect_res_dur, libyears, num_deps), na.rm = TRUE)
@@ -685,6 +686,7 @@ cm_model_comm_welcoming <- function (path,
         lic_coverage <- cm_metric_license_coverage (path)
         lic_declared <- cm_metric_licenses_declared (path)
         ci_test_data <- cm_metric_test_coverage (path)
+        bp_badge <- cm_metric_best_practices (path)
         pr_dat <- cm_metric_change_req (path, end_date = end_date)
 
         bus <- cm_metric_contrib_absence (path, end_date = end_date)
@@ -698,6 +700,7 @@ cm_model_comm_welcoming <- function (path,
         lic_coverage <- metrics_data$license_coverage
         lic_declared <- metrics_data$licenses_declared
         ci_test_data <- metrics_data$test_coverage
+        bp_badge <- metrics_data$best_practices
         pr_dat <- metrics_data$change_req
         bus <- metrics_data$contrib_absence
         ele <- metrics_data$elephant_factor
@@ -713,7 +716,7 @@ cm_model_comm_welcoming <- function (path,
     val_days <- log10 (c (issue_age, time_first_resp))
 
     lic_declared <- as.integer (length (lic_declared) > 0L)
-    bp_badge <- as.integer (cm_metric_best_practices (path))
+    bp_badge <- as.integer (bp_badge)
 
     test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)
     test_cov <- test_cov / 100

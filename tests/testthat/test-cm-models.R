@@ -91,6 +91,9 @@ test_that ("collate all models", {
 
     mod_dat <- collate_all_models (path, end_date = end_date)
 
+    metrics_data <- collate_all_metrics (path, end_date = end_date)
+    mod_dat_metrics <- collate_all_models (metrics_data = metrics_data)
+
     fs::dir_delete (path)
 
     expect_type (mod_dat, "double")
