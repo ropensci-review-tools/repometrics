@@ -18,5 +18,5 @@ cm_metric_dependency_count <- function (path, end_date = NULL) {
 
     deps <- rm_data_libyears (path)
 
-    return (mn_med_sum (nrow (deps)))
+    return (nrow (deps))
 }

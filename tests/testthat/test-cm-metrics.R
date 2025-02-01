@@ -354,10 +354,10 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     expect_named (ly, c ("mean", "sd", "median", "sum"))
     expect_true (all (ly [which (!is.na (ly))] > 0))
 
-    expect_type (ndeps, "double")
-    expect_length (ndeps, 4L)
-    expect_named (ndeps, c ("mean", "sd", "median", "sum"))
-    expect_true (all (ndeps [which (!is.na (ly))] > 0))
+    expect_type (ndeps, "integer")
+    expect_length (ndeps, 1L)
+    expect_named (ndeps, NULL)
+    expect_true (ndeps > 0)
 })
 
 test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
@@ -595,7 +595,7 @@ test_that ("cm metric collate all", {
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- c (
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
-        2, 4, 3, 1, 3, 4, 1, 0, 1, 1,
+        2, 1, 3, 1, 3, 4, 1, 0, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
         2, 4, 4, 1, 4, 0, 4, 14, 1, 1,
         2, 4, 3, 4
