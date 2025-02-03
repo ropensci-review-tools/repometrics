@@ -47,3 +47,15 @@ n_per_page_in_tests <- function (n_per_page) {
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     ifelse (is_test_env, 2L, n_per_page)
 }
+
+# Fn used in collating all metrics over ranges of end dates:
+get_end_date_seq <- function (end_date = Sys.Date (),
+                              period = get_repometrics_period (),
+                              num_years = 3) {
+
+    num_periods <- num_years * 365.25 / period
+    period_seq <- seq_len (num_periods) * period - period
+    end_dates <- Sys.Date () - period_seq
+
+    return (end_dates)
+}
