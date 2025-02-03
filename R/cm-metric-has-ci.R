@@ -36,7 +36,7 @@ cm_metric_has_ci <- function (path, end_date = NULL) {
     if (!has_ci) {
         ci_files <- repo_has_ci_files (path)
         has_ci <- length (ci_files) > 0L
-        if (has_ci) {
+        if (has_ci && is_verbose ()) {
             cli::cli_alert_info (paste0 (
                 "Unable to determine whether runs are ",
                 "recent for CI service [{ci_files}]."

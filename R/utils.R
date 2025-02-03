@@ -59,3 +59,7 @@ get_end_date_seq <- function (end_date = Sys.Date (),
 
     return (end_dates)
 }
+
+is_verbose <- function () {
+    getOption ("rlang_message_verbosity", "") == "verbose"
+}

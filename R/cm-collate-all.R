@@ -81,7 +81,7 @@ models_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) 
         function (d) collate_all_models (path, end_date = d)
     )
     models_data <- data.frame (do.call (rbind, models_data)) |>
-        dplyr::mutate (models_data, date = end_dates, .before = 1)
+        dplyr::mutate (date = end_dates, .before = 1)
 
     return (models_data)
 }
