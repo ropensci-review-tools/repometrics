@@ -17,6 +17,6 @@
 
 get_repometrics_period <- function () {
     period <- getOption ("repometrics_period")
-    checkmate::assert_int (period, lower = 1L)
+    checkmate::assert_numeric (period, lower = 1L)
     return (period)
 }
