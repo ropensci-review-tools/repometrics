@@ -94,6 +94,15 @@ test_that ("collate all models", {
     metrics_data <- collate_all_metrics (path, end_date = end_date)
     mod_dat_metrics <- collate_all_models (metrics_data = metrics_data)
 
+    metrics_all <- withr::with_options (
+        list ("repometrics_period" = 365.25 / 2),
+        metrics_over_end_dates (path, end_date = end_date, num_years = 1)
+    )
+    models_all <- withr::with_options (
+        list ("repometrics_period" = 365.25 / 2),
+        models_over_end_dates (path, end_date = end_date, num_years = 1)
+    )
+
     fs::dir_delete (path)
 
     expect_type (mod_dat, "double")
@@ -103,4 +112,18 @@ test_that ("collate all models", {
     expect_true (length (which (is.na (mod_dat))) <= 1L)
 
     expect_identical (mod_dat, mod_dat_metrics)
+
+    expect_type (metrics_all, "list")
+    end_dates <- withr::with_options (
+        list ("repometrics_period" = 365.25 / 2),
+        get_end_date_seq (end_date = end_date, num_years = 1)
+    )
+    expect_length (metrics_all, length (end_dates))
+    expect_named (metrics_all, as.character (end_dates))
+    expect_identical (names (metrics_all [[1]]), names (metrics_data))
+
+    expect_s3_class (models_all, "data.frame")
+    expect_equal (nrow (models_all), length (end_dates))
+    model_fns <- get_cm_fns ("model")
+    expect_named (models_all, c ("date", gsub ("cm\\_model\\_", "", model_fns)))
 })
