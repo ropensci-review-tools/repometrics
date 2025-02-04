@@ -45,7 +45,13 @@ cran_downloads_internal <- function (pkg_name = NULL,
     req_url <- paste0 (daily_url, interval, "/", pkg_name)
 
     req <- httr2::request (req_url)
-    resp <- httr2::req_perform (req)
+    resp <- tryCatch (
+        httr2::req_perform (req),
+        error = function (e) NULL
+    )
+    if (is.null (resp)) {
+        return (data.frame (date = as.Date (character (0L)), downloads = integer (0L)))
+    }
     httr2::resp_check_status (resp)
 
     body <- httr2::resp_body_json (resp)
