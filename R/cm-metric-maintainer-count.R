@@ -114,6 +114,9 @@ get_desc_authors <- function (path, roles = c ("cre", "aut")) {
     if (any (grepl ("<", auts))) {
         aut_emails <- gsub ("^.*<|>(\\s?)$", "", auts)
     }
+    if (length (aut_names) == 0L || length (aut_emails) == 0L) {
+        aut_names <- aut_emails <- character (0L)
+    }
 
     data.frame (name = aut_names, email = aut_emails)
 }
