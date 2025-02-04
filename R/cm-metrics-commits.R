@@ -31,9 +31,10 @@ cm_metric_commit_freq <- function (path, end_date = Sys.Date ()) {
 
     week <- round (as.numeric (log$week), digits = 2)
     index <- seq (min (week), max (week), by = 0.01)
-    index_years <- index - floor (index)
-    index_in_52 <- which (index_years >= 0 & index_years <= 0.52)
-    index <- sprintf ("%.2f", index [index_in_52])
+    index_weeks <- round (index - floor (index), digits = 2)
+    # This is 53, because end of year is start of 53rd week:
+    index_in_53 <- which (index_weeks >= 0 & index_weeks <= 0.53)
+    index <- sprintf ("%.2f", index [index_in_53])
 
     commits <- rep (0, length (index))
     index_log <- match (log$week, index)
