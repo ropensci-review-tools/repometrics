@@ -3,7 +3,7 @@ cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
     # Suppress no visible binding notes:
     name <- coverage <- NULL
 
-    requireNamespace ("readr")
+    requireNamespace ("readr", quietly = TRUE)
 
     or <- org_repo_from_path (path)
     wf_tests <- rm_data_gh_repo_workflow (path) |>

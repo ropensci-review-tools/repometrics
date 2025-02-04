@@ -7,7 +7,7 @@
 #' @noRd
 cm_metric_licenses_declared <- function (path, end_date = NULL) {
 
-    requireNamespace ("desc")
+    requireNamespace ("desc", quietly = TRUE)
 
     lic <- unname (desc::desc_get ("License", path))
     return (gsub ("^\\s*|\\s*$", "", strsplit (lic, ",") [[1]]))
@@ -26,7 +26,7 @@ cm_metric_license_coverage <- function (path,
                                         end_date = NULL,
                                         dirs = c ("R", "src", "inst/extdata")) {
 
-    requireNamespace ("readr")
+    requireNamespace ("readr", quietly = TRUE)
 
     if (any (grepl ("/", dirs, fixed = TRUE))) {
         dirs <- gsub ("/", .Platform$file.sep, dirs, fixed = TRUE)

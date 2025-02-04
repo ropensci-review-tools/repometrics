@@ -68,7 +68,7 @@ pkgs_are_r <- function (pkgs) {
 
 write_pkgs_json <- function (pkgs, dir = getwd ()) {
 
-    requireNamespace ("jsonlite")
+    requireNamespace ("jsonlite", quietly = TRUE)
 
     checkmate::assert_directory_exists (dir)
 

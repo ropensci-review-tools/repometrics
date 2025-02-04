@@ -9,7 +9,7 @@ cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
     user_login <- merged_by <- participants <- created_at <-
         assignee <- closed_by <- NULL
 
-    requireNamespace ("desc")
+    requireNamespace ("desc", quiety = TRUE)
 
     checkmate::assert_date (end_date)
 
