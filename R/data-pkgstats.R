@@ -80,10 +80,17 @@ extract_pkgstats_data_single <- function (log, path) {
         clean_after <- TRUE
     }
 
-    res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-        flist <- reset_repo (path_cp, log$hash [i]) # nolint
-        run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
-    })
+    if (is_verbose ()) {
+        res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
+            flist <- reset_repo (path_cp, log$hash [i]) # nolint
+            run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
+        })
+    } else {
+        res <- lapply (seq_len (nrow (log)), function (i) {
+            flist <- reset_repo (path_cp, log$hash [i]) # nolint
+            run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
+        })
+    }
 
     if (clean_after) {
         fs::dir_delete (path_cp)
@@ -100,6 +107,9 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
         c ("log", "path", "run_one_pkgstats"),
         envir = environment ()
     )
+    if (!is_verbose ()) {
+        opb <- pbapply::pboptions (type = "none")
+    }
     res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
         path_cp <- fs::dir_copy (path, fs::path_temp ())
         flist <- reset_repo (path_cp, log$hash [i]) # nolint
@@ -108,6 +118,10 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
         return (s)
     }, cl = cl)
     parallel::stopCluster (cl)
+
+    if (!is_verbose ()) {
+        pbapply::pboptions (opb)
+    }
 
     return (res)
 

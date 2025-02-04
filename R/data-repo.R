@@ -12,19 +12,27 @@
 #' @export
 repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 
-    cli::cli_alert_info ("Extracting package statistics ...")
+    if (is_verbose ()) {
+        cli::cli_alert_info ("Extracting package statistics ...")
+    }
     pkgstats <- repo_pkgstats_history (
         path,
         step_days = step_days,
         num_cores = num_cores
     )
-    cli::cli_alert_success ("Done!")
+    if (is_verbose ()) {
+        cli::cli_alert_success ("Done!")
+    }
 
-    cli::cli_alert_info ("Extracting GitHub data ...")
+    if (is_verbose ()) {
+        cli::cli_alert_info ("Extracting GitHub data ...")
+    }
     rm <- rm_data_repo (path)
     rm$contributors <-
         get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api)
-    cli::cli_alert_success ("Done!")
+    if (is_verbose ()) {
+        cli::cli_alert_success ("Done!")
+    }
 
     list (pkgstats = pkgstats, rm = rm)
 }
@@ -64,7 +72,7 @@ rm_data_repo <- function (path) {
 
     data_fns <- get_rm_data_fns ()
 
-    if (all_rm_data_fns_memoised (data_fns, path)) {
+    if (all_rm_data_fns_memoised (data_fns, path) || !is_verbose ()) {
         res <- lapply (data_fns, function (i) {
             do.call (i, list (path = path))
         })
