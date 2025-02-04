@@ -75,12 +75,17 @@ match_repo_ctbs_to_desc <- function (path, desc_auts, gh_auts) {
         match_string_vecs (desc_auts$name, ctbs_from_gh$name),
         match_string_vecs (desc_auts$email, ctbs_from_gh$email)
     )
-    n_from_log <- apply (index_from_log, 1, function (i) any (!is.na (i))) |>
-        which () |>
-        length ()
-    n_from_gh <- apply (index_from_gh, 1, function (i) any (!is.na (i))) |>
-        which () |>
-        length ()
+    n_from_log <- n_from_gh <- 0L
+    if (length (index_from_log) > 0L) {
+        n_from_log <- apply (index_from_log, 1, function (i) any (!is.na (i))) |>
+            which () |>
+            length ()
+    }
+    if (length (index_from_gh) > 0L) {
+        n_from_gh <- apply (index_from_gh, 1, function (i) any (!is.na (i))) |>
+            which () |>
+            length ()
+    }
 
     return (max (c (n_from_log, n_from_gh)))
 }
@@ -113,6 +118,9 @@ get_desc_authors <- function (path, roles = c ("cre", "aut")) {
     aut_emails <- ""
     if (any (grepl ("<", auts))) {
         aut_emails <- gsub ("^.*<|>(\\s?)$", "", auts)
+    }
+    if (length (aut_names) == 0L || length (aut_emails) == 0L) {
+        aut_names <- aut_emails <- character (0L)
     }
 
     data.frame (name = aut_names, email = aut_emails)
