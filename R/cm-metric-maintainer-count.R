@@ -75,12 +75,17 @@ match_repo_ctbs_to_desc <- function (path, desc_auts, gh_auts) {
         match_string_vecs (desc_auts$name, ctbs_from_gh$name),
         match_string_vecs (desc_auts$email, ctbs_from_gh$email)
     )
-    n_from_log <- apply (index_from_log, 1, function (i) any (!is.na (i))) |>
-        which () |>
-        length ()
-    n_from_gh <- apply (index_from_gh, 1, function (i) any (!is.na (i))) |>
-        which () |>
-        length ()
+    n_from_log <- n_from_gh <- 0L
+    if (length (index_from_log) > 0L) {
+        n_from_log <- apply (index_from_log, 1, function (i) any (!is.na (i))) |>
+            which () |>
+            length ()
+    }
+    if (length (index_from_gh) > 0L) {
+        n_from_gh <- apply (index_from_gh, 1, function (i) any (!is.na (i))) |>
+            which () |>
+            length ()
+    }
 
     return (max (c (n_from_log, n_from_gh)))
 }
