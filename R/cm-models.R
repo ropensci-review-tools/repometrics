@@ -474,7 +474,7 @@ cm_model_viability_strategy <- function (path,
 
     lang_dist_mn <- mean (langs$ncode_pc) # lower is better
     # Re-scale this so that 4 languages translates to a value of 1:
-    lang_dist_mn <- 0.25 / lang_dist_mn
+    lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)
 
     bus <- log10 (bus [["ncommits"]]) # higher is better
     ele <- log10 (ele [["ncommits"]]) # higher is better

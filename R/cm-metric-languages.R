@@ -33,7 +33,7 @@ cm_metric_languages <- function (path, end_date = NULL) {
     dplyr::group_by (s, language) |>
         dplyr::summarise (nfiles = sum (nfiles), ncode = sum (ncode)) |>
         dplyr::mutate (
-            nfiles_pc = nfiles / sum (nfiles),
-            ncode_pc = ncode / sum (ncode)
+            nfiles_pc = ifelse (sum (nfiles) == 0, 0, nfiles / sum (nfiles)),
+            ncode_pc = ifelse (sum (ncode) == 0, 0, ncode / sum (ncode))
         )
 }
