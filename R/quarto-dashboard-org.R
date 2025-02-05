@@ -12,6 +12,8 @@
 #' @export
 orgmetrics_dashboard <- function (data_org, data_users, action = "preview") {
 
+    data_org <- data_org_preprocess (data_org)
+
     requireNamespace ("brio")
     requireNamespace ("jsonlite")
     requireNamespace ("quarto")
@@ -23,8 +25,29 @@ orgmetrics_dashboard <- function (data_org, data_users, action = "preview") {
     path_src <- system.file ("extdata", "quarto-org", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto-org")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
+    saveRDS (data_org, fs::path (dir, "results-org.Rds"))
 
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
     })
+}
+
+#' Pre-process organization data by converting all model values to standard
+#' z-scores, retrieving the latest value only for each package, and generating
+#' a "final" score from the sum across all model scores. Higher values of this
+#' final score are better than lower values.
+#' @noRd
+data_org_preprocess <- function (data_org) {
+
+    data_org |>
+        dplyr::mutate (
+            dplyr::across (dplyr::where (is.numeric), ~ scale (.) [, 1])
+        ) |>
+        dplyr::group_by (package) |>
+        dplyr::slice_head (n = 1L) |>
+        dplyr::mutate (
+            final = sum (dplyr::across (dplyr::where (is.numeric))),
+            .after = "date"
+        ) |>
+        dplyr::arrange (dplyr::desc (final))
 }
