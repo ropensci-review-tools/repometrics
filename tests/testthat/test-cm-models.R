@@ -144,7 +144,7 @@ test_that ("collate across orgs", {
         models_over_end_dates (path, end_date = end_date, num_years = 1)
     )
     dat <- list (
-        repo = repometrics_data_repo (path),
+        repo = repometrics_data_repo (path, num_cores = 1L),
         metrics = metrics_all,
         models = models_all
     )
