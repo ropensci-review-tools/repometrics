@@ -13,8 +13,9 @@
 #' measured in both mean and median forms, and converts all measured values to
 #' aggregate mean and median values.
 #'
-#' @return A numeric vector of two values for mean and median of overall
-#' response durations.
+#' @return A single numeric value of the mean of all of the four values. As
+#' this is in days, it is converted to log 10, with both NA values and values <
+#' 1 converted to values of 1 prior to log.
 #'
 #' @noRd
 cm_model_dev_responsiveness <- function (path,
@@ -53,8 +54,10 @@ cm_model_dev_responsiveness <- function (path,
     names (vals) <- c ("mean", "median")
     vals [which (is.na (vals))] <- NA_real_
 
-    # But only return mean value, to align with all others:
-    return (vals [["mean"]])
+    # But only return mean value, to align with all others
+    val <- vals [["mean"]]
+    val <- ifelse (is.na (val) | val < 1, 1, val)
+    return (log10 (val))
 }
 
 #' CHAOSS model "project engagement"
