@@ -65,31 +65,39 @@ gh_user_general_internal <- function (login = "",
     )
 
     orgs <- user$organizations$nodes
-    org_name <- vapply (orgs, function (i) i$name, character (1L))
-    org_gh_org <- vapply (orgs, function (i) i$resourcePath, character (1L))
-    org_url <- vapply (orgs, function (i) i$url, character (1L))
-    org_web_url <- vapply (
-        orgs,
-        function (i) null2na_char (i$websiteUrl),
-        character (1L)
-    )
-    org_location <- vapply (
-        orgs,
-        function (i) null2na_char (i$location),
-        character (1L)
-    )
-    org_num_members <- vapply (
-        orgs,
-        function (i) i$membersWithRole$totalCount,
-        integer (1L)
-    )
+
+    org_name <- org_gh_org <- org_url <-
+        org_web_url <- org_location <- character (0L)
+    org_num_members <- integer (0L)
+
+    if (length (orgs) > 0L) {
+
+        org_name <- vapply (orgs, function (i) i$name, character (1L))
+        org_gh_org <- vapply (orgs, function (i) i$resourcePath, character (1L))
+        org_url <- vapply (orgs, function (i) i$url, character (1L))
+        org_web_url <- vapply (
+            orgs,
+            function (i) null2na_char (i$websiteUrl),
+            character (1L)
+        ) |> null2na_char ()
+        org_location <- vapply (
+            orgs,
+            function (i) null2na_char (i$location),
+            character (1L)
+        ) |> null2na_char ()
+        org_num_members <- vapply (
+            orgs,
+            function (i) i$membersWithRole$totalCount,
+            integer (1L)
+        )
+    }
 
     orgs <- data.frame (
         name = org_name,
         gh_org = org_gh_org,
         url = org_url,
-        web_url = null2na_char (org_web_url),
-        location = null2na_char (org_location),
+        web_url = org_web_url,
+        location = org_location,
         num_members = org_num_members
     )
 
