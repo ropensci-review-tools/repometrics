@@ -6,6 +6,8 @@ website:
   cookie-consent:
     type: express
   navbar:
+    left:
+      - models.qmd
     right:
       - icon: "github"
         menu:

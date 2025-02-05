@@ -1,0 +1,426 @@
+---
+title: "Community Models"
+execute:
+  echo: false
+format: 
+  html:
+    fig-width: 8
+    fig-height: 4
+    code-fold: false
+---
+
+```{r load-pkg, echo = FALSE, message = FALSE}
+library (repometrics)
+```
+This page includes several graphs providing insight into the models of
+community health across the entire organization(s).
+
+```{r load-data}
+dat_models <- readRDS ("results-org.Rds")$pkgstats
+```
+```{r ojs-in-models, echo = FALSE}
+ojs_define (models_in = dat_models)
+```
+```{ojs stats-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            statsFiltered,
+            {
+                x: "date",
+                y: "value",
+                stroke: "measure",
+                fontSize: 18,
+                curve: "basis-open"
+            }
+        ),
+        Plot.text(
+            statsFiltered,
+            Plot.selectFirst({
+                x: "date",
+                y: "value",
+                z: "measure",
+                text: "measure",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
+
+## General data
+
+This plot shows data on the following three aspects:
+
+- `authors` = Numbers of package authors, distinguishing between authors (with
+"aut" role) and contributors (with "ctb" role). These are extracted directly
+from the package `DESCRIPTION` file, whereas values displayed in the
+"Contributors" page are taken from both Git logs and GitHub, regardless of
+presence in the `DESCRIPTION` file.
+- `functions` = Numbers of functions in the package, distinguishing between
+exported functions and total number including both exported and non-exported
+functions.
+- `external` = Numbers of external calls to functions from other packages,
+distinguishing between calls to base R itself, and calls to all other packages.
+
+```{r desc-data}
+cols <- names (dat$desc_data) [which (!names (dat$desc_data) %in% c ("package"))]
+desc <- dat$desc_data [, cols]
+desc$date <- as.Date (desc$date)
+desc$base_calls <- desc$base_calls / 10
+
+cols <- names (desc) [which (!names (desc) %in% c ("date"))]
+desc <- tidyr::pivot_longer (
+    desc,
+    c ("n_aut", "n_ctb", "n_fns_tot", "n_fns_exp", "n_ext_pkgs", "base_calls")
+)
+names (desc) <- c ("date", "desc_variable", "value")
+desc$group <- "authors"
+desc$group [grep ("^n\\_fns", desc$desc_variable)] <- "functions"
+desc$group [desc$desc_variable %in% c ("n_ext_pkgs", "base_calls")] <- "external"
+```
+
+```{r ojs-in-desc, echo = FALSE}
+ojs_define (desc_in = desc)
+```
+
+```{ojs desc-transpose-and-filter}
+desc = {
+    return transpose(desc_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof group = Inputs.radio(
+    ["authors", "functions", "external"],
+    {
+        value: "authors",
+        label: "Variable Types:",
+    }
+)
+descFiltered = desc.filter(function(row) {
+  return group.includes(row.group)
+})
+```
+
+```{ojs desc-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            descFiltered,
+            {
+                x: "date",
+                y: "value",
+                stroke: "desc_variable",
+                fontSize: 18,
+                curve: "basis-open"
+            }
+        ),
+        Plot.text(
+            descFiltered,
+            Plot.selectFirst({
+                x: "date",
+                y: "value",
+                z: "desc_variable",
+                text: "desc_variable",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Value",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
+
+## Numbers of Files and Lines of Code
+
+```{r loc-data}
+rm_cols <- c ("package", "nempty", "nspaces", "nchars", "nexpr", "ntabs", "indentation")
+cols <- names (dat$loc) [which (!names (dat$loc) %in% rm_cols)]
+loc <- dat$loc [, cols]
+loc$date <- as.Date (loc$date)
+loc$dir <- vapply (
+    loc$dir,
+    function (d) fs::path_split (d) [[1]] [1],
+    character (1L)
+)
+
+loc <- tidyr::pivot_longer (
+    loc,
+    c ("nfiles", "nlines", "ncode", "ndoc")
+) |>
+    dplyr::rename (loc_measure = name) |>
+    dplyr::mutate (loc_measure = dplyr::case_match (
+        loc_measure,
+        "nfiles" ~ "files",
+        "nlines" ~ "total",
+        "ncode" ~ "code",
+        "ndoc" ~ "doc"
+    )) |>
+    dplyr::group_by (date, dir, loc_measure) |>
+    dplyr::summarise (value = mean (value), .groups = "keep") |>
+    dplyr::ungroup () |>
+    dplyr::arrange (by = dplyr::desc (date))
+
+loc_files <- loc [loc$loc_measure == "files", ]
+loc_lines <- loc [loc$loc_measure != "files", ]
+```
+
+```{r ojs-in-loc, echo = FALSE}
+ojs_define (loc_files_in = loc_files)
+ojs_define (loc_lines_in = loc_lines)
+```
+
+This first plot shows total numbers of files in each specified sub-directory.
+
+
+```{ojs loc_files-transpose}
+loc_files = {
+    return transpose(loc_files_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+```
+
+
+```{ojs loc-files-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 60,
+    marginBottom: 50,
+    x: {grid: true},
+    y: {grid: true},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            loc_files,
+            {
+                x: "date",
+                y: "value",
+                stroke: "dir",
+                fontSize: 18,
+                curve: "basis-open"
+            }
+        ),
+        Plot.text(
+            loc_files,
+            Plot.selectFirst({
+                x: "date",
+                y: "value",
+                z: "dir",
+                text: "dir",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Numbers of Files",
+                labelAnchor: "center",
+                labelOffset: 55,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
+
+This next plot shows numbers of lines, both of code and documentation.
+
+```{ojs loc-lines-transpose-and-filter}
+loc_lines = {
+    return transpose(loc_lines_in).map(row => ({
+        ...row,
+        date: new Date(row.date)
+    }));
+}
+viewof loc_measure = Inputs.radio(
+    ["total", "code", "doc"],
+    {
+        value: "total",
+        label: "LOC Type:",
+    }
+)
+locLinesFiltered = loc_lines.filter(function(row) {
+  return loc_measure.includes(row.loc_measure)
+})
+```
+
+```{ojs loc-lines-plot}
+Plot.plot({
+    style: `
+        overflow: visible;
+    `,
+    marginLeft: 80,
+    marginBottom: 50,
+    x: {grid: true},
+y: {grid: true, type: "log"},
+    marks: [
+        Plot.ruleY([0]),
+        Plot.lineY(
+            locLinesFiltered,
+            {
+                x: "date",
+                y: "value",
+                stroke: "dir",
+                fontSize: 18,
+                curve: "basis-open"
+            }
+        ),
+        Plot.text(
+            locLinesFiltered,
+            Plot.selectFirst({
+                x: "date",
+                y: "value",
+                z: "dir",
+                text: "dir",
+                textAnchor: "start",
+                dx: 3,
+                fontSize: 18
+            })
+        ),
+        Plot.axisX(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisX(
+            {
+                fontSize: 20,
+                label: "Date",
+                labelAnchor: "center",
+                labelOffset: 40,
+                ticks: []
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 14,
+                label: "",
+                labelArrow: false
+            }
+        ),
+        Plot.axisY(
+            {
+                fontSize: 24,
+                label: "Numbers of Lines",
+                labelAnchor: "center",
+                labelOffset: 70,
+                ticks: []
+            }
+        ),
+    ]
+})
+```
