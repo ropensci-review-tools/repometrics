@@ -100,5 +100,7 @@ coverage_from_one_log <- function (log_url) {
         fs::dir_delete (dirs_new)
     }
 
-    return (max (cov))
+    cov <- ifelse (length (cov) == 0L, NA_real_, max (cov))
+
+    return (cov)
 }
