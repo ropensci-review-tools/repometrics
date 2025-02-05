@@ -1,0 +1,20 @@
+project:
+  type: website
+
+website:
+  title: "Organization"
+  cookie-consent:
+    type: express
+  navbar:
+    right:
+      - icon: "github"
+        menu:
+          - text: Source Code
+            url: https://github.com/ropensci-review-tools/repometrics
+          - text: Request a Feature
+            url: https://github.com/ropensci-review-tools/repometrics/issues/new
+
+format:
+  html:
+    theme: cosmo
+    toc: true
