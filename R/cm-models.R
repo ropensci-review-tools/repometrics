@@ -3,7 +3,7 @@
 #' \url{https://chaoss.community/kb/metrics-model-development-responsiveness/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/4}.
 #'
-#' Values are in days, with lower better than higher.
+#' Higher values are better than lower values.
 #'
 #' This takes the four metrics of:
 #' 1. Review cycle duration within a change request (in days)
@@ -13,9 +13,11 @@
 #' measured in both mean and median forms, and converts all measured values to
 #' aggregate mean and median values.
 #'
-#' @return A single numeric value of the mean of all of the four values. As
-#' this is in days, it is converted to log 10, with both NA values and values <
-#' 1 converted to values of 1 prior to log.
+#' @return A single numeric value formed from the mean of all of the four
+#' values. As this is in days, it is converted to log 10, with both NA values
+#' and values < 1 converted to values of 1 prior to log. The final value is
+#' then two minus this value, so higher values are better, and all are assessed
+#' against a standard scale of 100 days (log10(100) = 2).
 #'
 #' @noRd
 cm_model_dev_responsiveness <- function (path,
@@ -55,9 +57,10 @@ cm_model_dev_responsiveness <- function (path,
     vals [which (is.na (vals))] <- NA_real_
 
     # But only return mean value, to align with all others
-    val <- vals [["mean"]]
-    val <- ifelse (is.na (val) | val < 1, 1, val)
-    return (log10 (val))
+    # And convert final value to scale so that higher is better by
+    val <- 2 - log10 (vals [["mean"]])
+    val <- ifelse (is.na (val), 0, val)
+    return (val)
 }
 
 #' CHAOSS model "project engagement"
@@ -232,7 +235,7 @@ cm_model_community_activity <- function (path,
 #' \url{https://chaoss.community/kb/metrics-model-oss-project-viability-compliance-security/}
 #' \url{https://github.com/ropensci-review-tools/repometrics/issues/8}
 #'
-#' Higher values are better than higher values.
+#' Higher values are better than lower values.
 #'
 #' @noRd
 cm_model_oss_compliance <- function (path,
