@@ -36,6 +36,10 @@ set_num_cores <- function (num_cores) {
     if (num_cores < 1L) {
         cli::cli_abort ("Number of cores must be at least 1")
     }
+    if (!nzchar (Sys.getenv ("GITHUB_WORKFLOW", ""))) {
+        # Force single core on all gha workflows:
+        num_cores <- 1L
+    }
     return (num_cores)
 }
 
