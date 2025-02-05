@@ -175,4 +175,10 @@ test_that ("collate across orgs", {
 
     expect_type (org_data, "list")
     expect_named (org_data, c ("repos", "metrics", "models"))
+    npkgs <- 2L
+    expect_length (org_data$repos, npkgs)
+    expect_length (org_data$metrics, npkgs)
+    expect_s3_class (org_data$models, "data.frame")
+    n_periods <- length (get_end_date_seq (end_date = end_date, num_years = 1))
+    expect_equal (nrow (org_data$models), n_periods)
 })
