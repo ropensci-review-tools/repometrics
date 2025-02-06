@@ -36,7 +36,7 @@ models_len = models_final.length
 ```
 
 
-```{ojs}
+```{ojs plot-all-community-health-vars}
 Plot.plot({
     height: 20 * models_len,
     marginLeft: 60,
@@ -109,4 +109,59 @@ viewof commHealthVar = Inputs.select(
     commHealthVars,
     { multiple: "false", label: "Community Health Variable" }
 );
+```
+
+```{ojs}
+models_filtered = models_all.filter(function(mod) {
+    return mod.name.includes(commHealthVar)
+})
+```
+
+
+```{ojs plot-filtered-community-health-var}
+Plot.plot({
+    height: 20 * models_len,
+    marginLeft: 60,
+    marginRight: 160,
+    marginTop: 50,
+    marginBottom: 50,
+    axis: null,
+    x: {
+        axis: "top",
+        grid: true,
+        label: "Community Health"
+    },
+    y: { grid: true },
+    marks: [
+        Plot.barX(models_filtered, {
+            y: "package",
+            x: "value",
+            sort: {y: "-x" },
+            fill: "value",
+        }),
+        Plot.barX(models_filtered,
+            Plot.pointer(
+            {
+                y: "package",
+                x: "value",
+                sort: {y: "-x" },
+                stroke: "gray",
+                fill: "value",
+                strokeWidth: 2,
+            })
+        ),
+        Plot.text(models_filtered, {
+            x: (d) => d.value < 0 ? 0 : d.value,
+            y: "package",
+            text: "package",
+            textAnchor: "start",
+            fontSize: 16,
+            dx: 5
+        })
+    ],
+    color: {
+        scheme: "Cool",
+        type: "ordinal"
+    }
+})
 ```
