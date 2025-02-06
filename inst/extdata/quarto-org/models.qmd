@@ -12,8 +12,9 @@ format:
 ```{r load-pkg, echo = FALSE, message = FALSE}
 library (repometrics)
 ```
-This page includes several graphs providing insight into the models of
-community health across the entire organization(s).
+This page shows aggregate community health scores for all repositories within
+the "reconhub" and "epiverse-trace" organizations. Higher values describe
+repositories with greater community health scores.
 
 ```{r load-data}
 dat_models <- readRDS ("results-org.Rds") |>
