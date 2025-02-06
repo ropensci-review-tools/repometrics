@@ -24,13 +24,15 @@ dat_models <- readRDS ("results-org.Rds") |>
 ojs_define (models_in = dat_models)
 ```
 ```{ojs}
-models = {
+models_all = {
     return transpose(models_in).map(row => ({
         ...row,
-        date: new Date(row.date)
     }));
 }
-models_len = models.length
+models_final = models_all.filter(function(mod) {
+    return mod.name.includes("final")
+})
+models_len = models_final.length
 ```
 
 
@@ -49,25 +51,25 @@ Plot.plot({
     },
     y: { grid: true },
     marks: [
-        Plot.barX(models, {
+        Plot.barX(models_final, {
             y: "package",
-            x: "final",
+            x: "value",
             sort: {y: "-x" },
-            fill: "final",
+            fill: "value",
         }),
-        Plot.barX(models,
+        Plot.barX(models_final,
             Plot.pointer(
             {
                 y: "package",
-                x: "final",
+                x: "value",
                 sort: {y: "-x" },
                 stroke: "gray",
-                fill: "final",
+                fill: "value",
                 strokeWidth: 2,
             })
         ),
-        Plot.text(models, {
-            x: (d) => d.final < 0 ? 0 : d.final,
+        Plot.text(models_final, {
+            x: (d) => d.value < 0 ? 0 : d.value,
             y: "package",
             text: "package",
             textAnchor: "start",
@@ -80,4 +82,31 @@ Plot.plot({
         type: "ordinal"
     }
 })
+```
+
+## Individual components of community health
+
+The following section shows the individual components of community health for
+all repositories.
+
+```{ojs comm-health-vars}
+commHealthVars = [
+    "collab_devel_index",
+    "comm_serv_support",
+    "comm_welcoming",
+    "community_activity",
+    "dev_responsiveness",
+    "oss_compliance",
+    "proj_awareness",
+    "proj_engagement",
+    "starter_health",
+    "viability_community",
+    "viability_gov",
+    "viability_starter",
+    "viability_strategy"
+]
+viewof commHealthVar = Inputs.select(
+    commHealthVars,
+    { multiple: "false", label: "Community Health Variable" }
+);
 ```

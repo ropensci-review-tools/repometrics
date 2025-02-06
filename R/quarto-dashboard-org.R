@@ -12,7 +12,9 @@
 #' @export
 orgmetrics_dashboard <- function (data_org, data_users, action = "preview") {
 
-    data_org <- data_org_preprocess (data_org)
+    data_all <- data_org_preprocess (data_org) |>
+        dplyr::select (-org, -date) |>
+        tidyr::pivot_longer (-package)
 
     requireNamespace ("brio")
     requireNamespace ("jsonlite")
@@ -25,7 +27,7 @@ orgmetrics_dashboard <- function (data_org, data_users, action = "preview") {
     path_src <- system.file ("extdata", "quarto-org", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto-org")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
-    saveRDS (data_org, fs::path (dir, "results-org.Rds"))
+    saveRDS (data_all, fs::path (dir, "results-org.Rds"))
 
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
