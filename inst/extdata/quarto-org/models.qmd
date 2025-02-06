@@ -46,6 +46,7 @@ Plot.plot({
             {
                 y: "package",
                 x: "final",
+                sort: {y: "-x" },
                 stroke: "#4e79a7",
                 strokeWidth: 2,
             }
@@ -53,4 +54,3 @@ Plot.plot({
     ]
 })
 ```
-
