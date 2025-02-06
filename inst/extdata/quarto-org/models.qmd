@@ -41,8 +41,14 @@ Plot.plot({
     marginBottom: 50,
     y: {grid: true},
     marks: [
-        Plot.barX(
-            models,
+        Plot.barX(models, {
+            y: "package",
+            x: "final",
+            sort: {y: "-x" },
+            fill: "final",
+        }),
+        Plot.barX(models,
+            Plot.pointer(
             {
                 y: "package",
                 x: "final",
@@ -50,8 +56,18 @@ Plot.plot({
                 stroke: "gray",
                 fill: "final",
                 strokeWidth: 2,
-            }
+            })
         ),
+        Plot.text(models,
+            Plot.pointer({
+                x: "final",
+                y: "package",
+                text: "package",
+                textAnchor: "end",
+                fontSize: 20,
+                dx: -3
+            })
+        )
     ],
     color: {
         scheme: "Cool",
