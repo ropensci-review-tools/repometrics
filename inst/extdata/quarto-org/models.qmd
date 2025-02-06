@@ -1,0 +1,236 @@
+---
+title: "Community Models"
+execute:
+  echo: false
+format: 
+  html:
+    fig-width: 8
+    fig-height: 4
+    code-fold: false
+---
+
+```{r load-pkg, echo = FALSE, message = FALSE}
+library (repometrics)
+```
+This page shows aggregate community health scores for all repositories within
+the "reconhub" and "epiverse-trace" organizations. Higher values describe
+repositories with greater community health scores.
+
+```{r load-data}
+dat_models <- readRDS ("results-org.Rds") |>
+    as.data.frame ()
+```
+```{r ojs-in-models, echo = FALSE}
+ojs_define (models_in = dat_models)
+```
+```{ojs}
+models_all = {
+    return transpose(models_in).map(row => ({
+        ...row,
+    }));
+}
+models_final = models_all.filter(function(mod) {
+    return mod.name.includes("final")
+})
+models_len = models_final.length
+```
+
+
+```{ojs plot-all-community-health-vars}
+Plot.plot({
+    height: 20 * models_len,
+    marginLeft: 60,
+    marginRight: 160,
+    marginTop: 50,
+    marginBottom: 50,
+    axis: null,
+    x: {
+        axis: "top",
+        grid: true,
+        label: "Community Health"
+    },
+    y: { grid: true },
+    marks: [
+        Plot.barX(models_final, {
+            y: "package",
+            x: "value",
+            sort: {y: "-x" },
+            fill: "value",
+        }),
+        Plot.barX(models_final,
+            Plot.pointer(
+            {
+                y: "package",
+                x: "value",
+                sort: {y: "-x" },
+                stroke: "gray",
+                fill: "value",
+                strokeWidth: 2,
+            })
+        ),
+        Plot.text(models_final, {
+            x: (d) => d.value < 0 ? 0 : d.value,
+            y: "package",
+            text: "package",
+            textAnchor: "start",
+            fontSize: 16,
+            dx: 5
+        })
+    ],
+    color: {
+        scheme: "Cool",
+        type: "ordinal"
+    }
+})
+```
+
+## Individual components of community health
+
+The following section shows the individual components of community health for
+all repositories.
+
+```{ojs comm-health-vars}
+commHealthVars = [
+    "collab_devel_index",
+    "comm_serv_support",
+    "comm_welcoming",
+    "community_activity",
+    "dev_responsiveness",
+    "oss_compliance",
+    "proj_awareness",
+    "proj_engagement",
+    "starter_health",
+    "viability_community",
+    "viability_gov",
+    "viability_starter",
+    "viability_strategy"
+]
+viewof commHealthVar = Inputs.select(
+    commHealthVars,
+    { multiple: "false", label: "Community Health Variable" }
+);
+```
+
+```{ojs}
+models_filtered = models_all.filter(function(mod) {
+    return mod.name.includes(commHealthVar)
+})
+```
+
+
+```{ojs plot-filtered-community-health-var}
+Plot.plot({
+    height: 20 * models_len,
+    marginLeft: 60,
+    marginRight: 160,
+    marginTop: 50,
+    marginBottom: 50,
+    axis: null,
+    x: {
+        axis: "top",
+        grid: true,
+        label: "Community Health"
+    },
+    y: { grid: true },
+    marks: [
+        Plot.barX(models_filtered, {
+            y: "package",
+            x: "value",
+            sort: {y: "-x" },
+            fill: "value",
+        }),
+        Plot.barX(models_filtered,
+            Plot.pointer(
+            {
+                y: "package",
+                x: "value",
+                sort: {y: "-x" },
+                stroke: "gray",
+                fill: "value",
+                strokeWidth: 2,
+            })
+        ),
+        Plot.text(models_filtered, {
+            x: (d) => d.value < 0 ? 0 : d.value,
+            y: "package",
+            text: "package",
+            textAnchor: "start",
+            fontSize: 16,
+            dx: 5
+        })
+    ],
+    color: {
+        scheme: "Cool",
+        type: "ordinal"
+    }
+})
+```
+
+## Community health for individual repositories
+
+The following section all components of community health for a selected
+repository.
+
+```{ojs get-all-models}
+// Get array of unique repo names for input selector:
+reposAll = models_all.map(function(item) {
+    return item.package;
+});
+repos = Array.from(new Set(reposAll));
+viewof repo = Inputs.select(repos, {multiple: false, label: "Repository:"})
+```
+
+```{ojs}
+model_repo = models_all.filter(function(mod) {
+    return mod.package.includes(repo) && mod.name !== "final"
+})
+model_repo_len = model_repo.length
+```
+
+```{ojs plot-filtered-repo}
+Plot.plot({
+    height: 40 * model_repo_len,
+    marginLeft: 60,
+    marginRight: 160,
+    marginTop: 50,
+    marginBottom: 50,
+    axis: null,
+    x: {
+        axis: "top",
+        grid: true,
+        label: "Community Health"
+    },
+    y: { grid: true },
+    marks: [
+        Plot.barX(model_repo, {
+            y: "name",
+            x: "value",
+            sort: {y: "-x" },
+            fill: "value",
+        }),
+        Plot.barX(model_repo,
+            Plot.pointer(
+            {
+                y: "name",
+                x: "value",
+                sort: {y: "-x" },
+                stroke: "gray",
+                fill: "value",
+                strokeWidth: 2,
+            })
+        ),
+        Plot.text(model_repo, {
+            x: (d) => d.value < 0 ? 0 : d.value,
+            y: "name",
+            text: "name",
+            textAnchor: "start",
+            fontSize: 16,
+            dx: 5
+        })
+    ],
+    color: {
+        scheme: "Cool",
+        type: "ordinal"
+    }
+})
+```
