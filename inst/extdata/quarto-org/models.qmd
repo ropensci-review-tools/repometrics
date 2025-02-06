@@ -37,6 +37,7 @@ models_len = models.length
 Plot.plot({
     height: 20 * models_len,
     marginLeft: 60,
+    marginRight: 160,
     marginTop: 50,
     marginBottom: 50,
     y: {grid: true},
@@ -58,16 +59,14 @@ Plot.plot({
                 strokeWidth: 2,
             })
         ),
-        Plot.text(models,
-            Plot.pointer({
-                x: "final",
-                y: "package",
-                text: "package",
-                textAnchor: "end",
-                fontSize: 20,
-                dx: -3
-            })
-        )
+        Plot.text(models, {
+            x: (d) => d.final < 0 ? 0 : d.final,
+            y: "package",
+            text: "package",
+            textAnchor: "start",
+            fontSize: 16,
+            dx: 5
+        })
     ],
     color: {
         scheme: "Cool",
