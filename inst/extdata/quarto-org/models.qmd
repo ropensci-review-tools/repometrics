@@ -165,3 +165,72 @@ Plot.plot({
     }
 })
 ```
+
+## Community health for individual repositories
+
+The following section all components of community health for a selected
+repository.
+
+```{ojs get-all-models}
+// Get array of unique repo names for input selector:
+reposAll = models_all.map(function(item) {
+    return item.package;
+});
+repos = Array.from(new Set(reposAll));
+viewof repo = Inputs.select(repos, {multiple: false, label: "Repository:"})
+```
+
+```{ojs}
+model_repo = models_all.filter(function(mod) {
+    return mod.package.includes(repo) && mod.name !== "final"
+})
+model_repo_len = model_repo.length
+```
+
+```{ojs plot-filtered-repo}
+Plot.plot({
+    height: 40 * model_repo_len,
+    marginLeft: 60,
+    marginRight: 160,
+    marginTop: 50,
+    marginBottom: 50,
+    axis: null,
+    x: {
+        axis: "top",
+        grid: true,
+        label: "Community Health"
+    },
+    y: { grid: true },
+    marks: [
+        Plot.barX(model_repo, {
+            y: "name",
+            x: "value",
+            sort: {y: "-x" },
+            fill: "value",
+        }),
+        Plot.barX(model_repo,
+            Plot.pointer(
+            {
+                y: "name",
+                x: "value",
+                sort: {y: "-x" },
+                stroke: "gray",
+                fill: "value",
+                strokeWidth: 2,
+            })
+        ),
+        Plot.text(model_repo, {
+            x: (d) => d.value < 0 ? 0 : d.value,
+            y: "name",
+            text: "name",
+            textAnchor: "start",
+            fontSize: 16,
+            dx: 5
+        })
+    ],
+    color: {
+        scheme: "Cool",
+        type: "ordinal"
+    }
+})
+```
