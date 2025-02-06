@@ -45,6 +45,8 @@ data_org_preprocess <- function (data_org) {
         ) |>
         dplyr::group_by (package) |>
         dplyr::slice_head (n = 1L) |>
+        dplyr::mutate (org = gsub ("\\/.*$", "", package), .after = package) |>
+        dplyr::mutate (package = gsub ("^.*\\/", "", package)) |>
         dplyr::mutate (
             final = sum (dplyr::across (dplyr::where (is.numeric))),
             .after = "date"
