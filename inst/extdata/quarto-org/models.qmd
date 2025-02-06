@@ -40,7 +40,13 @@ Plot.plot({
     marginRight: 160,
     marginTop: 50,
     marginBottom: 50,
-    y: {grid: true},
+    axis: null,
+    x: {
+        axis: "top",
+        grid: true,
+        label: "Community Health"
+    },
+    y: { grid: true },
     marks: [
         Plot.barX(models, {
             y: "package",
