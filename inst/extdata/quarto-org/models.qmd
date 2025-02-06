@@ -13,7 +13,7 @@ format:
 library (repometrics)
 ```
 This page includes several graphs providing insight into the models of
-community health across the entire organization(s). AA.
+community health across the entire organization(s).
 
 ```{r load-data}
 dat_models <- readRDS ("results-org.Rds") |>
@@ -29,7 +29,6 @@ models = {
         date: new Date(row.date)
     }));
 }
-console.log("models: " + JSON.stringify(models, null, 4))
 ```
 
 
