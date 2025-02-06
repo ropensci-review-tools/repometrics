@@ -29,12 +29,13 @@ models = {
         date: new Date(row.date)
     }));
 }
+models_len = models.length
 ```
 
 
 ```{ojs}
 Plot.plot({
-    height: 900,
+    height: 20 * models_len,
     marginLeft: 60,
     marginTop: 50,
     marginBottom: 50,
