@@ -1,14 +1,14 @@
 #' Main function to return a function call network between all packages defined
 #' in `org_paths`.
 #'
-#' Takes the result of `rm_data_fn_calls`, which includes details of all actual
-#' functions called, and reduces down to two summary metrics of connections
-#' between packages in terms of total numbers of functions called by each pair
-#' of packages, and numbers of actual calls made.
+#' Takes the result of `rm_org_data_fn_calls`, which includes details of all
+#' actual functions called, and reduces down to two summary metrics of
+#' connections between packages in terms of total numbers of functions called
+#' by each pair of packages, and numbers of actual calls made.
 #' @noRd
 rm_org_data_fn_call_network <- function (org_paths) {
 
-    fn_calls <- rm_data_fn_calls (org_paths)
+    fn_calls <- rm_org_data_fn_calls (org_paths)
     if (!is.null (fn_calls)) {
         fn_calls <- fn_calls |>
             dplyr::group_by (source, package) |>

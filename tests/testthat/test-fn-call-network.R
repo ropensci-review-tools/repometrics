@@ -16,7 +16,7 @@ test_that ("function call network", {
     org_paths <- fs::dir_ls (org_dir, type = "directory", recurse = FALSE)
     fn_calls <- rm_org_data_fn_call_network (org_paths)
 
-    fs::dir_delete (c (path, path1, path2))
+    fs::dir_delete (c (path1, path2))
 
     expect_null (fn_calls)
 })
