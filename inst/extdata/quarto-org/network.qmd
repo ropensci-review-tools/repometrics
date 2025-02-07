@@ -139,7 +139,7 @@ chart = {
       .data(nodes)
       .join("circle")
         .attr("fill", d => color(d.group))
-        .attr("r", d => 10 * Math.log10(d.contributions + 1));
+        .attr("r", d => 10 * Math.log10(d.num_calls + 1));
 
   node.append("text")
       .attr("x", 8)
