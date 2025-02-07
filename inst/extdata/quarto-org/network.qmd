@@ -16,41 +16,45 @@ fn_calls <- readRDS ("fn-calls.Rds")
 fn_call_nodes_pkg <- fn_calls |>
     dplyr::group_by (package) |>
     dplyr::summarise (num_calls = sum (num_calls)) |>
-    dplyr::rename (id = package)
+    dplyr::rename (id = package) |>
+    dplyr::mutate (group = "depends")
 fn_call_nodes_src <- fn_calls |>
     dplyr::group_by (source) |>
     dplyr::summarise (num_calls = sum (num_calls)) |>
-    dplyr::rename (id = source)
-fn_call_nodes <- dplyr::left_join (
-    fn_call_nodes_src,
+    dplyr::rename (id = source) |>
+    dplyr::mutate (group = "uses") |>
+    dplyr::filter (!id %in% fn_call_nodes_pkg$id)
+fn_call_nodes <- dplyr::bind_rows (
     fn_call_nodes_pkg,
-    by = dplyr::join_by (id, num_calls)
+    fn_call_nodes_src
 )
-fn_call_nodes$group <- "package"
-all_pkgs <- unique (c (fn_calls$source, fn_calls$package))
+
+dat <- readRDS ("results-org.Rds")
+all_pkgs <- unique (dat$package)
 extra_pkgs <- all_pkgs [which (!all_pkgs %in% fn_call_nodes$id)]
 fn_call_nodes <- rbind (
     fn_call_nodes,
     data.frame (id = extra_pkgs, num_calls = 0L, group = "isolated")
 )
-fn_calls <- fn_calls |>
+
+fn_call_links <- fn_calls |>
     dplyr::select (-num_fns) |>
     dplyr::rename (target = package, value = num_calls)
-fn_calls$type <- "package"
+fn_call_links$type <- "depends"
 ```
 
 ```{r ojs-definitions}
 ojs_define (nodes_in = fn_call_nodes)
-ojs_define (links_in = fn_calls)
+ojs_define (links_in = fn_call_links)
 ```
 
 ```{ojs transform}
-nodes = {
+nodesAll = {
     return transpose(nodes_in).map(row => ({
         ...row,
     }));
 }
-links = {
+linksAll = {
     return transpose(links_in).map(row => ({
         ...row,
     }));
@@ -76,6 +80,32 @@ viewof linewidth = Inputs.range(
 
 <div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
+```{ojs org-selector}
+node_types = ["depends", "uses", "isolated"]
+viewof typeSelection = {
+    const input =  Inputs.checkbox(
+        node_types,
+        {
+            value: node_types,
+            label: htl.html`<b>Node types:</b>`,
+        }
+    );
+
+    // Modification ideas from
+    // https://talk.observablehq.com/t/what-is-the-best-way-to-style-an-input-checkbox/7690/2
+    const scope = DOM.uid().id;
+    input.classList.add(scope);
+
+    input.append(htl.html`<style>
+    .${scope} > div, .${scope} > div label { display: flex; flex-wrap: wrap; gap: 10px; width: 300px }
+    `)
+
+    return input;
+}
+```
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
+
+
 ```{ojs swatches}
 import {Swatches} from "@d3/color-legend"
 Swatches(chart.scales.color)
@@ -87,7 +117,14 @@ chart = {
   const width = 928;
   const height = 600;
 
-  const types = Array.from(new Set(links.map(d => d.type)));
+  const nodes = nodesAll.filter(function(node) {
+    return typeSelection.includes(node.group) || node.group.length === 0
+  })
+  const links = linksAll.filter(function(link) {
+    return typeSelection.includes(link.type) || link.type.length === 0
+  })
+
+  const types = Array.from(new Set(nodes.map(d => d.group)));
 
   const color = d3.scaleOrdinal(types, d3.schemeCategory10);
 
