@@ -3,6 +3,8 @@
 #'
 #' @param data_org Data on GitHub organization as returned from
 #' `repometrics_collate_org_data` function.
+#' @param fn_calls Data on function calls between packages of the specified
+#' organization, as returned from the `rm_org_data_fn_call_network()` function.
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.
@@ -10,7 +12,7 @@
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #' @export
-orgmetrics_dashboard <- function (data_org, data_users, action = "preview") {
+orgmetrics_dashboard <- function (data_org, fn_calls, action = "preview") {
 
     data_all <- data_org_preprocess (data_org) |>
         dplyr::select (-org, -date) |>
@@ -28,6 +30,7 @@ orgmetrics_dashboard <- function (data_org, data_users, action = "preview") {
     path_dest <- fs::path (fs::path_temp (), "quarto-org")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
     saveRDS (data_all, fs::path (dir, "results-org.Rds"))
+    saveRDS (fn_calls, fs::path (dir, "fn-calls.Rds"))
 
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
