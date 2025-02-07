@@ -1,3 +1,24 @@
+#' Main function to return a function call network between all packages defined
+#' in `org_paths`.
+#'
+#' Takes the result of `rm_data_fn_calls`, which includes details of all actual
+#' functions called, and reduces down to two summary metrics of connections
+#' between packages in terms of total numbers of functions called by each pair
+#' of packages, and numbers of actual calls made.
+#' @noRd
+rm_data_fn_call_network <- function (org_paths) {
+
+    fn_calls <- rm_data_fn_calls (org_paths) |>
+        dplyr::group_by (source, package) |>
+        dplyr::summarise (
+            num_fns = dplyr::n (),
+            num_calls = sum (n),
+            .groups = "keep"
+        )
+
+    return (fn_calls)
+}
+
 #' Collate calls to all functions defined within packages of an organization.
 #' @noRd
 rm_data_fn_calls <- function (org_paths) {
@@ -43,7 +64,7 @@ get_pkg_name <- function (path) {
 
 #' Get calls within single package to all packages named in `pkg_names`.
 #' @noRd
-get_pkg_fn_calls <- function (path, pkg_names) {
+get_pkg_fn_calls_internal <- function (path, pkg_names) {
 
     fns <- pkgmatch::pkgmatch_treesitter_fn_tags (path)
     if (nrow (fns) == 0L) {
@@ -59,3 +80,4 @@ get_pkg_fn_calls <- function (path, pkg_names) {
 
     return (fns)
 }
+get_pkg_fn_calls <- memoise::memoise (get_pkg_fn_calls_internal)
