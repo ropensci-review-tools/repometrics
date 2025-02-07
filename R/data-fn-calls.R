@@ -8,13 +8,16 @@
 #' @noRd
 rm_data_fn_call_network <- function (org_paths) {
 
-    fn_calls <- rm_data_fn_calls (org_paths) |>
-        dplyr::group_by (source, package) |>
-        dplyr::summarise (
-            num_fns = dplyr::n (),
-            num_calls = sum (n),
-            .groups = "keep"
-        )
+    fn_calls <- rm_data_fn_calls (org_paths)
+    if (!is.null (fn_calls)) {
+        fn_calls <- fn_calls |>
+            dplyr::group_by (source, package) |>
+            dplyr::summarise (
+                num_fns = dplyr::n (),
+                num_calls = sum (n),
+                .groups = "keep"
+            )
+    }
 
     return (fn_calls)
 }
