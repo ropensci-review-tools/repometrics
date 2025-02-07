@@ -86,7 +86,7 @@ viewof typeSelection = {
     const input =  Inputs.checkbox(
         node_types,
         {
-            value: node_types,
+            value: ["depends", "uses"],
             label: htl.html`<b>Node types:</b>`,
         }
     );
