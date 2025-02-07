@@ -1,22 +1,19 @@
 test_that ("function call network", {
 
-    path <- generate_test_pkg ()
+    pkg_paths <- generate_test_org_data ()
+    org_path <- unique (fs::path_dir (pkg_paths))
 
-    org_dir <- fs::path (fs::path_temp (), "org")
-    if (!fs::dir_exists (org_dir)) {
-        fs::dir_create (org_dir)
-    }
-    path1 <- fs::dir_copy (path, fs::path (org_dir, "testpkg1"))
-    path2 <- fs::dir_copy (path, fs::path (org_dir, "testpkg2"))
-    fs::dir_delete (path)
+    fn_calls <- rm_org_data_fn_call_network (org_path)
 
-    d1 <- desc::desc_set ("Package" = "testpkg1", file = path1)
-    d2 <- desc::desc_set ("Package" = "testpkg2", file = path2)
+    fs::dir_delete (org_path)
 
-    org_paths <- fs::dir_ls (org_dir, type = "directory", recurse = FALSE)
-    fn_calls <- rm_org_data_fn_call_network (org_paths)
-
-    fs::dir_delete (c (path1, path2))
-
-    expect_null (fn_calls)
+    expect_s3_class (fn_calls, "data.frame")
+    expect_true (nrow (fn_calls) > 0L)
+    expect_named (fn_calls, c ("source", "package", "num_fns", "num_calls"))
+    expect_type (fn_calls$source, "character")
+    expect_type (fn_calls$package, "character")
+    expect_type (fn_calls$num_fns, "integer")
+    expect_type (fn_calls$num_calls, "integer")
+    expect_true (all (fn_calls$num_fns) > 0L)
+    expect_true (all (fn_calls$num_calls) > 0L)
 })
