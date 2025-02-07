@@ -6,7 +6,7 @@
 #' between packages in terms of total numbers of functions called by each pair
 #' of packages, and numbers of actual calls made.
 #' @noRd
-rm_data_fn_call_network <- function (org_paths) {
+rm_org_data_fn_call_network <- function (org_paths) {
 
     fn_calls <- rm_data_fn_calls (org_paths)
     if (!is.null (fn_calls)) {
@@ -24,7 +24,7 @@ rm_data_fn_call_network <- function (org_paths) {
 
 #' Collate calls to all functions defined within packages of an organization.
 #' @noRd
-rm_data_fn_calls <- function (org_paths) {
+rm_org_data_fn_calls <- function (org_paths) {
 
     requireNamespace ("pkgmatch")
 
