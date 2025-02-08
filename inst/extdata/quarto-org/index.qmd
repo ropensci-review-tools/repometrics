@@ -1,3 +1,15 @@
 ---
 title: "Organization-level Metrics and Models"
 ---
+
+This dashboard presents metrics and models for each repository within both the
+[`epiverse-trace`](https://github.com/epiverse-trace) and
+[`reconhub`](https://github.com/reconhub) GitHub organizations. The dashboard
+currently has two main pages:
+
+1. [*Community Models*](./models.html) summarising scores for the various
+    [CHAOSS (*Community Health Analytics in Open Source Software*)
+    models](https://chaoss.community/kb-metrics-and-metrics-models/) for each
+    repository.
+2. A [network diagram](./network.html) of strengths of relationship between
+   each repository.
