@@ -9,7 +9,26 @@ format:
     code-fold: false
 ---
 
-This page shows an interactive network diagram of "epiverse" packages.
+This page shows an interactive network diagram of "epiverse" packages, intended
+to demonstrate possible ways to view relationships between packages. The main
+functional component is the slider for "*Dependencies vs Code Similarity". This
+controls the thickness of lines connecting packages, with lines only shown for
+packages which have direct dependencies on one another.
+
+- For a value of zero, lines directly reflect (relative) numbers of function
+calls made from one package (in orange) to another (in blue).
+- For a value of one, lines are scaled by how different the code within each
+pair of packages is, with thinner lines for more similar packages.
+
+These two kinds of relationships can be taken together to indicate more
+important packages as those which are both used by many other packages, and are
+notably different from other packages. Thus important relationships are those
+for which lines which remain thick regardless of the value selected with this
+slider.
+
+---
+
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
 
 ```{r fn-calls-pre-process}
 fn_calls <- readRDS ("fn-calls.Rds")
@@ -65,7 +84,7 @@ emb_links <- emb_df |>
     tidyr::pivot_longer (-"package") |>
     dplyr::rename (source = package, target = name) |>
     dplyr::filter (!is.na (value)) |>
-    dplyr::mutate (type = "depends", value = round (10 * value)) |>
+    dplyr::mutate (type = "depends", value = 10 * value) |>
     dplyr::filter (target %in% emb_nodes$id)
 ```
 
