@@ -8,11 +8,13 @@
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.
+#' @param emb_matrix Matrix of embeddings between packages, returned from
+#' `rm_org_emb_distances()` function.
 #' @return (Invisibly) Path to main "index.html" document of quarto site. Note
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #' @export
-orgmetrics_dashboard <- function (data_org, fn_calls, action = "preview") {
+orgmetrics_dashboard <- function (data_org, fn_calls, emb_matrix, action = "preview") {
 
     data_all <- data_org_preprocess (data_org) |>
         dplyr::select (-org, -date) |>
@@ -31,6 +33,7 @@ orgmetrics_dashboard <- function (data_org, fn_calls, action = "preview") {
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
     saveRDS (data_all, fs::path (dir, "results-org.Rds"))
     saveRDS (fn_calls, fs::path (dir, "fn-calls.Rds"))
+    saveRDS (emb_matrix, fs::path (dir, "emb-matrix.Rds"))
 
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
