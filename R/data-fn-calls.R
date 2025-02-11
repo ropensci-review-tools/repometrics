@@ -30,8 +30,7 @@ rm_org_data_fn_calls <- function (org_paths) {
 
     pkg_names <- get_all_pkg_names (org_paths)
 
-    pkg_paths <- fs::dir_ls (org_paths, type = "directory", recurse = FALSE)
-    fn_calls <- pbapply::pblapply (pkg_paths, function (p) {
+    fn_calls <- pbapply::pblapply (pkg_names$path, function (p) {
 
         res <- get_pkg_fn_calls (p, pkg_names)
         if (!is.null (res)) {
