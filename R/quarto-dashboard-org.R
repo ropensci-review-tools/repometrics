@@ -16,6 +16,9 @@
 #' @export
 orgmetrics_dashboard <- function (data_org, fn_calls, emb_matrix, action = "preview") {
 
+    # Suppress no visible binding notes:
+    org <- package <- NULL
+
     data_all <- data_org_preprocess (data_org) |>
         dplyr::select (-org, -date) |>
         tidyr::pivot_longer (-package)
@@ -46,6 +49,9 @@ orgmetrics_dashboard <- function (data_org, fn_calls, emb_matrix, action = "prev
 #' final score are better than lower values.
 #' @noRd
 data_org_preprocess <- function (data_org) {
+
+    # Suppress no visible binding notes:
+    package <- final <- NULL
 
     data_org |>
         dplyr::mutate (

@@ -8,6 +8,9 @@
 #' @noRd
 rm_org_data_fn_call_network <- function (org_paths) {
 
+    # Suppress no visible binding notes:
+    package <- n <- NULL
+
     fn_calls <- rm_org_data_fn_calls (org_paths)
     if (!is.null (fn_calls)) {
         fn_calls <- fn_calls |>
@@ -25,6 +28,9 @@ rm_org_data_fn_call_network <- function (org_paths) {
 #' Collate calls to all functions defined within packages of an organization.
 #' @noRd
 rm_org_data_fn_calls <- function (org_paths) {
+
+    # Suppress no visible binding notes:
+    fn <- NULL
 
     requireNamespace ("pkgmatch")
 
@@ -67,6 +73,9 @@ get_pkg_name <- function (path) {
 #' Get calls within single package to all packages named in `pkg_names`.
 #' @noRd
 get_pkg_fn_calls_internal <- function (path, pkg_names) {
+
+    # Suppress no visible binding notes:
+    package <- name <- fn <- NULL
 
     fns <- pkgmatch::pkgmatch_treesitter_fn_tags (path)
     if (nrow (fns) == 0L) {
