@@ -8,6 +8,9 @@
 #' @noRd
 rm_org_data_fn_call_network <- function (org_paths) {
 
+    # Suppress no visible binding notes:
+    package <- n <- NULL
+
     fn_calls <- rm_org_data_fn_calls (org_paths)
     if (!is.null (fn_calls)) {
         fn_calls <- fn_calls |>
@@ -26,12 +29,14 @@ rm_org_data_fn_call_network <- function (org_paths) {
 #' @noRd
 rm_org_data_fn_calls <- function (org_paths) {
 
+    # Suppress no visible binding notes:
+    fn <- NULL
+
     requireNamespace ("pkgmatch")
 
     pkg_names <- get_all_pkg_names (org_paths)
 
-    pkg_paths <- fs::dir_ls (org_paths, type = "directory", recurse = FALSE)
-    fn_calls <- pbapply::pblapply (pkg_paths, function (p) {
+    fn_calls <- pbapply::pblapply (pkg_names$path, function (p) {
 
         res <- get_pkg_fn_calls (p, pkg_names)
         if (!is.null (res)) {
@@ -68,6 +73,9 @@ get_pkg_name <- function (path) {
 #' Get calls within single package to all packages named in `pkg_names`.
 #' @noRd
 get_pkg_fn_calls_internal <- function (path, pkg_names) {
+
+    # Suppress no visible binding notes:
+    package <- name <- fn <- NULL
 
     fns <- pkgmatch::pkgmatch_treesitter_fn_tags (path)
     if (nrow (fns) == 0L) {

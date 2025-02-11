@@ -9,9 +9,28 @@ format:
     code-fold: false
 ---
 
-This page shows an interactive network diagram of "epiverse" packages.
+This page shows an interactive network diagram of "epiverse" packages, intended
+to demonstrate possible ways to view relationships between packages. The main
+functional component is the slider for "*Dependencies vs Code Similarity". This
+controls the thickness of lines connecting packages, with lines only shown for
+packages which have direct dependencies on one another.
 
-```{r}
+- For a value of zero, lines directly reflect (relative) numbers of function
+calls made from one package (in orange) to another (in blue).
+- For a value of one, lines are scaled by how different the code within each
+pair of packages is, with thinner lines for more similar packages.
+
+These two kinds of relationships can be taken together to indicate more
+important packages as those which are both used by many other packages, and are
+notably different from other packages. Thus important relationships are those
+for which lines which remain thick regardless of the value selected with this
+slider.
+
+---
+
+<div style="margin-top: 20px; margin-bottom: 20px;"></div>
+
+```{r fn-calls-pre-process}
 fn_calls <- readRDS ("fn-calls.Rds")
 fn_call_nodes_pkg <- fn_calls |>
     dplyr::group_by (package) |>
@@ -43,9 +62,39 @@ fn_call_links <- fn_calls |>
 fn_call_links$type <- "depends"
 ```
 
+```{r emb-matrix-pre-process}
+emb <- readRDS ("emb-matrix.Rds")
+colnames (emb) <- rownames (emb)
+emb_nodes <- rowSums (emb, na.rm = TRUE)
+emb_nodes <- data.frame (
+    id = names (emb_nodes),
+    value = as.numeric (emb_nodes),
+    group = "isolated"
+)
+# Embeddings don't exist for all nodes, so add extra:
+nodes_extra <- fn_call_nodes$id [which (!fn_call_nodes$id %in% emb_nodes$id)]
+emb_nodes <- rbind (emb_nodes, data.frame (id = nodes_extra, value = 0, group = "isolated"))
+index <- match (fn_call_nodes$id, emb_nodes$id)
+emb_nodes$group [index] <- fn_call_nodes$group
+
+emb_nodes$group <- "depends"
+
+emb_df <- cbind (package = rownames (emb), data.frame (emb, row.names = NULL))
+emb_links <- emb_df |>
+    tidyr::pivot_longer (-"package") |>
+    dplyr::rename (source = package, target = name) |>
+    dplyr::filter (!is.na (value)) |>
+    dplyr::mutate (type = "depends", value = 10 * value) |>
+    dplyr::filter (target %in% emb_nodes$id)
+```
+
+
+
 ```{r ojs-definitions}
 ojs_define (nodes_in = fn_call_nodes)
 ojs_define (links_in = fn_call_links)
+ojs_define (nodes_in_emb = emb_nodes)
+ojs_define (links_in_emb = emb_links)
 ```
 
 ```{ojs transform}
@@ -56,6 +105,16 @@ nodesAll = {
 }
 linksAll = {
     return transpose(links_in).map(row => ({
+        ...row,
+    }));
+}
+nodesAllEmb = {
+    return transpose(nodes_in_emb).map(row => ({
+        ...row,
+    }));
+}
+linksAllEmb = {
+    return transpose(links_in_emb).map(row => ({
         ...row,
     }));
 }
@@ -75,6 +134,13 @@ viewof strength = Inputs.range(
 viewof linewidth = Inputs.range(
     [1,10],
     {value: 1, step: 1, label: htl.html`<b>Line Thickness:</b>`}
+);
+```
+
+```{ojs emb-vs-deps-slider}
+viewof deps_vs_emb = Inputs.range(
+    [0, 1],
+    {value: 0, step: 0.1, label: htl.html`<b>Dependencies (0) vs Code Similarity (1):</b>`}
 );
 ```
 
@@ -117,12 +183,37 @@ chart = {
   const width = 928;
   const height = 600;
 
+  // linksAll has fewer (source, target) pairs than linksAllEmb, so create a
+  // lookup table of those pairs which do exist:
+  const linksAllEmbLookup = {};
+  linksAllEmb.forEach(obj => {
+    linksAllEmbLookup[`${obj.source},${obj.target}`] = obj.value;
+  });
+
+  // Then loop over all linksAllEmb, and add values for linksAll where they
+  // exist for same (source, target) pair. Note that obj1.value is embedding
+  // strength, while linksAllLookup holds dependency strength
+  const linksCombined = linksAll.map(obj => {
+      const key = `${obj.source},${obj.target}`;
+      return {
+          ...obj,
+          value: linksAllEmbLookup[key] ?
+            (1. - deps_vs_emb) * obj.value + deps_vs_emb * linksAllEmbLookup[key] : obj.value
+      };
+  });
+
+  // const nodes = nodesAllEmb.filter(function(node) {
+  //   return typeSelection.includes(node.group) || node.group.length === 0
+  // })
   const nodes = nodesAll.filter(function(node) {
     return typeSelection.includes(node.group) || node.group.length === 0
   })
-  const links = linksAll.filter(function(link) {
+  const links = linksCombined.filter(function(link) {
     return typeSelection.includes(link.type) || link.type.length === 0
   })
+  // const links = linksCombined.filter(function(link) {
+  //   return typeSelection.includes(link.type) || link.type.length === 0
+  // })
 
   const types = Array.from(new Set(nodes.map(d => d.group)));
 
@@ -162,7 +253,7 @@ chart = {
     .data(links)
     .join("path")
       .attr("stroke", d => color(d.type))
-      .attr("stroke-width", d => Math.sqrt(d.value) * linewidth);
+      .attr("stroke-width", d => d.value * linewidth);
 
   const node = svg.append("g")
     .selectAll("g")
