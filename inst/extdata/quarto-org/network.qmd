@@ -65,7 +65,7 @@ emb_links <- emb_df |>
     tidyr::pivot_longer (-"package") |>
     dplyr::rename (source = package, target = name) |>
     dplyr::filter (!is.na (value)) |>
-    dplyr::mutate (type = "depends", value = 10 * value) |>
+    dplyr::mutate (type = "depends", value = round (10 * value)) |>
     dplyr::filter (target %in% emb_nodes$id)
 ```
 
@@ -166,19 +166,20 @@ chart = {
 
   // linksAll has fewer (source, target) pairs than linksAllEmb, so create a
   // lookup table of those pairs which do exist:
-  const linksAllLookup = {};
-  linksAll.forEach(obj => {
-    linksAllLookup[`${obj.source},${obj.target}`] = obj.value;
+  const linksAllEmbLookup = {};
+  linksAllEmb.forEach(obj => {
+    linksAllEmbLookup[`${obj.source},${obj.target}`] = obj.value;
   });
 
   // Then loop over all linksAllEmb, and add values for linksAll where they
   // exist for same (source, target) pair. Note that obj1.value is embedding
   // strength, while linksAllLookup holds dependency strength
-  const linksCombined = linksAllEmb.map(obj => {
+  const linksCombined = linksAll.map(obj => {
       const key = `${obj.source},${obj.target}`;
       return {
           ...obj,
-          value: linksAllLookup[key] ? (1 - deps_vs_emb) * obj.value + deps_vs_emb * linksAllLookup[key] : obj.value
+          value: linksAllEmbLookup[key] ?
+            (1. - deps_vs_emb) * obj.value + deps_vs_emb * linksAllEmbLookup[key] : obj.value
       };
   });
 
@@ -188,7 +189,7 @@ chart = {
   const nodes = nodesAll.filter(function(node) {
     return typeSelection.includes(node.group) || node.group.length === 0
   })
-  const links = linksAll.filter(function(link) {
+  const links = linksCombined.filter(function(link) {
     return typeSelection.includes(link.type) || link.type.length === 0
   })
   // const links = linksCombined.filter(function(link) {
@@ -233,7 +234,7 @@ chart = {
     .data(links)
     .join("path")
       .attr("stroke", d => color(d.type))
-      .attr("stroke-width", d => Math.sqrt(d.value) * linewidth);
+      .attr("stroke-width", d => d.value * linewidth);
 
   const node = svg.append("g")
     .selectAll("g")
