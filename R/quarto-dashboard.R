@@ -11,6 +11,8 @@
 #' @return (Invisibly) Path to main "index.html" document of quarto site. Note
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
+#'
+#' @family dashboard
 #' @export
 repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
 

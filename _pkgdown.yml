@@ -1,0 +1,12 @@
+url: https://docs.ropensci.org/repometrics
+
+figures:
+  dev: grDevices::png
+
+reference:
+- title: Data collation
+  contents:
+  - has_concept("data")
+- title: Dashboard
+  contents:
+  - has_concept("dashboard")

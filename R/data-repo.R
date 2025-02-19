@@ -9,6 +9,7 @@
 #' GitHub data.
 #' }
 #'
+#' @family data
 #' @export
 repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 

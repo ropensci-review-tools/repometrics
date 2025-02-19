@@ -11,7 +11,6 @@ Metrics for your code repository. Call one function to generate an interactive d
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://docs.ropensci.org/repometrics/}
   \item \url{https://github.com/ropensci-review-tools/repometrics}
   \item Report bugs at \url{https://github.com/ropensci-review-tools/repometrics/issues}
 }

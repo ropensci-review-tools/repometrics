@@ -27,3 +27,4 @@ simply opening this "index.html" file.
 Start quarto dashboard with results of main \link{repometrics_data_repo}
 function.
 }
+\concept{dashboard}
