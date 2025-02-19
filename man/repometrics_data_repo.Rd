@@ -33,3 +33,9 @@ GitHub data.
 \description{
 Collate 'repometrics' data for a local R package
 }
+\seealso{
+Other data: 
+\code{\link{repo_pkgstats_history}()},
+\code{\link{repometrics_data_user}()}
+}
+\concept{data}

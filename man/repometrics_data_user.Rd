@@ -38,3 +38,9 @@ A list of the following \code{data.frame} objects:
 \description{
 Extract and combine all user data
 }
+\seealso{
+Other data: 
+\code{\link{repo_pkgstats_history}()},
+\code{\link{repometrics_data_repo}()}
+}
+\concept{data}

@@ -36,3 +36,9 @@ properties of each function in package.
 \description{
 Apply \pkg{pkgstats} across the git history of a package
 }
+\seealso{
+Other data: 
+\code{\link{repometrics_data_repo}()},
+\code{\link{repometrics_data_user}()}
+}
+\concept{data}

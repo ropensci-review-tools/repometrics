@@ -49,6 +49,7 @@ repo_pkgstats_history_internal <- function (path, step_days = 1L, num_cores = -1
 #' properties of each function in package.
 #' }
 #'
+#' @family data
 #' @export
 repo_pkgstats_history <- memoise::memoise (repo_pkgstats_history_internal)
 

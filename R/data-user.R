@@ -17,6 +17,8 @@
 #' \item `issue_cmts` with information on all issue comments made by user
 #' \item `issues` with information on all issues opened by user
 #' }
+#'
+#' @family data
 #' @export
 repometrics_data_user <- function (login,
                                    ended_at = Sys.time (),
