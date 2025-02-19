@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.1.6.49",
+  "version": "0.1.6.050",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -295,10 +295,13 @@
       "name": "pkgstats",
       "sameAs": "https://github.com/ropensci-review-tools/pkgstats"
     },
-    "SystemRequirements": null
+    "SystemRequirements": {}
   },
   "fileSize": "13358.074KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
-  "contIntegration": ["https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check", "https://app.codecov.io/gh/ropensci-review-tools/repometrics"],
+  "contIntegration": [
+    "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",
+    "https://app.codecov.io/gh/ropensci-review-tools/repometrics"
+  ],
   "developmentStatus": "https://www.repostatus.org/#active"
 }
