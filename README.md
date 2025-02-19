@@ -64,6 +64,11 @@ customizable, they can be difficult both to set up and to use. The [OpenSSF
 Scorecard](https://github.com/ossf/scorecard) is a lightweight system focussed
 on metrics of "security health".
 
+Plus a host of semi-private and commercial offerings like
+[codescene](https://codescene.com/), [SonarQube](https://www.sonarsource.com/),
+[SonarGraph](https://www.hello2morrow.com/products/sonargraph),
+[Teamscale](https://teamscale.com/), and [Understand](https://scitools.com/).
+
 ## Code of Conduct
 
 Please note that this package is released with a [Contributor Code of
