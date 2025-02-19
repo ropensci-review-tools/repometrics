@@ -1,3 +1,8 @@
+test_all <- (identical (Sys.getenv ("MPADGE_LOCAL"), "true") ||
+    identical (Sys.getenv ("GITHUB_JOB"), "test-coverage"))
+
+skip_if (!test_all)
+
 test_that ("author matches", { # R/cm-metric-cran-downloads.R
 
     dat <- mock_rm_data ()
