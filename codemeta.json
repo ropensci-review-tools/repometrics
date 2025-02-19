@@ -4,11 +4,10 @@
   "identifier": "repometrics",
   "description": "Metrics for your code repository. Call one function to generate an interactive dashboard displaying the state of your code.",
   "name": "repometrics: Metrics for Your Code Repository",
-  "relatedLink": "https://docs.ropensci.org/repometrics/",
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.1.6.043",
+  "version": "0.1.6.044",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -291,7 +290,7 @@
     },
     "SystemRequirements": {}
   },
-  "fileSize": "12643.356KB",
+  "fileSize": "13362.46KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
   "contIntegration": [
     "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",
