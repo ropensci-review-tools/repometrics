@@ -100,7 +100,7 @@ mock_rm_data <- function (repo = TRUE) {
         res <- lapply (logins, function (login) {
             pars <- list (
                 login = login,
-                n_per_page = 1,
+                n_per_page = 1L,
                 ended_at = ended_at,
                 nyears = 1
             )
