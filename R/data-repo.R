@@ -17,20 +17,33 @@
 #' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
 #' restricted to maximum available cores, and a value of zero will use all
 #' available cores.
+#' @param ended_at Parameter used in some aspects of resultant data to limit
+#' the end date of data collection. Defaults to `Sys.time()`.
+#' @param nyears Parameter <= 1 determining fraction of a year over which data
+#' up until `end_date` are collected.
 #'
 #' @return data
 #' @export
-repometrics_data <- function (path, step_days = 1L, num_cores = -1L) {
+repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
+                              ended_at = Sys.time (), nyears = 1) {
 
-    data_repo <- repometrics_data_repo (
+    data <- repometrics_data_repo (
         path = path, step_days = step_days, num_cores = num_cores
     )
 
-    ctbs <- data_repo$rm$contribs_from_gh_api$login
-    data_ctbs <- lapply (ctbs, repometrics_data_user)
+    ctbs <- data$rm$contribs_from_gh_api$login
+    data_ctbs <- lapply (ctbs, function (ctb) {
+        repometrics_data_user (
+            login = ctb,
+            ended_at = ended_at,
+            nyears = nyears
+        )
+    })
     names (data_ctbs) <- ctbs
 
-    return (c (data_repo, data_ctbs))
+    data$contributors <- data_ctbs
+
+    return (data)
 }
 
 #' Collate 'repometrics' data for a local R package.

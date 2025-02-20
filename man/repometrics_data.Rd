@@ -4,7 +4,13 @@
 \alias{repometrics_data}
 \title{Collate 'repometrics' data for a local R package.}
 \usage{
-repometrics_data(path, step_days = 1L, num_cores = -1L)
+repometrics_data(
+  path,
+  step_days = 1L,
+  num_cores = -1L,
+  ended_at = Sys.time(),
+  nyears = 1
+)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
@@ -20,6 +26,12 @@ single-core only. Negative values are subtracted from number of available
 cores, determined as \code{parallel::detectCores()}, so default of \code{num_cores = -1L} uses \code{detectCores() - 1L}. Positive values use precisely that number,
 restricted to maximum available cores, and a value of zero will use all
 available cores.}
+
+\item{ended_at}{Parameter used in some aspects of resultant data to limit
+the end date of data collection. Defaults to \code{Sys.time()}.}
+
+\item{nyears}{Parameter <= 1 determining fraction of a year over which data
+up until \code{end_date} are collected.}
 }
 \value{
 data

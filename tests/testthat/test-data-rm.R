@@ -4,6 +4,38 @@ test_that ("rm data full", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
+    data_repo <- repometrics_data_repo (path)
+
+    ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+    logins <- data_repo$rm$contribs_from_gh_api$login
+
+    data_ctbs <- lapply (logins, function (login) {
+        repometrics_data_user (
+            login = login,
+            n_per_page = 1L,
+            ended_at = ended_at,
+            nyears = 1
+        )
+    })
+    names (data_ctbs) <- logins
+
+    data <- repometrics_data (path, ended_at = ended_at, nyears = 1)
+
+    fs::dir_delete (path)
+
+    expect_type (data, "list")
+    expect_named (data, c ("pkgstats", "rm", "contributors"))
+
+    dat_constructed <- c (data_repo, contributors = list (data_ctbs))
+    expect_identical (data, dat_constructed)
+})
+
+test_that ("rm data repo", {
+
+    Sys.setenv ("REPOMETRICS_TESTS" = "true")
+    dat <- mock_rm_data ()
+    path <- generate_test_pkg ()
+
     dat <- rm_data_repo (path)
 
     fs::dir_delete (path)

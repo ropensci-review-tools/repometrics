@@ -4,11 +4,8 @@
 #' function, along with data on repository structure and historical developed
 #' extracted by the \link{repometrics_data_repo} function.
 #'
+#' @inheritParams repometrics_data
 #' @param login GitHub login of user
-#' @param ended_at Parameter used in some aspects of resultant data to limit
-#' the end date of data collection. Defaults to `Sys.time()`.
-#' @param nyears Parameter <= 1 determining fraction of a year over which data
-#' up until `end_date` are collected.
 #' @param n_per_page Number of items per page to pass to GitHub GraphQL API
 #' requests. This should never need to be changed.
 #' @return A list of the following `data.frame` objects:
@@ -30,6 +27,10 @@ repometrics_data_user <- function (login,
                                    n_per_page = 100) {
 
     checkmate::assert_character (login, len = 1L)
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    if (is_test_env) {
+        n_per_page <- 1L
+    }
 
     data_fns <- get_rm_gh_user_fns ()
     pars <- list (

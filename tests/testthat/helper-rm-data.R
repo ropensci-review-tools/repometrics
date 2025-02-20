@@ -44,7 +44,7 @@ mock_rm_data <- function (repo = TRUE) {
         prfx <- paste0 ("gh_user", match (login, logins), "_")
         pars <- list (
             login = login,
-            n_per_page = 1,
+            n_per_page = 1L,
             ended_at = ended_at,
             nyears = 1
         )
@@ -96,23 +96,28 @@ mock_rm_data <- function (repo = TRUE) {
         )
     } else {
         data_fns <- get_rm_gh_user_fns ()
-        pars <- list (
-            login = login,
-            n_per_page = 1,
-            ended_at = ended_at,
-            nyears = 1
-        )
+        logins <- c ("gaborcsardi", "hfrick")
+        res <- lapply (logins, function (login) {
+            pars <- list (
+                login = login,
+                n_per_page = 1,
+                ended_at = ended_at,
+                nyears = 1
+            )
 
-        res <- lapply (data_fns, function (i) {
-            do.call (i, pars)
+            res_i <- lapply (data_fns, function (i) {
+                do.call (i, pars)
+            })
+            names (res_i) <- gsub ("^gh\\_user\\_", "", data_fns)
+
+            names (res_i) <- gsub ("follow", "followers", names (res_i))
+            res_i$following <- do.call (gh_user_follow, c (pars, followers = FALSE))
+
+            i <- grep ("general", names (res_i))
+            res_i <- c (res_i [i], res_i [-i] [order (names (res_i) [-i])])
+            return (res_i)
         })
-        names (res) <- gsub ("^gh\\_user\\_", "", data_fns)
-
-        names (res) <- gsub ("follow", "followers", names (res))
-        res$following <- do.call (gh_user_follow, c (pars, followers = FALSE))
-
-        i <- grep ("general", names (res))
-        res <- c (res [i], res [-i] [order (names (res) [-i])])
+        names (res) <- logins
     }
 
     fs::dir_delete (path)
