@@ -36,18 +36,29 @@ pak::pkg_install ("ropensci-review-tools/repometrics")
 
 ### Use
 
-The main data-gathering function requires just one parameter specifying the
-path to a local source repository:
+The dashboard requires two sources of data, beginning with core data of a focal
+repository. Code for that repository must exist in a local directory
+corresponding to the single input parameter, `path`:
 
 ``` r
-data <- repometrics_data_repo (path)
+data_repo <- repometrics_data_repo (path)
 ```
 
-The results can then be visualised as an interactive dashboard by running this
-line:
+The second data source is then information on all people who have contributed
+to the repository, both by direct code commits and via GitHub. The following
+lines extract information on each of those contributors:
 
 ``` r
-repometrics_dashboard (data)
+ctbs <- data_repo$rm$contribs_from_gh_api$login
+data_ctbs <- lapply (ctbs, repometrics_data_user)
+names (data_ctbs) <- ctbs
+```
+
+A `repometrics` dashboard for the repository can then be launched with the
+following line:
+
+``` r
+repometrics_dashboard (data_repo, data_ctbs)
 ```
 
 The dashboard will automatically open in your default browser.
