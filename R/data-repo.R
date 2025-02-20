@@ -4,7 +4,19 @@
 #' function, along with detailed data on individual contributors extracted by
 #' the \link{repometrics_data_user} function.
 #'
-#' @inheritParams repo_pkgstats_history
+#' @param path Path to local repository containing an R package.
+#' @param step_days Analyse package at intervals of this number of days. The
+#' last commit for each day is chosen. For example, `step_days = 7L` will
+#' return weekly statistics. Values of zero or less will analyse all commits,
+#' including potentially multiple daily commits.
+#' @param num_cores Number of cores to use in multi-core processing. Has no
+#' effect on Windows operating systems, on which calculations are always
+#' single-core only. Negative values are subtracted from number of available
+#' cores, determined as `parallel::detectCores()`, so default of `num_cores =
+#' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
+#' restricted to maximum available cores, and a value of zero will use all
+#' available cores.
+#'
 #' @return A list with two main items:
 #' \enumerate{
 #' \item "pkgstats" Containing summary data from apply `pkgstats` routines

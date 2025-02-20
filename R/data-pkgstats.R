@@ -25,18 +25,7 @@ repo_pkgstats_history_internal <- function (path, step_days = 1L, num_cores = -1
 
 #' Apply \pkg{pkgstats} across the git history of a package
 #'
-#' @param path Path to local repository containing an R package.
-#' @param step_days Analyse package at intervals of this number of days. The
-#' last commit for each day is chosen. For example, `step_days = 7L` will
-#' return weekly statistics. Values of zero or less will analyse all commits,
-#' including potentially multiple daily commits.
-#' @param num_cores Number of cores to use in multi-core processing. Has no
-#' effect on Windows operating systems, on which calculations are always
-#' single-core only. Negative values are subtracted from number of available
-#' cores, determined as `parallel::detectCores()`, so default of `num_cores =
-#' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
-#' restricted to maximum available cores, and a value of zero will use all
-#' available cores.
+#' @inheritParams repometrics_data_repo
 #'
 #' @return `NULL` if `path` is not an R package, or if no \pkg{pkgstats}
 #' results are able to be extracted. Otherwise, a list of three items:
