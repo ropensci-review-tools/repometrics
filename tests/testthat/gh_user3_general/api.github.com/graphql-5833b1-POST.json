@@ -16,7 +16,7 @@
                         "url": "https://github.com/ropensci",
                         "websiteUrl": "https://ropensci.org/",
                         "membersWithRole": {
-                            "totalCount": 294
+                            "totalCount": 298
                         }
                     },
                     {
@@ -66,7 +66,7 @@
                         "url": "https://github.com/reconhub",
                         "websiteUrl": "http://www.repidemicsconsortium.org",
                         "membersWithRole": {
-                            "totalCount": 24
+                            "totalCount": 23
                         }
                     },
                     {
@@ -253,13 +253,13 @@
             },
             "avatarUrl": "https://avatars.githubusercontent.com/u/6697851?u=0f8c9fc5b04de2485164e2cde5b62d45b4e684a0&v=4",
             "repositories": {
-                "totalCount": 171
+                "totalCount": 172
             },
             "repositoriesContributedTo": {
                 "totalCount": 63
             },
             "starredRepositories": {
-                "totalCount": 1620
+                "totalCount": 1627
             }
         }
     }

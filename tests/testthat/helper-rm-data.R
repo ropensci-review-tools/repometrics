@@ -38,35 +38,38 @@ mock_rm_data <- function (repo = TRUE) {
     })
 
     # rm-data-user:
-    login <- "mpadge"
+    logins <- c ("gaborcsardi", "hfrick", "mpadge")
     ended_at <- as.POSIXct ("2024-01-01T00:00:00")
-    pars <- list (
-        login = login,
-        n_per_page = 1,
-        ended_at = ended_at,
-        nyears = 1
-    )
-    general <- httptest2::with_mock_dir ("gh_user_general", {
-        do.call (gh_user_general, pars)
-    })
-    followers <- httptest2::with_mock_dir ("gh_user_followers", {
-        do.call (gh_user_follow, c (pars, followers = TRUE))
-    })
-    following <- httptest2::with_mock_dir ("gh_user_following", {
-        do.call (gh_user_follow, c (pars, followers = FALSE))
-    })
-    user_commit_cmt <- httptest2::with_mock_dir ("gh_user_commit_cmt", {
-        do.call (gh_user_commit_cmt, pars)
-    })
-    user_commits <- httptest2::with_mock_dir ("gh_user_commits", {
-        do.call (gh_user_commits, pars)
-    })
-    user_issues <- httptest2::with_mock_dir ("gh_user_issues", {
-        do.call (gh_user_issues, pars)
-    })
-    user_issue_cmts <- httptest2::with_mock_dir ("gh_user_issue_cmts", {
-        do.call (gh_user_issue_cmts, pars)
-    })
+    for (login in logins) {
+        prfx <- paste0 ("gh_user", match (login, logins), "_")
+        pars <- list (
+            login = login,
+            n_per_page = 1L,
+            ended_at = ended_at,
+            nyears = 1
+        )
+        general <- httptest2::with_mock_dir (paste0 (prfx, "general"), {
+            do.call (gh_user_general, pars)
+        })
+        followers <- httptest2::with_mock_dir (paste0 (prfx, "followers"), {
+            do.call (gh_user_follow, c (pars, followers = TRUE))
+        })
+        following <- httptest2::with_mock_dir (paste0 (prfx, "following"), {
+            do.call (gh_user_follow, c (pars, followers = FALSE))
+        })
+        user_commit_cmt <- httptest2::with_mock_dir (paste0 (prfx, "commit_cmt"), {
+            do.call (gh_user_commit_cmt, pars)
+        })
+        user_commits <- httptest2::with_mock_dir (paste0 (prfx, "commits"), {
+            do.call (gh_user_commits, pars)
+        })
+        user_issues <- httptest2::with_mock_dir (paste0 (prfx, "issues"), {
+            do.call (gh_user_issues, pars)
+        })
+        user_issue_cmts <- httptest2::with_mock_dir (paste0 (prfx, "issue_cmts"), {
+            do.call (gh_user_issue_cmts, pars)
+        })
+    }
 
     # cran_downloads fn needs modified DESC:
     desc_path <- fs::path (path, "DESCRIPTION")
@@ -93,23 +96,28 @@ mock_rm_data <- function (repo = TRUE) {
         )
     } else {
         data_fns <- get_rm_gh_user_fns ()
-        pars <- list (
-            login = login,
-            n_per_page = 1,
-            ended_at = ended_at,
-            nyears = 1
-        )
+        logins <- c ("gaborcsardi", "hfrick")
+        res <- lapply (logins, function (login) {
+            pars <- list (
+                login = login,
+                n_per_page = 1L,
+                ended_at = ended_at,
+                nyears = 1
+            )
 
-        res <- lapply (data_fns, function (i) {
-            do.call (i, pars)
+            res_i <- lapply (data_fns, function (i) {
+                do.call (i, pars)
+            })
+            names (res_i) <- gsub ("^gh\\_user\\_", "", data_fns)
+
+            names (res_i) <- gsub ("follow", "followers", names (res_i))
+            res_i$following <- do.call (gh_user_follow, c (pars, followers = FALSE))
+
+            i <- grep ("general", names (res_i))
+            res_i <- c (res_i [i], res_i [-i] [order (names (res_i) [-i])])
+            return (res_i)
         })
-        names (res) <- gsub ("^gh\\_user\\_", "", data_fns)
-
-        names (res) <- gsub ("follow", "followers", names (res))
-        res$following <- do.call (gh_user_follow, c (pars, followers = FALSE))
-
-        i <- grep ("general", names (res))
-        res <- c (res [i], res [-i] [order (names (res) [-i])])
+        names (res) <- logins
     }
 
     fs::dir_delete (path)

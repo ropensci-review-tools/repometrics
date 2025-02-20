@@ -1,0 +1,22 @@
+{
+    "data": {
+        "user": {
+            "login": "hfrick",
+            "followers": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0wM1QxNDozNDo1OCswMTowMM4LhT1A"
+                },
+                "totalCount": 181,
+                "nodes": [
+                    {
+                        "login": "jdblischak"
+                    },
+                    {
+                        "login": "DrNaveen01"
+                    }
+                ]
+            }
+        }
+    }
+}

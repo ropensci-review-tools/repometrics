@@ -1,0 +1,46 @@
+{
+    "data": {
+        "user": {
+            "login": "gaborcsardi",
+            "issueComments": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0yMFQwODoxMjo0MiswMTowMM6fLsuA"
+                },
+                "totalCount": 20906,
+                "nodes": [
+                    {
+                        "createdAt": "2025-02-20T09:25:03Z",
+                        "issue": {
+                            "number": 971,
+                            "comments": {
+                                "totalCount": 3
+                            },
+                            "participants": {
+                                "totalCount": 2
+                            },
+                            "repository": {
+                                "nameWithOwner": "r-lib/actions"
+                            }
+                        }
+                    },
+                    {
+                        "createdAt": "2025-02-20T07:12:42Z",
+                        "issue": {
+                            "number": 645,
+                            "comments": {
+                                "totalCount": 11
+                            },
+                            "participants": {
+                                "totalCount": 4
+                            },
+                            "repository": {
+                                "nameWithOwner": "r-hub/rhub"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

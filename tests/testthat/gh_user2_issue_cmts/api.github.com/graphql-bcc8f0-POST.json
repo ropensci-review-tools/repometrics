@@ -1,41 +1,41 @@
 {
     "data": {
         "user": {
-            "login": "mpadge",
+            "login": "hfrick",
             "issueComments": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMS0yOFQxMjo0MDowMSswMTowMM6cFxqR"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0xNFQxOTo0MzowNCswMTowMM6ejNPe"
                 },
-                "totalCount": 5209,
+                "totalCount": 844,
                 "nodes": [
                     {
-                        "createdAt": "2025-01-27T09:01:08Z",
+                        "createdAt": "2025-02-17T17:39:17Z",
                         "issue": {
-                            "number": 3,
+                            "number": 75,
                             "comments": {
                                 "totalCount": 2
                             },
                             "participants": {
-                                "totalCount": 1
+                                "totalCount": 2
                             },
                             "repository": {
-                                "nameWithOwner": "ropensci-review-tools/repometrics"
+                                "nameWithOwner": "tidymodels/multilevelmod"
                             }
                         }
                     },
                     {
-                        "createdAt": "2025-01-28T11:40:01Z",
+                        "createdAt": "2025-02-14T18:43:04Z",
                         "issue": {
-                            "number": 28,
+                            "number": 380,
                             "comments": {
-                                "totalCount": 2
+                                "totalCount": 3
                             },
                             "participants": {
-                                "totalCount": 2
+                                "totalCount": 4
                             },
                             "repository": {
-                                "nameWithOwner": "bnicenboim/pangoling"
+                                "nameWithOwner": "r-lib/revdepcheck"
                             }
                         }
                     }

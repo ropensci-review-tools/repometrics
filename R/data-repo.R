@@ -1,6 +1,59 @@
-#' Collate 'repometrics' data for a local R package
+#' Collate 'repometrics' data for a local R package.
 #'
-#' @inheritParams repo_pkgstats_history
+#' This function collates all data for a local R package or repository needed
+#' to create a dashboard with the \link{repometrics_dashboard} function. It
+#' combines data from both the \link{repometrics_data_repo} and
+#' \link{repometrics_data_user} functions.
+#'
+#' @param path Path to local repository containing an R package.
+#' @param step_days Analyse package at intervals of this number of days. The
+#' last commit for each day is chosen. For example, `step_days = 7L` will
+#' return weekly statistics. Values of zero or less will analyse all commits,
+#' including potentially multiple daily commits.
+#' @param num_cores Number of cores to use in multi-core processing. Has no
+#' effect on Windows operating systems, on which calculations are always
+#' single-core only. Negative values are subtracted from number of available
+#' cores, determined as `parallel::detectCores()`, so default of `num_cores =
+#' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
+#' restricted to maximum available cores, and a value of zero will use all
+#' available cores.
+#' @param ended_at Parameter used in some aspects of resultant data to limit
+#' the end date of data collection. Defaults to `Sys.time()`.
+#' @param nyears Parameter <= 1 determining fraction of a year over which data
+#' up until `end_date` are collected.
+#'
+#' @return data
+#' @export
+repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
+                              ended_at = Sys.time (), nyears = 1) {
+
+    data <- repometrics_data_repo (
+        path = path, step_days = step_days, num_cores = num_cores
+    )
+
+    ctbs <- data$rm$contribs_from_gh_api$login
+    data_ctbs <- lapply (ctbs, function (ctb) {
+        repometrics_data_user (
+            login = ctb,
+            ended_at = ended_at,
+            nyears = nyears
+        )
+    })
+    names (data_ctbs) <- ctbs
+
+    data$contributors <- data_ctbs
+
+    return (data)
+}
+
+#' Collate 'repometrics' data for a local R package.
+#'
+#' This forms part of the data collated by the main \link{repometrics_data}
+#' function, along with detailed data on individual contributors extracted by
+#' the \link{repometrics_data_user} function.
+#'
+#' @inheritParams repometrics_data
+#'
 #' @return A list with two main items:
 #' \enumerate{
 #' \item "pkgstats" Containing summary data from apply `pkgstats` routines

@@ -1,19 +1,19 @@
 {
     "data": {
         "user": {
-            "login": "mpadge",
-            "following": {
+            "login": "gaborcsardi",
+            "followers": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNC0wOS0xOFQxNjo1Mzo0MSswMjowMM4KeO8E"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0xNVQwMzo0MTo1OSswMTowMM4Lmaov"
                 },
-                "totalCount": 109,
+                "totalCount": 1443,
                 "nodes": [
                     {
-                        "login": "emitanaka"
+                        "login": "yukai-yang"
                     },
                     {
-                        "login": "zkamvar"
+                        "login": "kumeS"
                     }
                 ]
             }
