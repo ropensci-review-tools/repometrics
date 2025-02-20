@@ -19,7 +19,12 @@ test_that ("rm data full", {
     })
     names (data_ctbs) <- logins
 
-    data <- repometrics_data (path, ended_at = ended_at, nyears = 1)
+    data <- repometrics_data (
+        path,
+        num_cores = 1L,
+        ended_at = ended_at,
+        nyears = 1
+    )
 
     fs::dir_delete (path)
 
