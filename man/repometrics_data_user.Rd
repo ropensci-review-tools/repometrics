@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-user.R
 \name{repometrics_data_user}
 \alias{repometrics_data_user}
-\title{Extract and combine all user data}
+\title{Extract and combine data on all contributors to a repository.}
 \usage{
 repometrics_data_user(
   login,
@@ -36,7 +36,9 @@ A list of the following \code{data.frame} objects:
 }
 }
 \description{
-Extract and combine all user data
+This forms part of the data collated by the main \link{repometrics_data}
+function, along with data on repository structure and historical developed
+extracted by the \link{repometrics_data_repo} function.
 }
 \seealso{
 Other data: 

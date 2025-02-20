@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-repo.R
 \name{repometrics_data_repo}
 \alias{repometrics_data_repo}
-\title{Collate 'repometrics' data for a local R package}
+\title{Collate 'repometrics' data for a local R package.}
 \usage{
 repometrics_data_repo(path, step_days = 1L, num_cores = -1L)
 }
@@ -31,7 +31,9 @@ GitHub data.
 }
 }
 \description{
-Collate 'repometrics' data for a local R package
+This forms part of the data collated by the main \link{repometrics_data}
+function, along with detailed data on individual contributors extracted by
+the \link{repometrics_data_user} function.
 }
 \seealso{
 Other data: 

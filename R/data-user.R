@@ -1,4 +1,8 @@
-#' Extract and combine all user data
+#' Extract and combine data on all contributors to a repository.
+#'
+#' This forms part of the data collated by the main \link{repometrics_data}
+#' function, along with data on repository structure and historical developed
+#' extracted by the \link{repometrics_data_repo} function.
 #'
 #' @param login GitHub login of user
 #' @param ended_at Parameter used in some aspects of resultant data to limit

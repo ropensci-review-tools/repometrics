@@ -1,4 +1,8 @@
-#' Collate 'repometrics' data for a local R package
+#' Collate 'repometrics' data for a local R package.
+#'
+#' This forms part of the data collated by the main \link{repometrics_data}
+#' function, along with detailed data on individual contributors extracted by
+#' the \link{repometrics_data_user} function.
 #'
 #' @inheritParams repo_pkgstats_history
 #' @return A list with two main items:
