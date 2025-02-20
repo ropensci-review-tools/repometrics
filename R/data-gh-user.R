@@ -686,47 +686,50 @@ gh_user_issue_cmts_internal <- function (login,
         issue_comment_counts <-
             issue_comment_counts + dat$data$user$issueComments$totalCount
 
-        nodes <- dat$data$user$issueComments$nodes
+        if (issue_comment_counts > 0L) {
 
-        created_at <- c (
-            created_at,
-            vapply (nodes, function (i) i$createdAt, character (1L))
-        )
-        org_repo <- c (
-            org_repo,
-            vapply (
-                nodes,
-                function (i) i$issue$repository$nameWithOwner,
-                character (1L)
-            )
-        )
-        issue_num <- c (
-            issue_num,
-            vapply (
-                nodes, function (i) i$issue$number,
-                integer (1L)
-            )
-        )
-        num_comments <- c (
-            num_comments,
-            vapply (
-                nodes,
-                function (i) i$issue$comments$totalCount,
-                integer (1L)
-            )
-        )
-        num_participants <- c (
-            num_participants,
-            vapply (
-                nodes,
-                function (i) i$issue$participants$totalCount,
-                integer (1L)
-            )
-        )
+            nodes <- dat$data$user$issueComments$nodes
 
-        if (utils::tail (as.POSIXct (created_at), 1) < start_timestamp) {
-            has_next_page <- FALSE
-        }
+            created_at <- c (
+                created_at,
+                vapply (nodes, function (i) i$createdAt, character (1L))
+            )
+            org_repo <- c (
+                org_repo,
+                vapply (
+                    nodes,
+                    function (i) i$issue$repository$nameWithOwner,
+                    character (1L)
+                )
+            )
+            issue_num <- c (
+                issue_num,
+                vapply (
+                    nodes, function (i) i$issue$number,
+                    integer (1L)
+                )
+            )
+            num_comments <- c (
+                num_comments,
+                vapply (
+                    nodes,
+                    function (i) i$issue$comments$totalCount,
+                    integer (1L)
+                )
+            )
+            num_participants <- c (
+                num_participants,
+                vapply (
+                    nodes,
+                    function (i) i$issue$participants$totalCount,
+                    integer (1L)
+                )
+            )
+
+            if (utils::tail (as.POSIXct (created_at), 1) < start_timestamp) {
+                has_next_page <- FALSE
+            }
+        } # else will always have has_next_page = FALSE
     }
 
     data.frame (
