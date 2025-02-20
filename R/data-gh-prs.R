@@ -158,8 +158,9 @@ rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) { # nolint
             character (1L)
         )
         author <- vapply (
-            i$comments$nodes,
-            function (j) j$author$login,
+            i$comments$nodes, function (j) {
+                ifelse (length (j$author) == 0L, "", j$author$login)
+            },
             character (1L)
         )
         body <- vapply (i$comments$nodes, function (j) j$body, character (1L))
@@ -224,7 +225,9 @@ rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) { # nolint
     })
 
     # A few extra pro-processing ones just to avoid long lines:
-    user_login <- vapply (pr_data, function (i) i$author$login, character (1L))
+    user_login <- vapply (pr_data, function (i) {
+        ifelse (length (i$author) == 0L, "", i$author$login)
+    }, character (1L))
     merged_by <- vapply (
         pr_data,
         function (i) null2na_char (i$mergedBy$login),
