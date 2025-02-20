@@ -1,8 +1,9 @@
 #' Collate 'repometrics' data for a local R package.
 #'
-#' This forms part of the data collated by the main \link{repometrics_data}
-#' function, along with detailed data on individual contributors extracted by
-#' the \link{repometrics_data_user} function.
+#' This function collates all data for a local R package or repository needed
+#' to create a dashboard with the \link{repometrics_dashboard} function. It
+#' combines data from both the \link{repometrics_data_repo} and
+#' \link{repometrics_data_user} functions.
 #'
 #' @param path Path to local repository containing an R package.
 #' @param step_days Analyse package at intervals of this number of days. The
@@ -16,6 +17,29 @@
 #' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
 #' restricted to maximum available cores, and a value of zero will use all
 #' available cores.
+#'
+#' @return data
+#' @export
+repometrics_data <- function (path, step_days = 1L, num_cores = -1L) {
+
+    data_repo <- repometrics_data_repo (
+        path = path, step_days = step_days, num_cores = num_cores
+    )
+
+    ctbs <- data_repo$rm$contribs_from_gh_api$login
+    data_ctbs <- lapply (ctbs, repometrics_data_user)
+    names (data_ctbs) <- ctbs
+
+    return (c (data_repo, data_ctbs))
+}
+
+#' Collate 'repometrics' data for a local R package.
+#'
+#' This forms part of the data collated by the main \link{repometrics_data}
+#' function, along with detailed data on individual contributors extracted by
+#' the \link{repometrics_data_user} function.
+#'
+#' @inheritParams repometrics_data
 #'
 #' @return A list with two main items:
 #' \enumerate{
