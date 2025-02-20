@@ -1,0 +1,17 @@
+{
+    "data": {
+        "user": {
+            "login": "hfrick",
+            "following": {
+                "pageInfo": {
+                    "hasNextPage": false,
+                    "endCursor": null
+                },
+                "totalCount": 0,
+                "nodes": [
+
+                ]
+            }
+        }
+    }
+}

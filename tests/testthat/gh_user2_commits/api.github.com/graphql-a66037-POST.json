@@ -1,0 +1,64 @@
+{
+    "data": {
+        "user": {
+            "login": "hfrick",
+            "contributionsCollection": {
+                "startedAt": "2023-01-01T08:00:00Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "totalCommitContributions": 740,
+                "commitContributionsByRepository": [
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": true,
+                                "endCursor": "Mg"
+                            },
+                            "totalCount": 150,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2023-12-20T08:00:00Z",
+                                    "commitCount": 7,
+                                    "repository": {
+                                        "nameWithOwner": "tidymodels/censored"
+                                    }
+                                },
+                                {
+                                    "occurredAt": "2023-12-18T08:00:00Z",
+                                    "commitCount": 6,
+                                    "repository": {
+                                        "nameWithOwner": "tidymodels/censored"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": true,
+                                "endCursor": "Mg"
+                            },
+                            "totalCount": 111,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2023-12-13T08:00:00Z",
+                                    "commitCount": 1,
+                                    "repository": {
+                                        "nameWithOwner": "tidymodels/parsnip"
+                                    }
+                                },
+                                {
+                                    "occurredAt": "2023-12-11T08:00:00Z",
+                                    "commitCount": 3,
+                                    "repository": {
+                                        "nameWithOwner": "tidymodels/parsnip"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

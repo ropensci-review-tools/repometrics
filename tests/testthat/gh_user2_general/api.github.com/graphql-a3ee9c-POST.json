@@ -1,0 +1,56 @@
+{
+    "data": {
+        "user": {
+            "login": "hfrick",
+            "name": "Hannah Frick",
+            "location": "London",
+            "bio": "tidymodels team",
+            "company": null,
+            "email": "",
+            "organizations": {
+                "nodes": [
+                    {
+                        "location": "Worldwide",
+                        "name": "R-Ladies Global",
+                        "resourcePath": "/rladies",
+                        "url": "https://github.com/rladies",
+                        "websiteUrl": "https://rladies.org",
+                        "membersWithRole": {
+                            "totalCount": 32
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "tidyverse",
+                        "resourcePath": "/tidyverse",
+                        "url": "https://github.com/tidyverse",
+                        "websiteUrl": "http://tidyverse.org",
+                        "membersWithRole": {
+                            "totalCount": 26
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "tidymodels",
+                        "resourcePath": "/tidymodels",
+                        "url": "https://github.com/tidymodels",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 6
+                        }
+                    }
+                ]
+            },
+            "avatarUrl": "https://avatars.githubusercontent.com/u/12950918?u=d663acf844f310395068585570b8040bb14571ed&v=4",
+            "repositories": {
+                "totalCount": 54
+            },
+            "repositoriesContributedTo": {
+                "totalCount": 44
+            },
+            "starredRepositories": {
+                "totalCount": 5
+            }
+        }
+    }
+}
