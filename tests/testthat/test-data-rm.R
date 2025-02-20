@@ -1,10 +1,10 @@
-test_that ("rm data full", {
+test_that ("repometrics data full", {
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    data_repo <- repometrics_data_repo (path)
+    data_repo <- repometrics_data_repo (path, num_cores = 1L)
 
     ended_at <- as.POSIXct ("2024-01-01T00:00:00")
     logins <- data_repo$rm$contribs_from_gh_api$login
