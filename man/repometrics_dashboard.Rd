@@ -5,7 +5,13 @@
 \title{Start quarto dashboard with results of main \link{repometrics_data_repo}
 function.}
 \usage{
-repometrics_dashboard(data_repo, data_users, action = "preview")
+repometrics_dashboard(
+  data_repo,
+  data_users,
+  action = "preview",
+  ctb_threshold = NULL,
+  max_ctbs = NULL
+)
 }
 \arguments{
 \item{data_repo}{Data on repository as returned from
@@ -17,6 +23,16 @@ returned from \link{repometrics_data_user} function applied to one package.}
 \item{action}{One of "preview", to start and open a live preview of the
 dashboard website, or "render" to render a static version without previewing
 or opening.}
+
+\item{ctb_threshold}{An optional single numeric value between 0 and 1. If
+specified, contributions are arranged in cumulative order, and the
+contributor data reduced to only those who conntribute to this proportion of
+all contributions.}
+
+\item{max_ctbs}{Optional maximum number of contributors to be included. This
+is an alternative way to reduce number of contributors presented in
+dashboard, and may only be specified if \code{ctb_threshold} is left at default
+value of \code{NULL}.}
 }
 \value{
 (Invisibly) Path to main "index.html" document of quarto site. Note

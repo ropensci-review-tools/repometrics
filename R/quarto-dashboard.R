@@ -8,13 +8,33 @@
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.
+#' @param ctb_threshold An optional single numeric value between 0 and 1. If
+#' specified, contributions are arranged in cumulative order, and the
+#' contributor data reduced to only those who contribute to this proportion of
+#' all contributions.
+#' @param max_ctbs Optional maximum number of contributors to be included. This
+#' is an alternative way to reduce number of contributors presented in
+#' dashboard, and may only be specified if `ctb_threshold` is left at default
+#' value of `NULL`.
+#'
 #' @return (Invisibly) Path to main "index.html" document of quarto site. Note
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #'
 #' @family dashboard
 #' @export
-repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
+repometrics_dashboard <- function (data_repo, data_users, action = "preview",
+                                   ctb_threshold = NULL, max_ctbs = NULL) {
+
+    if (!is.null (ctb_threshold)) {
+        checkmate::assert_numeric (ctb_threshold, len = 1L, lower = 0, upper = 1)
+        if (!is.null (max_ctbs)) {
+            cli::cli_abort ("Only one of 'ctb_threshold' or 'max_ctbs' may be specified.")
+        }
+    }
+    if (!is.null (max_ctbs)) {
+        checkmate::assert_integerish (max_ctbs, len = 1L, lower = 1, upper = length (data_users))
+    }
 
     check_dashboard_arg (data_repo)
     data_repo$pkgstats <- timestamps_to_dates (data_repo$pkgstats)
