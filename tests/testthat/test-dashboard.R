@@ -76,25 +76,65 @@ test_that ("dashboard build", {
     repometrics_dashboard (data_repo, data_users, action = "render")
 
     # Expect quarto docs to have been modified with package name:
-    pkg_name <- data_repo$pkgstats$desc_data$package [1]
     path_tmp <- fs::path (fs::path_temp (), "quarto")
     expect_true (fs::dir_exists (path_tmp))
 
+    pkg_name <- data_repo$pkgstats$desc_data$package [1]
     f_index <- fs::path (path_tmp, "index.qmd")
     index_qmd <- brio::read_lines (f_index)
     i <- grep ("^title\\:", index_qmd)
-    expect_true (grepl ("\\{testpkg\\}", index_qmd [i]))
+    ptn <- paste0 ("\\{", pkg_name, "\\}")
+    expect_true (grepl (ptn, index_qmd [i]))
 
     f_yaml <- fs::path (path_tmp, "_quarto.yml")
     y <- brio::read_lines (f_yaml)
     i <- grep ("^(\\s+?)title", y)
-    expect_true (grepl ("testpkg", y [i]))
+    expect_true (grepl (pkg_name, y [i]))
 
     # Expect site docs to have been built:
     path_tmp_site <- fs::path (fs::path_temp (), "quarto", "_site")
     expect_true (fs::dir_exists (path_tmp_site))
     f_tmp_site <- fs::path (fs::path_temp (), "quarto", "_site", "index.html")
     expect_true (fs::file_exists (f_tmp_site))
+
+    f_users <- fs::path (path_tmp, "results-users.Rds")
+    expect_true (fs::file_exists (f_users))
+    expect_length (readRDS (f_users), num_users)
+
+    f_net <- fs::path (path_tmp, "results-user-network.json")
+    expect_true (fs::file_exists (f_net))
+    net <- jsonlite::read_json (f_net, simplify = TRUE)
+    expect_equal (length (which (net$nodes$group == "person")), num_users)
+
+    fs::dir_delete (path_tmp)
+})
+
+test_that ("dashboard with user reduction", {
+
+    data_repo <- data0
+    max_ctbs <- 2L
+    repometrics_dashboard (
+        data_repo,
+        data_users,
+        max_ctbs = max_ctbs,
+        action = "render"
+    )
+
+    path_tmp <- fs::path (fs::path_temp (), "quarto")
+    expect_true (fs::dir_exists (path_tmp))
+
+    f_users <- fs::path (path_tmp, "results-users.Rds")
+    expect_true (fs::file_exists (f_users))
+    expect_false (length (readRDS (f_users)) == num_users)
+    expect_length (readRDS (f_users), max_ctbs)
+
+    f_net <- fs::path (path_tmp, "results-user-network.json")
+    expect_true (fs::file_exists (f_net))
+    net <- jsonlite::read_json (f_net, simplify = TRUE)
+    expect_true (length (which (net$nodes$group == "person")) < num_users)
+    expect_equal (length (which (net$nodes$group == "person")), max_ctbs)
+
+    fs::dir_delete (path_tmp)
 })
 
 test_that ("reduce_data_users", {
