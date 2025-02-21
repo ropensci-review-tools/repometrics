@@ -72,7 +72,8 @@ add_user_login_cols <- function (data_users) {
             if (is.data.frame (ud) && nrow (ud) > 0L) {
                 ud$login <- names (data_users) [u]
             } else if (is.character (ud)) {
-                ud <- data.frame (ud, login = names (data_users) [u])
+                login <- names (data_users) [i]
+                ud <- data.frame (ud, login = rep (login, length (ud)))
                 names (ud) [1] <- names (data_users [[u]]) [i]
             }
             return (ud)
