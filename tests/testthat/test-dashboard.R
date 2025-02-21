@@ -6,7 +6,8 @@ path <- fs::path_dir (flist [1])
 pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
 data0 <- list (pkgstats = pkgstats, rm = rm_data)
 
-data_users <- lapply (1:4, function (i) mock_user_rel_data ())
+num_users <- 4L
+data_users <- lapply (seq_len (num_users), function (i) mock_user_rel_data ())
 names (data_users) <- letters [seq_len (length (data_users))]
 
 test_that ("dashboard input errors", {
@@ -58,6 +59,15 @@ test_that ("dashboard input errors", {
         repometrics_dashboard (data, data_users, max_ctbs = 0),
         "Assertion on \\'max\\_ctbs\\' failed\\: Element 1 is not >= 1"
     )
+    expect_error (
+        repometrics_dashboard (
+            data,
+            data_users,
+            ctb_threshold = 0.5,
+            max_ctbs = 2
+        ),
+        "Only one of \\'ctb\\_threshold\\' or \\'max\\_ctbs\\' may be specified"
+    )
 })
 
 test_that ("dashboard build", {
@@ -85,6 +95,16 @@ test_that ("dashboard build", {
     expect_true (fs::dir_exists (path_tmp_site))
     f_tmp_site <- fs::path (fs::path_temp (), "quarto", "_site", "index.html")
     expect_true (fs::file_exists (f_tmp_site))
+})
+
+test_that ("reduce_data_users", {
+
+    data_users_red <- reduce_data_users (data_users, max_ctb = 2L)
+    expect_length (data_users, num_users)
+    expect_length (data_users_red, 2L)
+
+    data_users_red <- reduce_data_users (data_users, ctb_threshold = 0.5)
+    expect_true (length (data_users_red) < length (data_users))
 })
 
 if (fs::dir_exists (path)) {
