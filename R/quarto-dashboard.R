@@ -1,10 +1,8 @@
 #' Start quarto dashboard with results of main \link{repometrics_data_repo}
 #' function.
 #'
-#' @param data_repo Data on repository as returned from
-#' \link{repometrics_data_repo} function applied to one package.
-#' @param data_users Data on repository developers ("users" in GitHub terms), as
-#' returned from \link{repometrics_data_user} function applied to one package.
+#' @param data Data on repository and all contributors as returned from
+#' \link{repometrics_data} function applied to one package.
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.
@@ -23,25 +21,39 @@
 #'
 #' @family dashboard
 #' @export
-repometrics_dashboard <- function (data_repo, data_users, action = "preview",
+repometrics_dashboard <- function (data, action = "preview",
                                    ctb_threshold = NULL, max_ctbs = NULL) {
 
     if (!is.null (ctb_threshold)) {
-        checkmate::assert_numeric (ctb_threshold, len = 1L, lower = 0, upper = 1)
+        checkmate::assert_numeric (
+            ctb_threshold,
+            len = 1L,
+            lower = 0,
+            upper = 1
+        )
         if (!is.null (max_ctbs)) {
-            cli::cli_abort ("Only one of 'ctb_threshold' or 'max_ctbs' may be specified.")
+            cli::cli_abort (
+                "Only one of 'ctb_threshold' or 'max_ctbs' may be specified."
+            )
         }
     }
     if (!is.null (max_ctbs)) {
-        checkmate::assert_integerish (max_ctbs, len = 1L, lower = 1, upper = length (data_users))
+        checkmate::assert_integerish (
+            max_ctbs,
+            len = 1L,
+            lower = 1,
+            upper = length (data$contributors)
+        )
     }
 
+    data_ctbs <- data$contributors
+    data$contributors <- NULL
     if (!is.null (ctb_threshold) || !is.null (max_ctbs)) {
-        data_users <- reduce_data_users (data_users, ctb_threshold, max_ctbs)
+        data_ctbs <- reduce_data_users (data_ctbs, ctb_threshold, max_ctbs)
     }
 
-    check_dashboard_arg (data_repo)
-    data_repo$pkgstats <- timestamps_to_dates (data_repo$pkgstats)
+    check_dashboard_arg (data)
+    data$pkgstats <- timestamps_to_dates (data$pkgstats)
 
     requireNamespace ("brio")
     requireNamespace ("jsonlite")
@@ -54,16 +66,16 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview",
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
     dir <- fs::dir_copy (path_src, path_dest, overwrite = TRUE)
-    saveRDS (data_repo, fs::path (dir, "results-repo.Rds"))
-    saveRDS (data_users, fs::path (dir, "results-users.Rds"))
+    saveRDS (data, fs::path (dir, "results-repo.Rds"))
+    saveRDS (data_ctbs, fs::path (dir, "results-users.Rds"))
 
-    dat_user_network <- get_user_network (data_repo, data_users)
+    dat_user_network <- get_user_network (data, data_ctbs)
     jsonlite::write_json (
         dat_user_network,
         fs::path (dir, "results-user-network.json")
     )
 
-    pkg_name <- data_repo$pkgstats$desc_data$package [1]
+    pkg_name <- data$pkgstats$desc_data$package [1]
     quarto_insert_pkg_name (dir, pkg_name)
 
     withr::with_dir (dir, {
@@ -248,7 +260,7 @@ timestamps_to_dates <- function (data) {
                 dplyr::ungroup ()
         }
 
-        return (dplyr::arrange (i, by = dplyr::desc (date)))
+        dplyr::arrange (i, by = dplyr::desc (date))
     })
 }
 

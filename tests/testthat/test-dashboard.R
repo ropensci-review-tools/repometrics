@@ -11,11 +11,12 @@ pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
-data0 <- list (pkgstats = pkgstats, rm = rm_data)
 
 num_users <- 4L
-data_users <- lapply (seq_len (num_users), function (i) mock_user_rel_data ())
-names (data_users) <- letters [seq_len (length (data_users))]
+data_ctbs <- lapply (seq_len (num_users), function (i) mock_user_rel_data ())
+names (data_ctbs) <- letters [seq_len (length (data_ctbs))]
+
+data0 <- list (pkgstats = pkgstats, rm = rm_data, contributors = data_ctbs)
 
 # --------- pre-process end --------
 
@@ -23,18 +24,18 @@ test_that ("dashboard input errors", {
 
     data <- data0
     expect_error (
-        repometrics_dashboard (data, data_users, action = "noarg"),
+        repometrics_dashboard (data, action = "noarg"),
         "\\'arg\\' should be one of"
     )
     names (data) [1] <- "changed"
     expect_error (
-        repometrics_dashboard (data, data_users, action = "render"),
+        repometrics_dashboard (data, action = "render"),
         "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
     data$pkgstats$stats <- data$pkgstats$stats [, -1]
     expect_error (
-        repometrics_dashboard (data, data_users, action = "render"),
+        repometrics_dashboard (data, action = "render"),
         "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
@@ -42,36 +43,35 @@ test_that ("dashboard input errors", {
     data$pkgstats$stats <-
         data$pkgstats$stats [-seq_len (nrow (data$pkgstats$stats)), ]
     expect_error (
-        repometrics_dashboard (data, data_users, action = "render"),
+        repometrics_dashboard (data, action = "render"),
         "\\'data\\' contains empty tables."
     )
 
     expect_error (
-        repometrics_dashboard (data, data_users, ctb_threshold = "a"),
+        repometrics_dashboard (data, ctb_threshold = "a"),
         paste0 (
             "Assertion on \\'ctb\\_threshold\\' failed\\: ",
             "Must be of type \\'numeric\\'"
         )
     )
     expect_error (
-        repometrics_dashboard (data, data_users, ctb_threshold = 2),
+        repometrics_dashboard (data, ctb_threshold = 2),
         "Assertion on \\'ctb\\_threshold\\' failed\\: Element 1 is not <= 1"
     )
     expect_error (
-        repometrics_dashboard (data, data_users, max_ctbs = "a"),
+        repometrics_dashboard (data, max_ctbs = "a"),
         paste0 (
             "Assertion on \\'max\\_ctbs\\' failed\\: ",
             "Must be of type \\'integerish\\'"
         )
     )
     expect_error (
-        repometrics_dashboard (data, data_users, max_ctbs = 0),
+        repometrics_dashboard (data, max_ctbs = 0),
         "Assertion on \\'max\\_ctbs\\' failed\\: Element 1 is not >= 1"
     )
     expect_error (
         repometrics_dashboard (
             data,
-            data_users,
             ctb_threshold = 0.5,
             max_ctbs = 2
         ),
@@ -81,14 +81,14 @@ test_that ("dashboard input errors", {
 
 test_that ("dashboard build", {
 
-    data_repo <- data0
-    repometrics_dashboard (data_repo, data_users, action = "render")
+    data <- data0
+    repometrics_dashboard (data, action = "render")
 
     # Expect quarto docs to have been modified with package name:
     path_tmp <- fs::path (fs::path_temp (), "quarto")
     expect_true (fs::dir_exists (path_tmp))
 
-    pkg_name <- data_repo$pkgstats$desc_data$package [1]
+    pkg_name <- data$pkgstats$desc_data$package [1]
     f_index <- fs::path (path_tmp, "index.qmd")
     index_qmd <- brio::read_lines (f_index)
     i <- grep ("^title\\:", index_qmd)
@@ -120,11 +120,10 @@ test_that ("dashboard build", {
 
 test_that ("dashboard with user reduction", {
 
-    data_repo <- data0
+    data <- data0
     max_ctbs <- 2L
     repometrics_dashboard (
-        data_repo,
-        data_users,
+        data,
         max_ctbs = max_ctbs,
         action = "render"
     )
@@ -148,12 +147,13 @@ test_that ("dashboard with user reduction", {
 
 test_that ("reduce_data_users", {
 
-    data_users_red <- reduce_data_users (data_users, max_ctb = 2L)
-    expect_length (data_users, num_users)
-    expect_length (data_users_red, 2L)
+    max_ctbs <- 2L
+    data_ctbs_red <- reduce_data_users (data_ctbs, max_ctbs = max_ctbs)
+    expect_length (data_ctbs, num_users)
+    expect_length (data_ctbs_red, max_ctbs)
 
-    data_users_red <- reduce_data_users (data_users, ctb_threshold = 0.5)
-    expect_true (length (data_users_red) < length (data_users))
+    data_ctbs_red <- reduce_data_users (data_ctbs, ctb_threshold = 0.5)
+    expect_true (length (data_ctbs_red) < length (data_ctbs))
 })
 
 if (fs::dir_exists (path)) {
