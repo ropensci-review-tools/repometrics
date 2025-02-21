@@ -36,29 +36,22 @@ pak::pkg_install ("ropensci-review-tools/repometrics")
 
 ### Use
 
-The dashboard requires two sources of data, beginning with core data of a focal
-repository. Code for that repository must exist in a local directory
-corresponding to the single input parameter, `path`:
+The `repometrics` package has one main function for collating all data for a
+repository:
+[`repometrics_data()`](https://docs.ropensci.org/repometrics/reference/repometrics_data.html).
+This function has one main parameter, specifying the `path` to a local
+directory containing an R package.
 
 ``` r
-data_repo <- repometrics_data_repo (path)
+data <- repometrics_data (path)
 ```
 
-The second data source is then information on all people who have contributed
-to the repository, both by direct code commits and via GitHub. The following
-lines extract information on each of those contributors:
+A `repometrics` dashboard for the repository can then be launched by passing
+those `data` to [the `repometrics_dashboard()`
+function](https://docs.ropensci.org/repometrics/reference/repometrics_dashboard.html):
 
 ``` r
-ctbs <- data_repo$rm$contribs_from_gh_api$login
-data_ctbs <- lapply (ctbs, repometrics_data_user)
-names (data_ctbs) <- ctbs
-```
-
-A `repometrics` dashboard for the repository can then be launched with the
-following line:
-
-``` r
-repometrics_dashboard (data_repo, data_ctbs)
+repometrics_dashboard (data)
 ```
 
 The dashboard will automatically open in your default browser.
