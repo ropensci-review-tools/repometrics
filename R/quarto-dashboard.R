@@ -36,6 +36,10 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview",
         checkmate::assert_integerish (max_ctbs, len = 1L, lower = 1, upper = length (data_users))
     }
 
+    if (!is.null (ctb_threshold) || !is.null (max_ctbs)) {
+        data_users <- reduce_data_users (data_users, ctb_threshold, max_ctbs)
+    }
+
     check_dashboard_arg (data_repo)
     data_repo$pkgstats <- timestamps_to_dates (data_repo$pkgstats)
 
@@ -65,6 +69,31 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview",
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
     })
+}
+
+reduce_data_users <- function (data_users,
+                               ctb_threshold = NULL,
+                               max_ctbs = NULL) {
+
+    classes <- vapply (data_users [[1]], class, character (1L))
+    index <- which (classes == "data.frame")
+    # Those are "commit_cmt", "commits", "issue_cmts", "issues"
+    rowcounts <- t (vapply (data_users, function (u) {
+        vapply (u [index], nrow, integer (1L))
+    }, integer (length (index))))
+    n <- sort (rowSums (rowcounts), decreasing = TRUE)
+
+    if (!is.null (max_ctbs)) {
+        these_ctbs <- names (n) [seq_len (max_ctbs)]
+        index <- sort (match (these_ctbs, names (data_users)))
+    } else {
+        ncum <- cumsum (n) / sum (n)
+        ctbs_trimmed <- names (ncum) [which (ncum <= ctb_threshold)]
+        index <- sort (match (ctbs_trimmed, names (data_users)))
+    }
+    data_users <- data_users [index]
+
+    return (data_users)
 }
 
 # `range` is used to scale values, and restrict to sufficiently large values.
