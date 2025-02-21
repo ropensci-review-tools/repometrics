@@ -27,13 +27,25 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview",
                                    ctb_threshold = NULL, max_ctbs = NULL) {
 
     if (!is.null (ctb_threshold)) {
-        checkmate::assert_numeric (ctb_threshold, len = 1L, lower = 0, upper = 1)
+        checkmate::assert_numeric (
+            ctb_threshold,
+            len = 1L,
+            lower = 0,
+            upper = 1
+        )
         if (!is.null (max_ctbs)) {
-            cli::cli_abort ("Only one of 'ctb_threshold' or 'max_ctbs' may be specified.")
+            cli::cli_abort (
+                "Only one of 'ctb_threshold' or 'max_ctbs' may be specified."
+            )
         }
     }
     if (!is.null (max_ctbs)) {
-        checkmate::assert_integerish (max_ctbs, len = 1L, lower = 1, upper = length (data_users))
+        checkmate::assert_integerish (
+            max_ctbs,
+            len = 1L,
+            lower = 1,
+            upper = length (data_users)
+        )
     }
 
     if (!is.null (ctb_threshold) || !is.null (max_ctbs)) {
@@ -248,7 +260,7 @@ timestamps_to_dates <- function (data) {
                 dplyr::ungroup ()
         }
 
-        return (dplyr::arrange (i, by = dplyr::desc (date)))
+        dplyr::arrange (i, by = dplyr::desc (date))
     })
 }
 
