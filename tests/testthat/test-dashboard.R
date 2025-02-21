@@ -6,40 +6,40 @@ path <- fs::path_dir (flist [1])
 pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
 data0 <- list (pkgstats = pkgstats, rm = rm_data)
 
-user_data <- lapply (1:2, function (i) mock_user_rel_data ())
-names (user_data) <- c ("a", "b")
+data_users <- lapply (1:4, function (i) mock_user_rel_data ())
+names (data_users) <- letters [seq_len (length (data_users))]
 
 test_that ("dashboard input errors", {
 
     data <- data0
     expect_error (
-        repometrics_dashboard (data, action = "noarg"),
+        repometrics_dashboard (data, data_users, action = "noarg"),
         "\\'arg\\' should be one of"
     )
     names (data) [1] <- "changed"
     expect_error (
-        repometrics_dashboard (data, action = "render"),
+        repometrics_dashboard (data, data_users, action = "render"),
         "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
     data$pkgstats$stats <- data$pkgstats$stats [, -1]
     expect_error (
-        repometrics_dashboard (data, action = "render"),
+        repometrics_dashboard (data, data_users, action = "render"),
         "Assertion on \\'names\\(data\\)\\' failed\\: Names must be "
     )
 
     data <- data0
     data$pkgstats$stats <- data$pkgstats$stats [-seq_len (nrow (data$pkgstats$stats)), ]
     expect_error (
-        repometrics_dashboard (data, action = "render"),
+        repometrics_dashboard (data, data_users, action = "render"),
         "\\'data\\' contains empty tables."
     )
+
 })
 
 test_that ("dashboard build", {
 
     data_repo <- data0
-    data_users <- user_data
     repometrics_dashboard (data_repo, data_users, action = "render")
 
     # Expect quarto docs to have been modified with package name:
