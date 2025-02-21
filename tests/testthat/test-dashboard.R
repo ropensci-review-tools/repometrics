@@ -1,3 +1,10 @@
+test_all <- (identical (Sys.getenv ("MPADGE_LOCAL"), "true") ||
+    identical (Sys.getenv ("GITHUB_JOB"), "test-coverage"))
+
+skip_if (!test_all)
+
+# --------- pre-process start --------
+
 rm_data <- mock_rm_data ()
 
 pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
@@ -9,6 +16,8 @@ data0 <- list (pkgstats = pkgstats, rm = rm_data)
 num_users <- 4L
 data_users <- lapply (seq_len (num_users), function (i) mock_user_rel_data ())
 names (data_users) <- letters [seq_len (length (data_users))]
+
+# --------- pre-process end --------
 
 test_that ("dashboard input errors", {
 
