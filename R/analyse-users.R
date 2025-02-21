@@ -1,7 +1,7 @@
 #' Construct user-by-user square matrices of strengths of relation between
 #' users.
 #'
-#' @param user_data Result of `lapply(logins, repometrics_data_user)`.
+#' @param data_users Result of `lapply(logins, repometrics_data_user)`.
 #' Contains the following fields:
 #' \enumerate{
 #' \item general (not considered here)
@@ -15,36 +15,36 @@
 #' @return A `data.frame` of pairwise user logins, and proportions of overlap
 #' betwen repositories in the six variables described above.
 #' @noRd
-user_relation_matrices <- function (user_data) {
+user_relation_matrices <- function (data_users) {
 
     # Suppress no visible binding notes:
     followers <- following <- org_repo <- repo <- login <- num_comments <- NULL
 
-    user_names <- names (user_data)
-    user_data <- add_user_login_cols (user_data) |>
+    user_names <- names (data_users)
+    data_users <- add_user_login_cols (data_users) |>
         combine_user_data ()
 
     # Pre-processing to name grouping column "repo" and count column "n":
-    user_data$commit_cmt$repo <-
-        paste0 (user_data$commit_cmt$org, user_data$commit_cmt$repo)
+    data_users$commit_cmt$repo <-
+        paste0 (data_users$commit_cmt$org, data_users$commit_cmt$repo)
 
-    user_data$followers <-
-        dplyr::rename (user_data$followers, repo = followers) |>
+    data_users$followers <-
+        dplyr::rename (data_users$followers, repo = followers) |>
         dplyr::mutate (n = 1L)
-    user_data$following <-
-        dplyr::rename (user_data$following, repo = following) |>
+    data_users$following <-
+        dplyr::rename (data_users$following, repo = following) |>
         dplyr::mutate (n = 1L)
 
-    user_data$issue_cmts <-
-        dplyr::rename (user_data$issue_cmts, repo = org_repo) |>
+    data_users$issue_cmts <-
+        dplyr::rename (data_users$issue_cmts, repo = org_repo) |>
         dplyr::group_by (repo, login) |>
         dplyr::summarise (n = sum (num_comments), .groups = "keep")
-    user_data$issues <- dplyr::rename (user_data$issues, repo = org_repo) |>
+    data_users$issues <- dplyr::rename (data_users$issues, repo = org_repo) |>
         dplyr::group_by (repo, login) |>
         dplyr::summarise (n = dplyr::n (), .groups = "keep")
 
-    overlap <- lapply (names (user_data), function (n) {
-        user_data [[n]] <- user_relate_fields (user_data, user_names, what = n)
+    overlap <- lapply (names (data_users), function (n) {
+        data_users [[n]] <- user_relate_fields (data_users, user_names, what = n)
     })
 
     res <- dplyr::left_join (
@@ -62,18 +62,18 @@ user_relation_matrices <- function (user_data) {
 
 #' Add 'login' columns to all user data, so each element can be combined.
 #' @noRd
-add_user_login_cols <- function (user_data) {
+add_user_login_cols <- function (data_users) {
 
-    nms <- names (user_data)
-    res <- lapply (seq_along (user_data), function (u) {
-        nms_u <- names (user_data [[u]])
-        res_u <- lapply (seq_along (user_data [[u]]), function (i) {
-            ud <- user_data [[u]] [[i]]
+    nms <- names (data_users)
+    res <- lapply (seq_along (data_users), function (u) {
+        nms_u <- names (data_users [[u]])
+        res_u <- lapply (seq_along (data_users [[u]]), function (i) {
+            ud <- data_users [[u]] [[i]]
             if (is.data.frame (ud) && nrow (ud) > 0L) {
-                ud$login <- names (user_data) [u]
+                ud$login <- names (data_users) [u]
             } else if (is.character (ud)) {
-                ud <- data.frame (ud, login = names (user_data) [u])
-                names (ud) [1] <- names (user_data [[u]]) [i]
+                ud <- data.frame (ud, login = names (data_users) [u])
+                names (ud) [1] <- names (data_users [[u]]) [i]
             }
             return (ud)
         })
@@ -90,39 +90,39 @@ add_user_login_cols <- function (user_data) {
 #'
 #' The `add_user_login_cols` enables all data to be `rbind`-ed here.
 #' @noRd
-combine_user_data <- function (user_data) {
+combine_user_data <- function (data_users) {
 
-    data <- lapply (names (user_data [[1]]), function (n) {
-        these <- lapply (user_data, function (i) i [[n]])
+    data <- lapply (names (data_users [[1]]), function (n) {
+        these <- lapply (data_users, function (i) i [[n]])
         res <- do.call (rbind, these)
         rownames (res) <- NULL
         return (res)
     })
 
-    names (data) <- names (user_data [[1]])
+    names (data) <- names (data_users [[1]])
     data$general <- NULL
 
     return (data)
 }
 
-user_relate_fields <- function (user_data, user_names, what = "commits") {
+user_relate_fields <- function (data_users, user_names, what = "commits") {
 
     # Suppress no visible binding notes:
     num_commits <- login <- repo <- n <- NULL
 
     user_combs <- t (utils::combn (user_names, m = 2L))
     if (what == "commits") {
-        user_data [[what]] <-
-            dplyr::rename (user_data [[what]], n = num_commits)
+        data_users [[what]] <-
+            dplyr::rename (data_users [[what]], n = num_commits)
     } else if (what == "commit_cmt") {
-        user_data$commit_cmt$n <- 1L
+        data_users$commit_cmt$n <- 1L
     }
 
     res <- apply (user_combs, 1, function (i) {
-        cmt1 <- dplyr::filter (user_data [[what]], login == i [1]) |>
+        cmt1 <- dplyr::filter (data_users [[what]], login == i [1]) |>
             dplyr::group_by (repo) |>
             dplyr::summarise (n1 = sum (n))
-        cmt2 <- dplyr::filter (user_data [[what]], login == i [2]) |>
+        cmt2 <- dplyr::filter (data_users [[what]], login == i [2]) |>
             dplyr::group_by (repo) |>
             dplyr::summarise (n2 = sum (n))
         overlap <- dplyr::inner_join (cmt1, cmt2, by = "repo")
