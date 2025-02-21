@@ -22,7 +22,19 @@
 #' @param nyears Parameter <= 1 determining fraction of a year over which data
 #' up until `end_date` are collected.
 #'
-#' @return data
+#' @return A list of three forms of data:
+#' \enumerate{
+#' \item "pkgstats" containing statistics on the historical development of
+#' package code, derived from the \pkg{pkgstats} package;
+#' \item "rm" containing data from GitHub on the repository, including data on
+#' contributors, issues, pull requests, and people watching and starring the
+#' repository.
+#' \item "contributors" as a named list of data on every individual contributor
+#' to the repository, whether by code contributions or GitHub issues or
+#' discussions.
+#' }
+#'
+#' @family data
 #' @export
 repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
                               ended_at = Sys.time (), nyears = 1) {

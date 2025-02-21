@@ -34,7 +34,17 @@ the end date of data collection. Defaults to \code{Sys.time()}.}
 up until \code{end_date} are collected.}
 }
 \value{
-data
+A list of three forms of data:
+\enumerate{
+\item "pkgstats" containing statistics on the historical development of
+package code, derived from the \pkg{pkgstats} package;
+\item "rm" containing data from GitHub on the repository, including data on
+contributors, issues, pull requests, and people watching and starring the
+repository.
+\item "contributors" as a named list of data on every individual contributor
+to the repository, whether by code contributions or GitHub issues or
+discussions.
+}
 }
 \description{
 This function collates all data for a local R package or repository needed
@@ -42,3 +52,10 @@ to create a dashboard with the \link{repometrics_dashboard} function. It
 combines data from both the \link{repometrics_data_repo} and
 \link{repometrics_data_user} functions.
 }
+\seealso{
+Other data: 
+\code{\link{repo_pkgstats_history}()},
+\code{\link{repometrics_data_repo}()},
+\code{\link{repometrics_data_user}()}
+}
+\concept{data}

@@ -43,6 +43,7 @@ extracted by the \link{repometrics_data_repo} function.
 \seealso{
 Other data: 
 \code{\link{repo_pkgstats_history}()},
+\code{\link{repometrics_data}()},
 \code{\link{repometrics_data_repo}()}
 }
 \concept{data}
