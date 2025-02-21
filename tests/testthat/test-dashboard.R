@@ -35,6 +35,22 @@ test_that ("dashboard input errors", {
         "\\'data\\' contains empty tables."
     )
 
+    expect_error (
+        repometrics_dashboard (data, data_users, ctb_threshold = "a"),
+        "Assertion on \\'ctb\\_threshold\\' failed\\: Must be of type \\'numeric\\'"
+    )
+    expect_error (
+        repometrics_dashboard (data, data_users, ctb_threshold = 2),
+        "Assertion on \\'ctb\\_threshold\\' failed\\: Element 1 is not <= 1"
+    )
+    expect_error (
+        repometrics_dashboard (data, data_users, max_ctbs = "a"),
+        "Assertion on \\'max\\_ctbs\\' failed\\: Must be of type \\'integerish\\'"
+    )
+    expect_error (
+        repometrics_dashboard (data, data_users, max_ctbs = 0),
+        "Assertion on \\'max\\_ctbs\\' failed\\: Element 1 is not >= 1"
+    )
 })
 
 test_that ("dashboard build", {
