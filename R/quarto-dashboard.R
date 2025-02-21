@@ -8,13 +8,37 @@
 #' @param action One of "preview", to start and open a live preview of the
 #' dashboard website, or "render" to render a static version without previewing
 #' or opening.
+#' @param ctb_threshold An optional single numeric value between 0 and 1. If
+#' specified, contributions are arranged in cumulative order, and the
+#' contributor data reduced to only those who contribute to this proportion of
+#' all contributions.
+#' @param max_ctbs Optional maximum number of contributors to be included. This
+#' is an alternative way to reduce number of contributors presented in
+#' dashboard, and may only be specified if `ctb_threshold` is left at default
+#' value of `NULL`.
+#'
 #' @return (Invisibly) Path to main "index.html" document of quarto site. Note
 #' that the site must be served with `action = "preview"`, and will not work by
 #' simply opening this "index.html" file.
 #'
 #' @family dashboard
 #' @export
-repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
+repometrics_dashboard <- function (data_repo, data_users, action = "preview",
+                                   ctb_threshold = NULL, max_ctbs = NULL) {
+
+    if (!is.null (ctb_threshold)) {
+        checkmate::assert_numeric (ctb_threshold, len = 1L, lower = 0, upper = 1)
+        if (!is.null (max_ctbs)) {
+            cli::cli_abort ("Only one of 'ctb_threshold' or 'max_ctbs' may be specified.")
+        }
+    }
+    if (!is.null (max_ctbs)) {
+        checkmate::assert_integerish (max_ctbs, len = 1L, lower = 1, upper = length (data_users))
+    }
+
+    if (!is.null (ctb_threshold) || !is.null (max_ctbs)) {
+        data_users <- reduce_data_users (data_users, ctb_threshold, max_ctbs)
+    }
 
     check_dashboard_arg (data_repo)
     data_repo$pkgstats <- timestamps_to_dates (data_repo$pkgstats)
@@ -45,6 +69,31 @@ repometrics_dashboard <- function (data_repo, data_users, action = "preview") {
     withr::with_dir (dir, {
         do.call (eval (parse (text = quarto_action)), list ())
     })
+}
+
+reduce_data_users <- function (data_users,
+                               ctb_threshold = NULL,
+                               max_ctbs = NULL) {
+
+    classes <- vapply (data_users [[1]], class, character (1L))
+    index <- which (classes == "data.frame")
+    # Those are "commit_cmt", "commits", "issue_cmts", "issues"
+    rowcounts <- t (vapply (data_users, function (u) {
+        vapply (u [index], nrow, integer (1L))
+    }, integer (length (index))))
+    n <- sort (rowSums (rowcounts), decreasing = TRUE)
+
+    if (!is.null (max_ctbs)) {
+        these_ctbs <- names (n) [seq_len (max_ctbs)]
+        index <- sort (match (these_ctbs, names (data_users)))
+    } else {
+        ncum <- cumsum (n) / sum (n)
+        ctbs_trimmed <- names (ncum) [which (ncum <= ctb_threshold)]
+        index <- sort (match (ctbs_trimmed, names (data_users)))
+    }
+    data_users <- data_users [index]
+
+    return (data_users)
 }
 
 # `range` is used to scale values, and restrict to sufficiently large values.
