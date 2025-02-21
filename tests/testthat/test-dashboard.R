@@ -29,7 +29,8 @@ test_that ("dashboard input errors", {
     )
 
     data <- data0
-    data$pkgstats$stats <- data$pkgstats$stats [-seq_len (nrow (data$pkgstats$stats)), ]
+    data$pkgstats$stats <-
+        data$pkgstats$stats [-seq_len (nrow (data$pkgstats$stats)), ]
     expect_error (
         repometrics_dashboard (data, data_users, action = "render"),
         "\\'data\\' contains empty tables."
@@ -37,7 +38,10 @@ test_that ("dashboard input errors", {
 
     expect_error (
         repometrics_dashboard (data, data_users, ctb_threshold = "a"),
-        "Assertion on \\'ctb\\_threshold\\' failed\\: Must be of type \\'numeric\\'"
+        paste0 (
+            "Assertion on \\'ctb\\_threshold\\' failed\\: ",
+            "Must be of type \\'numeric\\'"
+        )
     )
     expect_error (
         repometrics_dashboard (data, data_users, ctb_threshold = 2),
@@ -45,7 +49,10 @@ test_that ("dashboard input errors", {
     )
     expect_error (
         repometrics_dashboard (data, data_users, max_ctbs = "a"),
-        "Assertion on \\'max\\_ctbs\\' failed\\: Must be of type \\'integerish\\'"
+        paste0 (
+            "Assertion on \\'max\\_ctbs\\' failed\\: ",
+            "Must be of type \\'integerish\\'"
+        )
     )
     expect_error (
         repometrics_dashboard (data, data_users, max_ctbs = 0),
