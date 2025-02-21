@@ -44,7 +44,8 @@ user_relation_matrices <- function (data_users) {
         dplyr::summarise (n = dplyr::n (), .groups = "keep")
 
     overlap <- lapply (names (data_users), function (n) {
-        data_users [[n]] <- user_relate_fields (data_users, user_names, what = n)
+        data_users [[n]] <-
+            user_relate_fields (data_users, user_names, what = n)
     })
 
     res <- dplyr::left_join (
