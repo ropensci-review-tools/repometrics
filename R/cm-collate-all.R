@@ -57,31 +57,3 @@ collate_all_models <- function (path,
 
     return (model_data)
 }
-
-metrics_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) {
-
-    end_dates <- get_end_date_seq (end_date = end_date, num_years = num_years)
-
-    metrics_data <- lapply (
-        end_dates,
-        function (d) collate_all_metrics (path, end_date = d)
-    )
-    names (metrics_data) <- as.character (end_dates)
-    attr (metrics_data, "period") <- get_repometrics_period ()
-
-    return (metrics_data)
-}
-
-models_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) {
-
-    end_dates <- get_end_date_seq (end_date = end_date, num_years = num_years)
-
-    models_data <- lapply (
-        end_dates,
-        function (d) collate_all_models (path, end_date = d)
-    )
-    models_data <- data.frame (do.call (rbind, models_data)) |>
-        dplyr::mutate (date = end_dates, .before = 1)
-
-    return (models_data)
-}
