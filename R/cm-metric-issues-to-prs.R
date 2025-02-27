@@ -1,4 +1,4 @@
-cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
+cm_data_issues_to_prs <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
     issues <- get_issues_in_period (path, end_date)
@@ -9,6 +9,10 @@ cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
     }
 
     return (ret)
+}
+
+cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
+    cm_data_issues_to_prs (path, end_date)
 }
 
 get_issues_in_period <- function (path,

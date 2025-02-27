@@ -6,7 +6,7 @@
 #' @param end_date Not used here, but specified for consistent interface to all
 #' metric fns.
 #' @noRd
-cm_metric_languages <- function (path, end_date = NULL) {
+cm_data_languages <- function (path, end_date = NULL) {
 
     # Suppress no visible binding note:
     language <- nfiles <- ncode <- NULL
@@ -36,4 +36,8 @@ cm_metric_languages <- function (path, end_date = NULL) {
             nfiles_pc = ifelse (sum (nfiles) == 0, 0, nfiles / sum (nfiles)),
             ncode_pc = ifelse (sum (ncode) == 0, 0, ncode / sum (ncode))
         )
+}
+
+cm_metric_languages <- function (path, end_date = NULL) {
+    cm_data_languages (path, end_date)
 }
