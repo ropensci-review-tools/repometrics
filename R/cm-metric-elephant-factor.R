@@ -5,7 +5,7 @@
 #' \url{https://chaoss.community/kb/metric-elephant-factor/}.
 #'
 #' @noRd
-cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
+cm_data_elephant_factor <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     name <- company <- ncommits <- nfiles_changed <- lines_changed <- NULL
@@ -34,4 +34,8 @@ cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
         dplyr::bind_rows (log_na)
 
     gitlog_absence_factor (log)
+}
+
+cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
+    cm_data_elephant_factor (path, end_date)
 }

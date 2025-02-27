@@ -28,7 +28,7 @@ has_gh_ci_tests <- function (path) {
 
 # 'end_date' not used here, but specified for consistent interface to all
 # metric fns.
-cm_metric_has_ci <- function (path, end_date = NULL) {
+cm_data_has_ci <- function (path, end_date = NULL) {
 
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     has_ci <- ifelse (is_test_env, FALSE, has_gh_ci_tests (path))
@@ -45,4 +45,8 @@ cm_metric_has_ci <- function (path, end_date = NULL) {
     }
 
     return (has_ci)
+}
+
+cm_metric_has_ci <- function (path, end_date = NULL) {
+    cm_data_has_ci (path, end_date)
 }

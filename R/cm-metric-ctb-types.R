@@ -8,7 +8,7 @@
 #' \url{https://chaoss.community/kb/metric-types-of-contributions/}.
 #'
 #' @noRd
-cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
+cm_data_ctb_diversity <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
     updated_at <- NULL
@@ -38,4 +38,8 @@ cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
     main_auts <- unique (c (issue_aut, pr_aut))
 
     return (length (setdiff (cmt_aut, main_auts)) / length (main_auts))
+}
+
+cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
+    cm_data_ctb_diversity (path, end_date)
 }
