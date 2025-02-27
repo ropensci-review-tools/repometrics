@@ -1,4 +1,4 @@
-cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
+cm_data_issue_response_time <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible warning notes:
     user_login <- issue_number <- created_at <- response_date <- NULL
@@ -32,7 +32,11 @@ cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     return (issue_responses$response_time)
 }
 
-cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
+cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
+    cm_data_issue_response_time (path, end_date)
+}
+
+cm_data_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
 
     issues <- rm_data_issues_from_gh_api (path)
     index <- grep ("bug|defect|fix", issues$label, ignore.case = TRUE)
@@ -60,13 +64,17 @@ cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # n
     ))
 }
 
+cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
+    cm_data_defect_resolution_dur (path, end_date)
+}
+
 #' CHAOSS metric "Time to Close"
 #'
 #' \url{https://chaoss.community/kb/metric-time-to-close/}
 #' "How much time passes between creating and closing an operation such as an
 #' issue, change request, or support ticket?"
 #' @noRd
-cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
+cm_data_time_to_close <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     state <- NULL
@@ -85,6 +93,10 @@ cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (times_to_close))
 }
 
+cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
+    cm_data_time_to_close (path, end_date)
+}
+
 #' CHAOSS metric "Change Request Closure Ratio"
 #'
 #' \url{https://chaoss.community/kb/metric-change-request-closure-ratio/}
@@ -100,7 +112,7 @@ cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
 #' to suggest a fix. That should at least help clarify.
 #'
 #' @noRd
-cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
+cm_data_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     closed <- NULL
@@ -121,7 +133,11 @@ cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
     length (index_closed) / length (index_open)
 }
 
-cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
+cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_closure_ratio (path, end_date)
+}
+
+cm_data_issue_age <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     created_at <- closed_at <- NULL
@@ -148,12 +164,16 @@ cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
     )
 }
 
+cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
+    cm_data_issue_age (path, end_date)
+}
+
 #' CHAOSS metric for "Issues Active", which is simply the number of active
 #' issues during specified period.
 #'
 #' \url{https://chaoss.community/kb/metric-issues-active/}
 #' @noRd
-cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
+cm_data_issues_active <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     created_at <- closed_at <- updated_at <- NULL
@@ -167,7 +187,11 @@ cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
     return (nrow (issues))
 }
 
-cm_metric_issue_comments <- function (path, end_date = Sys.Date ()) {
+cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
+    cm_data_issues_active (path, end_date)
+}
+
+cm_data_issue_comments <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     created_at <- closed_at <- NULL
@@ -179,4 +203,8 @@ cm_metric_issue_comments <- function (path, end_date = Sys.Date ()) {
         dplyr::filter (created_at >= start_date & created_at <= end_date)
 
     return (nrow (comments))
+}
+
+cm_metric_issue_comments <- function (path, end_date = Sys.Date ()) {
+    cm_data_issue_comments (path, end_date)
 }
