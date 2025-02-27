@@ -1,4 +1,4 @@
-cm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
+cm_data_num_contributors <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date)
 
@@ -22,4 +22,8 @@ cm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
     index <- as.integer (names (index_table) [which (index_table == 2L)])
 
     return (length (index))
+}
+
+cm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
+    cm_data_num_contributors (path, end_date)
 }

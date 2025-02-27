@@ -1,4 +1,4 @@
-cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
+cm_data_num_forks <- function (path, end_date = Sys.Date ()) {
 
     forks <- rm_data_repo_forks (path)
 
@@ -6,4 +6,8 @@ cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
     index <- which (forks$created >= start_date & forks$created <= end_date)
 
     return (c (num_in_period = length (index), num_total = nrow (forks)))
+}
+
+cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
+    cm_data_num_forks (path, end_date)
 }
