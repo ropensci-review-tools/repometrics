@@ -2,7 +2,7 @@
 #'
 #' \url{https://chaoss.community/kb/metric-time-to-first-response/}.
 #' @noRd
-cm_metric_response_time <- function (path, end_date = Sys.Date ()) {
+cm_data_response_time <- function (path, end_date = Sys.Date ()) {
 
     # In R/cm-metrics-pr-reviews:
     dur_prs <- cm_metric_pr_response_durations (path, end_date = end_date)
@@ -12,4 +12,8 @@ cm_metric_response_time <- function (path, end_date = Sys.Date ()) {
     durations <- as.integer (c (dur_prs, dur_issues))
 
     return (mn_med_sum (durations))
+}
+
+cm_metric_response_time <- function (path, end_date = Sys.Date ()) {
+    cm_data_response_time (path, end_date)
 }

@@ -1,4 +1,4 @@
-cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
+cm_data_test_coverage <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
     name <- coverage <- NULL
@@ -34,5 +34,9 @@ cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
     )
 
     return (res)
+}
+
+cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
+    cm_data_test_coverage (path, end_date)
 }
 cm_metric_test_coverage <- memoise::memoise (cm_metric_test_coverage_internal)

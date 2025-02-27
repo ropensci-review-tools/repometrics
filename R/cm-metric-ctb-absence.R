@@ -10,7 +10,7 @@
 #' @param path Local path to repository
 #' @param end_date Date at which metric is to be calculated.
 #' @noRd
-cm_metric_contrib_absence <- function (path, end_date = Sys.Date ()) {
+cm_data_contrib_absence <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_date (end_date)
 
@@ -19,6 +19,10 @@ cm_metric_contrib_absence <- function (path, end_date = Sys.Date ()) {
     log <- gitlog_unique_contributors (path, start_date, end_date)
 
     gitlog_absence_factor (log)
+}
+
+cm_metric_contrib_absence <- function (path, end_date = Sys.Date ()) {
+    cm_data_contrib_absence (path, end_date)
 }
 
 gitlog_absence_factor <- function (log) {

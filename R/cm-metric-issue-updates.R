@@ -3,7 +3,7 @@
 #' \url{https://chaoss.community/kb/metrics-model-community-activity/}
 #' "The number of issues updated over a certain period of time."
 #' @noRd
-cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
+cm_data_issue_updates <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- NULL
@@ -21,7 +21,11 @@ cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
     length (issue_nums)
 }
 
-cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
+cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
+    cm_data_issue_updates (path, end_date)
+}
+
+cm_data_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- issue_number <- NULL
@@ -48,7 +52,11 @@ cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (cmts))
 }
 
-cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
+cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
+    cm_data_issue_cmt_count (path, end_date)
+}
+
+cm_data_issues_closed <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     closed_at <- NULL
@@ -61,4 +69,8 @@ cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
         dplyr::filter (closed_at >= start_date & closed_at <= end_date)
 
     nrow (issues)
+}
+
+cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
+    cm_data_issues_closed (path, end_date)
 }

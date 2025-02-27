@@ -3,7 +3,7 @@
 #' counting only those who were active either in commits, issues, or pull
 #' requests over the standard time period.
 #' @noRd
-cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
+cm_data_maintainer_count <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     user_login <- merged_by <- participants <- created_at <-
@@ -45,6 +45,10 @@ cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
     num_gh_auts <- match_repo_ctbs_to_desc (path, auts, gh_auts)
 
     c (total = nrow (auts), recent = num_gh_auts)
+}
+
+cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
+    cm_data_maintainer_count (path, end_date)
 }
 
 #' Match repo contributors from both git log and GitHub API to author names and

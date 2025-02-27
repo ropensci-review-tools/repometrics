@@ -5,7 +5,7 @@
 #' issue authors, and issue comments participants over a certain period of
 #' time."
 #' @noRd
-cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
+cm_data_ctb_count <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- NULL
@@ -30,6 +30,10 @@ cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
     )
 }
 
+cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
+    cm_data_ctb_count (path, end_date)
+}
+
 #' CHAOSS metric for committer count
 #'
 #' \url{https://chaoss.community/kb/metric-committers/}.
@@ -40,7 +44,7 @@ cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
 #'  D2_count: Contributors who have created a merge request and successfully
 #'    merged code."
 #' @noRd
-cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
+cm_data_committer_count <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     starred_at <- created <- org_repo <- created_at <- NULL
@@ -71,4 +75,8 @@ cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
         issues = length (ctbs1),
         prs = length (ctbs2)
     )
+}
+
+cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
+    cm_data_committer_count (path, end_date)
 }

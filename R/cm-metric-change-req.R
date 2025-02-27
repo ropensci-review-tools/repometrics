@@ -20,7 +20,7 @@
 #' request.
 #' }
 #' @noRd
-cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
+cm_data_change_req <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date)
     if (nrow (log) == 0) {
@@ -42,4 +42,9 @@ cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
     }
 
     return (ret)
+}
+
+cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
+
+    cm_data_change_req (path, end_date)
 }

@@ -20,7 +20,7 @@
 #' have been added at any time after an actual creation date of each issue.
 #'
 #' @noRd
-cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
+cm_data_label_inclusivity <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     created_at <- NULL
@@ -52,4 +52,8 @@ cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
         prop_labelled_friendly = prop_labelled_friendly,
         prop_friendly_overall = prop_friendly_overall
     )
+}
+
+cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
+    cm_data_label_inclusivity (path, end_date)
 }

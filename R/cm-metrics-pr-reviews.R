@@ -20,7 +20,7 @@
 #' into that.
 #'
 #' @noRd
-cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
+cm_data_pr_reviews <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date) # in data-gh-prs.R
 
@@ -94,7 +94,11 @@ cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
+cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_reviews (path, end_date)
+}
+
+cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
 
@@ -129,7 +133,11 @@ cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
     )
 }
 
-cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
+cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_review_duration (path, end_date)
+}
+
+cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 
     pr_dat <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
     comment_counts <- c (
@@ -144,12 +152,16 @@ cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (comment_counts))
 }
 
+cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_cmt_count (path, end_date)
+}
+
 #' Measure response duration to PRs, but only from primary contributors.
 #' https://chaoss.community/kb/metric-time-to-first-response/
 #'
 #' @return Difftime vector of response durations in days
 #' @noRd
-cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
+cm_data_pr_response_durations <- function (path, end_date = Sys.Date ()) {
 
     contribs <- rm_data_contribs_from_gh_api (path)
     contribs <- unique (contribs$login)
@@ -189,7 +201,11 @@ cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
     return (durations)
 }
 
-cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
+cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_response_durations (path, end_date)
+}
+
+cm_data_pr_age <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
     created_at <- closed_at <- NULL
@@ -206,6 +222,10 @@ cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (ages))
 }
 
+cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_age (path, end_date)
+}
+
 #' CHAOSS metric "Change Request Reviews", which assesses "to what extent are
 #' change requests put through a formal review process using platform
 #' features?" This is assessed here as the simple propotion of all merged PRs
@@ -214,7 +234,7 @@ cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metric-change-request-reviews/}
 #'
 #' @noRd
-cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
 
     pr_dat <- get_prs_in_period (path, end_date)
 
@@ -224,4 +244,8 @@ cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
             nrow (pr_dat)
     }
     return (ret)
+}
+
+cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_reviews_approved (path, end_date)
 }

@@ -22,9 +22,9 @@ cm_metric_licenses_declared <- function (path, end_date = NULL) {
 #' @param dirs Directories to include in assessing files for license coverage.
 #' metric fns.
 #' @noRd
-cm_metric_license_coverage <- function (path,
-                                        end_date = NULL,
-                                        dirs = c ("R", "src", "inst/extdata")) {
+cm_data_license_coverage <- function (path,
+                                      end_date = NULL,
+                                      dirs = c ("R", "src", "inst/extdata")) {
 
     requireNamespace ("readr", quietly = TRUE)
 
@@ -62,6 +62,13 @@ cm_metric_license_coverage <- function (path,
     }, logical (1L))
 
     return (length (which (has_license)) / length (flist))
+}
+
+cm_metric_license_coverage <- function (path,
+                                        end_date = NULL,
+                                        dirs = c ("R", "src", "inst/extdata")) {
+
+    cm_data_license_coverage (path, end_date, dirs)
 }
 
 included_exts <- c ("r", "q", "qmd", "rmd", "c", "cpp", "h", "js", "py")

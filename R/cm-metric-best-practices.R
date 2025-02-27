@@ -9,7 +9,7 @@
 #' provide a consistent interface).
 #'
 #' @noRd
-cm_metric_best_practices <- function (path, end_date = NULL) {
+cm_data_best_practices <- function (path, end_date = NULL) {
     readme_path <- fs::dir_ls (path, regexp = "readme\\.md", ignore.case = TRUE)
     if (length (readme_path) == 0L) {
         return (FALSE)
@@ -20,4 +20,8 @@ cm_metric_best_practices <- function (path, end_date = NULL) {
     ptn_ossf <- "bestpractices\\.dev"
     ptn <- paste0 (c (ptn_ci, ptn_ossf), collapse = "|")
     return (any (grepl (ptn, readme)))
+}
+
+cm_metric_best_practices <- function (path, end_date = NULL) {
+    cm_data_best_practices (path, end_date)
 }
