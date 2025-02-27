@@ -5,7 +5,7 @@
 #' issue authors, and issue comments participants over a certain period of
 #' time."
 #' @noRd
-cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
+cm_data_ctb_count <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- NULL
@@ -28,6 +28,10 @@ cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
         issue_authors = nrow (issues),
         issue_cmt_authors = nrow (issue_cmts)
     )
+}
+
+cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
+    cm_data_ctb_count (path, end_date)
 }
 
 #' CHAOSS metric for committer count

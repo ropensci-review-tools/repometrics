@@ -5,7 +5,7 @@
 #' @param end_date The date up to which download counts are to be aggregated.
 #' @return A single integer counting the number of downloads.
 #' @noRd
-cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
+cm_data_cran_downloads <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_directory_exists (path)
     checkmate::assert_date (end_date)
@@ -18,6 +18,10 @@ cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
         dplyr::filter (date >= start_date & date <= end_date)
 
     return (sum (cran_dl$downloads))
+}
+
+cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
+    cm_data_cran_downloads (path, end_date)
 }
 
 #' Download the full daily log over `nyears`, and use memoised return value to
