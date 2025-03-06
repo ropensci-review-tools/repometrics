@@ -29,11 +29,12 @@ cm_data_issue_response_time <- function (path, end_date = Sys.Date ()) {
         created_at >= start_date & response_date <= end_date
     )
 
-    return (issue_responses$response_time)
+    return (issue_responses)
 }
 
 cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
-    cm_data_issue_response_time (path, end_date)
+    issue_responses <- cm_data_issue_response_time (path, end_date)
+    res <- mean (as.integer (issue_responses$response_time), na.rm = TRUE)
 }
 
 cm_data_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint

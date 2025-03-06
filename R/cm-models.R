@@ -36,7 +36,6 @@ cm_model_dev_responsiveness <- function (path,
         defect_resol_dur <- metrics_data$defect_resolution_dur
     }
 
-    issue_resp_time <- mean (as.integer (issue_resp_time))
     defect_resol_dur <- defect_resol_dur [["mean"]]
 
     vals <- c (pr_dur_mn, issue_resp_time, defect_resol_dur)
@@ -576,7 +575,6 @@ cm_model_comm_serv_support <- function (path,
 
     }
 
-    issue_resp_time <- as.numeric (mean (issue_resp_time))
     issue_age <- issue_age [["mean"]]
     issue_res_duration <- issue_res_duration [["mean"]]
     pr_age <- pr_age [["mean"]]
@@ -631,7 +629,6 @@ cm_model_starter_health <- function (path,
 
     }
 
-    time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
     pr_closure_ratio <- NA_real_
@@ -701,7 +698,6 @@ cm_model_comm_welcoming <- function (path,
 
     issue_age <- issue_age [["mean"]] # [0, N >> 1]
     issue_age <- ifelse (issue_age == 0, 1, issue_age)
-    time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
     val_days <- log10 (c (issue_age, time_first_resp))
