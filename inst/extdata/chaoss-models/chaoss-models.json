@@ -1,0 +1,104 @@
+{
+    "models": {
+        "dev_reponsiveness": [
+            "pr_review_duration",
+            "issue_response_time",
+            "defect_resolution_dur"
+        ],
+        "proj_engagement": [
+            "change_req",
+            "committer_count",
+            "ctb_count",
+            "issues_closed",
+            "issue_updates",
+            "issue_cmt_count"
+        ],
+        "proj_awareness": [
+            "num_forks",
+            "popularity"
+        ],
+        "community_activity": [
+            "ctb_count",
+            "pr_reviews",
+            "recent_releases",
+            "issue_updates",
+            "maintainer_count",
+            "commit_freq",
+            "issue_cmt_count"
+        ],
+        "oss_compliance": [
+            "best_practices",
+            "license_coverage",
+            "licenses_declared",
+            "defect_resolution_dur",
+            "libyears",
+            "dependency_count"
+        ],
+        "viability_community": [
+            "committer_count",
+            "change_req",
+            "maintainer_count",
+            "libyears"
+        ],
+        "viability_starter": [
+            "contrib_absence",
+            "elephant_factor",
+            "licenses_declared",
+            "change_req",
+            "libyears"
+        ],
+        "viability_gov": [
+            "label_inclusivity",
+            "change_req",
+            "popularity",
+            "time_to_close",
+            "libyears",
+            "issue_age",
+            "release_freq"
+        ],
+        "viability_strategy": [
+            "languages",
+            "contrib_absence",
+            "elephant_factor",
+            "release_freq"
+        ],
+        "collab_devel_index": [
+            "has_ci",
+            "change_req",
+            "issues_to_prs",
+            "num_contributors",
+            "pr_reviews",
+            "num_forks",
+            "num_commits",
+            "code_change_lines"
+        ],
+        "comm_serv_support": [
+            "issue_response_time",
+            "issue_age",
+            "defect_resolution_dur",
+            "pr_age",
+            "pr_review_duration",
+            "issue_comments",
+            "issues_active",
+            "pr_reviews"
+        ],
+        "starter_health": [
+            "issue_response_time",
+            "change_req",
+            "contrib_absence",
+            "release_freq"
+        ],
+        "comm_welcoming": [
+            "issue_age",
+            "issue_response_time",
+            "license_coverage",
+            "licenses_declared",
+            "test_coverage",
+            "best_practices",
+            "change_req",
+            "contrib_absence",
+            "elephant_factor",
+            "ctb_count"
+        ]
+    }
+}
