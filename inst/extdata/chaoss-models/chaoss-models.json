@@ -6,7 +6,7 @@
             "defect_resolution_dur"
         ],
         "proj_engagement": [
-            "change_req",
+            "num_prs_merged",
             "committer_count",
             "ctb_count",
             "issues_closed",
