@@ -25,22 +25,21 @@ cm_model_dev_responsiveness <- function (path,
                                          metrics_data = NULL) {
 
     if (is.null (metrics_data)) {
-        pr_durs <- cm_metric_pr_review_duration (path, end_date = end_date)
+        pr_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
         issue_resp_time <-
             cm_metric_issue_response_time (path, end_date = end_date)
         defect_resol_dur <-
             cm_metric_defect_resolution_dur (path, end_date = end_date)
     } else {
-        pr_durs <- metrics_data$pr_review_duration
+        pr_dur_mn <- metrics_data$pr_review_duration
         issue_resp_time <- metrics_data$issue_response_time
         defect_resol_dur <- metrics_data$defect_resolution_dur
     }
 
-    pr_durs <- mean (pr_durs [grep ("\\_mn$", names (pr_durs))], na.rm = TRUE)
     issue_resp_time <- mean (as.integer (issue_resp_time))
     defect_resol_dur <- defect_resol_dur [["mean"]]
 
-    vals <- c (pr_durs, issue_resp_time, defect_resol_dur)
+    vals <- c (pr_dur_mn, issue_resp_time, defect_resol_dur)
     # convert final value to scale so that higher is better by
     val <- 2 - log10 (mean (vals, na.rm = TRUE))
     val <- ifelse (is.na (val), 0, val)
@@ -557,7 +556,7 @@ cm_model_comm_serv_support <- function (path,
             cm_metric_defect_resolution_dur (path, end_date = end_date)
 
         pr_age <- cm_metric_pr_age (path, end_date = end_date)
-        pr_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
+        pr_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
 
         # Metrics measured in N > 1, for which higher is better:
         issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
@@ -570,7 +569,7 @@ cm_model_comm_serv_support <- function (path,
         issue_age <- metrics_data$issue_age
         issue_res_duration <- metrics_data$defect_resolution_dur
         pr_age <- metrics_data$pr_age
-        pr_dur <- metrics_data$pr_review_duration
+        pr_dur_mn <- metrics_data$pr_review_duration
         issue_num_cmts <- metrics_data$issue_comments
         issues_active <- metrics_data$issues_active
         pr_num_revs <- metrics_data$pr_reviews
@@ -581,12 +580,11 @@ cm_model_comm_serv_support <- function (path,
     issue_age <- issue_age [["mean"]]
     issue_res_duration <- issue_res_duration [["mean"]]
     pr_age <- pr_age [["mean"]]
-    pr_dur <- pr_dur [["review_dur_mn"]]
 
     pr_num_revs_approved <- pr_num_revs [["approved_count"]]
     pr_num_revs_rejected <- pr_num_revs [["rejected_count"]]
 
-    res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur)
+    res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur_mn)
     res_ON <-
         c (issue_num_cmts, issues_active, pr_num_revs_approved, pr_num_revs_rejected)
     res_log10 <- vapply (list (res_N_days, res_ON), function (i) {

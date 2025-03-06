@@ -134,7 +134,10 @@ cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_review_duration (path, end_date)
+    dat <- cm_data_pr_review_duration (path, end_date)
+    # That has "cycle_dur_mn" and overall "review_dur_mn"; take mean of both:
+    res <- mn_med_sum (dat [grep ("\\_mn$", names (dat))])
+    return (res [["mean"]])
 }
 
 cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
