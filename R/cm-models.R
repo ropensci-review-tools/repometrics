@@ -69,7 +69,7 @@ cm_model_proj_engagement <- function (path,
 
     if (is.null (metrics_data)) {
 
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        num_prs_merged <- cm_metric_num_prs_merged (path, end_date = end_date)
         counts <- cm_metric_committer_count (path, end_date = end_date)
         # has number of unique commiters for (watchers or forks, issues, prs)
 
@@ -88,19 +88,13 @@ cm_model_proj_engagement <- function (path,
         #   cm_metric_pr_review_duration (path, end_date = end_date)
     } else {
 
-        pr_dat <- metrics_data$pr_dat
+        num_prs_merged <- metrics_data$num_prs_merged
         counts <- metrics_data$committer_count
         num_code_ctbs <- metrics_data$ctb_count
         num_issues_closed <- metrics_data$issues_closed
         num_issues_updated <- metrics_data$issue_updates
         num_issue_comments <- metrics_data$issue_cmt_count
     }
-
-    num_prs_merged <- ifelse (
-        length (pr_dat) > 1,
-        pr_dat [["n_closed"]],
-        0L
-    )
 
     res <- c (
         num_prs_merged, counts, num_code_ctbs,

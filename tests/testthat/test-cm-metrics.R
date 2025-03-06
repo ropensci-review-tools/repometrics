@@ -584,17 +584,17 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 44L)
+    expect_length (metrics_data, 45L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
-    lens_expected <- c (
+    lens_expected <- as.integer (c (
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
         1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
-        2, 4, 4, 1, 4, 0, 1, 14, 1, 1,
-        2, 4, 3, 4
-    )
+        2, 1, 4, 4, 1, 4, 0, 1, 14, 1,
+        1, 2, 4, 3, 4
+    ))
     expect_equal (lens, lens_expected)
 })
