@@ -134,7 +134,10 @@ cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_review_duration (path, end_date)
+    dat <- cm_data_pr_review_duration (path, end_date)
+    # That has "cycle_dur_mn" and overall "review_dur_mn"; take mean of both:
+    res <- mn_med_sum (dat [grep ("\\_mn$", names (dat))])
+    return (res [["mean"]])
 }
 
 cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
@@ -248,4 +251,15 @@ cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
     cm_data_pr_reviews_approved (path, end_date)
+}
+
+cm_metric_num_prs_merged <- function (path, end_date = Sys.Date ()) {
+    pr_dat <- cm_metric_change_req (path, end_date)
+    num_prs_merged <- ifelse (
+        length (pr_dat) > 1,
+        as.integer (pr_dat [["n_closed"]]),
+        0L
+    )
+
+    return (num_prs_merged)
 }

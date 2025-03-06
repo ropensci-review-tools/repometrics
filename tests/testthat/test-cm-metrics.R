@@ -217,15 +217,12 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    revs <- cm_metric_pr_review_duration (path, end_date = end_date)
+    rev_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
     fs::dir_delete (path)
 
-    expect_type (revs, "double")
-    expect_length (revs, 4L)
-    expect_named (
-        revs,
-        c ("cycle_dur_mn", "cycle_dur_md", "review_dur_mn", "review_dur_md")
-    )
+    expect_type (rev_dur_mn, "double")
+    expect_length (rev_dur_mn, 1L)
+    expect_named (rev_dur_mn, NULL)
 })
 
 test_that ("cm metric issue numbers, durations, response times", {
@@ -242,7 +239,6 @@ test_that ("cm metric issue numbers, durations, response times", {
 
     # Vector of response durations:
     expect_type (dur_issues, "double")
-    expect_s3_class (dur_issues, "difftime")
     expect_true (length (dur_issues) >= 0L)
 
     # Overall summary statistic on repsonse times from both issues and PRs:
@@ -271,8 +267,8 @@ test_that ("cm metric defect resolution duration", {
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
+    expect_length (res, 1L)
+    expect_named (res, NULL)
 })
 
 test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
@@ -588,17 +584,17 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 44L)
+    expect_length (metrics_data, 45L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
-    lens_expected <- c (
+    lens_expected <- as.integer (c (
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
-        2, 1, 3, 1, 3, 4, 1, 0, 1, 1,
+        1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
-        2, 4, 4, 1, 4, 0, 4, 14, 1, 1,
-        2, 4, 3, 4
-    )
+        2, 1, 4, 4, 1, 4, 0, 1, 14, 1,
+        1, 2, 4, 3, 4
+    ))
     expect_equal (lens, lens_expected)
 })

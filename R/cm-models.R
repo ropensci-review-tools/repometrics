@@ -25,40 +25,20 @@ cm_model_dev_responsiveness <- function (path,
                                          metrics_data = NULL) {
 
     if (is.null (metrics_data)) {
-        pr_durs <- cm_metric_pr_review_duration (path, end_date = end_date)
+        pr_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
         issue_resp_time <-
             cm_metric_issue_response_time (path, end_date = end_date)
         defect_resol_dur <-
             cm_metric_defect_resolution_dur (path, end_date = end_date)
     } else {
-        pr_durs <- metrics_data$pr_review_duration
+        pr_dur_mn <- metrics_data$pr_review_duration
         issue_resp_time <- metrics_data$issue_response_time
         defect_resol_dur <- metrics_data$defect_resolution_dur
     }
 
-    issue_resp_time <- mn_med_sum (as.integer (issue_resp_time))
-    names (issue_resp_time) <- paste0 ("issue_resp_", names (issue_resp_time))
-    names (defect_resol_dur) <-
-        paste0 ("defect_resol_", names (defect_resol_dur))
-
-    nms <- list (c ("mn", "mean"), c ("md", "median"))
-    vals <- lapply (nms, function (nm) {
-        index_i <- grep (nm [2], names (issue_resp_time), value = TRUE)
-        index_d <- grep (nm [2], names (defect_resol_dur), value = TRUE)
-        vals_i <- c (
-            pr_durs [grep (nm [1], names (pr_durs), value = TRUE)],
-            issue_resp_time [index_i],
-            defect_resol_dur [index_d]
-        )
-        return (vals_i [which (!is.na (vals_i))])
-    })
-    vals <- c (mean = mean (vals [[1]]), median = stats::median (vals [[2]]))
-    names (vals) <- c ("mean", "median")
-    vals [which (is.na (vals))] <- NA_real_
-
-    # But only return mean value, to align with all others
-    # And convert final value to scale so that higher is better by
-    val <- 2 - log10 (vals [["mean"]])
+    vals <- c (pr_dur_mn, issue_resp_time, defect_resol_dur)
+    # convert final value to scale so that higher is better by
+    val <- 2 - log10 (mean (vals, na.rm = TRUE))
     val <- ifelse (is.na (val), 0, val)
     return (val)
 }
@@ -89,7 +69,7 @@ cm_model_proj_engagement <- function (path,
 
     if (is.null (metrics_data)) {
 
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        num_prs_merged <- cm_metric_num_prs_merged (path, end_date = end_date)
         counts <- cm_metric_committer_count (path, end_date = end_date)
         # has number of unique commiters for (watchers or forks, issues, prs)
 
@@ -108,19 +88,13 @@ cm_model_proj_engagement <- function (path,
         #   cm_metric_pr_review_duration (path, end_date = end_date)
     } else {
 
-        pr_dat <- metrics_data$pr_dat
+        num_prs_merged <- metrics_data$num_prs_merged
         counts <- metrics_data$committer_count
         num_code_ctbs <- metrics_data$ctb_count
         num_issues_closed <- metrics_data$issues_closed
         num_issues_updated <- metrics_data$issue_updates
         num_issue_comments <- metrics_data$issue_cmt_count
     }
-
-    num_prs_merged <- ifelse (
-        length (pr_dat) > 1,
-        pr_dat [["n_closed"]],
-        0L
-    )
 
     res <- c (
         num_prs_merged, counts, num_code_ctbs,
@@ -269,7 +243,6 @@ cm_model_oss_compliance <- function (path,
 
     bp_badge <- as.integer (bp_badge)
     lic_declared <- as.integer (length (lic_declared) > 0L)
-    defect_res_dur <- defect_res_dur [["mean"]]
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
     libyears <- libyears [["mean"]]
 
@@ -573,7 +546,7 @@ cm_model_comm_serv_support <- function (path,
             cm_metric_defect_resolution_dur (path, end_date = end_date)
 
         pr_age <- cm_metric_pr_age (path, end_date = end_date)
-        pr_dur <- cm_metric_pr_review_duration (path, end_date = end_date)
+        pr_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
 
         # Metrics measured in N > 1, for which higher is better:
         issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
@@ -586,23 +559,20 @@ cm_model_comm_serv_support <- function (path,
         issue_age <- metrics_data$issue_age
         issue_res_duration <- metrics_data$defect_resolution_dur
         pr_age <- metrics_data$pr_age
-        pr_dur <- metrics_data$pr_review_duration
+        pr_dur_mn <- metrics_data$pr_review_duration
         issue_num_cmts <- metrics_data$issue_comments
         issues_active <- metrics_data$issues_active
         pr_num_revs <- metrics_data$pr_reviews
 
     }
 
-    issue_resp_time <- as.numeric (mean (issue_resp_time))
     issue_age <- issue_age [["mean"]]
-    issue_res_duration <- issue_res_duration [["mean"]]
     pr_age <- pr_age [["mean"]]
-    pr_dur <- pr_dur [["review_dur_mn"]]
 
     pr_num_revs_approved <- pr_num_revs [["approved_count"]]
     pr_num_revs_rejected <- pr_num_revs [["rejected_count"]]
 
-    res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur)
+    res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur_mn)
     res_ON <-
         c (issue_num_cmts, issues_active, pr_num_revs_approved, pr_num_revs_rejected)
     res_log10 <- vapply (list (res_N_days, res_ON), function (i) {
@@ -649,7 +619,6 @@ cm_model_starter_health <- function (path,
 
     }
 
-    time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
     pr_closure_ratio <- NA_real_
@@ -719,7 +688,6 @@ cm_model_comm_welcoming <- function (path,
 
     issue_age <- issue_age [["mean"]] # [0, N >> 1]
     issue_age <- ifelse (issue_age == 0, 1, issue_age)
-    time_first_resp <- mn_med_sum (time_first_resp) [["mean"]]
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
     val_days <- log10 (c (issue_age, time_first_resp))
