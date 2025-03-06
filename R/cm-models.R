@@ -36,29 +36,13 @@ cm_model_dev_responsiveness <- function (path,
         defect_resol_dur <- metrics_data$defect_resolution_dur
     }
 
-    issue_resp_time <- mn_med_sum (as.integer (issue_resp_time))
-    names (issue_resp_time) <- paste0 ("issue_resp_", names (issue_resp_time))
-    names (defect_resol_dur) <-
-        paste0 ("defect_resol_", names (defect_resol_dur))
+    pr_durs <- mean (pr_durs [grep ("\\_mn$", names (pr_durs))], na.rm = TRUE)
+    issue_resp_time <- mean (as.integer (issue_resp_time))
+    defect_resol_dur <- defect_resol_dur [["mean"]]
 
-    nms <- list (c ("mn", "mean"), c ("md", "median"))
-    vals <- lapply (nms, function (nm) {
-        index_i <- grep (nm [2], names (issue_resp_time), value = TRUE)
-        index_d <- grep (nm [2], names (defect_resol_dur), value = TRUE)
-        vals_i <- c (
-            pr_durs [grep (nm [1], names (pr_durs), value = TRUE)],
-            issue_resp_time [index_i],
-            defect_resol_dur [index_d]
-        )
-        return (vals_i [which (!is.na (vals_i))])
-    })
-    vals <- c (mean = mean (vals [[1]]), median = stats::median (vals [[2]]))
-    names (vals) <- c ("mean", "median")
-    vals [which (is.na (vals))] <- NA_real_
-
-    # But only return mean value, to align with all others
-    # And convert final value to scale so that higher is better by
-    val <- 2 - log10 (vals [["mean"]])
+    vals <- c (pr_durs, issue_resp_time, defect_resol_dur)
+    # convert final value to scale so that higher is better by
+    val <- 2 - log10 (mean (vals, na.rm = TRUE))
     val <- ifelse (is.na (val), 0, val)
     return (val)
 }
