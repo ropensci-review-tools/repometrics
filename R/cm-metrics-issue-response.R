@@ -66,7 +66,8 @@ cm_data_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nol
 }
 
 cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
-    cm_data_defect_resolution_dur (path, end_date)
+    dat <- cm_data_defect_resolution_dur (path, end_date)
+    dat [["mean"]]
 }
 
 #' CHAOSS metric "Time to Close"

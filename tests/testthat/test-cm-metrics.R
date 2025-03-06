@@ -239,7 +239,6 @@ test_that ("cm metric issue numbers, durations, response times", {
 
     # Vector of response durations:
     expect_type (dur_issues, "double")
-    expect_s3_class (dur_issues, "difftime")
     expect_true (length (dur_issues) >= 0L)
 
     # Overall summary statistic on repsonse times from both issues and PRs:
@@ -268,8 +267,8 @@ test_that ("cm metric defect resolution duration", {
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 2L)
-    expect_named (res, c ("mean", "median"))
+    expect_length (res, 1L)
+    expect_named (res, NULL)
 })
 
 test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
@@ -592,7 +591,7 @@ test_that ("cm metric collate all", {
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- c (
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
-        2, 1, 3, 1, 3, 4, 1, 1, 1, 1,
+        1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
         2, 4, 4, 1, 4, 0, 1, 14, 1, 1,
         2, 4, 3, 4

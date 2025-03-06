@@ -36,8 +36,6 @@ cm_model_dev_responsiveness <- function (path,
         defect_resol_dur <- metrics_data$defect_resolution_dur
     }
 
-    defect_resol_dur <- defect_resol_dur [["mean"]]
-
     vals <- c (pr_dur_mn, issue_resp_time, defect_resol_dur)
     # convert final value to scale so that higher is better by
     val <- 2 - log10 (mean (vals, na.rm = TRUE))
@@ -251,7 +249,6 @@ cm_model_oss_compliance <- function (path,
 
     bp_badge <- as.integer (bp_badge)
     lic_declared <- as.integer (length (lic_declared) > 0L)
-    defect_res_dur <- defect_res_dur [["mean"]]
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
     libyears <- libyears [["mean"]]
 
@@ -576,7 +573,6 @@ cm_model_comm_serv_support <- function (path,
     }
 
     issue_age <- issue_age [["mean"]]
-    issue_res_duration <- issue_res_duration [["mean"]]
     pr_age <- pr_age [["mean"]]
 
     pr_num_revs_approved <- pr_num_revs [["approved_count"]]
