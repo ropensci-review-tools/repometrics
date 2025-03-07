@@ -137,7 +137,6 @@ cm_model_proj_awareness <- function (path,
     }
 
     num_stars <- num_stars [["stars"]]
-    num_forks <- num_forks [["num_in_period"]]
 
     res <- c (num_forks, num_stars)
     res [which (res == 0)] <- 1
@@ -512,7 +511,6 @@ cm_model_collab_devel_index <- function (path,
     }
 
     num_pr_reviews <- pr_dat [["approved_count"]]
-    num_forks <- num_forks [["num_in_period"]]
 
     res_O1 <- c (has_ci_tests, pr_prop_code, issues_to_prs)
     res_ON <- c (num_ctbs, num_pr_reviews, num_forks)

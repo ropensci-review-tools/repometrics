@@ -9,5 +9,6 @@ cm_data_num_forks <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
-    cm_data_num_forks (path, end_date)
+    dat <- cm_data_num_forks (path, end_date)
+    return (dat [["num_in_period"]])
 }

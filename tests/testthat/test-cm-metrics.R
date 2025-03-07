@@ -188,9 +188,9 @@ test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
     fs::dir_delete (path)
 
     expect_type (forks, "integer")
-    expect_length (forks, 2L)
-    expect_named (forks, c ("num_in_period", "num_total"))
-    expect_true (forks [["num_total"]] > 0)
+    expect_length (forks, 1L)
+    expect_named (forks, NULL)
+    expect_true (forks >= 0L)
 })
 
 test_that ("cm metric code change lines", { # R/cm-metrics-code-change.R
@@ -593,7 +593,7 @@ test_that ("cm metric collate all", {
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
         1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
-        2, 1, 4, 4, 1, 4, 0, 1, 14, 1,
+        1, 1, 4, 4, 1, 4, 0, 1, 14, 1,
         1, 2, 4, 3, 4
     ))
     expect_equal (lens, lens_expected)
