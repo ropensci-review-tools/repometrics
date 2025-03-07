@@ -94,11 +94,11 @@ test_that ("cm metrics num_commits num_contribs", {
     expect_named (n, expected = NULL)
     expect_equal (n, 1L)
 
-    n <- cm_metric_commit_freq (path, end_date = end_date)
+    n <- cm_metric_commit_count (path, end_date = end_date)
     expect_type (n, "double")
-    expect_length (n, 4L)
-    expect_named (n, c ("mean", "sd", "median", "sum"))
-    expect_true (all (n [which (!is.na (n))] > 0))
+    expect_length (n, 1L)
+    expect_named (n, NULL)
+    expect_true (n > 0)
 
     fs::dir_delete (path)
 })
@@ -595,7 +595,7 @@ test_that ("cm metric collate all", {
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
-        1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
+        1, 1, 1, 1, 1, 3, 3, 1, 4, 1,
         1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
         1, 1, 1, 4, 1, 4, 0, 1, 14, 1,

@@ -171,7 +171,7 @@ cm_model_community_activity <- function (path,
 
         # ----- Model includes frequencies of both commits and comments, but
         # ----- these are here treated instead as direct counts.
-        commit_count <- cm_metric_commit_freq (path, end_date = end_date)
+        commit_count <- cm_metric_commit_count (path, end_date = end_date)
         comment_counts <- cm_metric_issue_cmt_count (path, end_date = end_date)
 
     } else {
@@ -182,12 +182,11 @@ cm_model_community_activity <- function (path,
         issues_updated <- metrics_data$issue_updates
         num_maintainers <-
             metrics_data$maintainer_count
-        commit_count <- metrics_data$commit_freq
+        commit_count <- metrics_data$commit_count
         comment_counts <- metrics_data$issue_cmt_count
 
     }
 
-    commit_count <- commit_count [["mean"]]
     prs_approved <- prs [["approved_count"]]
 
     res <- c (
