@@ -416,9 +416,9 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     fs::dir_delete (path)
 
     expect_type (rel_freq, "integer")
-    expect_length (rel_freq, 2L)
-    expect_named (rel_freq, c ("mean", "median"))
-    expect_true (all (rel_freq > 0L))
+    expect_length (rel_freq, 1L)
+    expect_named (rel_freq, NULL)
+    expect_true (rel_freq > 0L)
 
     expect_type (rel_count, "integer")
     expect_length (rel_count, 1L)
@@ -641,7 +641,7 @@ test_that ("cm metric collate all", {
         1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
         1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
-        14, 1, 1, 2, 4, 3, 1, 1
+        14, 1, 1, 1, 4, 3, 1, 1
     ))
     expect_equal (lens, lens_expected)
 })

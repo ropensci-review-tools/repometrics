@@ -374,8 +374,6 @@ cm_model_viability_gov <- function (path,
 
     }
 
-    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
-
     labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
 
     # ------ Combine all:
@@ -425,7 +423,6 @@ cm_model_viability_strategy <- function (path,
     bus <- log10 (bus) # higher is better
     ele <- log10 (ele) # higher is better
 
-    req_freq <- rel_freq [["mean"]]
     rel_freq <- log10 (ifelse (rel_freq == 0, 1, rel_freq))
 
     res_0N <- c (bus, ele, -rel_freq)
@@ -584,7 +581,6 @@ cm_model_starter_health <- function (path,
 
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
-    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
     rel_freq <- ifelse (rel_freq == 0, 1, rel_freq)
 
     res_high <- c (pr_closure_ratio, log10 (abs), log10 (rel_freq))
