@@ -262,7 +262,7 @@ cm_model_viability_community <- function (path,
 
     if (is.null (metrics_data)) {
 
-        counts <- cm_metric_committer_count (path, end_date = end_date)
+        watcher_count <- cm_metric_watcher_count (path, end_date = end_date)
         pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
         pr_n_closed <- cm_metric_change_req_n_closed (path, end_date = end_date)
         num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
@@ -270,7 +270,7 @@ cm_model_viability_community <- function (path,
 
     } else {
 
-        counts <- metrics_data$committer_count
+        watcher_count <- metrics_data$watcher_count
         pr_dat <- metrics_data$change_req
         pr_n_opened <- metrics_data$change_req_n_opened
         pr_n_closed <- metrics_data$change_req_n_closed
@@ -279,17 +279,13 @@ cm_model_viability_community <- function (path,
 
     }
 
-    # "counts" has number of unique commiters for
-    # (watchers or forks, issues, prs)
-    counts <- counts [["watchers"]] # stars and forks, as unique users
-
     num_auts <- num_auts [["recent"]]
 
     # The model includes "Change Requests" (as direct count), and "Change
     # Request Closure Ratio". The latter here is replaced by number of "closed"
     # change requests, which is the number merged. Thus each opened and merged
     # PR counts for 2, while each unmerged counts onlyu for 1.
-    res <- c (counts, pr_n_opened, pr_n_closed, num_auts)
+    res <- c (watcher_count, pr_n_opened, pr_n_closed, num_auts)
     res [which (res == 0)] <- 1
     # lower values of libyears are  better, so appended below in negated form:
     res <- sum (c (log10 (res), -libyears), na.rm = TRUE)

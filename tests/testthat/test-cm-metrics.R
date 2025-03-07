@@ -481,6 +481,7 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
 
     counts_ctb <- cm_metric_ctb_count (path, end_date = end_date)
     counts_cmt <- cm_metric_committer_count (path, end_date = end_date)
+    counts_watchers <- cm_metric_watcher_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -498,6 +499,10 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
     expect_named (counts_cmt, c ("watchers", "issues", "prs"))
     expect_true (all (counts_cmt >= 0L))
     expect_true (sum (counts_cmt) > 0L)
+
+    expect_type (counts_watchers, "integer")
+    expect_length (counts_watchers, 1L)
+    expect_true (counts_watchers >= 0L)
 })
 
 test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates.R
@@ -618,7 +623,7 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 47L)
+    expect_length (metrics_data, 48L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
@@ -628,7 +633,7 @@ test_that ("cm metric collate all", {
         1, 4, 1, 1, 1, 3, 1, 3, 4, 1,
         1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
         2, 1, 1, 1, 1, 4, 1, 4, 0, 1,
-        14, 1, 1, 2, 4, 3, 4
+        14, 1, 1, 2, 4, 3, 4, 1
     ))
     expect_equal (lens, lens_expected)
 })

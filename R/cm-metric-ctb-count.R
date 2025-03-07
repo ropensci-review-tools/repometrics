@@ -80,3 +80,8 @@ cm_data_committer_count <- function (path, end_date = Sys.Date ()) {
 cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
     cm_data_committer_count (path, end_date)
 }
+
+cm_metric_watcher_count <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_committer_count (path, end_date)
+    return (dat [["watchers"]])
+}
