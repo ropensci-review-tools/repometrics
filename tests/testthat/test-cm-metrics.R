@@ -179,18 +179,23 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_named (prop_approved, NULL)
 })
 
-test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
+test_that ("cm metric num forks, stars", { # R/cm-metrics-num-forks.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     forks <- cm_metric_num_forks (path, end_date = end_date)
+    stars <- cm_metric_num_stars (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (forks, "integer")
     expect_length (forks, 1L)
     expect_named (forks, NULL)
     expect_true (forks >= 0L)
+    expect_type (stars, "integer")
+    expect_length (stars, 1L)
+    expect_named (stars, NULL)
+    expect_true (stars >= 0L)
 })
 
 test_that ("cm metric code change lines", { # R/cm-metrics-code-change.R
@@ -319,13 +324,13 @@ test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
     expect_true (res >= 0)
 })
 
-test_that ("cm metric popularity", { # R/cm-metric-popularity.R
+test_that ("cm data popularity", { # R/cm-metric-popularity.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_metric_popularity (path, end_date = end_date)
+    res <- cm_data_popularity (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -593,7 +598,7 @@ test_that ("cm metric collate all", {
         1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
         1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
         1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
-        1, 1, 4, 4, 1, 4, 0, 1, 14, 1,
+        1, 1, 1, 4, 1, 4, 0, 1, 14, 1,
         1, 2, 4, 3, 4
     ))
     expect_equal (lens, lens_expected)

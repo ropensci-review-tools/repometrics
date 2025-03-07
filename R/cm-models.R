@@ -127,16 +127,14 @@ cm_model_proj_awareness <- function (path,
     if (is.null (metrics_data)) {
 
         num_forks <- cm_metric_num_forks (path, end_date = end_date)
-        num_stars <- cm_metric_popularity (path, end_date = end_date)
+        num_stars <- cm_metric_num_stars (path, end_date = end_date)
 
     } else {
 
         num_forks <- metrics_data$num_forks
-        num_stars <- metrics_data$popularity
+        num_stars <- metrics_data$num_stars
 
     }
-
-    num_stars <- num_stars [["stars"]]
 
     res <- c (num_forks, num_stars)
     res [which (res == 0)] <- 1
@@ -374,7 +372,8 @@ cm_model_viability_gov <- function (path,
         # ---- Higher values are better:
         labs <- cm_metric_label_inclusivity (path, end_date = end_date)
         pr_dat <- cm_metric_change_req (path, end_date = end_date)
-        pop <- cm_metric_popularity (path, end_date = end_date)
+        num_forks <- cm_metric_num_forks (path, end_date = end_date)
+        num_stars <- cm_metric_num_stars (path, end_date = end_date)
 
         # ----- Lower values are better:
         issues <- cm_metric_time_to_close (path, end_date = end_date)
@@ -386,7 +385,8 @@ cm_model_viability_gov <- function (path,
 
         labs <- metrics_data$label_inclusivity
         pr_dat <- metrics_data$change_req
-        pop <- metrics_data$popularity
+        num_forks <- metrics_data$num_forks
+        num_stars <- metrics_data$num_stars
         issues <- metrics_data$time_to_close
         libyears <- metrics_data$libyears
         issue_age <- metrics_data$issue_age
@@ -403,19 +403,18 @@ cm_model_viability_gov <- function (path,
     if (length (pr_dat) > 1L) {
         pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
     }
-    pop <- pop [c ("forks", "stars")] # [0, N >> 1]
 
     libyears <- libyears [["mean"]]
 
     # ------ Combine all:
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
-    pop [which (pop == 0)] <- 1
-    pop <- log10 (pop) # higher is better
+    num_forks <- ifelse (num_forks == 0, 0, log10 (num_forks))
+    num_stars <- ifelse (num_stars == 0, 0, log10 (num_stars))
     res_days <- c (iss_time_to_close, issue_age, rel_freq)
     res_days [which (res_days == 0)] <- 1
     res_days <- log10 (res_days) # lower is better
 
-    res <- c (res_01, pop, -res_days, -libyears)
+    res <- c (res_01, num_forks, num_stars, -res_days, -libyears)
     return (sum (res, na.rm = TRUE))
 }
 
