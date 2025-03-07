@@ -162,7 +162,7 @@ cm_model_community_activity <- function (path,
         ctbs <- cm_metric_ctb_count (path, end_date = end_date)
         # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each
         # as number of unique authors.
-        prs <- cm_metric_pr_reviews (path, end_date = end_date)
+        prs_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
 
         num_releases <- cm_metric_recent_releases (path, end_date = end_date)
         issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
@@ -177,7 +177,7 @@ cm_model_community_activity <- function (path,
     } else {
 
         ctbs <- metrics_data$ctb_count
-        prs <- metrics_data$pr_reviews
+        prs_approved <- metrics_data$pr_reviews_approved
         num_releases <- metrics_data$recent_releases
         issues_updated <- metrics_data$issue_updates
         num_maintainers <-
@@ -186,8 +186,6 @@ cm_model_community_activity <- function (path,
         comment_counts <- metrics_data$issue_cmt_count
 
     }
-
-    prs_approved <- prs [["approved_count"]]
 
     res <- c (
         ctbs, prs_approved, num_releases, issues_updated,
