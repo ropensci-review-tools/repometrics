@@ -351,9 +351,9 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     fs::dir_delete (path)
 
     expect_type (ly, "double")
-    expect_length (ly, 4L)
-    expect_named (ly, c ("mean", "sd", "median", "sum"))
-    expect_true (all (ly [which (!is.na (ly))] > 0))
+    expect_length (ly, 1L)
+    expect_named (ly, NULL)
+    expect_true (ly > 0)
 
     expect_type (ndeps, "integer")
     expect_length (ndeps, 1L)
@@ -604,7 +604,7 @@ test_that ("cm metric collate all", {
     lens_expected <- as.integer (c (
         1, 1, 1, 1, 1, 3, 3, 1, 4, 1,
         1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
-        1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
+        1, 1, 3, 5, 1, 1, 1, 2, 1, 1,
         1, 1, 1, 4, 1, 4, 0, 1, 14, 1,
         1, 2, 4, 3, 4
     ))

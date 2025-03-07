@@ -7,11 +7,16 @@
 #' @param end_date Not used here, but specified for consistent interface to all
 #' metric fns.
 #' @noRd
-cm_metric_libyears <- function (path, end_date = NULL) {
+cm_data_libyears <- function (path, end_date = NULL) {
 
     deps <- rm_data_libyears (path)
 
     return (mn_med_sum (deps$libyears))
+}
+
+cm_metric_libyears <- function (path, end_date = NULL) {
+    dat <- cm_data_libyears (path)
+    return (dat [["mean"]])
 }
 
 cm_metric_dependency_count <- function (path, end_date = NULL) {

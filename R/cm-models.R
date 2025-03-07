@@ -238,7 +238,6 @@ cm_model_oss_compliance <- function (path,
     bp_badge <- as.integer (bp_badge)
     lic_declared <- as.integer (lic_declared)
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
-    libyears <- libyears [["mean"]]
 
     num_deps <- ifelse (depcount == 0L, 0, log10 (depcount))
 
@@ -292,11 +291,9 @@ cm_model_viability_community <- function (path,
 
     num_auts <- num_auts [["recent"]]
 
-    # lower values of libyears are  better, so appended below in negated form:
-    libyears <- libyears [["mean"]]
-
     res <- c (counts, pr_dat, num_auts)
     res [which (res == 0)] <- 1
+    # lower values of libyears are  better, so appended below in negated form:
     res <- sum (c (log10 (res), -libyears), na.rm = TRUE)
 
     return (res)
@@ -342,7 +339,6 @@ cm_model_viability_starter <- function (path,
     } else {
         pr_dat <- rep (NA_real_, 2L)
     }
-    libyears <- libyears [["mean"]]
 
     res <- c (abs, ele, lic_declared, pr_dat)
     res [which (res == 0)] <- 1
@@ -400,8 +396,6 @@ cm_model_viability_gov <- function (path,
     if (length (pr_dat) > 1L) {
         pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
     }
-
-    libyears <- libyears [["mean"]]
 
     # ------ Combine all:
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
