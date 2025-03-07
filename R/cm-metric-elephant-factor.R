@@ -36,6 +36,9 @@ cm_data_elephant_factor <- function (path, end_date = Sys.Date ()) {
     gitlog_absence_factor (log)
 }
 
+#' See 'contrib_absence', which returns commits, files, and code, but they're
+#' all very highly correlated, so only one returned here.
 cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
-    cm_data_elephant_factor (path, end_date)
+    dat <- cm_data_elephant_factor (path, end_date)
+    dat [["ncommits"]]
 }

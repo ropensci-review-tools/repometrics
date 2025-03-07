@@ -94,11 +94,11 @@ test_that ("cm metrics num_commits num_contribs", {
     expect_named (n, expected = NULL)
     expect_equal (n, 1L)
 
-    n <- cm_metric_commit_freq (path, end_date = end_date)
+    n <- cm_metric_commit_count (path, end_date = end_date)
     expect_type (n, "double")
-    expect_length (n, 4L)
-    expect_named (n, c ("mean", "sd", "median", "sum"))
-    expect_true (all (n [which (!is.na (n))] > 0))
+    expect_length (n, 1L)
+    expect_named (n, NULL)
+    expect_true (n > 0)
 
     fs::dir_delete (path)
 })
@@ -111,15 +111,37 @@ test_that ("cm metric change reqests", { # R/cm-metrics-change-req.R
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 10000)
 
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
-
-    options ("repometrics_period" = op)
-    fs::dir_delete (path)
+    pr_dat <- cm_data_change_req (path, end_date = end_date)
 
     expect_type (pr_dat, "double")
     expect_length (pr_dat, 4L)
     expect_named (pr_dat, c ("n_opened", "n_closed", "prop_merged", "prop_code_from_prs"))
     expect_true (all (pr_dat > 0))
+
+    pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
+    pr_n_closed <- cm_metric_change_req_n_closed (path, end_date = end_date)
+    pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
+    prop_code_from_prs <- cm_metric_change_req_prop_code (path, end_date = end_date)
+
+    options ("repometrics_period" = op)
+    fs::dir_delete (path)
+
+    expect_type (pr_n_opened, "integer")
+    expect_length (pr_n_opened, 1L)
+    expect_true (pr_n_opened > 0)
+
+    expect_type (pr_n_closed, "integer")
+    expect_length (pr_n_closed, 1L)
+    expect_true (pr_n_closed > 0)
+
+    expect_type (pr_closure_ratio, "double")
+    expect_length (pr_closure_ratio, 1L)
+    expect_true (pr_closure_ratio > 0)
+    expect_true (pr_closure_ratio <= 1)
+
+    expect_type (prop_code_from_prs, "double")
+    expect_length (prop_code_from_prs, 1L)
+    expect_true (prop_code_from_prs > 0)
 })
 
 test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
@@ -143,9 +165,10 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    revs <- cm_metric_pr_reviews (path, end_date = end_date)
+    revs <- cm_data_pr_reviews (path, end_date = end_date)
     cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
-    prop_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
+    prs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
+    prs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
     age <- cm_metric_pr_age (path, end_date = end_date)
 
     options ("repometrics_period" = op)
@@ -174,23 +197,31 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_length (age, 4L)
     expect_named (age, c ("mean", "sd", "median", "sum"))
 
-    expect_type (prop_approved, "double")
-    expect_length (prop_approved, 1L)
-    expect_named (prop_approved, NULL)
+    expect_type (prs_approved, "integer")
+    expect_length (prs_approved, 1L)
+    expect_named (prs_approved, NULL)
+    expect_type (prs_rejected, "integer")
+    expect_length (prs_rejected, 1L)
+    expect_named (prs_rejected, NULL)
 })
 
-test_that ("cm metric num forks", { # R/cm-metrics-num-forks.R
+test_that ("cm metric num forks, stars", { # R/cm-metrics-num-forks.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
     forks <- cm_metric_num_forks (path, end_date = end_date)
+    stars <- cm_metric_num_stars (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (forks, "integer")
-    expect_length (forks, 2L)
-    expect_named (forks, c ("num_in_period", "num_total"))
-    expect_true (forks [["num_total"]] > 0)
+    expect_length (forks, 1L)
+    expect_named (forks, NULL)
+    expect_true (forks >= 0L)
+    expect_type (stars, "integer")
+    expect_length (stars, 1L)
+    expect_named (stars, NULL)
+    expect_true (stars >= 0L)
 })
 
 test_that ("cm metric code change lines", { # R/cm-metrics-code-change.R
@@ -280,11 +311,9 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 3L)
-    expect_named (
-        res,
-        c ("prop_labelled", "prop_labelled_friendly", "prop_friendly_overall")
-    )
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (res >= 0)
 })
 
 test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
@@ -296,8 +325,9 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 4L)
-    expect_named (res, c ("mean", "sd", "median", "sum"))
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (is.na (res))
 })
 
 test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
@@ -319,13 +349,13 @@ test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
     expect_true (res >= 0)
 })
 
-test_that ("cm metric popularity", { # R/cm-metric-popularity.R
+test_that ("cm data popularity", { # R/cm-metric-popularity.R
 
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_metric_popularity (path, end_date = end_date)
+    res <- cm_data_popularity (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -346,9 +376,9 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     fs::dir_delete (path)
 
     expect_type (ly, "double")
-    expect_length (ly, 4L)
-    expect_named (ly, c ("mean", "sd", "median", "sum"))
-    expect_true (all (ly [which (!is.na (ly))] > 0))
+    expect_length (ly, 1L)
+    expect_named (ly, NULL)
+    expect_true (ly > 0)
 
     expect_type (ndeps, "integer")
     expect_length (ndeps, 1L)
@@ -367,9 +397,9 @@ test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
     fs::dir_delete (path)
 
     expect_type (res, "integer")
-    expect_length (res, 3L)
-    expect_named (res, c ("mean", "median", "n"))
-    expect_equal (res [["n"]], 0L)
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (is.na (res))
 })
 
 test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
@@ -388,9 +418,9 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     fs::dir_delete (path)
 
     expect_type (rel_freq, "integer")
-    expect_length (rel_freq, 2L)
-    expect_named (rel_freq, c ("mean", "median"))
-    expect_true (all (rel_freq > 0L))
+    expect_length (rel_freq, 1L)
+    expect_named (rel_freq, NULL)
+    expect_true (rel_freq > 0L)
 
     expect_type (rel_count, "integer")
     expect_length (rel_count, 1L)
@@ -404,22 +434,27 @@ test_that ("cm metric programming languages", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_metric_languages (path)
+    dat <- cm_data_languages (path)
+    met <- cm_metric_languages (path) # re-scaled version of ncode_pc
 
     fs::dir_delete (path)
 
-    expect_s3_class (res, "data.frame")
-    expect_true (nrow (res) > 0L)
-    expect_equal (ncol (res), 5L)
+    expect_s3_class (dat, "data.frame")
+    expect_true (nrow (dat) > 0L)
+    expect_equal (ncol (dat), 5L)
     expect_identical (
-        names (res),
+        names (dat),
         c ("language", "nfiles", "ncode", "nfiles_pc", "ncode_pc")
     )
-    expect_equal (res$language [1], "R")
-    expect_type (res$nfiles, "integer")
-    expect_type (res$ncode, "integer")
-    expect_type (res$nfiles_pc, "double")
-    expect_type (res$ncode_pc, "double")
+    expect_equal (dat$language [1], "R")
+    expect_type (dat$nfiles, "integer")
+    expect_type (dat$ncode, "integer")
+    expect_type (dat$nfiles_pc, "double")
+    expect_type (dat$ncode_pc, "double")
+
+    expect_type (met, "double")
+    expect_length (met, 1L)
+    expect_true (met > 0 && met < 1)
 })
 
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
@@ -428,20 +463,27 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res1 <- cm_metric_contrib_absence (path, end_date = end_date)
+    dat <- cm_data_contrib_absence (path, end_date = end_date)
+    res1 <- cm_metric_contrib_absence_commits (path, end_date = end_date)
     res2 <- cm_metric_elephant_factor (path, end_date = end_date)
 
     fs::dir_delete (path)
 
+    expect_type (dat, "integer")
+    expect_length (dat, 3L)
+    expect_named (dat, c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_true (all (dat > 0L))
+
     expect_type (res1, "integer")
-    expect_length (res1, 3L)
-    expect_named (res1, c ("ncommits", "nfiles_changed", "lines_changed"))
-    expect_true (all (res1 > 0L))
+    expect_length (res1, 1L)
+    expect_named (res1, NULL)
+    expect_true (res1 > 0L)
+    expect_equal (res1, dat [["ncommits"]])
 
     expect_type (res2, "integer")
-    expect_length (res2, 3L)
-    expect_named (res2, c ("ncommits", "nfiles_changed", "lines_changed"))
-    expect_true (all (res2 > 0L))
+    expect_length (res2, 1L)
+    expect_named (res2, NULL)
+    expect_true (res2 > 0L)
 })
 
 end_date <- as.Date ("2024-12-01")
@@ -454,6 +496,7 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
 
     counts_ctb <- cm_metric_ctb_count (path, end_date = end_date)
     counts_cmt <- cm_metric_committer_count (path, end_date = end_date)
+    counts_watchers <- cm_metric_watcher_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -471,6 +514,10 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
     expect_named (counts_cmt, c ("watchers", "issues", "prs"))
     expect_true (all (counts_cmt >= 0L))
     expect_true (sum (counts_cmt) > 0L)
+
+    expect_type (counts_watchers, "integer")
+    expect_length (counts_watchers, 1L)
+    expect_true (counts_watchers >= 0L)
 })
 
 test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates.R
@@ -512,14 +559,22 @@ test_that ("cm metric maintainer count", {
     fs::dir_delete (path)
 
     expect_type (maintainers, "integer")
-    expect_length (maintainers, 2L)
-    expect_named (maintainers, expected = c ("total", "recent"))
-    expect_true (all (maintainers >= 0L))
+    expect_length (maintainers, 1L)
+    expect_named (maintainers, NULL)
+    expect_true (maintainers >= 0L)
 })
 
 test_that ("cm metric licenses declared + best practices", {
 
     path <- generate_test_pkg ()
+
+    lic_dat <- cm_data_licenses_declared (path)
+
+    expect_type (lic_dat, "character")
+    expect_named (lic_dat, NULL)
+    expect_true (length (lic_dat) >= 1)
+    lic_ptn <- paste0 (included_licenses, collapse = "|")
+    expect_true (all (grepl (lic_ptn, lic_dat)))
 
     lic <- cm_metric_licenses_declared (path)
     n <- cm_metric_license_coverage (path)
@@ -527,11 +582,10 @@ test_that ("cm metric licenses declared + best practices", {
 
     fs::dir_delete (path)
 
-    expect_type (lic, "character")
+    expect_type (lic, "logical")
+    expect_length (lic, 1L)
     expect_named (lic, NULL)
-    expect_true (length (lic) >= 1)
-    lic_ptn <- paste0 (included_licenses, collapse = "|")
-    expect_true (all (grepl (lic_ptn, lic)))
+    expect_true (lic)
 
     expect_type (n, "double")
     expect_length (n, 1L)
@@ -584,17 +638,17 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 45L)
+    expect_length (metrics_data, 49L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
-        1, 1, 1, 1, 4, 3, 3, 1, 4, 1,
-        1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
-        1, 1, 3, 5, 4, 1, 1, 2, 1, 1,
-        2, 1, 4, 4, 1, 4, 0, 1, 14, 1,
-        1, 2, 4, 3, 4
+        1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
+        1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
+        1, 1, 1, 1, 1, 4, 3, 1, 1
     ))
     expect_equal (lens, lens_expected)
 })

@@ -22,16 +22,17 @@
 #' @noRd
 cm_data_change_req <- function (path, end_date = Sys.Date ()) {
 
+    ret <- c (
+        n_opened = 0, n_closed = 0, prop_merged = 0, prop_code_from_prs = 0
+    )
+
     log <- git_log_in_period (path, end_date)
     if (nrow (log) == 0) {
-        return (0)
+        return (ret)
     }
 
     prs <- get_prs_in_period (path, end_date)
 
-    ret <- c (
-        n_opened = 0, n_closed = 0, prop_merged = 0, prop_code_from_prs = 0
-    )
     if (nrow (prs) > 0L) {
         ret <- c (
             n_opened = nrow (prs),
@@ -44,7 +45,22 @@ cm_data_change_req <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-cm_metric_change_req <- function (path, end_date = Sys.Date ()) {
+cm_metric_change_req_n_opened <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_change_req (path, end_date)
+    return (as.integer (dat [["n_opened"]]))
+}
 
-    cm_data_change_req (path, end_date)
+cm_metric_change_req_n_closed <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_change_req (path, end_date)
+    return (as.integer (dat [["n_closed"]]))
+}
+
+cm_metric_change_req_prop_merged <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_change_req (path, end_date)
+    dat [["prop_merged"]]
+}
+
+cm_metric_change_req_prop_code <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_change_req (path, end_date)
+    dat [["prop_code_from_prs"]]
 }

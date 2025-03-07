@@ -69,7 +69,7 @@ cm_model_proj_engagement <- function (path,
 
     if (is.null (metrics_data)) {
 
-        num_prs_merged <- cm_metric_num_prs_merged (path, end_date = end_date)
+        num_prs_merged <- cm_metric_change_req_n_closed (path, end_date = end_date)
         counts <- cm_metric_committer_count (path, end_date = end_date)
         # has number of unique commiters for (watchers or forks, issues, prs)
 
@@ -88,7 +88,7 @@ cm_model_proj_engagement <- function (path,
         #   cm_metric_pr_review_duration (path, end_date = end_date)
     } else {
 
-        num_prs_merged <- metrics_data$num_prs_merged
+        num_prs_merged <- metrics_data$change_req_n_closed
         counts <- metrics_data$committer_count
         num_code_ctbs <- metrics_data$ctb_count
         num_issues_closed <- metrics_data$issues_closed
@@ -127,17 +127,14 @@ cm_model_proj_awareness <- function (path,
     if (is.null (metrics_data)) {
 
         num_forks <- cm_metric_num_forks (path, end_date = end_date)
-        num_stars <- cm_metric_popularity (path, end_date = end_date)
+        num_stars <- cm_metric_num_stars (path, end_date = end_date)
 
     } else {
 
         num_forks <- metrics_data$num_forks
-        num_stars <- metrics_data$popularity
+        num_stars <- metrics_data$num_stars
 
     }
-
-    num_stars <- num_stars [["stars"]]
-    num_forks <- num_forks [["num_in_period"]]
 
     res <- c (num_forks, num_stars)
     res [which (res == 0)] <- 1
@@ -165,7 +162,7 @@ cm_model_community_activity <- function (path,
         ctbs <- cm_metric_ctb_count (path, end_date = end_date)
         # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each
         # as number of unique authors.
-        prs <- cm_metric_pr_reviews (path, end_date = end_date)
+        prs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
 
         num_releases <- cm_metric_recent_releases (path, end_date = end_date)
         issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
@@ -174,24 +171,21 @@ cm_model_community_activity <- function (path,
 
         # ----- Model includes frequencies of both commits and comments, but
         # ----- these are here treated instead as direct counts.
-        commit_count <- cm_metric_commit_freq (path, end_date = end_date)
+        commit_count <- cm_metric_commit_count (path, end_date = end_date)
         comment_counts <- cm_metric_issue_cmt_count (path, end_date = end_date)
 
     } else {
 
         ctbs <- metrics_data$ctb_count
-        prs <- metrics_data$pr_reviews
+        prs_approved <- metrics_data$pr_reviews_approved
         num_releases <- metrics_data$recent_releases
         issues_updated <- metrics_data$issue_updates
         num_maintainers <-
             metrics_data$maintainer_count
-        commit_count <- metrics_data$commit_freq
+        commit_count <- metrics_data$commit_count
         comment_counts <- metrics_data$issue_cmt_count
 
     }
-
-    commit_count <- commit_count [["mean"]]
-    prs_approved <- prs [["approved_count"]]
 
     res <- c (
         ctbs, prs_approved, num_releases, issues_updated,
@@ -242,9 +236,8 @@ cm_model_oss_compliance <- function (path,
     }
 
     bp_badge <- as.integer (bp_badge)
-    lic_declared <- as.integer (length (lic_declared) > 0L)
+    lic_declared <- as.integer (lic_declared)
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
-    libyears <- libyears [["mean"]]
 
     num_deps <- ifelse (depcount == 0L, 0, log10 (depcount))
 
@@ -269,40 +262,30 @@ cm_model_viability_community <- function (path,
 
     if (is.null (metrics_data)) {
 
-        counts <- cm_metric_committer_count (path, end_date = end_date)
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        watcher_count <- cm_metric_watcher_count (path, end_date = end_date)
+        pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
+        pr_n_closed <- cm_metric_change_req_n_closed (path, end_date = end_date)
         num_auts <- cm_metric_maintainer_count (path, end_date = end_date)
         libyears <- cm_metric_libyears (path)
 
     } else {
 
-        counts <- metrics_data$committer_count
+        watcher_count <- metrics_data$watcher_count
         pr_dat <- metrics_data$change_req
+        pr_n_opened <- metrics_data$change_req_n_opened
+        pr_n_closed <- metrics_data$change_req_n_closed
         num_auts <- metrics_data$maintainer_count
         libyears <- metrics_data$libyears
 
     }
 
-    # "counts" has number of unique commiters for
-    # (watchers or forks, issues, prs)
-    counts <- counts [["watchers"]] # stars and forks, as unique users
     # The model includes "Change Requests" (as direct count), and "Change
     # Request Closure Ratio". The latter here is replaced by number of "closed"
-    # change requests, which is the number merged. Thus each opeend and merged
+    # change requests, which is the number merged. Thus each opened and merged
     # PR counts for 2, while each unmerged counts onlyu for 1.
-    if (length (pr_dat) > 1L) {
-        pr_dat <- pr_dat [c ("n_opened", "n_closed")]
-    } else {
-        pr_dat <- rep (NA_real_, 2L)
-    }
-
-    num_auts <- num_auts [["recent"]]
-
-    # lower values of libyears are  better, so appended below in negated form:
-    libyears <- libyears [["mean"]]
-
-    res <- c (counts, pr_dat, num_auts)
+    res <- c (watcher_count, pr_n_opened, pr_n_closed, num_auts)
     res [which (res == 0)] <- 1
+    # lower values of libyears are  better, so appended below in negated form:
     res <- sum (c (log10 (res), -libyears), na.rm = TRUE)
 
     return (res)
@@ -322,35 +305,29 @@ cm_model_viability_starter <- function (path,
 
     if (is.null (metrics_data)) {
 
-        abs <- cm_metric_contrib_absence (path, end_date = end_date)
+        # Only take absence factors for commits, as authors are be definition
+        # very highly correlated.
+        abs <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path)
         lic_declared <- cm_metric_licenses_declared (path)
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
+        pr_n_closed <- cm_metric_change_req_n_closed (path, end_date = end_date)
         libyears <- cm_metric_libyears (path)
 
     } else {
 
-        abs <- metrics_data$contrib_absence
+        abs <- metrics_data$contrib_absence_commits
         ele <- metrics_data$elephant_factor
         lic_declared <- metrics_data$licenses_declared
-        pr_dat <- metrics_data$change_req
+        pr_n_opened <- metrics_data$change_req_n_opened
+        pr_n_closed <- metrics_data$change_req_n_closed
         libyears <- metrics_data$libyears
 
     }
 
-    # Only take absence factors for commits, as authors are be definition very
-    # highly correlcted.
-    abs <- abs [["ncommits"]]
-    ele <- ele [["ncommits"]]
-    lic_declared <- as.integer (length (lic_declared) > 0L)
-    if (length (pr_dat) > 1L) {
-        pr_dat <- pr_dat [c ("n_opened", "n_closed")]
-    } else {
-        pr_dat <- rep (NA_real_, 2L)
-    }
-    libyears <- libyears [["mean"]]
+    lic_declared <- as.integer (lic_declared)
 
-    res <- c (abs, ele, lic_declared, pr_dat)
+    res <- c (abs, ele, lic_declared, pr_n_opened, pr_n_closed)
     res [which (res == 0)] <- 1
     res <- sum (c (log10 (res), -libyears), na.rm = TRUE)
 
@@ -373,50 +350,42 @@ cm_model_viability_gov <- function (path,
     if (is.null (metrics_data)) {
 
         # ---- Higher values are better:
-        labs <- cm_metric_label_inclusivity (path, end_date = end_date)
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
-        pop <- cm_metric_popularity (path, end_date = end_date)
+        labs_prop_friendly <-
+            cm_metric_label_inclusivity (path, end_date = end_date)
+        pr_closure_ratio <-
+            cm_metric_change_req_prop_merged (path, end_date = end_date)
+        num_forks <- cm_metric_num_forks (path, end_date = end_date)
+        num_stars <- cm_metric_num_stars (path, end_date = end_date)
 
         # ----- Lower values are better:
-        issues <- cm_metric_time_to_close (path, end_date = end_date)
+        issue_time_to_close <-
+            cm_metric_time_to_close (path, end_date = end_date)
         libyears <- cm_metric_libyears (path)
         issue_age <- cm_metric_issue_age (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
-        labs <- metrics_data$label_inclusivity
-        pr_dat <- metrics_data$change_req
-        pop <- metrics_data$popularity
-        issues <- metrics_data$time_to_close
+        labs_prop_friendly <- metrics_data$label_inclusivity
+        pr_closure_ratio <- metrics_data$change_req_prop_merged
+        num_forks <- metrics_data$num_forks
+        num_stars <- metrics_data$num_stars
+        issue_time_to_close <- metrics_data$time_to_close
         libyears <- metrics_data$libyears
         issue_age <- metrics_data$issue_age
         rel_freq <- metrics_data$release_freq
 
     }
 
-    iss_time_to_close <- issues [["mean"]] # [0, N >> 1]
-    issue_age <- issue_age [["mean"]] # [0, N >> 1]
-    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
-
-    labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
-    pr_closure_ratio <- NA_real_
-    if (length (pr_dat) > 1L) {
-        pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
-    }
-    pop <- pop [c ("forks", "stars")] # [0, N >> 1]
-
-    libyears <- libyears [["mean"]]
-
     # ------ Combine all:
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
-    pop [which (pop == 0)] <- 1
-    pop <- log10 (pop) # higher is better
-    res_days <- c (iss_time_to_close, issue_age, rel_freq)
+    num_forks <- ifelse (num_forks == 0, 0, log10 (num_forks))
+    num_stars <- ifelse (num_stars == 0, 0, log10 (num_stars))
+    res_days <- c (issue_time_to_close, issue_age, rel_freq)
     res_days [which (res_days == 0)] <- 1
     res_days <- log10 (res_days) # lower is better
 
-    res <- c (res_01, pop, -res_days, -libyears)
+    res <- c (res_01, num_forks, num_stars, -res_days, -libyears)
     return (sum (res, na.rm = TRUE))
 }
 
@@ -435,31 +404,26 @@ cm_model_viability_strategy <- function (path,
     if (is.null (metrics_data)) {
 
         langs <- cm_metric_languages (path)
-        bus <- cm_metric_contrib_absence (path, end_date = end_date)
+        bus <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
         langs <- metrics_data$languages
-        bus <- metrics_data$contrib_absence
+        bus <- metrics_data$contrib_absence_commits
         ele <- metrics_data$elephant_factor
         rel_freq <- metrics_data$release_freq
 
     }
 
-    lang_dist_mn <- mean (langs$ncode_pc) # lower is better
-    # Re-scale this so that 4 languages translates to a value of 1:
-    lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)
+    bus <- log10 (bus) # higher is better
+    ele <- log10 (ele) # higher is better
 
-    bus <- log10 (bus [["ncommits"]]) # higher is better
-    ele <- log10 (ele [["ncommits"]]) # higher is better
-
-    req_freq <- rel_freq [["mean"]]
     rel_freq <- log10 (ifelse (rel_freq == 0, 1, rel_freq))
 
     res_0N <- c (bus, ele, -rel_freq)
-    res <- lang_dist_mn + sum (res_0N, na.rm = TRUE)
+    res <- langs + sum (res_0N, na.rm = TRUE)
 
     return (res)
 }
@@ -481,12 +445,12 @@ cm_model_collab_devel_index <- function (path,
         # metrics that are in [0, 1]:
         has_ci_tests <- cm_metric_has_ci (path, end_date = end_date)
 
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        prop_code_from_prs <- cm_metric_change_req_prop_code (path, end_date = end_date)
         issues_to_prs <- cm_metric_issues_to_prs (path, end_date = end_date)
 
         # metrics that are in [0, N ~ O(1)]:
         num_ctbs <- cm_metric_num_contributors (path, end_date = end_date)
-        pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
+        num_pr_revs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
         num_forks <- cm_metric_num_forks (path, end_date = end_date)
 
         # matrics that are in [0, N >> 1]:
@@ -496,26 +460,18 @@ cm_model_collab_devel_index <- function (path,
     } else {
 
         has_ci_tests <- metrics_data$has_ci
-        pr_dat <- metrics_data$change_req
+        prop_code_from_prs <- metrics_data$change_req_prop_code
         issues_to_prs <- metrics_data$issues_to_prs
         num_ctbs <- metrics_data$num_contributors
-        pr_dat <- metrics_data$pr_reviews
+        num_pr_revs_approved <- metrics_data$pr_reviews_approved
         num_forks <- metrics_data$num_forks
         num_commits <- metrics_data$num_commits
         code_change_lines <- metrics_data$code_change_lines
 
     }
 
-    pr_prop_code <- 0
-    if (length (pr_dat) > 1L) {
-        pr_prop_code <- pr_dat [["prop_code_from_prs"]]
-    }
-
-    num_pr_reviews <- pr_dat [["approved_count"]]
-    num_forks <- num_forks [["num_in_period"]]
-
-    res_O1 <- c (has_ci_tests, pr_prop_code, issues_to_prs)
-    res_ON <- c (num_ctbs, num_pr_reviews, num_forks)
+    res_O1 <- c (has_ci_tests, prop_code_from_prs, issues_to_prs)
+    res_ON <- c (num_ctbs, num_pr_revs_approved, num_forks)
     res_ON2 <- c (num_commits, code_change_lines)
     res_ON2 [which (res_ON2 == 0)] <- 1
     res_ON2 <- log10 (res_ON2)
@@ -551,7 +507,8 @@ cm_model_comm_serv_support <- function (path,
         # Metrics measured in N > 1, for which higher is better:
         issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
         issues_active <- cm_metric_issues_active (path, end_date = end_date)
-        pr_num_revs <- cm_metric_pr_reviews (path, end_date = end_date)
+        pr_num_revs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
+        pr_num_revs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
 
     } else {
 
@@ -562,15 +519,12 @@ cm_model_comm_serv_support <- function (path,
         pr_dur_mn <- metrics_data$pr_review_duration
         issue_num_cmts <- metrics_data$issue_comments
         issues_active <- metrics_data$issues_active
-        pr_num_revs <- metrics_data$pr_reviews
+        pr_num_revs_approved <- metrics_data$pr_reviews_approved
+        pr_num_revs_rejected <- metrics_data$pr_reviews_rejected
 
     }
 
-    issue_age <- issue_age [["mean"]]
     pr_age <- pr_age [["mean"]]
-
-    pr_num_revs_approved <- pr_num_revs [["approved_count"]]
-    pr_num_revs_rejected <- pr_num_revs [["rejected_count"]]
 
     res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur_mn)
     res_ON <-
@@ -604,31 +558,23 @@ cm_model_starter_health <- function (path,
         time_first_resp <- cm_metric_issue_response_time (path, end_date = end_date)
 
         # Metrics in [0, 1], for which higher is better:
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
 
         # Metrics in [0, N], for which higher is better:
-        abs <- cm_metric_contrib_absence (path, end_date = end_date)
+        abs <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
         time_first_resp <- metrics_data$issue_response_time
-        pr_dat <- metrics_data$change_req
-        abs <- metrics_data$contrib_absence
+        pr_closure_ratio <- metrics_data$change_req_prop_merged
+        abs <- metrics_data$contrib_absence_commits
         rel_freq <- metrics_data$release_freq
 
     }
 
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
-    pr_closure_ratio <- NA_real_
-    if (length (pr_dat) > 1L) {
-        pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
-    }
-
-    abs <- abs [["ncommits"]]
-
-    rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
     rel_freq <- ifelse (rel_freq == 0, 1, rel_freq)
 
     res_high <- c (pr_closure_ratio, log10 (abs), log10 (rel_freq))
@@ -665,9 +611,9 @@ cm_model_comm_welcoming <- function (path,
         lic_declared <- cm_metric_licenses_declared (path)
         ci_test_data <- cm_metric_test_coverage (path)
         bp_badge <- cm_metric_best_practices (path)
-        pr_dat <- cm_metric_change_req (path, end_date = end_date)
+        pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
 
-        bus <- cm_metric_contrib_absence (path, end_date = end_date)
+        bus <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path)
         num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date)
 
@@ -679,35 +625,28 @@ cm_model_comm_welcoming <- function (path,
         lic_declared <- metrics_data$licenses_declared
         ci_test_data <- metrics_data$test_coverage
         bp_badge <- metrics_data$best_practices
-        pr_dat <- metrics_data$change_req
-        bus <- metrics_data$contrib_absence
+        pr_closure_ratio <- metrics_data$change_req_prop_merged
+        bus <- metrics_data$contrib_absence_commits
         ele <- metrics_data$elephant_factor
         num_code_ctbs <- metrics_data$ctb_count
 
     }
 
-    issue_age <- issue_age [["mean"]] # [0, N >> 1]
     issue_age <- ifelse (issue_age == 0, 1, issue_age)
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
     val_days <- log10 (c (issue_age, time_first_resp))
 
-    lic_declared <- as.integer (length (lic_declared) > 0L)
+    lic_declared <- as.integer (lic_declared)
     bp_badge <- as.integer (bp_badge)
 
     test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)
     test_cov <- test_cov / 100
-    pr_closure_ratio <- NA
-    if (length (pr_dat) > 1L) {
-        pr_closure_ratio <- pr_dat [["prop_merged"]] # [0, 1]
-    }
 
     val_01 <-
         c (lic_coverage, lic_declared, bp_badge, test_cov, pr_closure_ratio)
 
     # ----- Values in [0, N] for which higher are better:
-    ele <- ele [["ncommits"]]
-    bus <- bus [["ncommits"]]
     num_code_ctbs <- num_code_ctbs [["code"]]
     num_code_ctbs <- ifelse (num_code_ctbs == 0, 1, num_code_ctbs)
 

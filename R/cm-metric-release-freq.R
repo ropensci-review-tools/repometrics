@@ -27,7 +27,8 @@ cm_data_release_freq <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
-    cm_data_release_freq (path, end_date)
+    dat <- cm_data_release_freq (path, end_date)
+    return (dat [["mean"]])
 }
 
 cm_data_recent_releases <- function (path, end_date = Sys.Date ()) {

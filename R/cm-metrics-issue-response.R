@@ -34,7 +34,7 @@ cm_data_issue_response_time <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     issue_responses <- cm_data_issue_response_time (path, end_date)
-    res <- mean (as.integer (issue_responses$response_time), na.rm = TRUE)
+    mean (as.integer (issue_responses$response_time), na.rm = TRUE)
 }
 
 cm_data_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
@@ -96,7 +96,8 @@ cm_data_time_to_close <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
-    cm_data_time_to_close (path, end_date)
+    dat <- cm_data_time_to_close (path, end_date)
+    return (dat [["mean"]])
 }
 
 #' CHAOSS metric "Change Request Closure Ratio"
@@ -167,7 +168,8 @@ cm_data_issue_age <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
-    cm_data_issue_age (path, end_date)
+    dat <- cm_data_issue_age (path, end_date)
+    return (dat [["mean"]])
 }
 
 #' CHAOSS metric for "Issues Active", which is simply the number of active

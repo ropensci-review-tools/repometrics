@@ -47,6 +47,7 @@ cm_data_commit_freq <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (commits))
 }
 
-cm_metric_commit_freq <- function (path, end_date = Sys.Date ()) {
-    cm_data_commit_freq (path, end_date)
+cm_metric_commit_count <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_commit_freq (path, end_date)
+    return (dat [["mean"]])
 }
