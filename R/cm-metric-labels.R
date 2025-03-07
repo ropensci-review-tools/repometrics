@@ -55,5 +55,6 @@ cm_data_label_inclusivity <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
-    cm_data_label_inclusivity (path, end_date)
+    dat <- cm_data_label_inclusivity (path, end_date)
+    return (dat [["prop_friendly_overall"]])
 }

@@ -307,11 +307,9 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 3L)
-    expect_named (
-        res,
-        c ("prop_labelled", "prop_labelled_friendly", "prop_friendly_overall")
-    )
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (res >= 0)
 })
 
 test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
@@ -639,7 +637,7 @@ test_that ("cm metric collate all", {
     lens_expected <- as.integer (c (
         1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
         1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
-        1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 5, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
         14, 1, 1, 1, 4, 3, 1, 1
     ))

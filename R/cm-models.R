@@ -350,20 +350,23 @@ cm_model_viability_gov <- function (path,
     if (is.null (metrics_data)) {
 
         # ---- Higher values are better:
-        labs <- cm_metric_label_inclusivity (path, end_date = end_date)
-        pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
+        labs_prop_friendly <-
+            cm_metric_label_inclusivity (path, end_date = end_date)
+        pr_closure_ratio <-
+            cm_metric_change_req_prop_merged (path, end_date = end_date)
         num_forks <- cm_metric_num_forks (path, end_date = end_date)
         num_stars <- cm_metric_num_stars (path, end_date = end_date)
 
         # ----- Lower values are better:
-        issue_time_to_close <- cm_metric_time_to_close (path, end_date = end_date)
+        issue_time_to_close <-
+            cm_metric_time_to_close (path, end_date = end_date)
         libyears <- cm_metric_libyears (path)
         issue_age <- cm_metric_issue_age (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
-        labs <- metrics_data$label_inclusivity
+        labs_prop_friendly <- metrics_data$label_inclusivity
         pr_closure_ratio <- metrics_data$change_req_prop_merged
         num_forks <- metrics_data$num_forks
         num_stars <- metrics_data$num_stars
@@ -373,8 +376,6 @@ cm_model_viability_gov <- function (path,
         rel_freq <- metrics_data$release_freq
 
     }
-
-    labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
 
     # ------ Combine all:
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
