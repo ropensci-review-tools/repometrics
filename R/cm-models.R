@@ -325,7 +325,6 @@ cm_model_viability_starter <- function (path,
 
     }
 
-    ele <- ele [["ncommits"]]
     lic_declared <- as.integer (lic_declared)
 
     res <- c (abs, ele, lic_declared, pr_n_opened, pr_n_closed)
@@ -426,7 +425,7 @@ cm_model_viability_strategy <- function (path,
     lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)
 
     bus <- log10 (bus) # higher is better
-    ele <- log10 (ele [["ncommits"]]) # higher is better
+    ele <- log10 (ele) # higher is better
 
     req_freq <- rel_freq [["mean"]]
     rel_freq <- log10 (ifelse (rel_freq == 0, 1, rel_freq))
@@ -662,7 +661,6 @@ cm_model_comm_welcoming <- function (path,
         c (lic_coverage, lic_declared, bp_badge, test_cov, pr_closure_ratio)
 
     # ----- Values in [0, N] for which higher are better:
-    ele <- ele [["ncommits"]]
     num_code_ctbs <- num_code_ctbs [["code"]]
     num_code_ctbs <- ifelse (num_code_ctbs == 0, 1, num_code_ctbs)
 

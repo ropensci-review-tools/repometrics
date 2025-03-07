@@ -473,9 +473,9 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     expect_equal (res1, dat [["ncommits"]])
 
     expect_type (res2, "integer")
-    expect_length (res2, 3L)
-    expect_named (res2, c ("ncommits", "nfiles_changed", "lines_changed"))
-    expect_true (all (res2 > 0L))
+    expect_length (res2, 1L)
+    expect_named (res2, NULL)
+    expect_true (res2 > 0L)
 })
 
 end_date <- as.Date ("2024-12-01")
@@ -637,7 +637,7 @@ test_that ("cm metric collate all", {
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
         1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
-        1, 4, 1, 1, 1, 3, 1, 3, 4, 1,
+        1, 4, 1, 1, 1, 1, 1, 3, 4, 1,
         1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
         14, 1, 1, 2, 4, 3, 4, 1
