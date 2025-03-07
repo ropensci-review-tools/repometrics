@@ -30,3 +30,8 @@ cm_data_popularity <- function (path, end_date = Sys.Date ()) {
 cm_metric_popularity <- function (path, end_date = Sys.Date ()) {
     cm_data_popularity (path, end_date)
 }
+
+cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_popularity (path, end_date)
+    return (dat [["forks"]])
+}
