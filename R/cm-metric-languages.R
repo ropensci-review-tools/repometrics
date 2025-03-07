@@ -39,5 +39,9 @@ cm_data_languages <- function (path, end_date = NULL) {
 }
 
 cm_metric_languages <- function (path, end_date = NULL) {
-    cm_data_languages (path, end_date)
+    dat <- cm_data_languages (path, end_date)
+    lang_dist_mn <- mean (dat$ncode_pc) # lower is better
+    # Re-scale this so that 4 languages translates to a value of 1:
+    lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)
+    return (lang_dist_mn)
 }

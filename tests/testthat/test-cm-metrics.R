@@ -430,22 +430,27 @@ test_that ("cm metric programming languages", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_metric_languages (path)
+    dat <- cm_data_languages (path)
+    met <- cm_metric_languages (path) # re-scaled version of ncode_pc
 
     fs::dir_delete (path)
 
-    expect_s3_class (res, "data.frame")
-    expect_true (nrow (res) > 0L)
-    expect_equal (ncol (res), 5L)
+    expect_s3_class (dat, "data.frame")
+    expect_true (nrow (dat) > 0L)
+    expect_equal (ncol (dat), 5L)
     expect_identical (
-        names (res),
+        names (dat),
         c ("language", "nfiles", "ncode", "nfiles_pc", "ncode_pc")
     )
-    expect_equal (res$language [1], "R")
-    expect_type (res$nfiles, "integer")
-    expect_type (res$ncode, "integer")
-    expect_type (res$nfiles_pc, "double")
-    expect_type (res$ncode_pc, "double")
+    expect_equal (dat$language [1], "R")
+    expect_type (dat$nfiles, "integer")
+    expect_type (dat$ncode, "integer")
+    expect_type (dat$nfiles_pc, "double")
+    expect_type (dat$ncode_pc, "double")
+
+    expect_type (met, "double")
+    expect_length (met, 1L)
+    expect_true (met > 0 && met < 1)
 })
 
 test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
@@ -637,7 +642,7 @@ test_that ("cm metric collate all", {
     lens_expected <- as.integer (c (
         1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
         1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
-        1, 1, 1, 1, 1, 1, 5, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
         14, 1, 1, 1, 4, 3, 1, 1
     ))
