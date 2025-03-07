@@ -232,7 +232,8 @@ cm_data_pr_age <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_age (path, end_date)
+    dat <- cm_data_pr_age (path, end_date)
+    return (dat [["mean"]])
 }
 
 #' CHAOSS metric "Change Request Reviews", which assesses "to what extent are

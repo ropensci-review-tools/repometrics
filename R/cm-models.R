@@ -74,7 +74,7 @@ cm_model_proj_engagement <- function (path,
         # has number of unique commiters for (watchers or forks, issues, prs)
 
         num_code_ctbs <-
-            cm_metric_ctb_count (path, end_date = end_date) [["code"]]
+            cm_metric_ctb_count (path, end_date = end_date)
 
         num_issues_closed <-
             cm_metric_issues_closed (path, end_date = end_date)
@@ -159,7 +159,7 @@ cm_model_community_activity <- function (path,
 
 
         # ----- Single integer results which can be directly added:
-        ctbs <- cm_metric_ctb_count (path, end_date = end_date)
+        num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date)
         # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each
         # as number of unique authors.
         prs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
@@ -176,7 +176,7 @@ cm_model_community_activity <- function (path,
 
     } else {
 
-        ctbs <- metrics_data$ctb_count
+        num_code_ctbs <- metrics_data$ctb_count
         prs_approved <- metrics_data$pr_reviews_approved
         num_releases <- metrics_data$recent_releases
         issues_updated <- metrics_data$issue_updates
@@ -188,7 +188,7 @@ cm_model_community_activity <- function (path,
     }
 
     res <- c (
-        ctbs, prs_approved, num_releases, issues_updated,
+        num_code_ctbs, prs_approved, num_releases, issues_updated,
         num_maintainers, commit_count, comment_counts
     )
     res [which (res == 0)] <- 1
@@ -524,8 +524,6 @@ cm_model_comm_serv_support <- function (path,
 
     }
 
-    pr_age <- pr_age [["mean"]]
-
     res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur_mn)
     res_ON <-
         c (issue_num_cmts, issues_active, pr_num_revs_approved, pr_num_revs_rejected)
@@ -647,7 +645,6 @@ cm_model_comm_welcoming <- function (path,
         c (lic_coverage, lic_declared, bp_badge, test_cov, pr_closure_ratio)
 
     # ----- Values in [0, N] for which higher are better:
-    num_code_ctbs <- num_code_ctbs [["code"]]
     num_code_ctbs <- ifelse (num_code_ctbs == 0, 1, num_code_ctbs)
 
     val_0N <- log10 (c (bus, ele, num_code_ctbs))
