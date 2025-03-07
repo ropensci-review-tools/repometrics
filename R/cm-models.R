@@ -236,7 +236,7 @@ cm_model_oss_compliance <- function (path,
     }
 
     bp_badge <- as.integer (bp_badge)
-    lic_declared <- as.integer (length (lic_declared) > 0L)
+    lic_declared <- as.integer (lic_declared)
     defect_res_dur <- ifelse (defect_res_dur > 0, log10 (defect_res_dur), 0)
     libyears <- libyears [["mean"]]
 
@@ -336,7 +336,7 @@ cm_model_viability_starter <- function (path,
     # highly correlcted.
     abs <- abs [["ncommits"]]
     ele <- ele [["ncommits"]]
-    lic_declared <- as.integer (length (lic_declared) > 0L)
+    lic_declared <- as.integer (lic_declared)
     if (length (pr_dat) > 1L) {
         pr_dat <- pr_dat [c ("n_opened", "n_closed")]
     } else {
@@ -686,7 +686,7 @@ cm_model_comm_welcoming <- function (path,
 
     val_days <- log10 (c (issue_age, time_first_resp))
 
-    lic_declared <- as.integer (length (lic_declared) > 0L)
+    lic_declared <- as.integer (lic_declared)
     bp_badge <- as.integer (bp_badge)
 
     test_cov <- ifelse (nrow (ci_test_data) > 0, ci_test_data$coverage, 0.0)

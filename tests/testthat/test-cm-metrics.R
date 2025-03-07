@@ -526,17 +526,24 @@ test_that ("cm metric licenses declared + best practices", {
 
     path <- generate_test_pkg ()
 
+    lic_dat <- cm_data_licenses_declared (path)
+
+    expect_type (lic_dat, "character")
+    expect_named (lic_dat, NULL)
+    expect_true (length (lic_dat) >= 1)
+    lic_ptn <- paste0 (included_licenses, collapse = "|")
+    expect_true (all (grepl (lic_ptn, lic_dat)))
+
     lic <- cm_metric_licenses_declared (path)
     n <- cm_metric_license_coverage (path)
     bp <- cm_metric_best_practices (path)
 
     fs::dir_delete (path)
 
-    expect_type (lic, "character")
+    expect_type (lic, "logical")
+    expect_length (lic, 1L)
     expect_named (lic, NULL)
-    expect_true (length (lic) >= 1)
-    lic_ptn <- paste0 (included_licenses, collapse = "|")
-    expect_true (all (grepl (lic_ptn, lic)))
+    expect_true (lic)
 
     expect_type (n, "double")
     expect_length (n, 1L)

@@ -5,12 +5,18 @@
 #' @param path Path to local repo
 #' @param end_date Not used here, but specified for consistent interface to all
 #' @noRd
-cm_metric_licenses_declared <- function (path, end_date = NULL) {
+cm_data_licenses_declared <- function (path, end_date = NULL) {
 
     requireNamespace ("desc", quietly = TRUE)
 
     lic <- unname (desc::desc_get ("License", path))
     return (gsub ("^\\s*|\\s*$", "", strsplit (lic, ",") [[1]]))
+}
+
+cm_metric_licenses_declared <- function (path, end_date = NULL) {
+
+    lic_dat <- cm_data_licenses_declared (path)
+    return (length (lic_dat) > 0L)
 }
 
 #' Metric fo rnumber of files with declared licenses
