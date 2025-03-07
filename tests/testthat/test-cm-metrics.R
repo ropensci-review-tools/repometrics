@@ -323,8 +323,9 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
     fs::dir_delete (path)
 
     expect_type (res, "double")
-    expect_length (res, 4L)
-    expect_named (res, c ("mean", "sd", "median", "sum"))
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (is.na (res))
 })
 
 test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
@@ -394,9 +395,9 @@ test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
     fs::dir_delete (path)
 
     expect_type (res, "integer")
-    expect_length (res, 3L)
-    expect_named (res, c ("mean", "median", "n"))
-    expect_equal (res [["n"]], 0L)
+    expect_length (res, 1L)
+    expect_named (res, NULL)
+    expect_true (is.na (res))
 })
 
 test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
@@ -637,10 +638,10 @@ test_that ("cm metric collate all", {
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
         1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
-        1, 4, 1, 1, 1, 1, 1, 3, 4, 1,
+        1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
         1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
-        14, 1, 1, 2, 4, 3, 4, 1
+        14, 1, 1, 2, 4, 3, 1, 1
     ))
     expect_equal (lens, lens_expected)
 })

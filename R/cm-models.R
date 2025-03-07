@@ -356,7 +356,7 @@ cm_model_viability_gov <- function (path,
         num_stars <- cm_metric_num_stars (path, end_date = end_date)
 
         # ----- Lower values are better:
-        issues <- cm_metric_time_to_close (path, end_date = end_date)
+        issue_time_to_close <- cm_metric_time_to_close (path, end_date = end_date)
         libyears <- cm_metric_libyears (path)
         issue_age <- cm_metric_issue_age (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
@@ -367,15 +367,13 @@ cm_model_viability_gov <- function (path,
         pr_closure_ratio <- metrics_data$change_req_prop_merged
         num_forks <- metrics_data$num_forks
         num_stars <- metrics_data$num_stars
-        issues <- metrics_data$time_to_close
+        issue_time_to_close <- metrics_data$time_to_close
         libyears <- metrics_data$libyears
         issue_age <- metrics_data$issue_age
         rel_freq <- metrics_data$release_freq
 
     }
 
-    iss_time_to_close <- issues [["mean"]] # [0, N >> 1]
-    issue_age <- issue_age [["mean"]] # [0, N >> 1]
     rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
 
     labs_prop_friendly <- labs [["prop_friendly_overall"]] # [0, 1]
@@ -384,7 +382,7 @@ cm_model_viability_gov <- function (path,
     res_01 <- c (labs_prop_friendly, pr_closure_ratio) # higher is better
     num_forks <- ifelse (num_forks == 0, 0, log10 (num_forks))
     num_stars <- ifelse (num_stars == 0, 0, log10 (num_stars))
-    res_days <- c (iss_time_to_close, issue_age, rel_freq)
+    res_days <- c (issue_time_to_close, issue_age, rel_freq)
     res_days [which (res_days == 0)] <- 1
     res_days <- log10 (res_days) # lower is better
 
@@ -532,7 +530,6 @@ cm_model_comm_serv_support <- function (path,
 
     }
 
-    issue_age <- issue_age [["mean"]]
     pr_age <- pr_age [["mean"]]
 
     pr_num_revs_approved <- pr_num_revs [["approved_count"]]
@@ -645,7 +642,6 @@ cm_model_comm_welcoming <- function (path,
 
     }
 
-    issue_age <- issue_age [["mean"]] # [0, N >> 1]
     issue_age <- ifelse (issue_age == 0, 1, issue_age)
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
 
