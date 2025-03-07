@@ -194,8 +194,9 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_true (all (cmts [which (!is.na (cmts))] >= 0))
 
     expect_type (age, "double")
-    expect_length (age, 4L)
-    expect_named (age, c ("mean", "sd", "median", "sum"))
+    expect_length (age, 1L)
+    expect_named (age, NULL)
+    expect_true (is.na (age))
 
     expect_type (prs_approved, "integer")
     expect_length (prs_approved, 1L)
@@ -647,7 +648,7 @@ test_that ("cm metric collate all", {
         1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
         1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
+        1, 1, 1, 1, 1, 1, 1, 4, 0, 1,
         1, 1, 1, 1, 1, 4, 3, 1, 1
     ))
     expect_equal (lens, lens_expected)

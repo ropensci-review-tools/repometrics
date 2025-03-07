@@ -524,8 +524,6 @@ cm_model_comm_serv_support <- function (path,
 
     }
 
-    pr_age <- pr_age [["mean"]]
-
     res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur_mn)
     res_ON <-
         c (issue_num_cmts, issues_active, pr_num_revs_approved, pr_num_revs_rejected)
