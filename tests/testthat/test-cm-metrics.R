@@ -111,15 +111,37 @@ test_that ("cm metric change reqests", { # R/cm-metrics-change-req.R
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 10000)
 
-    pr_dat <- cm_metric_change_req (path, end_date = end_date)
-
-    options ("repometrics_period" = op)
-    fs::dir_delete (path)
+    pr_dat <- cm_data_change_req (path, end_date = end_date)
 
     expect_type (pr_dat, "double")
     expect_length (pr_dat, 4L)
     expect_named (pr_dat, c ("n_opened", "n_closed", "prop_merged", "prop_code_from_prs"))
     expect_true (all (pr_dat > 0))
+
+    pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
+    pr_n_closed <- cm_metric_change_req_n_closed (path, end_date = end_date)
+    pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
+    prop_code_from_prs <- cm_metric_change_req_prop_code (path, end_date = end_date)
+
+    options ("repometrics_period" = op)
+    fs::dir_delete (path)
+
+    expect_type (pr_n_opened, "integer")
+    expect_length (pr_n_opened, 1L)
+    expect_true (pr_n_opened > 0)
+
+    expect_type (pr_n_closed, "integer")
+    expect_length (pr_n_closed, 1L)
+    expect_true (pr_n_closed > 0)
+
+    expect_type (pr_closure_ratio, "double")
+    expect_length (pr_closure_ratio, 1L)
+    expect_true (pr_closure_ratio > 0)
+    expect_true (pr_closure_ratio <= 1)
+
+    expect_type (prop_code_from_prs, "double")
+    expect_length (prop_code_from_prs, 1L)
+    expect_true (prop_code_from_prs > 0)
 })
 
 test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
@@ -596,17 +618,17 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 45L)
+    expect_length (metrics_data, 47L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
-        1, 1, 1, 1, 1, 3, 3, 1, 4, 1,
-        1, 1, 3, 1, 3, 4, 1, 1, 1, 1,
-        1, 1, 3, 5, 1, 1, 1, 2, 1, 1,
-        1, 1, 1, 4, 1, 4, 0, 1, 14, 1,
-        1, 2, 4, 3, 4
+        1, 1, 1, 1, 1, 1, 1, 1, 3, 3,
+        1, 4, 1, 1, 1, 3, 1, 3, 4, 1,
+        1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
+        2, 1, 1, 1, 1, 4, 1, 4, 0, 1,
+        14, 1, 1, 2, 4, 3, 4
     ))
     expect_equal (lens, lens_expected)
 })

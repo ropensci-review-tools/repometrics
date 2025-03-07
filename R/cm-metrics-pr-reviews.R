@@ -252,14 +252,3 @@ cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
 cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
     cm_data_pr_reviews_approved (path, end_date)
 }
-
-cm_metric_num_prs_merged <- function (path, end_date = Sys.Date ()) {
-    pr_dat <- cm_metric_change_req (path, end_date)
-    num_prs_merged <- ifelse (
-        length (pr_dat) > 1,
-        as.integer (pr_dat [["n_closed"]]),
-        0L
-    )
-
-    return (num_prs_merged)
-}
