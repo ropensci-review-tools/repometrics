@@ -6,7 +6,7 @@
             "defect_resolution_dur"
         ],
         "proj_engagement": [
-            "num_prs_merged",
+            "change_req_n_closed",
             "committer_count",
             "ctb_count",
             "issues_closed",
@@ -15,15 +15,15 @@
         ],
         "proj_awareness": [
             "num_forks",
-            "popularity"
+            "num_stars"
         ],
         "community_activity": [
             "ctb_count",
-            "pr_reviews",
+            "pr_reviews_approved",
             "recent_releases",
             "issue_updates",
             "maintainer_count",
-            "commit_freq",
+            "commit_count",
             "issue_cmt_count"
         ],
         "oss_compliance": [
@@ -35,22 +35,26 @@
             "dependency_count"
         ],
         "viability_community": [
-            "committer_count",
+            "watcher_count",
             "change_req",
+            "change_req_n_opened",
+            "change_req_n_closed",
             "maintainer_count",
             "libyears"
         ],
         "viability_starter": [
-            "contrib_absence",
+            "contrib_absence_commits",
             "elephant_factor",
             "licenses_declared",
-            "change_req",
+            "change_req_n_opened",
+            "change_req_n_closed",
             "libyears"
         ],
         "viability_gov": [
             "label_inclusivity",
-            "change_req",
-            "popularity",
+            "change_req_prop_merged",
+            "num_forks",
+            "num_stars",
             "time_to_close",
             "libyears",
             "issue_age",
@@ -58,16 +62,16 @@
         ],
         "viability_strategy": [
             "languages",
-            "contrib_absence",
+            "contrib_absence_commits",
             "elephant_factor",
             "release_freq"
         ],
         "collab_devel_index": [
             "has_ci",
-            "change_req",
+            "change_req_prop_code",
             "issues_to_prs",
             "num_contributors",
-            "pr_reviews",
+            "pr_reviews_approved",
             "num_forks",
             "num_commits",
             "code_change_lines"
@@ -80,12 +84,13 @@
             "pr_review_duration",
             "issue_comments",
             "issues_active",
-            "pr_reviews"
+            "pr_reviews_approved",
+            "pr_reviews_rejected"
         ],
         "starter_health": [
             "issue_response_time",
-            "change_req",
-            "contrib_absence",
+            "change_req_prop_merged",
+            "contrib_absence_commits",
             "release_freq"
         ],
         "comm_welcoming": [
@@ -95,8 +100,8 @@
             "licenses_declared",
             "test_coverage",
             "best_practices",
-            "change_req",
-            "contrib_absence",
+            "change_req_prop_merged",
+            "contrib_absence_commits",
             "elephant_factor",
             "ctb_count"
         ]
