@@ -21,9 +21,23 @@ cm_data_contrib_absence <- function (path, end_date = Sys.Date ()) {
     gitlog_absence_factor (log)
 }
 
-cm_metric_contrib_absence <- function (path, end_date = Sys.Date ()) {
-    cm_data_contrib_absence (path, end_date)
+cm_metric_contrib_absence_commits <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_contrib_absence (path, end_date)
+    dat [["ncommits"]]
 }
+
+# These others are not used, as they are highly correlated with main measure
+# anyway:
+#
+# cm_metric_contrib_absence_files <- function (path, end_date = Sys.Date ()) {
+#     dat <- cm_data_contrib_absence (path, end_date)
+#     dat [["nfiles_changed"]]
+# }
+#
+# cm_metric_contrib_absence_lines <- function (path, end_date = Sys.Date ()) {
+#     dat <- cm_data_contrib_absence (path, end_date)
+#     dat [["lines_changed"]]
+# }
 
 gitlog_absence_factor <- function (log) {
 
@@ -41,6 +55,7 @@ gitlog_absence_factor <- function (log) {
         USE.NAMES = TRUE
     )
     numeric_cols <- names (numeric_cols) [which (numeric_cols)]
+    # These are ["ncommits", "nfiles_changed", "lines_changed"]
     vapply (
         numeric_cols,
         function (i) absence_factor (log, what = i),

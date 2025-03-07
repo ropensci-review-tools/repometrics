@@ -455,15 +455,22 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res1 <- cm_metric_contrib_absence (path, end_date = end_date)
+    dat <- cm_data_contrib_absence (path, end_date = end_date)
+    res1 <- cm_metric_contrib_absence_commits (path, end_date = end_date)
     res2 <- cm_metric_elephant_factor (path, end_date = end_date)
 
     fs::dir_delete (path)
 
+    expect_type (dat, "integer")
+    expect_length (dat, 3L)
+    expect_named (dat, c ("ncommits", "nfiles_changed", "lines_changed"))
+    expect_true (all (dat > 0L))
+
     expect_type (res1, "integer")
-    expect_length (res1, 3L)
-    expect_named (res1, c ("ncommits", "nfiles_changed", "lines_changed"))
-    expect_true (all (res1 > 0L))
+    expect_length (res1, 1L)
+    expect_named (res1, NULL)
+    expect_true (res1 > 0L)
+    expect_equal (res1, dat [["ncommits"]])
 
     expect_type (res2, "integer")
     expect_length (res2, 3L)
@@ -629,7 +636,7 @@ test_that ("cm metric collate all", {
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
-        1, 1, 1, 1, 1, 1, 1, 1, 3, 3,
+        1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
         1, 4, 1, 1, 1, 3, 1, 3, 4, 1,
         1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,

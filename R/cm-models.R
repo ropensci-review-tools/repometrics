@@ -305,7 +305,9 @@ cm_model_viability_starter <- function (path,
 
     if (is.null (metrics_data)) {
 
-        abs <- cm_metric_contrib_absence (path, end_date = end_date)
+        # Only take absence factors for commits, as authors are be definition
+        # very highly correlated.
+        abs <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path)
         lic_declared <- cm_metric_licenses_declared (path)
         pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
@@ -314,7 +316,7 @@ cm_model_viability_starter <- function (path,
 
     } else {
 
-        abs <- metrics_data$contrib_absence
+        abs <- metrics_data$contrib_absence_commits
         ele <- metrics_data$elephant_factor
         lic_declared <- metrics_data$licenses_declared
         pr_n_opened <- metrics_data$change_req_n_opened
@@ -323,9 +325,6 @@ cm_model_viability_starter <- function (path,
 
     }
 
-    # Only take absence factors for commits, as authors are be definition very
-    # highly correlcted.
-    abs <- abs [["ncommits"]]
     ele <- ele [["ncommits"]]
     lic_declared <- as.integer (lic_declared)
 
@@ -409,14 +408,14 @@ cm_model_viability_strategy <- function (path,
     if (is.null (metrics_data)) {
 
         langs <- cm_metric_languages (path)
-        bus <- cm_metric_contrib_absence (path, end_date = end_date)
+        bus <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
         langs <- metrics_data$languages
-        bus <- metrics_data$contrib_absence
+        bus <- metrics_data$contrib_absence_commits
         ele <- metrics_data$elephant_factor
         rel_freq <- metrics_data$release_freq
 
@@ -426,7 +425,7 @@ cm_model_viability_strategy <- function (path,
     # Re-scale this so that 4 languages translates to a value of 1:
     lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)
 
-    bus <- log10 (bus [["ncommits"]]) # higher is better
+    bus <- log10 (bus) # higher is better
     ele <- log10 (ele [["ncommits"]]) # higher is better
 
     req_freq <- rel_freq [["mean"]]
@@ -575,21 +574,19 @@ cm_model_starter_health <- function (path,
         pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
 
         # Metrics in [0, N], for which higher is better:
-        abs <- cm_metric_contrib_absence (path, end_date = end_date)
+        abs <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         rel_freq <- cm_metric_release_freq (path, end_date = end_date)
 
     } else {
 
         time_first_resp <- metrics_data$issue_response_time
         pr_closure_ratio <- metrics_data$change_req_prop_merged
-        abs <- metrics_data$contrib_absence
+        abs <- metrics_data$contrib_absence_commits
         rel_freq <- metrics_data$release_freq
 
     }
 
     time_first_resp <- ifelse (time_first_resp == 0, 1, time_first_resp)
-
-    abs <- abs [["ncommits"]]
 
     rel_freq <- rel_freq [["mean"]] # [0, N >> 1]
     rel_freq <- ifelse (rel_freq == 0, 1, rel_freq)
@@ -630,7 +627,7 @@ cm_model_comm_welcoming <- function (path,
         bp_badge <- cm_metric_best_practices (path)
         pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
 
-        bus <- cm_metric_contrib_absence (path, end_date = end_date)
+        bus <- cm_metric_contrib_absence_commits (path, end_date = end_date)
         ele <- cm_metric_elephant_factor (path)
         num_code_ctbs <- cm_metric_ctb_count (path, end_date = end_date)
 
@@ -643,7 +640,7 @@ cm_model_comm_welcoming <- function (path,
         ci_test_data <- metrics_data$test_coverage
         bp_badge <- metrics_data$best_practices
         pr_closure_ratio <- metrics_data$change_req_prop_merged
-        bus <- metrics_data$contrib_absence
+        bus <- metrics_data$contrib_absence_commits
         ele <- metrics_data$elephant_factor
         num_code_ctbs <- metrics_data$ctb_count
 
@@ -666,7 +663,6 @@ cm_model_comm_welcoming <- function (path,
 
     # ----- Values in [0, N] for which higher are better:
     ele <- ele [["ncommits"]]
-    bus <- bus [["ncommits"]]
     num_code_ctbs <- num_code_ctbs [["code"]]
     num_code_ctbs <- ifelse (num_code_ctbs == 0, 1, num_code_ctbs)
 
