@@ -165,9 +165,10 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    revs <- cm_metric_pr_reviews (path, end_date = end_date)
+    revs <- cm_data_pr_reviews (path, end_date = end_date)
     cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
-    prop_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
+    prs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
+    prs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
     age <- cm_metric_pr_age (path, end_date = end_date)
 
     options ("repometrics_period" = op)
@@ -196,9 +197,12 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_length (age, 4L)
     expect_named (age, c ("mean", "sd", "median", "sum"))
 
-    expect_type (prop_approved, "double")
-    expect_length (prop_approved, 1L)
-    expect_named (prop_approved, NULL)
+    expect_type (prs_approved, "integer")
+    expect_length (prs_approved, 1L)
+    expect_named (prs_approved, NULL)
+    expect_type (prs_rejected, "integer")
+    expect_length (prs_rejected, 1L)
+    expect_named (prs_rejected, NULL)
 })
 
 test_that ("cm metric num forks, stars", { # R/cm-metrics-num-forks.R
@@ -634,7 +638,7 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 48L)
+    expect_length (metrics_data, 49L)
     metric_fns <- get_cm_fns ("metric")
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
@@ -644,7 +648,7 @@ test_that ("cm metric collate all", {
         1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
-        14, 1, 1, 1, 4, 3, 1, 1
+        1, 1, 1, 1, 1, 4, 3, 1, 1
     ))
     expect_equal (lens, lens_expected)
 })

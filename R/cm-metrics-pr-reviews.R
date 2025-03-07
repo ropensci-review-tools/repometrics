@@ -94,8 +94,14 @@ cm_data_pr_reviews <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-cm_metric_pr_reviews <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_reviews (path, end_date)
+cm_metric_pr_revs_approved <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_pr_reviews (path, end_date)
+    return (dat [["approved_count"]])
+}
+
+cm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
+    dat <- cm_data_pr_reviews (path, end_date)
+    return (dat [["rejected_count"]])
 }
 
 cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {

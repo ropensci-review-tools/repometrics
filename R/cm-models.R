@@ -162,7 +162,7 @@ cm_model_community_activity <- function (path,
         ctbs <- cm_metric_ctb_count (path, end_date = end_date)
         # Those are [code, pr_authors, issue_authors, issue_cmt_authors], each
         # as number of unique authors.
-        prs_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
+        prs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
 
         num_releases <- cm_metric_recent_releases (path, end_date = end_date)
         issues_updated <- cm_metric_issue_updates (path, end_date = end_date)
@@ -450,7 +450,7 @@ cm_model_collab_devel_index <- function (path,
 
         # metrics that are in [0, N ~ O(1)]:
         num_ctbs <- cm_metric_num_contributors (path, end_date = end_date)
-        pr_dat <- cm_metric_pr_reviews (path, end_date = end_date)
+        num_pr_revs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
         num_forks <- cm_metric_num_forks (path, end_date = end_date)
 
         # matrics that are in [0, N >> 1]:
@@ -463,17 +463,15 @@ cm_model_collab_devel_index <- function (path,
         prop_code_from_prs <- metrics_data$change_req_prop_code
         issues_to_prs <- metrics_data$issues_to_prs
         num_ctbs <- metrics_data$num_contributors
-        pr_dat <- metrics_data$pr_reviews
+        num_pr_revs_approved <- metrics_data$pr_reviews_approved
         num_forks <- metrics_data$num_forks
         num_commits <- metrics_data$num_commits
         code_change_lines <- metrics_data$code_change_lines
 
     }
 
-    num_pr_reviews <- pr_dat [["approved_count"]]
-
     res_O1 <- c (has_ci_tests, prop_code_from_prs, issues_to_prs)
-    res_ON <- c (num_ctbs, num_pr_reviews, num_forks)
+    res_ON <- c (num_ctbs, num_pr_revs_approved, num_forks)
     res_ON2 <- c (num_commits, code_change_lines)
     res_ON2 [which (res_ON2 == 0)] <- 1
     res_ON2 <- log10 (res_ON2)
@@ -509,7 +507,8 @@ cm_model_comm_serv_support <- function (path,
         # Metrics measured in N > 1, for which higher is better:
         issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
         issues_active <- cm_metric_issues_active (path, end_date = end_date)
-        pr_num_revs <- cm_metric_pr_reviews (path, end_date = end_date)
+        pr_num_revs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
+        pr_num_revs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
 
     } else {
 
@@ -520,14 +519,12 @@ cm_model_comm_serv_support <- function (path,
         pr_dur_mn <- metrics_data$pr_review_duration
         issue_num_cmts <- metrics_data$issue_comments
         issues_active <- metrics_data$issues_active
-        pr_num_revs <- metrics_data$pr_reviews
+        pr_num_revs_approved <- metrics_data$pr_reviews_approved
+        pr_num_revs_rejected <- metrics_data$pr_reviews_rejected
 
     }
 
     pr_age <- pr_age [["mean"]]
-
-    pr_num_revs_approved <- pr_num_revs [["approved_count"]]
-    pr_num_revs_rejected <- pr_num_revs [["rejected_count"]]
 
     res_N_days <- c (issue_resp_time, issue_age, issue_res_duration, pr_age, pr_dur_mn)
     res_ON <-
