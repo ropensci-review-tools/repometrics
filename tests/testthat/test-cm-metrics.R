@@ -495,20 +495,27 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    counts_ctb <- cm_metric_ctb_count (path, end_date = end_date)
+    # data has [code, pr_authors, issue_authors, issue_cmt_authors]
+    data_ctb <- cm_data_ctb_count (path, end_date = end_date)
+    counts_ctb <- cm_metric_ctb_count (path, end_date = end_date) # code only
     counts_cmt <- cm_metric_committer_count (path, end_date = end_date)
     counts_watchers <- cm_metric_watcher_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
-    expect_type (counts_ctb, "integer")
-    expect_length (counts_ctb, 4L)
+    expect_type (data_ctb, "integer")
+    expect_length (data_ctb, 4L)
     expect_named (
-        counts_ctb,
+        data_ctb,
         c ("code", "pr_authors", "issue_authors", "issue_cmt_authors")
     )
-    expect_true (all (counts_ctb >= 0L))
-    expect_true (sum (counts_ctb) > 0L)
+    expect_true (all (data_ctb >= 0L))
+    expect_true (sum (data_ctb) > 0L)
+
+    expect_type (counts_ctb, "integer")
+    expect_length (counts_ctb, 1L)
+    expect_named (counts_ctb, NULL)
+    expect_true (counts_ctb >= 0L)
 
     expect_type (counts_cmt, "integer")
     expect_length (counts_cmt, 3L)
@@ -646,7 +653,7 @@ test_that ("cm metric collate all", {
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (
         1, 1, 1, 1, 1, 1, 1, 1, 3, 1,
-        1, 4, 1, 1, 1, 1, 1, 1, 4, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 4, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 4, 0, 1,
         1, 1, 1, 1, 1, 4, 3, 1, 1

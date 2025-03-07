@@ -30,8 +30,10 @@ cm_data_ctb_count <- function (path, end_date = Sys.Date ()) {
     )
 }
 
+# Only code contributions are actually counted
 cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
-    cm_data_ctb_count (path, end_date)
+    dat <- cm_data_ctb_count (path, end_date)
+    return (dat [["code"]])
 }
 
 #' CHAOSS metric for committer count
