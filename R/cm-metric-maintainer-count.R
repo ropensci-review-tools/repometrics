@@ -48,7 +48,8 @@ cm_data_maintainer_count <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
-    cm_data_maintainer_count (path, end_date)
+    dat <- cm_data_maintainer_count (path, end_date)
+    return (dat [["recent"]])
 }
 
 #' Match repo contributors from both git log and GitHub API to author names and

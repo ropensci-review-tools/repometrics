@@ -544,9 +544,9 @@ test_that ("cm metric maintainer count", {
     fs::dir_delete (path)
 
     expect_type (maintainers, "integer")
-    expect_length (maintainers, 2L)
-    expect_named (maintainers, expected = c ("total", "recent"))
-    expect_true (all (maintainers >= 0L))
+    expect_length (maintainers, 1L)
+    expect_named (maintainers, NULL)
+    expect_true (maintainers >= 0L)
 })
 
 test_that ("cm metric licenses declared + best practices", {
@@ -632,7 +632,7 @@ test_that ("cm metric collate all", {
         1, 1, 1, 1, 1, 1, 1, 1, 3, 3,
         1, 4, 1, 1, 1, 3, 1, 3, 4, 1,
         1, 1, 1, 1, 1, 3, 5, 1, 1, 1,
-        2, 1, 1, 1, 1, 4, 1, 4, 0, 1,
+        1, 1, 1, 1, 1, 4, 1, 4, 0, 1,
         14, 1, 1, 2, 4, 3, 4, 1
     ))
     expect_equal (lens, lens_expected)

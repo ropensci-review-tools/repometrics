@@ -279,8 +279,6 @@ cm_model_viability_community <- function (path,
 
     }
 
-    num_auts <- num_auts [["recent"]]
-
     # The model includes "Change Requests" (as direct count), and "Change
     # Request Closure Ratio". The latter here is replaced by number of "closed"
     # change requests, which is the number merged. Thus each opened and merged
