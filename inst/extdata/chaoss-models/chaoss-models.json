@@ -1,6 +1,254 @@
 {
+    "metrics": [
+        {
+            "name": "best_practices",
+            "what": "binary",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "change_req_n_closed",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "change_req_n_opened",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "change_req_prop_code",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "change_req_prop_merged",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "code_change_lines",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "commit_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "committer_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "contrib_absence_commits",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "ctb_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "defect_resolution_dur",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "dependency_count",
+            "what": "count",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "elephant_factor",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "has_ci",
+            "what": "binary",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "issue_age",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "issue_cmt_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "issue_response_time",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "issue_updates",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "issues_active",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "issues_closed",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "issues_to_prs",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "label_inclusivity",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "languages",
+            "what": "real",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "libyears",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "license_coverage",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "licenses_declared",
+            "what": "binary",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "maintainer_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "num_commits",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "num_contributors",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "num_forks",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "num_stars",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "pr_age",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "pr_review_duration",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "pr_revs_approved",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "pr_revs_rejected",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "recent_releases",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "release_freq",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "test_coverage",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "time_to_close",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "watcher_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "duration",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        }
+    ],
     "models": {
-        "dev_reponsiveness": [
+        "dev_responsiveness": [
             "pr_review_duration",
             "issue_response_time",
             "defect_resolution_dur"

@@ -32,12 +32,17 @@ cm_data_languages <- function (path, end_date = NULL) {
 
     dplyr::group_by (s, language) |>
         dplyr::summarise (nfiles = sum (nfiles), ncode = sum (ncode)) |>
+        dplyr::filter (ncode > 0) |>
         dplyr::mutate (
-            nfiles_pc = ifelse (sum (nfiles) == 0, 0, nfiles / sum (nfiles)),
-            ncode_pc = ifelse (sum (ncode) == 0, 0, ncode / sum (ncode))
+            nfiles_pc = nfiles / sum (nfiles),
+            ncode_pc = ncode / sum (ncode)
         )
 }
 
+# The mean value of the percetage of code per language. As this is a
+# standardised measure, this is simply equal to 1 / number-of-languages, but
+# full calculation used regardless to allow potential improvement in the
+# future.
 cm_metric_languages <- function (path, end_date = NULL) {
     dat <- cm_data_languages (path, end_date)
     lang_dist_mn <- mean (dat$ncode_pc) # lower is better

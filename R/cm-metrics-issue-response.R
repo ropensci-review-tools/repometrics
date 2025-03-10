@@ -194,21 +194,3 @@ cm_data_issues_active <- function (path, end_date = Sys.Date ()) {
 cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
     cm_data_issues_active (path, end_date)
 }
-
-cm_data_issue_comments <- function (path, end_date = Sys.Date ()) {
-
-    # suppress no visible binding notes:
-    created_at <- closed_at <- NULL
-
-    start_date <- end_date - get_repometrics_period ()
-
-    comments <- rm_data_issue_comments_from_gh_api (path) |>
-        dplyr::mutate (created_at = as.Date (created_at)) |>
-        dplyr::filter (created_at >= start_date & created_at <= end_date)
-
-    return (nrow (comments))
-}
-
-cm_metric_issue_comments <- function (path, end_date = Sys.Date ()) {
-    cm_data_issue_comments (path, end_date)
-}

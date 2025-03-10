@@ -1,6 +1,6 @@
 Package: repometrics
 Title: Metrics for Your Code Repository
-Version: 0.1.6.121
+Version: 0.1.6.126
 Authors@R: 
     person("Mark", "Padgham", , "mark.padgham@email.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2172-5265"))
@@ -28,9 +28,11 @@ Suggests:
     desc,
     httptest2,
     jsonlite,
+    knitr,
     pkgmatch,
     quarto,
     readr,
+    rmarkdown,
     testthat (>= 3.0.0),
     tidyr,
     withr,
@@ -43,3 +45,4 @@ Encoding: UTF-8
 Language: en-GB
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr
