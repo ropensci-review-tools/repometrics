@@ -41,7 +41,7 @@ gh_user_general_qry <- function (login = "") {
 
 # Only uses `login` param:
 gh_user_general_internal <- function (login = "",
-                                      ended_at = Sys.time (),
+                                      ended_at = Sys.Date (),
                                       nyears = 1,
                                       n_per_page = 100L) {
 
@@ -143,7 +143,7 @@ gh_user_follow_qry <- function (login = "",
 
 # Uses all parameters except `ended_at` at `nyears`.
 gh_user_follow_internal <- function (login,
-                                     ended_at = Sys.time (),
+                                     ended_at = Sys.Date (),
                                      nyears = 1,
                                      n_per_page = 100L,
                                      followers = TRUE) {
@@ -221,7 +221,7 @@ gh_user_commit_cmt_qry <- function (login = "",
 
 # Uses all params except `ended_at` and `nyears`:
 gh_user_commit_cmt_internal <- function (login,
-                                         ended_at = Sys.time (),
+                                         ended_at = Sys.Date (),
                                          nyears = 1,
                                          n_per_page = 100L) {
 
@@ -287,7 +287,7 @@ gh_user_commit_cmt <- memoise::memoise (gh_user_commit_cmt_internal)
 #
 # Uses all parameters
 gh_user_commits_qry <- function (login = "",
-                                 ended_at = Sys.time (),
+                                 ended_at = Sys.Date (),
                                  nyears = 1,
                                  n_per_page = 100L,
                                  end_cursor = NULL) {
@@ -296,7 +296,8 @@ gh_user_commits_qry <- function (login = "",
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
     checkmate::assert_numeric (nyears, len = 1L, upper = 1)
 
-    from <- format (ended_at - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
+    # These 'format' calls pad with hms = "00:00:00":
+    from <- format (ended_at - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
     ended_at <- format (ended_at, "%Y-%m-%dT%H:%M:%S")
 
     after_txt <- ""
@@ -335,7 +336,7 @@ gh_user_commits_qry <- function (login = "",
 }
 
 gh_user_commits_internal <- function (login,
-                                      ended_at = Sys.time (),
+                                      ended_at = Sys.Date (),
                                       nyears = 1,
                                       n_per_page = 100L) {
 
@@ -430,7 +431,7 @@ gh_user_commits <- memoise::memoise (gh_user_commits_internal)
 
 # Uses all parameters
 gh_user_issues_qry <- function (login = "",
-                                ended_at = Sys.time (),
+                                ended_at = Sys.Date (),
                                 nyears = 1,
                                 n_per_page = 100L,
                                 end_cursor = NULL) {
@@ -439,7 +440,7 @@ gh_user_issues_qry <- function (login = "",
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
     checkmate::assert_numeric (nyears, len = 1L, upper = 1)
 
-    from <- format (ended_at - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
+    from <- format (ended_at - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
     ended_at <- format (ended_at, "%Y-%m-%dT%H:%M:%S")
 
     after_txt <- ""
@@ -495,7 +496,7 @@ gh_user_issues_qry <- function (login = "",
 
 # Uses all parameters
 gh_user_issues_internal <- function (login,
-                                     ended_at = Sys.time (),
+                                     ended_at = Sys.Date (),
                                      nyears = 1,
                                      n_per_page = 100L) {
 
@@ -652,7 +653,7 @@ gh_user_issue_cmts_qry <- function (login = "",
 
 # Uses all parameters except `ended_at`
 gh_user_issue_cmts_internal <- function (login,
-                                         ended_at = Sys.time (),
+                                         ended_at = Sys.Date (),
                                          nyears = 1,
                                          n_per_page = 100L) {
 
@@ -665,7 +666,7 @@ gh_user_issue_cmts_internal <- function (login,
     has_next_page <- TRUE
 
     start_timestamp <-
-        format (Sys.time () - 60 * 60 * 24 * 365 * nyears, "%Y-%m-%dT%H:%M:%S")
+        format (Sys.Date () - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
     start_timestamp <- as.POSIXct (start_timestamp)
 
     while (has_next_page) {

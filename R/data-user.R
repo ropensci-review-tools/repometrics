@@ -22,7 +22,7 @@
 #' @family data
 #' @export
 repometrics_data_user <- function (login,
-                                   ended_at = Sys.time (),
+                                   ended_at = Sys.Date (),
                                    nyears = 1,
                                    n_per_page = 100) {
 

@@ -6,7 +6,7 @@
 \usage{
 repometrics_data_user(
   login,
-  ended_at = Sys.time(),
+  ended_at = Sys.Date(),
   nyears = 1,
   n_per_page = 100
 )
@@ -15,7 +15,7 @@ repometrics_data_user(
 \item{login}{GitHub login of user}
 
 \item{ended_at}{Parameter used in some aspects of resultant data to limit
-the end date of data collection. Defaults to \code{Sys.time()}.}
+the end date of data collection. Defaults to \code{Sys.Date ()}.}
 
 \item{nyears}{Parameter <= 1 determining fraction of a year over which data
 up until \code{end_date} are collected.}
