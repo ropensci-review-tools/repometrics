@@ -5,37 +5,37 @@
             "issueComments": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0xNFQxOTo0MzowNCswMTowMM6ejNPe"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMy0wNlQxNToxMzo0NiswMTowMM6hK0vG"
                 },
-                "totalCount": 844,
+                "totalCount": 850,
                 "nodes": [
                     {
-                        "createdAt": "2025-02-17T17:39:17Z",
+                        "createdAt": "2025-03-07T10:51:02Z",
                         "issue": {
-                            "number": 75,
-                            "comments": {
-                                "totalCount": 2
-                            },
-                            "participants": {
-                                "totalCount": 2
-                            },
-                            "repository": {
-                                "nameWithOwner": "tidymodels/multilevelmod"
-                            }
-                        }
-                    },
-                    {
-                        "createdAt": "2025-02-14T18:43:04Z",
-                        "issue": {
-                            "number": 380,
+                            "number": 342,
                             "comments": {
                                 "totalCount": 3
                             },
                             "participants": {
-                                "totalCount": 4
+                                "totalCount": 2
                             },
                             "repository": {
-                                "nameWithOwner": "r-lib/revdepcheck"
+                                "nameWithOwner": "tidymodels/censored"
+                            }
+                        }
+                    },
+                    {
+                        "createdAt": "2025-03-06T14:13:46Z",
+                        "issue": {
+                            "number": 342,
+                            "comments": {
+                                "totalCount": 3
+                            },
+                            "participants": {
+                                "totalCount": 2
+                            },
+                            "repository": {
+                                "nameWithOwner": "tidymodels/censored"
                             }
                         }
                     }

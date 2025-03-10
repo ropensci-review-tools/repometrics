@@ -5,15 +5,15 @@
             "followers": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0xNVQwMzo0MTo1OSswMTowMM4Lmaov"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0yOFQwOTozOTo0MiswMTowMM4LsLcG"
                 },
-                "totalCount": 1443,
+                "totalCount": 1445,
                 "nodes": [
                     {
-                        "login": "yukai-yang"
+                        "login": "vrognas"
                     },
                     {
-                        "login": "kumeS"
+                        "login": "obenno"
                     }
                 ]
             }

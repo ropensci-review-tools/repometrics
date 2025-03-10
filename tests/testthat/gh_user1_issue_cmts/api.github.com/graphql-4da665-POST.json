@@ -5,37 +5,37 @@
             "issueComments": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0yMFQwODoxMjo0MiswMTowMM6fLsuA"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMy0wOVQxODo0ODozMyswMTowMM6hd9Rv"
                 },
-                "totalCount": 20906,
+                "totalCount": 20972,
                 "nodes": [
                     {
-                        "createdAt": "2025-02-20T09:25:03Z",
+                        "createdAt": "2025-03-09T20:24:35Z",
                         "issue": {
-                            "number": 971,
+                            "number": 3,
                             "comments": {
-                                "totalCount": 3
+                                "totalCount": 2
+                            },
+                            "participants": {
+                                "totalCount": 2
+                            },
+                            "repository": {
+                                "nameWithOwner": "cran/emmeans"
+                            }
+                        }
+                    },
+                    {
+                        "createdAt": "2025-03-09T17:48:33Z",
+                        "issue": {
+                            "number": 987,
+                            "comments": {
+                                "totalCount": 6
                             },
                             "participants": {
                                 "totalCount": 2
                             },
                             "repository": {
                                 "nameWithOwner": "r-lib/actions"
-                            }
-                        }
-                    },
-                    {
-                        "createdAt": "2025-02-20T07:12:42Z",
-                        "issue": {
-                            "number": 645,
-                            "comments": {
-                                "totalCount": 11
-                            },
-                            "participants": {
-                                "totalCount": 4
-                            },
-                            "repository": {
-                                "nameWithOwner": "r-hub/rhub"
                             }
                         }
                     }

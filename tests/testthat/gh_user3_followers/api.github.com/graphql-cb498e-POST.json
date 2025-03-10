@@ -5,15 +5,15 @@
             "followers": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0xNFQwMDo1OTowMSswMTowMM4Ll8_B"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0wOVQxNTozMDo0MSswMTowMM4Lj4oa"
                 },
-                "totalCount": 303,
+                "totalCount": 302,
                 "nodes": [
                     {
                         "login": "leoniedu"
                     },
                     {
-                        "login": "XiaomingX"
+                        "login": "reed6868"
                     }
                 ]
             }

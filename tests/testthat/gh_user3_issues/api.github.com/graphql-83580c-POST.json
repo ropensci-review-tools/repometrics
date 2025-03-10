@@ -1,0 +1,21 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "contributionsCollection": {
+                "startedAt": "2024-01-01T07:53:54Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "issueContributions": {
+                    "pageInfo": {
+                        "hasNextPage": false,
+                        "endCursor": null
+                    },
+                    "totalCount": 0,
+                    "nodes": [
+
+                    ]
+                }
+            }
+        }
+    }
+}

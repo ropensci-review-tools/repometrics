@@ -4,7 +4,7 @@
             "login": "mpadge",
             "name": "mark padgham",
             "location": "Münster, Germany",
-            "bio": "rOpenSci software research scientist",
+            "bio": "rOpenSci software review lead",
             "company": "@rOpenSci",
             "email": "mark.padgham@email.com",
             "organizations": {
@@ -16,7 +16,7 @@
                         "url": "https://github.com/ropensci",
                         "websiteUrl": "https://ropensci.org/",
                         "membersWithRole": {
-                            "totalCount": 298
+                            "totalCount": 301
                         }
                     },
                     {
@@ -256,10 +256,10 @@
                 "totalCount": 172
             },
             "repositoriesContributedTo": {
-                "totalCount": 63
+                "totalCount": 62
             },
             "starredRepositories": {
-                "totalCount": 1627
+                "totalCount": 1631
             }
         }
     }

@@ -1,0 +1,50 @@
+{
+    "data": {
+        "user": {
+            "login": "gaborcsardi",
+            "contributionsCollection": {
+                "startedAt": "2024-01-01T07:53:54Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "totalCommitContributions": 2,
+                "commitContributionsByRepository": [
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": false,
+                                "endCursor": "MQ"
+                            },
+                            "totalCount": 1,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2024-01-01T08:00:00Z",
+                                    "commitCount": 1,
+                                    "repository": {
+                                        "nameWithOwner": "gaborcsardi/covrlabs"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": false,
+                                "endCursor": "MQ"
+                            },
+                            "totalCount": 1,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2023-12-31T08:00:00Z",
+                                    "commitCount": 1,
+                                    "repository": {
+                                        "nameWithOwner": "r-hub/cran-flavors"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

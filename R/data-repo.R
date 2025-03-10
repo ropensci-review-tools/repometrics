@@ -18,7 +18,7 @@
 #' restricted to maximum available cores, and a value of zero will use all
 #' available cores.
 #' @param ended_at Parameter used in some aspects of resultant data to limit
-#' the end date of data collection. Defaults to `Sys.time()`.
+#' the end date of data collection. Defaults to `Sys.Date ()`.
 #' @param nyears Parameter <= 1 determining fraction of a year over which data
 #' up until `end_date` are collected.
 #'
@@ -37,7 +37,7 @@
 #' @family data
 #' @export
 repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
-                              ended_at = Sys.time (), nyears = 1) {
+                              ended_at = Sys.Date (), nyears = 1) {
 
     data <- repometrics_data_repo (
         path = path, step_days = step_days, num_cores = num_cores
@@ -45,12 +45,25 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 
     ctbs <- data$rm$contribs_from_gh_api$login
     data_ctbs <- lapply (ctbs, function (ctb) {
-        repometrics_data_user (
-            login = ctb,
-            ended_at = ended_at,
-            nyears = nyears
+        tryCatch (
+            repometrics_data_user (
+                login = ctb,
+                ended_at = ended_at,
+                nyears = nyears
+            ),
+            error = function (e) NULL
         )
     })
+    lens <- vapply (data_ctbs, length, integer (1L))
+    gh_errors <- ctbs [which (lens == 0L)]
+    if (length (gh_errors) > 0L) {
+        cli::cli_alert_warning (paste0 (
+            "Data for the following GitHub logins ",
+            "were unable to be obtained:\n  [{gh_errors}].\n",
+            "Try re-running function again to ensure all ",
+            "data are collected."
+        ))
+    }
     names (data_ctbs) <- ctbs
 
     data$contributors <- data_ctbs

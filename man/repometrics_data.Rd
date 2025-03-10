@@ -8,7 +8,7 @@ repometrics_data(
   path,
   step_days = 1L,
   num_cores = -1L,
-  ended_at = Sys.time(),
+  ended_at = Sys.Date(),
   nyears = 1
 )
 }
@@ -28,7 +28,7 @@ restricted to maximum available cores, and a value of zero will use all
 available cores.}
 
 \item{ended_at}{Parameter used in some aspects of resultant data to limit
-the end date of data collection. Defaults to \code{Sys.time()}.}
+the end date of data collection. Defaults to \code{Sys.Date ()}.}
 
 \item{nyears}{Parameter <= 1 determining fraction of a year over which data
 up until \code{end_date} are collected.}

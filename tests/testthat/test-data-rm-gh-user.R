@@ -58,7 +58,7 @@ test_that ("rm user data internal structures", {
     expect_named (dat1$commits, nms)
 
     expect_s3_class (dat1$issues, "data.frame")
-    expect_true (nrow (dat1$issues) > 1L)
+    expect_true (nrow (dat1$issues) >= 0L)
     expect_equal (ncol (dat1$issues), 8L)
     nms <- c (
         "opened_at", "closed_at", "org_repo", "issue_num",

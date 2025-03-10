@@ -5,15 +5,15 @@
             "following": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0xN1QxMToyMjowMSswMTowMM4LnTBA"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0yMVQwODo1NTowMyswMTowMM4LpE6o"
                 },
-                "totalCount": 111,
+                "totalCount": 115,
                 "nodes": [
                     {
-                        "login": "loreabad6"
+                        "login": "evanp"
                     },
                     {
-                        "login": "markvanderloo"
+                        "login": "weiji14"
                     }
                 ]
             }
