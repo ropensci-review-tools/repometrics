@@ -26,6 +26,14 @@ repometrics_data_user <- function (login,
                                    nyears = 1,
                                    n_per_page = 100) {
 
+    repometrics_data_user_memoised (login, ended_at, nyears, n_per_page)
+}
+
+repometrics_data_user_internal <- function (login,
+                                            ended_at = Sys.Date (),
+                                            nyears = 1,
+                                            n_per_page = 100) {
+
     checkmate::assert_character (login, len = 1L)
     is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     if (is_test_env) {
@@ -59,6 +67,8 @@ repometrics_data_user <- function (login,
 
     return (res)
 }
+
+repometrics_data_user_memoised <- memoise::memoise (repometrics_data_user_internal)
 
 get_rm_gh_user_fns <- function () {
 
