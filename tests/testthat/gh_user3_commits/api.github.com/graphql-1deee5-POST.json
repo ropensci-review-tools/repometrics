@@ -1,0 +1,32 @@
+{
+    "data": {
+        "user": {
+            "login": "mpadge",
+            "contributionsCollection": {
+                "startedAt": "2024-01-01T07:53:54Z",
+                "endedAt": "2024-01-01T08:00:00Z",
+                "totalCommitContributions": 8,
+                "commitContributionsByRepository": [
+                    {
+                        "contributions": {
+                            "pageInfo": {
+                                "hasNextPage": false,
+                                "endCursor": "MQ"
+                            },
+                            "totalCount": 8,
+                            "nodes": [
+                                {
+                                    "occurredAt": "2023-12-31T08:00:00Z",
+                                    "commitCount": 8,
+                                    "repository": {
+                                        "nameWithOwner": "mpadge/UrbanAnalyst"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

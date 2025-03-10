@@ -5,37 +5,37 @@
             "issueComments": {
                 "pageInfo": {
                     "hasNextPage": true,
-                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0yMFQxMDoyMDowMCswMTowMM6fMsD6"
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMy0xMFQwOTo1Mjo1MiswMTowMM6hhOMx"
                 },
-                "totalCount": 5278,
+                "totalCount": 5303,
                 "nodes": [
                     {
-                        "createdAt": "2025-02-20T10:26:47Z",
+                        "createdAt": "2025-03-10T10:33:09Z",
                         "issue": {
-                            "number": 681,
+                            "number": 130,
                             "comments": {
-                                "totalCount": 27
+                                "totalCount": 1
                             },
                             "participants": {
-                                "totalCount": 5
+                                "totalCount": 1
                             },
                             "repository": {
-                                "nameWithOwner": "ropensci/software-review"
+                                "nameWithOwner": "ropensci-review-tools/repometrics"
                             }
                         }
                     },
                     {
-                        "createdAt": "2025-02-20T09:20:00Z",
+                        "createdAt": "2025-03-10T08:52:52Z",
                         "issue": {
-                            "number": 688,
+                            "number": 277,
                             "comments": {
-                                "totalCount": 6
+                                "totalCount": 1
                             },
                             "participants": {
-                                "totalCount": 3
+                                "totalCount": 2
                             },
                             "repository": {
-                                "nameWithOwner": "ropensci/software-review"
+                                "nameWithOwner": "UrbanAnalyst/dodgr"
                             }
                         }
                     }
