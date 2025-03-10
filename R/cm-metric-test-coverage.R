@@ -31,9 +31,11 @@ cm_data_test_coverage <- function (path, end_date = NULL) {
     })
     coverage <- unique (grep ("%", text, value = TRUE))
     if (length (coverage) > 0L) {
-        coverage <- unique (as.numeric (gsub ("%", "", coverage)))
+        coverage <- max (unique (as.numeric (gsub ("%", "", coverage))))
+    } else {
+        coverage <- NA_real_
     }
-    return (max (coverage))
+    return (coverage)
 }
 
 cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
