@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.1.6.125",
+  "version": "0.1.6.126",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.2 (2024-10-31)",
+  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
   "author": [
     {
       "@type": "Person",
@@ -84,6 +84,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "pkgmatch",
       "name": "pkgmatch",
       "sameAs": "https://github.com/ropensci-review-tools/pkgmatch"
@@ -111,6 +123,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=readr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
     },
     {
       "@type": "SoftwareApplication",
@@ -295,13 +319,11 @@
       "name": "pkgstats",
       "sameAs": "https://github.com/ropensci-review-tools/pkgstats"
     },
-    "SystemRequirements": {}
+    "SystemRequirements": null
   },
-  "fileSize": "13358.074KB",
+  "fileSize": "24734.014KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",
-    "https://app.codecov.io/gh/ropensci-review-tools/repometrics"
-  ],
-  "developmentStatus": "https://www.repostatus.org/#active"
+  "contIntegration": ["https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check", "https://app.codecov.io/gh/ropensci-review-tools/repometrics"],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": ["dashboard", "r", "software-metrics"]
 }
