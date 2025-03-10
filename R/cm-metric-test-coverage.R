@@ -13,15 +13,20 @@ cm_data_test_coverage <- function (path, end_date = NULL) {
     codecov <- grep ("codecov\\.io.*\\.svg", readme, value = TRUE)
     ptn <- "https\\:.*\\.svg"
     badge_svg <- regmatches (codecov, gregexpr (ptn, codecov)) [[1]]
-    badge_svg <- readr::read_file (badge_svg)
+    # Have to use httr2 to enable mocking via httptest2:
+    badge <- httr2::request (badge_svg) |>
+        httr2::req_perform ()
+    httr2::resp_check_status (badge)
+    badge <- httr2::resp_body_string (badge)
+
     # No XML/HTML parsing pkgs here, so grep for text:
-    text_in <- gregexpr ("<text", badge_svg) [[1]]
-    text_out <- gregexpr ("<\\/text", badge_svg) [[1]]
+    text_in <- gregexpr ("<text", badge) [[1]]
+    text_out <- gregexpr ("<\\/text", badge) [[1]]
     if (length (text_in) != length (text_out)) {
         return (NA_real_)
     }
     text <- apply (cbind (text_in, text_out), 1, function (j) {
-        res <- substring (badge_svg, j [1], j [2]) [[1]]
+        res <- substring (badge, j [1], j [2]) [[1]]
         gsub ("^.*>|<*$", "", res)
     })
     coverage <- unique (grep ("%", text, value = TRUE))

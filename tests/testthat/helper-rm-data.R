@@ -36,6 +36,9 @@ mock_rm_data <- function (repo = TRUE) {
     stargazers <- httptest2::with_mock_dir ("gh_api_stars", {
         rm_data_repo_stargazers (path)
     })
+    coverage <- httptest2::with_mock_dir ("coverage", {
+        cm_data_test_coverage (path)
+    })
 
     # rm-data-user:
     logins <- c ("gaborcsardi", "hfrick", "mpadge")
