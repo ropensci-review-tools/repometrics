@@ -1,0 +1,46 @@
+{
+    "data": {
+        "user": {
+            "login": "gaborcsardi",
+            "name": "Gábor Csárdi",
+            "location": "Barcelona",
+            "bio": "",
+            "company": "@posit-pbc",
+            "email": "csardi.gabor@gmail.com",
+            "organizations": {
+                "nodes": [
+                    {
+                        "location": null,
+                        "name": "tidyverse",
+                        "resourcePath": "/tidyverse",
+                        "url": "https://github.com/tidyverse",
+                        "websiteUrl": "http://tidyverse.org",
+                        "membersWithRole": {
+                            "totalCount": 26
+                        }
+                    },
+                    {
+                        "location": null,
+                        "name": "R infrastructure",
+                        "resourcePath": "/r-lib",
+                        "url": "https://github.com/r-lib",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 19
+                        }
+                    }
+                ]
+            },
+            "avatarUrl": "https://avatars.githubusercontent.com/u/660288?u=677db9b09ed7b9ca76a2fc24622a9ca433ce05d5&v=4",
+            "repositories": {
+                "totalCount": 124
+            },
+            "repositoriesContributedTo": {
+                "totalCount": 189
+            },
+            "starredRepositories": {
+                "totalCount": 1367
+            }
+        }
+    }
+}

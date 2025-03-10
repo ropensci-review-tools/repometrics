@@ -1,0 +1,22 @@
+{
+    "data": {
+        "user": {
+            "login": "gaborcsardi",
+            "followers": {
+                "pageInfo": {
+                    "hasNextPage": true,
+                    "endCursor": "Y3Vyc29yOnYyOpK5MjAyNS0wMi0yOFQwOTozOTo0MiswMTowMM4LsLcG"
+                },
+                "totalCount": 1445,
+                "nodes": [
+                    {
+                        "login": "vrognas"
+                    },
+                    {
+                        "login": "obenno"
+                    }
+                ]
+            }
+        }
+    }
+}
