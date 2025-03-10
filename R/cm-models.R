@@ -505,7 +505,7 @@ cm_model_comm_serv_support <- function (path,
         pr_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
 
         # Metrics measured in N > 1, for which higher is better:
-        issue_num_cmts <- cm_metric_issue_comments (path, end_date = end_date)
+        issue_num_cmts <- cm_metric_issue_cmt_count (path, end_date = end_date)
         issues_active <- cm_metric_issues_active (path, end_date = end_date)
         pr_num_revs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
         pr_num_revs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)

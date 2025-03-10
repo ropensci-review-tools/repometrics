@@ -53,7 +53,7 @@ cm_data_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
-    cm_data_issue_cmt_count (path, end_date)
+    cm_data_issue_cmt_count (path, end_date) [["mean"]]
 }
 
 cm_data_issues_closed <- function (path, end_date = Sys.Date ()) {
