@@ -631,9 +631,9 @@ test_that ("cm metric test coverage", {
 
     fs::dir_delete (path)
 
-    expect_s3_class (cov, "data.frame")
-    expect_named (cov, c ("id", "created", "coverage"))
-    expect_true (nrow (cov) > 0L)
+    expect_type (cov, "double")
+    expect_length (cov, 1L)
+    expect_true (cov >= 0 && cov <= 100)
 })
 
 test_that ("cm metric collate all", {
@@ -656,7 +656,7 @@ test_that ("cm metric collate all", {
         1, 1, 1, 1, 1, 1, 1, 1, 4, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 4, 0, 1,
-        1, 1, 1, 1, 1, 4, 3, 1, 1
+        1, 1, 1, 1, 1, 4, 1, 1, 1
     ))
     expect_equal (lens, lens_expected)
 })

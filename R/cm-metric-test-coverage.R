@@ -1,39 +1,39 @@
-cm_data_test_coverage <- function (path, end_date = Sys.Date ()) {
+cm_data_test_coverage <- function (path, end_date = NULL) {
 
-    # Suppress no visible binding notes:
-    name <- coverage <- NULL
-
-    requireNamespace ("readr", quietly = TRUE)
+    requireNamespace ("readr")
 
     or <- org_repo_from_path (path)
-    wf_tests <- rm_data_gh_repo_workflow (path) |>
-        dplyr::filter (grepl ("test|coverage", name))
 
-    res0 <- data.frame (
-        id = integer (0),
-        created = double (0),
-        coverage = double (0),
-        row.names = NULL
-    )
-    if (nrow (wf_tests) == 0) {
-        return (res0)
+    readme <- fs::dir_ls (path, regexp = "README\\.md$")
+    if (length (readme) == 0L) {
+        return (NA_real_)
     }
 
-    # This returns the most recent test coverage value:
-    cov <- NA_real_
-    i <- 1L
-    while (is.na (cov) & i <= nrow (wf_tests)) {
-        cov <- coverage_from_one_log (wf_tests$logs_url [i])
-        i <- i + 1L
-    }
-    res <- data.frame (
-        id = wf_tests$id [i - 1],
-        created = wf_tests$created [i - 1],
-        coverage = cov,
-        row.names = NULL
-    )
+    readme <- readr::read_lines (readme, progress = FALSE)
+    codecov <- grep ("codecov\\.io.*\\.svg", readme, value = TRUE)
+    ptn <- "https\\:.*\\.svg"
+    badge_svg <- regmatches (codecov, gregexpr (ptn, codecov)) [[1]]
+    # Have to use httr2 to enable mocking via httptest2:
+    badge <- httr2::request (badge_svg) |>
+        httr2::req_perform ()
+    httr2::resp_check_status (badge)
+    badge <- httr2::resp_body_string (badge)
 
-    return (res)
+    # No XML/HTML parsing pkgs here, so grep for text:
+    text_in <- gregexpr ("<text", badge) [[1]]
+    text_out <- gregexpr ("<\\/text", badge) [[1]]
+    if (length (text_in) != length (text_out)) {
+        return (NA_real_)
+    }
+    text <- apply (cbind (text_in, text_out), 1, function (j) {
+        res <- substring (badge, j [1], j [2]) [[1]]
+        gsub ("^.*>|<*$", "", res)
+    })
+    coverage <- unique (grep ("%", text, value = TRUE))
+    if (length (coverage) > 0L) {
+        coverage <- unique (as.numeric (gsub ("%", "", coverage)))
+    }
+    return (max (coverage))
 }
 
 cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {

@@ -35,6 +35,13 @@ function (resp) {
         "repo/",
         fixed = TRUE
     )
+    # For coverage badge:
+    resp <- httptest2::gsub_response (
+        resp,
+        paste0 ("codecov.io/gh/", test_repo, "/branch/main/graph/"),
+        "repo/",
+        fixed = TRUE
+    )
 
     # Timestamp pattern, where replacing with "" removes sub-dir:
     ptn <- "[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}"
