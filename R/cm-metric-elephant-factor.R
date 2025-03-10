@@ -38,6 +38,7 @@ cm_data_elephant_factor <- function (path, end_date = Sys.Date ()) {
 
 #' See 'contrib_absence', which returns commits, files, and code, but they're
 #' all very highly correlated, so only one returned here.
+#' @noRd
 cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_elephant_factor (path, end_date)
     dat [["ncommits"]]
