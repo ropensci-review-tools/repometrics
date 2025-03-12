@@ -79,12 +79,16 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 #'
 #' @inheritParams repometrics_data
 #'
-#' @return A list with two main items:
+#' @return A list of four items:
 #' \enumerate{
 #' \item "pkgstats" Containing summary data from apply `pkgstats` routines
 #' across the git history of the repository.
-#' \item "cm" Containing data used to derive "CHAOSS metrics", primarily from
-#' GitHub data. See \link{rm_chaoss_metrics_list} for details of metrics.
+#' \item "rm" Containing data used to derive "CHAOSS metrics", primarily from
+#' GitHub data.
+#' \item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
+#' output of \link{rm_chaoss_metrics_list}.
+#' \item "cm_models" as a list of values for CHAOSS models, derived from
+#' aggregating various metrics.
 #' }
 #'
 #' @family data
@@ -113,7 +117,21 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
         cli::cli_alert_success ("Done!")
     }
 
-    list (pkgstats = pkgstats, rm = rm)
+    if (is_verbose ()) {
+        cli::cli_alert_info ("Collating CHAOSS metrics ...")
+    }
+    cm_metrics <- collate_all_metrics (path, end_date = end_date)
+    cm_models <- collate_all_models (path, end_date = end_date)
+    if (is_verbose ()) {
+        cli::cli_alert_success ("Done!")
+    }
+
+    list (
+        pkgstats = pkgstats,
+        rm = rm,
+        cm_metrics = cm_metrics,
+        cm_models = cm_models
+    )
 }
 
 #' Calculate all repository data used in CHAOSS metrics

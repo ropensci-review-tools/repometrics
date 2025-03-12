@@ -22,12 +22,16 @@ restricted to maximum available cores, and a value of zero will use all
 available cores.}
 }
 \value{
-A list with two main items:
+A list of four items:
 \enumerate{
 \item "pkgstats" Containing summary data from apply \code{pkgstats} routines
 across the git history of the repository.
-\item "cm" Containing data used to derive "CHAOSS metrics", primarily from
-GitHub data. See \link{rm_chaoss_metrics_list} for details of metrics.
+\item "rm" Containing data used to derive "CHAOSS metrics", primarily from
+GitHub data.
+\item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
+output of \link{rm_chaoss_metrics_list}.
+\item "cm_models" as a list of values for CHAOSS models, derived from
+aggregating various metrics.
 }
 }
 \description{
