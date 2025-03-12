@@ -2,7 +2,7 @@
 title: "CHAOSS models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{chaoss-models}
+  %\VignetteIndexEntry{CHAOSS models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
