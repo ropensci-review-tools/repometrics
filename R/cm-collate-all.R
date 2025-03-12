@@ -5,13 +5,34 @@
 #' called directly, rather this list is provided for information only, to
 #' enable users to know which metrics are implemented.
 #'
-#' @return A character vector with the internal function names of all
-#' implemented CHAOSS metrics.
+#' @return A `data.frame` with two columns:
+#' \enumerate{
+#' \item "fn_names", with the internal function names of all implemented CHAOSS
+#' metrics.
+#' \item "url", with the URL to the CHAOSS community web page describing that
+#' metric.
+#' }
+#'
+#' @note Metrics have been adapted in this package, and so may not precisely
+#' reflect the descriptions provided in the CHAOSS community web pages linked
+#' to in the URLs from this function. Adaptations have in particular been
+#' implemented to align metrics with their usage in aggregate "models".
+#'
 #' @examples
 #' metrics <- rm_chaoss_metrics_list ()
 #' @family auxiliary
 #' @export
 rm_chaoss_metrics_list <- function () {
+
+    fn_names <- chaoss_metrics_fn_names ()
+    url_fns <- paste0 (fn_names, "_url")
+    urls <- vapply (url_fns, function (u) do.call (u, list ()), character (1L))
+    urls <- paste0 (cm_metric_base_url (), unname (urls))
+
+    data.frame (fn_name = fn_names, url = urls)
+}
+
+chaoss_metrics_fn_names <- function () {
 
     ptn <- "^cm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
@@ -19,11 +40,12 @@ rm_chaoss_metrics_list <- function () {
     fns <- fns [which (!grepl ("\\_internal|\\_url$", fns))]
 
     return (fns)
+
 }
 
 collate_all_metrics <- function (path, end_date = Sys.Date ()) {
 
-    metric_fns <- rm_chaoss_metrics_list ()
+    metric_fns <- rm_chaoss_metrics_list ()$fn_name
 
     pars <- list (path = path, end_date = end_date)
     extra_pars <- list (
