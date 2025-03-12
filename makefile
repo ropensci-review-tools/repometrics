@@ -1,5 +1,5 @@
 LFILE = README
-VIGNETTE = repometrics
+VIGNETTE = chaoss-models
 
 all: help
 

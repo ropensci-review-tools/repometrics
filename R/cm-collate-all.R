@@ -39,7 +39,8 @@ collate_all_models <- function (path,
                                 end_date = Sys.Date (),
                                 metrics_data = NULL) {
 
-    model_fns <- get_cm_fns ("model")
+    mod_dat <- load_model_json_data ()
+    model_names <- names (mod_dat$models)
 
     if (is.null (metrics_data)) {
         pars <- list (path = path, end_date = end_date)
@@ -48,12 +49,10 @@ collate_all_models <- function (path,
     }
 
     model_data <- vapply (
-        model_fns,
-        function (f) do.call (f, pars),
+        model_names,
+        function (m) do.call (calculate_one_model, c (pars, model_name = m)),
         numeric (1L)
     )
-
-    names (model_data) <- gsub ("^cm\\_model\\_", "", model_fns)
 
     return (model_data)
 }

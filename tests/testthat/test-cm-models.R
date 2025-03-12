@@ -6,7 +6,11 @@ test_that ("cm model developer responsiveness", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_model_dev_responsiveness (path, end_date = end_date)
+    res <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "dev_responsiveness"
+    )
 
     fs::dir_delete (path)
 
@@ -21,15 +25,23 @@ test_that ("cm model project engagement and awareness", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    eng <- cm_model_proj_engagement (path, end_date = end_date)
-    awa <- cm_model_proj_awareness (path, end_date = end_date)
+    eng <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "proj_engagement"
+    )
+    awa <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "proj_awareness"
+    )
 
     fs::dir_delete (path)
 
     expect_type (eng, "double")
     expect_length (eng, 1L)
     expect_named (eng, NULL)
-    expect_true (eng >= 0)
+    expect_true (eng < 0) # Most metrics are 0, and log-scaled so -1
 
     expect_type (awa, "double")
     expect_length (awa, 1L)
@@ -43,15 +55,23 @@ test_that ("cm model community activity + oss compliance", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_model_community_activity (path, end_date = end_date)
-    oss <- cm_model_oss_compliance (path, end_date = end_date)
+    res <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "community_activity"
+    )
+    oss <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "oss_compliance"
+    )
 
     fs::dir_delete (path)
 
     expect_type (res, "double")
     expect_length (res, 1L)
     expect_named (res, NULL)
-    expect_true (res > 0)
+    expect_true (res < 0) # Several 0's on log-scale converted to -1
 
     expect_type (oss, "double")
     expect_length (oss, 1L)
@@ -65,14 +85,46 @@ test_that ("cm model viability", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    com <- cm_model_viability_community (path, end_date = end_date)
-    sta <- cm_model_viability_starter (path, end_date = end_date)
-    gov <- cm_model_viability_gov (path, end_date = end_date)
-    str <- cm_model_viability_strategy (path, end_date = end_date)
-    dev <- cm_model_collab_devel_index (path, end_date = end_date)
-    css <- cm_model_comm_serv_support (path, end_date = end_date)
-    sth <- cm_model_starter_health (path, end_date = end_date)
-    wel <- cm_model_comm_welcoming (path, end_date = end_date)
+    com <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "viability_community"
+    )
+    sta <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "viability_starter"
+    )
+    gov <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "viability_gov"
+    )
+    str <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "viability_strategy"
+    )
+    dev <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "collab_devel_index"
+    )
+    css <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "comm_serv_support"
+    )
+    sth <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "starter_health"
+    )
+    wel <- calculate_one_model (
+        path,
+        end_date = end_date,
+        model_name = "comm_welcoming"
+    )
 
     fs::dir_delete (path)
 
@@ -107,9 +159,9 @@ test_that ("collate all models", {
 
     expect_type (mod_dat, "double")
     expect_length (mod_dat, 13L)
-    nms <- gsub ("^cm\\_model\\_", "", get_cm_fns ("model"))
+    nms <- names (load_model_json_data ()$models)
     expect_named (mod_dat, nms)
-    expect_true (length (which (is.na (mod_dat))) <= 1L)
+    expect_false (any (is.na (mod_dat)))
 
     expect_identical (mod_dat, mod_dat_metrics)
 
@@ -125,5 +177,5 @@ test_that ("collate all models", {
     expect_s3_class (models_all, "data.frame")
     expect_equal (nrow (models_all), length (end_dates))
     model_fns <- get_cm_fns ("model")
-    expect_named (models_all, c ("date", gsub ("cm\\_model\\_", "", model_fns)))
+    expect_named (models_all, c ("date", nms))
 })
