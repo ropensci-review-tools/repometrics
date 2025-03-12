@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.1.6.141",
+  "version": "0.1.6.142",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",

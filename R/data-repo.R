@@ -22,7 +22,7 @@
 #' @param nyears Parameter <= 1 determining fraction of a year over which data
 #' up until `end_date` are collected.
 #'
-#' @return A list of three forms of data:
+#' @return A list of five items:
 #' \enumerate{
 #' \item "pkgstats" containing statistics on the historical development of
 #' package code, derived from the \pkg{pkgstats} package;
@@ -32,6 +32,10 @@
 #' \item "contributors" as a named list of data on every individual contributor
 #' to the repository, whether by code contributions or GitHub issues or
 #' discussions.
+#' \item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
+#' output of \link{rm_chaoss_metrics_list}.
+#' \item "cm_models" as a list of values for CHAOSS models, derived from
+#' aggregating various metrics.
 #' }
 #'
 #' @family data
@@ -68,6 +72,9 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 
     data$contributors <- data_ctbs
 
+    # dataa$cm_metrics <- collate_all_metrics (path, end_date = end_date)
+    # dataa$cm_models <- collate_all_models (path, end_date = end_date)
+
     return (data)
 }
 
@@ -79,16 +86,12 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 #'
 #' @inheritParams repometrics_data
 #'
-#' @return A list of four items:
+#' @return A list of two items:
 #' \enumerate{
 #' \item "pkgstats" Containing summary data from apply `pkgstats` routines
 #' across the git history of the repository.
 #' \item "rm" Containing data used to derive "CHAOSS metrics", primarily from
 #' GitHub data.
-#' \item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
-#' output of \link{rm_chaoss_metrics_list}.
-#' \item "cm_models" as a list of values for CHAOSS models, derived from
-#' aggregating various metrics.
 #' }
 #'
 #' @family data
@@ -117,20 +120,9 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
         cli::cli_alert_success ("Done!")
     }
 
-    if (is_verbose ()) {
-        cli::cli_alert_info ("Collating CHAOSS metrics ...")
-    }
-    cm_metrics <- collate_all_metrics (path, end_date = end_date)
-    cm_models <- collate_all_models (path, end_date = end_date)
-    if (is_verbose ()) {
-        cli::cli_alert_success ("Done!")
-    }
-
     list (
         pkgstats = pkgstats,
-        rm = rm,
-        cm_metrics = cm_metrics,
-        cm_models = cm_models
+        rm = rm
     )
 }
 
