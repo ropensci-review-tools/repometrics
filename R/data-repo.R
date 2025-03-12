@@ -71,7 +71,7 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
     return (data)
 }
 
-#' Collate 'repometrics' data for a local R package.
+#' Collate code and repository data for a local R package.
 #'
 #' This forms part of the data collated by the main \link{repometrics_data}
 #' function, along with detailed data on individual contributors extracted by
@@ -84,7 +84,7 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 #' \item "pkgstats" Containing summary data from apply `pkgstats` routines
 #' across the git history of the repository.
 #' \item "cm" Containing data used to derive "CHAOSS metrics", primarily from
-#' GitHub data.
+#' GitHub data. See \link{rm_chaoss_metrics_list} for details of metrics.
 #' }
 #'
 #' @family data

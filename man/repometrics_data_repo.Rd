@@ -2,7 +2,7 @@
 % Please edit documentation in R/data-repo.R
 \name{repometrics_data_repo}
 \alias{repometrics_data_repo}
-\title{Collate 'repometrics' data for a local R package.}
+\title{Collate code and repository data for a local R package.}
 \usage{
 repometrics_data_repo(path, step_days = 1L, num_cores = -1L)
 }
@@ -27,7 +27,7 @@ A list with two main items:
 \item "pkgstats" Containing summary data from apply \code{pkgstats} routines
 across the git history of the repository.
 \item "cm" Containing data used to derive "CHAOSS metrics", primarily from
-GitHub data.
+GitHub data. See \link{rm_chaoss_metrics_list} for details of metrics.
 }
 }
 \description{

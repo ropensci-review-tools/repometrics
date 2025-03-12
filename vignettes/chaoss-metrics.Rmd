@@ -57,3 +57,6 @@ get_Rd_metadata <- utils::getFromNamespace (".Rd_get_metadata", "tools")
 fn_note <- gsub ("\\n+", " ", get_Rd_metadata (fn_help, "note"))
 cat (paste0 ("> ", fn_note))
 ```
+
+All metrics are collated by calling [the main `repometrics_data()`
+function](https://docs.ropensci.org/repometrics/reference/repometrics_data.html).
