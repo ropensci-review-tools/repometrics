@@ -1,0 +1,19 @@
+---
+title: "CHAOSS metrics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CHAOSS metrics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set (
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+The `repometrics` package collates many metrics of a nominated repository,
+including the metrics defined by the [CHAOSS community ("Community Health
+Analytics in Open Source Software")](https://chaoss.community/).
