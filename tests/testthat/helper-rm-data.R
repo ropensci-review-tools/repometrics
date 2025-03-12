@@ -42,7 +42,7 @@ mock_rm_data <- function (repo = TRUE) {
 
     # rm-data-user:
     logins <- c ("gaborcsardi", "hfrick", "mpadge")
-    end_date <- as.POSIXct ("2024-01-01T00:00:00")
+    end_date <- as.Date ("2024-01-01")
     for (login in logins) {
         prfx <- paste0 ("gh_user", match (login, logins), "_")
         pars <- list (

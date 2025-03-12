@@ -80,7 +80,7 @@ test_that ("repometrics_data_user fn", {
     dat_mocked <- mock_rm_data (repo = FALSE)
 
     login <- "gaborcsardi"
-    end_date <- as.POSIXct ("2024-01-01T00:00:00")
+    end_date <- as.Date ("2024-01-01")
 
     dat <- repometrics_data_user (
         login = login,
