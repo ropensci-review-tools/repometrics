@@ -16,7 +16,7 @@ rm_chaoss_metrics_list <- function () {
     ptn <- "^cm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     fns <- grep (ptn, pkg_fns, value = TRUE)
-    fns <- fns [which (!grepl ("\\_internal", fns))]
+    fns <- fns [which (!grepl ("\\_internal|\\_url$", fns))]
 
     return (fns)
 }
@@ -94,4 +94,8 @@ models_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) 
         dplyr::mutate (date = end_dates, .before = 1)
 
     return (models_data)
+}
+
+cm_metric_base_url <- function () {
+    "https://chaoss.community/kb/"
 }

@@ -36,3 +36,11 @@ cm_metric_num_stars <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_popularity (path, end_date)
     return (dat [["stars"]])
 }
+
+cm_metric_num_forks_url <- function () {
+    "metric-project-popularity"
+}
+
+cm_metric_num_stars_url <- function () {
+    "metric-project-popularity"
+}

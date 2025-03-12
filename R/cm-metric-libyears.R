@@ -25,3 +25,11 @@ cm_metric_dependency_count <- function (path, end_date = NULL) {
 
     return (nrow (deps))
 }
+
+cm_metric_libyears_url <- function () {
+    "chaoss.community/kb/metric-libyears"
+}
+
+cm_metric_dependency_count_url <- function () {
+    "chaoss.community/kb/metric-libyears"
+}

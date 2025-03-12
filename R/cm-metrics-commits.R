@@ -9,6 +9,10 @@ cm_metric_num_commits <- function (path, end_date = Sys.Date ()) {
     cm_data_num_commits (path, end_date)
 }
 
+cm_metric_num_commits_url <- function () {
+    "metric-code-changes-commits"
+}
+
 #' CHAOSS Metric for commit frequency, which is actually assessed here as
 #' average number of commits per week, so a direct count rather than frequency.
 #' @noRd
@@ -50,4 +54,8 @@ cm_data_commit_freq <- function (path, end_date = Sys.Date ()) {
 cm_metric_commit_count <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_commit_freq (path, end_date)
     return (dat [["mean"]])
+}
+
+cm_metric_commit_count_url <- function () {
+    "metric-code-changes-commits"
 }

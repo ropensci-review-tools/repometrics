@@ -43,3 +43,7 @@ cm_data_ctb_diversity <- function (path, end_date = Sys.Date ()) {
 cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
     cm_data_ctb_diversity (path, end_date)
 }
+
+cm_metric_ctb_diversity_url <- function () {
+    "metric-types-of-contributions"
+}

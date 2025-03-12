@@ -31,6 +31,10 @@ cm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
     return (dat [["mean"]])
 }
 
+cm_metric_release_freq_url <- function () {
+    "metric-release-frequency"
+}
+
 cm_data_recent_releases <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
@@ -47,4 +51,8 @@ cm_data_recent_releases <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_recent_releases <- function (path, end_date = Sys.Date ()) {
     cm_data_recent_releases (path, end_date)
+}
+
+cm_metric_recent_releases_url <- function () {
+    "metric-release-frequency"
 }

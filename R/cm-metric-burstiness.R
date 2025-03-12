@@ -61,3 +61,7 @@ cm_data_burstiness <- function (path, end_date, band_len = 31L, band_width = 2) 
 cm_metric_burstiness <- function (path, end_date, band_len = 31L, band_width = 2) {
     cm_data_burstiness (path, end_date, band_len = 31L, band_width = 2)
 }
+
+cm_metric_burstiness_url <- function () {
+    "metric-burstiness"
+}

@@ -17,3 +17,7 @@ cm_data_response_time <- function (path, end_date = Sys.Date ()) {
 cm_metric_response_time <- function (path, end_date = Sys.Date ()) {
     cm_data_response_time (path, end_date)
 }
+
+cm_metric_response_time_url <- function () {
+    "metric-time-to-first-response"
+}

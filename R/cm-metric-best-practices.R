@@ -3,8 +3,6 @@
 #' This extends beyond the single CHAOSS recommendation of OpenSSF to also
 #' include the core infrastructure best practices badge.
 #'
-#' \url{https://chaoss.community/kb/metric-open-source-security-foundation-openssf-best-practices-badge/}
-#'
 #' This metric does not use the `end_date` parameter (but includes it to
 #' provide a consistent interface).
 #'
@@ -24,4 +22,8 @@ cm_data_best_practices <- function (path, end_date = NULL) {
 
 cm_metric_best_practices <- function (path, end_date = NULL) {
     cm_data_best_practices (path, end_date)
+}
+
+cm_metric_best_practices_url <- function () {
+    "metric-open-source-security-foundation-openssf-best-practices-badge"
 }

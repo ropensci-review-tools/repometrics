@@ -27,3 +27,7 @@ cm_data_num_contributors <- function (path, end_date = Sys.Date ()) {
 cm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
     cm_data_num_contributors (path, end_date)
 }
+
+cm_metric_num_contributors_url <- function () {
+    "metric-contributors"
+}

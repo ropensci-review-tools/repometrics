@@ -58,3 +58,7 @@ cm_metric_label_inclusivity <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_label_inclusivity (path, end_date)
     return (dat [["prop_friendly_overall"]])
 }
+
+cm_metric_label_inclusivity_url <- function () {
+    "chaoss.community/kb/metric-issue-label-inclusivity"
+}

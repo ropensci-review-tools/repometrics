@@ -26,6 +26,10 @@ cm_metric_contrib_absence_commits <- function (path, end_date = Sys.Date ()) {
     dat [["ncommits"]]
 }
 
+cm_metric_contrib_absence_commits_url <- function () {
+    "metric-contributor-absence-factor"
+}
+
 # These others are not used, as they are highly correlated with main measure
 # anyway:
 #
