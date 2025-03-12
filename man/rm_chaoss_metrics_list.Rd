@@ -4,7 +4,7 @@
 \alias{rm_chaoss_metrics_list}
 \title{List all implemented CHAOSS metrics}
 \usage{
-rm_chaoss_metrics_list(what = "metric")
+rm_chaoss_metrics_list()
 }
 \value{
 A character vector with the internal function names of all

@@ -11,15 +11,12 @@
 #' metrics <- rm_chaoss_metrics_list ()
 #' @family auxiliary
 #' @export
-rm_chaoss_metrics_list <- function (what = "metric") {
+rm_chaoss_metrics_list <- function () {
 
-    # Allow for possible expansion later:
-    what <- match.arg (what, "metric")
-    ptn <- paste0 ("^cm\\_", what, "\\_")
-
+    ptn <- "^cm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     fns <- grep (ptn, pkg_fns, value = TRUE)
-    fns <- fns [which (!grepl ("internal", fns))]
+    fns <- fns [which (!grepl ("\\_internal", fns))]
 
     return (fns)
 }
