@@ -11,6 +11,9 @@ cm_data_test_coverage <- function (path, end_date = NULL) {
 
     readme <- readr::read_lines (readme, progress = FALSE)
     codecov <- grep ("codecov\\.io.*\\.svg", readme, value = TRUE)
+    # That may not be separated by a linebreak, so:
+    codecov <- strsplit (codecov, "\\[\\!\\[|\\s") [[1]]
+    codecov <- grep ("codecov\\.io.*\\.svg", codecov, value = TRUE)
     if (length (codecov) == 0L) {
         return (NA_real_)
     }
