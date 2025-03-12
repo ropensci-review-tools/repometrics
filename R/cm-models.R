@@ -13,14 +13,18 @@ calculate_one_model <- function (path, end_date = Sys.Date (), metrics_data = NU
     these_metrics <- dplyr::filter (mod_dat$metrics, name %in% model_metrics)
     fn_names <- paste0 ("cm_metric_", these_metrics$name)
 
+    # metrics_values in the following are summed because some metrics like
+    # committer count have multiple fields:
     if (is.null (metrics_data)) {
         pars <- list (path = path, end_date = end_date)
-        # some metrics like committer count have multiple fields:
         metrics_values <- vapply (fn_names, function (f) {
             sum (do.call (f, pars))
         }, numeric (1L))
     } else {
-        metrics_values <- unlist (lapply (these_metrics$name, function (n) metrics_data [[n]]))
+        metrics_values <- unlist (lapply (
+            these_metrics$name,
+            function (n) sum (metrics_data [[n]])
+        ))
     }
 
     index <- which (these_metrics$scale == "log" & !is.na (metrics_values))
