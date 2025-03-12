@@ -8,6 +8,9 @@ load_model_json_data <- function () {
 
 calculate_one_model <- function (path, end_date = Sys.Date (), metrics_data = NULL, model_name = NULL) {
 
+    # Suppress no visible binding note:
+    name <- NULL
+
     mod_dat <- load_model_json_data ()
     model_metrics <- mod_dat$models [[grep (model_name, names (mod_dat$models), fixed = TRUE)]]
     these_metrics <- dplyr::filter (mod_dat$metrics, name %in% model_metrics)
