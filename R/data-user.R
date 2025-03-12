@@ -22,15 +22,15 @@
 #' @family data
 #' @export
 repometrics_data_user <- function (login,
-                                   ended_at = Sys.Date (),
+                                   end_date = Sys.Date (),
                                    nyears = 1,
                                    n_per_page = 100) {
 
-    repometrics_data_user_memoised (login, ended_at, nyears, n_per_page)
+    repometrics_data_user_memoised (login, end_date, nyears, n_per_page)
 }
 
 repometrics_data_user_internal <- function (login,
-                                            ended_at = Sys.Date (),
+                                            end_date = Sys.Date (),
                                             nyears = 1,
                                             n_per_page = 100) {
 
@@ -44,7 +44,7 @@ repometrics_data_user_internal <- function (login,
     pars <- list (
         login = login,
         n_per_page = n_per_page,
-        ended_at = ended_at,
+        end_date = end_date,
         nyears = nyears
     )
 
@@ -85,7 +85,7 @@ all_gh_user_fns_memoised <- function (data_fns, pars) {
             memoise::has_cache (get (i)) (
                 login = pars$login,
                 n_per_page = pars$n_per_page,
-                ended_at = pars$ended_at,
+                end_date = pars$end_date,
                 nyears = pars$nyears
             ),
             error = function (e) FALSE

@@ -17,12 +17,12 @@
 #' -1L` uses `detectCores() - 1L`. Positive values use precisely that number,
 #' restricted to maximum available cores, and a value of zero will use all
 #' available cores.
-#' @param ended_at Parameter used in some aspects of resultant data to limit
+#' @param end_date Parameter used in some aspects of resultant data to limit
 #' the end date of data collection. Defaults to `Sys.Date ()`.
 #' @param nyears Parameter <= 1 determining fraction of a year over which data
 #' up until `end_date` are collected.
 #'
-#' @return A list of three forms of data:
+#' @return A list of five items:
 #' \enumerate{
 #' \item "pkgstats" containing statistics on the historical development of
 #' package code, derived from the \pkg{pkgstats} package;
@@ -32,12 +32,16 @@
 #' \item "contributors" as a named list of data on every individual contributor
 #' to the repository, whether by code contributions or GitHub issues or
 #' discussions.
+#' \item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
+#' output of \link{rm_chaoss_metrics_list}.
+#' \item "cm_models" as a list of values for CHAOSS models, derived from
+#' aggregating various metrics.
 #' }
 #'
 #' @family data
 #' @export
 repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
-                              ended_at = Sys.Date (), nyears = 1) {
+                              end_date = Sys.Date (), nyears = 1) {
 
     data <- repometrics_data_repo (
         path = path, step_days = step_days, num_cores = num_cores
@@ -48,7 +52,7 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
         tryCatch (
             repometrics_data_user (
                 login = ctb,
-                ended_at = ended_at,
+                end_date = end_date,
                 nyears = nyears
             ),
             error = function (e) NULL
@@ -68,10 +72,13 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 
     data$contributors <- data_ctbs
 
+    # dataa$cm_metrics <- collate_all_metrics (path, end_date = end_date)
+    # dataa$cm_models <- collate_all_models (path, end_date = end_date)
+
     return (data)
 }
 
-#' Collate 'repometrics' data for a local R package.
+#' Collate code and repository data for a local R package.
 #'
 #' This forms part of the data collated by the main \link{repometrics_data}
 #' function, along with detailed data on individual contributors extracted by
@@ -79,11 +86,11 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 #'
 #' @inheritParams repometrics_data
 #'
-#' @return A list with two main items:
+#' @return A list of two items:
 #' \enumerate{
 #' \item "pkgstats" Containing summary data from apply `pkgstats` routines
 #' across the git history of the repository.
-#' \item "cm" Containing data used to derive "CHAOSS metrics", primarily from
+#' \item "rm" Containing data used to derive "CHAOSS metrics", primarily from
 #' GitHub data.
 #' }
 #'
@@ -113,7 +120,10 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
         cli::cli_alert_success ("Done!")
     }
 
-    list (pkgstats = pkgstats, rm = rm)
+    list (
+        pkgstats = pkgstats,
+        rm = rm
+    )
 }
 
 #' Calculate all repository data used in CHAOSS metrics

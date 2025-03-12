@@ -8,7 +8,7 @@ repometrics_data(
   path,
   step_days = 1L,
   num_cores = -1L,
-  ended_at = Sys.Date(),
+  end_date = Sys.Date(),
   nyears = 1
 )
 }
@@ -27,14 +27,14 @@ cores, determined as \code{parallel::detectCores()}, so default of \code{num_cor
 restricted to maximum available cores, and a value of zero will use all
 available cores.}
 
-\item{ended_at}{Parameter used in some aspects of resultant data to limit
+\item{end_date}{Parameter used in some aspects of resultant data to limit
 the end date of data collection. Defaults to \code{Sys.Date ()}.}
 
 \item{nyears}{Parameter <= 1 determining fraction of a year over which data
 up until \code{end_date} are collected.}
 }
 \value{
-A list of three forms of data:
+A list of five items:
 \enumerate{
 \item "pkgstats" containing statistics on the historical development of
 package code, derived from the \pkg{pkgstats} package;
@@ -44,6 +44,10 @@ repository.
 \item "contributors" as a named list of data on every individual contributor
 to the repository, whether by code contributions or GitHub issues or
 discussions.
+\item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
+output of \link{rm_chaoss_metrics_list}.
+\item "cm_models" as a list of values for CHAOSS models, derived from
+aggregating various metrics.
 }
 }
 \description{

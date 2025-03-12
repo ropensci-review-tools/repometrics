@@ -104,6 +104,14 @@ cm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
     return (dat [["rejected_count"]])
 }
 
+cm_metric_pr_revs_approved_url <- function () {
+    "metric-change-request-reviews"
+}
+
+cm_metric_pr_revs_rejected_url <- function () {
+    "metric-change-request-reviews"
+}
+
 cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
@@ -146,6 +154,10 @@ cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
     return (res [["mean"]])
 }
 
+cm_metric_pr_review_duration_url <- function () {
+    "metric-change-request-review-duration"
+}
+
 cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 
     pr_dat <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
@@ -163,6 +175,10 @@ cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
     cm_data_pr_cmt_count (path, end_date)
+}
+
+cm_metric_pr_cmt_count_url <- function () {
+    "metric-change-requests"
 }
 
 #' Measure response duration to PRs, but only from primary contributors.
@@ -214,6 +230,10 @@ cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
     cm_data_pr_response_durations (path, end_date)
 }
 
+cm_metric_pr_response_durations_url <- function () {
+    "metric-change-requests-duration"
+}
+
 cm_data_pr_age <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
@@ -234,6 +254,10 @@ cm_data_pr_age <- function (path, end_date = Sys.Date ()) {
 cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_pr_age (path, end_date)
     return (dat [["mean"]])
+}
+
+cm_metric_pr_age_url <- function () {
+    "metric-change-requests-duration"
 }
 
 #' CHAOSS metric "Change Request Reviews", which assesses "to what extent are
@@ -258,4 +282,8 @@ cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
     cm_data_pr_reviews_approved (path, end_date)
+}
+
+cm_metric_pr_reviews_approved_url <- function () {
+    "metric-change-requests-accepted"
 }

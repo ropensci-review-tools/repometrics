@@ -41,7 +41,7 @@ gh_user_general_qry <- function (login = "") {
 
 # Only uses `login` param:
 gh_user_general_internal <- function (login = "",
-                                      ended_at = Sys.Date (),
+                                      end_date = Sys.Date (),
                                       nyears = 1,
                                       n_per_page = 100L) {
 
@@ -141,9 +141,9 @@ gh_user_follow_qry <- function (login = "",
     return (q)
 }
 
-# Uses all parameters except `ended_at` at `nyears`.
+# Uses all parameters except `end_date` at `nyears`.
 gh_user_follow_internal <- function (login,
-                                     ended_at = Sys.Date (),
+                                     end_date = Sys.Date (),
                                      nyears = 1,
                                      n_per_page = 100L,
                                      followers = TRUE) {
@@ -219,9 +219,9 @@ gh_user_commit_cmt_qry <- function (login = "",
     return (q)
 }
 
-# Uses all params except `ended_at` and `nyears`:
+# Uses all params except `end_date` and `nyears`:
 gh_user_commit_cmt_internal <- function (login,
-                                         ended_at = Sys.Date (),
+                                         end_date = Sys.Date (),
                                          nyears = 1,
                                          n_per_page = 100L) {
 
@@ -287,7 +287,7 @@ gh_user_commit_cmt <- memoise::memoise (gh_user_commit_cmt_internal)
 #
 # Uses all parameters
 gh_user_commits_qry <- function (login = "",
-                                 ended_at = Sys.Date (),
+                                 end_date = Sys.Date (),
                                  nyears = 1,
                                  n_per_page = 100L,
                                  end_cursor = NULL) {
@@ -297,8 +297,8 @@ gh_user_commits_qry <- function (login = "",
     checkmate::assert_numeric (nyears, len = 1L, upper = 1)
 
     # These 'format' calls pad with hms = "00:00:00":
-    from <- format (ended_at - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
-    ended_at <- format (ended_at, "%Y-%m-%dT%H:%M:%S")
+    from <- format (end_date - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
+    end_date <- format (end_date, "%Y-%m-%dT%H:%M:%S")
 
     after_txt <- ""
     if (!is.null (end_cursor)) {
@@ -308,7 +308,7 @@ gh_user_commits_qry <- function (login = "",
     q <- paste0 ("{
         user(login:\"", login, "\") {
             login
-            contributionsCollection (from: \"", from, "\", to: \"", ended_at, "\") {
+            contributionsCollection (from: \"", from, "\", to: \"", end_date, "\") {
                 startedAt
                 endedAt
                 totalCommitContributions
@@ -336,7 +336,7 @@ gh_user_commits_qry <- function (login = "",
 }
 
 gh_user_commits_internal <- function (login,
-                                      ended_at = Sys.Date (),
+                                      end_date = Sys.Date (),
                                       nyears = 1,
                                       n_per_page = 100L) {
 
@@ -351,7 +351,7 @@ gh_user_commits_internal <- function (login,
 
         q <- gh_user_commits_qry (
             login = login,
-            ended_at = ended_at,
+            end_date = end_date,
             nyears = nyears,
             n_per_page = n_per_page,
             end_cursor = end_cursor
@@ -412,7 +412,7 @@ gh_user_commits_internal <- function (login,
     }
 
     started_at <- dat$data$user$contributionsCollection$startedAt
-    ended_at <- dat$data$user$contributionsCollection$endedAt
+    end_date <- dat$data$user$contributionsCollection$endedAt
 
     # suppress no visible binding note:
     repo <- date <- NULL
@@ -423,7 +423,7 @@ gh_user_commits_internal <- function (login,
     ) |>
         dplyr::arrange (repo, date)
     attr (res, "started_at") <- started_at
-    attr (res, "ended_at") <- ended_at
+    attr (res, "end_date") <- end_date
 
     return (res)
 }
@@ -431,7 +431,7 @@ gh_user_commits <- memoise::memoise (gh_user_commits_internal)
 
 # Uses all parameters
 gh_user_issues_qry <- function (login = "",
-                                ended_at = Sys.Date (),
+                                end_date = Sys.Date (),
                                 nyears = 1,
                                 n_per_page = 100L,
                                 end_cursor = NULL) {
@@ -440,8 +440,8 @@ gh_user_issues_qry <- function (login = "",
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
     checkmate::assert_numeric (nyears, len = 1L, upper = 1)
 
-    from <- format (ended_at - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
-    ended_at <- format (ended_at, "%Y-%m-%dT%H:%M:%S")
+    from <- format (end_date - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
+    end_date <- format (end_date, "%Y-%m-%dT%H:%M:%S")
 
     after_txt <- ""
     if (!is.null (end_cursor)) {
@@ -451,7 +451,7 @@ gh_user_issues_qry <- function (login = "",
     q <- paste0 ("{
         user(login:\"", login, "\") {
             login
-            contributionsCollection (from: \"", from, "\", to: \"", ended_at, "\") {
+            contributionsCollection (from: \"", from, "\", to: \"", end_date, "\") {
                 startedAt
                 endedAt
                 issueContributions (first: ", n_per_page, after_txt, ") {
@@ -496,7 +496,7 @@ gh_user_issues_qry <- function (login = "",
 
 # Uses all parameters
 gh_user_issues_internal <- function (login,
-                                     ended_at = Sys.Date (),
+                                     end_date = Sys.Date (),
                                      nyears = 1,
                                      n_per_page = 100L) {
 
@@ -514,7 +514,7 @@ gh_user_issues_internal <- function (login,
 
         q <- gh_user_issues_qry (
             login = login,
-            ended_at = ended_at,
+            end_date = end_date,
             nyears = nyears,
             n_per_page = n_per_page,
             end_cursor = end_cursor
@@ -523,7 +523,7 @@ gh_user_issues_internal <- function (login,
 
         collection <- dat$data$user$contributionsCollection
         collection_started_at <- collection$startedAt
-        collection_ended_at <- collection$endedAt
+        collection_end_date <- collection$endedAt
 
         has_next_page <- collection$issueContributions$pageInfo$hasNextPage
         end_cursor <- collection$issueContributions$pageInfo$endCursor
@@ -604,7 +604,7 @@ gh_user_issues_internal <- function (login,
     )
 
     attr (res, "started_at") <- collection_started_at
-    attr (res, "ended_at") <- collection_ended_at
+    attr (res, "end_date") <- collection_end_date
 
     return (res)
 }
@@ -651,9 +651,9 @@ gh_user_issue_cmts_qry <- function (login = "",
     return (q)
 }
 
-# Uses all parameters except `ended_at`
+# Uses all parameters except `end_date`
 gh_user_issue_cmts_internal <- function (login,
-                                         ended_at = Sys.Date (),
+                                         end_date = Sys.Date (),
                                          nyears = 1,
                                          n_per_page = 100L) {
 

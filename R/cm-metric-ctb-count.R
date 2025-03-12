@@ -36,6 +36,10 @@ cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
     return (dat [["code"]])
 }
 
+cm_metric_ctb_count_url <- function () {
+    "metrics-model-community-activity"
+}
+
 #' CHAOSS metric for committer count
 #'
 #' \url{https://chaoss.community/kb/metric-committers/}.
@@ -86,4 +90,12 @@ cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
 cm_metric_watcher_count <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_committer_count (path, end_date)
     return (dat [["watchers"]])
+}
+
+cm_metric_committer_count_url <- function () {
+    "metrics-model-community-activity"
+}
+
+cm_metric_watcher_count_url <- function () {
+    "metrics-model-community-activity"
 }

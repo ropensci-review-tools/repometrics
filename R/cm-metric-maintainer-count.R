@@ -52,6 +52,10 @@ cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
     return (dat [["recent"]])
 }
 
+cm_metric_maintainer_count_url <- function () {
+    "metric-contributors"
+}
+
 #' Match repo contributors from both git log and GitHub API to author names and
 #' emails given in "DESCRIPTION" file.
 #'
@@ -94,8 +98,6 @@ match_repo_ctbs_to_desc <- function (path, desc_auts, gh_auts) {
 
     return (max (c (n_from_log, n_from_gh)))
 }
-
-
 
 get_desc_authors <- function (path, roles = c ("cre", "aut")) {
 

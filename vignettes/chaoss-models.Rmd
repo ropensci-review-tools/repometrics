@@ -22,11 +22,21 @@ individual ["metrics"](https://chaoss.community/kbtopic/all-metrics/):
 
 > to provide deeper context and answer more complex questions about a community's health.
 
-These models are not hard-coded here, rather the
-metrics used in each are defined within a single JSON file stored at
+The metrics used in the models are described in the separate [*CHAOSS metrics*
+vignette](https://docs.ropensci.org/repometrics/articles/chaoss-models.html),
+and are detailed in the `data.frame` returned by [the
+`rm_chaoss_metrics_list()`
+function](https://docs.ropensci.org/repometrics/reference/rm_chaoss_metrics_list.html).
+
+In contrast to the metrics, each of which is encoded as a separate function
+within this package, the models are not hard-coded, rather the metrics used in
+each are defined within a single JSON file stored at
 [`extdata/chaoss-models/chaoss-models.json`](https://github.com/ropensci-review-tools/repometrics/blob/main/inst/extdata/chaoss-models/chaoss-models.json)
-in the `inst` sub-directory of the package. This allows the file to be accessed
-by loading the package:
+in the `inst` sub-directory of the package. This allows the model construction
+to be easily modified without needing to modify the underlying code of this
+package.
+
+The file can be accessed by loading the package:
 
 ```{r setup}
 library (repometrics)

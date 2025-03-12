@@ -50,3 +50,7 @@ cm_data_has_ci <- function (path, end_date = NULL) {
 cm_metric_has_ci <- function (path, end_date = NULL) {
     cm_data_has_ci (path, end_date)
 }
+
+cm_metric_has_ci_url <- function () {
+    "metric-test-coverage"
+}

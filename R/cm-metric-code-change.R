@@ -19,3 +19,7 @@ cm_metric_code_change_lines <- function (path,
 
     cm_data_code_change_lines (path, end_date, exclude_whitespace)
 }
+
+cm_metric_code_change_lines_url <- function () {
+    "metric-code-changes-commits"
+}

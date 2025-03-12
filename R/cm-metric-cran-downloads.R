@@ -24,6 +24,10 @@ cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
     cm_data_cran_downloads (path, end_date)
 }
 
+cm_metric_cran_downloads_url <- function () {
+    "metric-number-of-downloads"
+}
+
 #' Download the full daily log over `nyears`, and use memoised return value to
 #' filter to desired period for subsequent calls.
 #' @noRd

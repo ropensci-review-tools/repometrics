@@ -80,12 +80,12 @@ test_that ("repometrics_data_user fn", {
     dat_mocked <- mock_rm_data (repo = FALSE)
 
     login <- "gaborcsardi"
-    ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+    end_date <- as.Date ("2024-01-01")
 
     dat <- repometrics_data_user (
         login = login,
         n_per_page = 1L,
-        ended_at = ended_at,
+        end_date = end_date,
         nyears = 1
     )
     expect_identical (dat, dat_mocked$gaborcsardi)

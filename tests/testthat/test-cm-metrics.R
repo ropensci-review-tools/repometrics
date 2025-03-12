@@ -641,7 +641,7 @@ test_that ("cm metric collate all", {
 
     expect_type (metrics_data, "list")
     expect_length (metrics_data, 48L)
-    metric_fns <- get_cm_fns ("metric")
+    metric_fns <- rm_chaoss_metrics_list ()$fn_name
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)

@@ -1,18 +1,51 @@
-get_cm_fns <- function (what = "metric") {
+#' List all implemented CHAOSS metrics
+#'
+#' This function returns a list of internal functions defined within the
+#' 'repometrics' package. These internal functions are not intended to be
+#' called directly, rather this list is provided for information only, to
+#' enable users to know which metrics are implemented.
+#'
+#' @return A `data.frame` with two columns:
+#' \enumerate{
+#' \item "fn_names", with the internal function names of all implemented CHAOSS
+#' metrics.
+#' \item "url", with the URL to the CHAOSS community web page describing that
+#' metric.
+#' }
+#'
+#' @note Metrics have been adapted in this package, and so may not precisely
+#' reflect the descriptions provided in the CHAOSS community web pages linked
+#' to in the URLs from this function. Adaptations have in particular been
+#' implemented to align metrics with their usage in aggregate "models".
+#'
+#' @examples
+#' metrics <- rm_chaoss_metrics_list ()
+#' @family auxiliary
+#' @export
+rm_chaoss_metrics_list <- function () {
 
-    what <- match.arg (what, c ("metric", "model"))
-    ptn <- paste0 ("^cm\\_", what, "\\_")
+    fn_names <- chaoss_metrics_fn_names ()
+    url_fns <- paste0 (fn_names, "_url")
+    urls <- vapply (url_fns, function (u) do.call (u, list ()), character (1L))
+    urls <- paste0 (cm_metric_base_url (), unname (urls))
 
+    data.frame (fn_name = fn_names, url = urls)
+}
+
+chaoss_metrics_fn_names <- function () {
+
+    ptn <- "^cm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     fns <- grep (ptn, pkg_fns, value = TRUE)
-    fns <- fns [which (!grepl ("internal", fns))]
+    fns <- fns [which (!grepl ("\\_internal|\\_url$", fns))]
 
     return (fns)
+
 }
 
 collate_all_metrics <- function (path, end_date = Sys.Date ()) {
 
-    metric_fns <- get_cm_fns ("metric")
+    metric_fns <- rm_chaoss_metrics_list ()$fn_name
 
     pars <- list (path = path, end_date = end_date)
     extra_pars <- list (
@@ -83,4 +116,8 @@ models_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) 
         dplyr::mutate (date = end_dates, .before = 1)
 
     return (models_data)
+}
+
+cm_metric_base_url <- function () {
+    "https://chaoss.community/kb/"
 }

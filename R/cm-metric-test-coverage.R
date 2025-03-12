@@ -42,3 +42,7 @@ cm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
     cm_data_test_coverage (path, end_date) / 100
 }
 cm_metric_test_coverage <- memoise::memoise (cm_metric_test_coverage_internal)
+
+cm_metric_test_coverage_url <- function () {
+    "metric-test-coverage"
+}

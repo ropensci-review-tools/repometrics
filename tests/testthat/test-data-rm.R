@@ -6,14 +6,14 @@ test_that ("repometrics data full", {
 
     data_repo <- repometrics_data_repo (path, num_cores = 1L)
 
-    ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+    end_date <- as.Date ("2024-01-01")
     logins <- data_repo$rm$contribs_from_gh_api$login
 
     data_ctbs <- lapply (logins, function (login) {
         repometrics_data_user (
             login = login,
             n_per_page = 1L,
-            ended_at = ended_at,
+            end_date = end_date,
             nyears = 1
         )
     })
@@ -22,7 +22,7 @@ test_that ("repometrics data full", {
     data <- repometrics_data (
         path,
         num_cores = 1L,
-        ended_at = ended_at,
+        end_date = end_date,
         nyears = 1
     )
 

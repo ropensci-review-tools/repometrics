@@ -176,6 +176,5 @@ test_that ("collate all models", {
 
     expect_s3_class (models_all, "data.frame")
     expect_equal (nrow (models_all), length (end_dates))
-    model_fns <- get_cm_fns ("model")
     expect_named (models_all, c ("date", nms))
 })

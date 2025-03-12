@@ -15,6 +15,10 @@ cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
     cm_data_issues_to_prs (path, end_date)
 }
 
+cm_metric_issues_to_prs_url <- function () {
+    "metric-change-requests"
+}
+
 get_issues_in_period <- function (path,
                                   end_date = Sys.Date (),
                                   closed_only = FALSE) {
