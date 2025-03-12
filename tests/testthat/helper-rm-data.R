@@ -42,13 +42,13 @@ mock_rm_data <- function (repo = TRUE) {
 
     # rm-data-user:
     logins <- c ("gaborcsardi", "hfrick", "mpadge")
-    ended_at <- as.POSIXct ("2024-01-01T00:00:00")
+    end_date <- as.POSIXct ("2024-01-01T00:00:00")
     for (login in logins) {
         prfx <- paste0 ("gh_user", match (login, logins), "_")
         pars <- list (
             login = login,
             n_per_page = 1L,
-            ended_at = ended_at,
+            end_date = end_date,
             nyears = 1
         )
         general <- httptest2::with_mock_dir (paste0 (prfx, "general"), {
@@ -81,9 +81,9 @@ mock_rm_data <- function (repo = TRUE) {
     writeLines (desc, desc_path)
 
     # test-cm-metrics.R only tests cran downloads for this one date:
-    end_date <- as.Date ("2024-08-01")
+    end_date_cran <- as.Date ("2024-08-01")
     dl <- httptest2::with_mock_dir ("cran_dl", {
-        cm_metric_cran_downloads (path, end_date = end_date)
+        cm_metric_cran_downloads (path, end_date = end_date_cran)
     })
 
     # The return full mocked data set:
@@ -104,7 +104,7 @@ mock_rm_data <- function (repo = TRUE) {
             pars <- list (
                 login = login,
                 n_per_page = 1L,
-                ended_at = ended_at,
+                end_date = end_date,
                 nyears = 1
             )
 

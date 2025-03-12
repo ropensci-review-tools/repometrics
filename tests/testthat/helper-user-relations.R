@@ -46,7 +46,7 @@ mock_user_rel_data <- function () {
         date = rep (timestamp, 2L)
     )
     attr (commit_cmt, "started_at") <- timestamp_minus_year
-    attr (commit_cmt, "ended_at") <- timestamp
+    attr (commit_cmt, "end_date") <- timestamp
 
     issues <- data.frame (
         opened_at = rep (timestamp, 2L),
@@ -59,7 +59,7 @@ mock_user_rel_data <- function () {
         repo_languages = I (c ("R", "C"))
     )
     attr (issues, "started_at") <- timestamp_minus_year
-    attr (issues, "ended_at") <- timestamp
+    attr (issues, "end_date") <- timestamp
 
     issue_cmts <- data.frame (
         org_repo = commits$repo,
