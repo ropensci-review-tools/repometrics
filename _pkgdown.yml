@@ -10,3 +10,6 @@ reference:
 - title: Dashboard
   contents:
   - has_concept("dashboard")
+- title: Auxiliary functions
+  contents:
+  - has_concept("auxiliary")

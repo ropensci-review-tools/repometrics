@@ -1,6 +1,20 @@
-get_cm_fns <- function (what = "metric") {
+#' List all implemented CHAOSS metrics
+#'
+#' This function returns a list of internal functions defined within the
+#' 'repometrics' package. These internal functions are not intended to be
+#' called directly, rather this list is provided for information only, to
+#' enable users to know which metrics are implemented.
+#'
+#' @return A character vector with the internal function names of all
+#' implemented CHAOSS metrics.
+#' @examples
+#' metrics <- rm_chaoss_metrics_list ()
+#' @family auxiliary
+#' @export
+rm_chaoss_metrics_list <- function (what = "metric") {
 
-    what <- match.arg (what, c ("metric", "model"))
+    # Allow for possible expansion later:
+    what <- match.arg (what, "metric")
     ptn <- paste0 ("^cm\\_", what, "\\_")
 
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
@@ -12,7 +26,7 @@ get_cm_fns <- function (what = "metric") {
 
 collate_all_metrics <- function (path, end_date = Sys.Date ()) {
 
-    metric_fns <- get_cm_fns ("metric")
+    metric_fns <- rm_chaoss_metrics_list ()
 
     pars <- list (path = path, end_date = end_date)
     extra_pars <- list (
