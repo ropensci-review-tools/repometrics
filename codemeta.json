@@ -60,6 +60,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "DT",
+      "name": "DT",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=DT"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "httptest2",
       "name": "httptest2",
       "provider": {
@@ -319,18 +331,11 @@
       "name": "pkgstats",
       "sameAs": "https://github.com/ropensci-review-tools/pkgstats"
     },
-    "SystemRequirements": {}
+    "SystemRequirements": null
   },
-  "fileSize": "24734.014KB",
+  "fileSize": "24724.111KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",
-    "https://app.codecov.io/gh/ropensci-review-tools/repometrics"
-  ],
+  "contIntegration": ["https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check", "https://app.codecov.io/gh/ropensci-review-tools/repometrics"],
   "developmentStatus": "https://www.repostatus.org/#active",
-  "keywords": [
-    "dashboard",
-    "r",
-    "software-metrics"
-  ]
+  "keywords": ["dashboard", "r", "software-metrics"]
 }

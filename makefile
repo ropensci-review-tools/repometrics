@@ -1,5 +1,5 @@
 LFILE = README
-VIGNETTE = chaoss-models
+VIGNETTE = chaoss-metrics
 
 all: help
 
