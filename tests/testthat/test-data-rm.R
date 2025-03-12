@@ -19,6 +19,9 @@ test_that ("repometrics data full", {
     })
     names (data_ctbs) <- logins
 
+    cm_metrics <- collate_all_metrics (path, end_date = end_date)
+    cm_models <- collate_all_models (path, end_date = end_date)
+
     data <- repometrics_data (
         path,
         num_cores = 1L,
@@ -29,9 +32,17 @@ test_that ("repometrics data full", {
     fs::dir_delete (path)
 
     expect_type (data, "list")
-    expect_named (data, c ("pkgstats", "rm", "contributors"))
+    expect_named (
+        data,
+        c ("pkgstats", "rm", "contributors", "cm_metrics", "cm_models")
+    )
 
-    dat_constructed <- c (data_repo, contributors = list (data_ctbs))
+    dat_constructed <- c (
+        data_repo,
+        contributors = list (data_ctbs),
+        cm_metrics = list (cm_metrics),
+        cm_models = list (cm_models)
+    )
     expect_identical (data, dat_constructed)
 })
 
