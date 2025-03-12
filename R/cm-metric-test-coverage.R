@@ -11,6 +11,9 @@ cm_data_test_coverage <- function (path, end_date = NULL) {
 
     readme <- readr::read_lines (readme, progress = FALSE)
     codecov <- grep ("codecov\\.io.*\\.svg", readme, value = TRUE)
+    if (length (codecov) == 0L) {
+        return (NA_real_)
+    }
     ptn <- "https\\:.*\\.svg"
     badge_svg <- regmatches (codecov, gregexpr (ptn, codecov)) [[1]]
     # Have to use httr2 to enable mocking via httptest2:
