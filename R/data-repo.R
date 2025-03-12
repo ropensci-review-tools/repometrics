@@ -72,8 +72,8 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 
     data$contributors <- data_ctbs
 
-    # dataa$cm_metrics <- collate_all_metrics (path, end_date = end_date)
-    # dataa$cm_models <- collate_all_models (path, end_date = end_date)
+    data$cm_metrics <- collate_all_metrics (path, end_date = end_date)
+    data$cm_models <- collate_all_models (path, end_date = end_date)
 
     return (data)
 }
