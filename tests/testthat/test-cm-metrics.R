@@ -167,7 +167,7 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     path <- generate_test_pkg ()
     revs <- cm_data_pr_reviews (path, end_date = end_date)
     cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
-    prs_approved <- cm_metric_pr_revs_approved (path, end_date = end_date)
+    prs_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
     prs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
     age <- cm_metric_pr_age (path, end_date = end_date)
 
@@ -198,7 +198,7 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
     expect_named (age, NULL)
     expect_true (is.na (age))
 
-    expect_type (prs_approved, "integer")
+    expect_type (prs_approved, "double")
     expect_length (prs_approved, 1L)
     expect_named (prs_approved, NULL)
     expect_type (prs_rejected, "integer")
@@ -640,7 +640,7 @@ test_that ("cm metric collate all", {
     fs::dir_delete (path)
 
     expect_type (metrics_data, "list")
-    expect_length (metrics_data, 48L)
+    expect_length (metrics_data, 47L)
     metric_fns <- rm_chaoss_metrics_list ()$fn_name
     expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
 
@@ -650,7 +650,7 @@ test_that ("cm metric collate all", {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 4, 0, 1, 1,
-        1, 1, 1, 1, 4, 1, 1, 1
+        1, 1, 1, 4, 1, 1, 1
     ))
     expect_equal (lens, lens_expected)
 })

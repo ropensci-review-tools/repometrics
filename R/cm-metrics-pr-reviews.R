@@ -94,18 +94,37 @@ cm_data_pr_reviews <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-cm_metric_pr_revs_approved <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_pr_reviews (path, end_date)
-    return (dat [["approved_count"]])
+#' CHAOSS metric "Change Request Reviews", which assesses "to what extent are
+#' change requests put through a formal review process using platform
+#' features?" This is assessed here as the simple propotion of all merged PRs
+#' which were officially "approved".
+#'
+#' \url{https://chaoss.community/kb/metric-change-request-reviews/}
+#'
+#' @noRd
+cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+
+    pr_dat <- get_prs_in_period (path, end_date)
+
+    ret <- NA_real_
+    if (nrow (pr_dat) > 0L) {
+        ret <- length (which (pr_dat$review_decision == "APPROVED")) /
+            nrow (pr_dat)
+    }
+    return (ret)
+}
+
+cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+    cm_data_pr_reviews_approved (path, end_date)
+}
+
+cm_metric_pr_reviews_approved_url <- function () {
+    "metric-change-requests-accepted"
 }
 
 cm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_pr_reviews (path, end_date)
     return (dat [["rejected_count"]])
-}
-
-cm_metric_pr_revs_approved_url <- function () {
-    "metric-change-request-reviews"
 }
 
 cm_metric_pr_revs_rejected_url <- function () {
@@ -258,32 +277,4 @@ cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_pr_age_url <- function () {
     "metric-change-requests-duration"
-}
-
-#' CHAOSS metric "Change Request Reviews", which assesses "to what extent are
-#' change requests put through a formal review process using platform
-#' features?" This is assessed here as the simple propotion of all merged PRs
-#' which were officially "approved".
-#'
-#' \url{https://chaoss.community/kb/metric-change-request-reviews/}
-#'
-#' @noRd
-cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
-
-    pr_dat <- get_prs_in_period (path, end_date)
-
-    ret <- NA_real_
-    if (nrow (pr_dat) > 0L) {
-        ret <- length (which (pr_dat$review_decision == "APPROVED")) /
-            nrow (pr_dat)
-    }
-    return (ret)
-}
-
-cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_reviews_approved (path, end_date)
-}
-
-cm_metric_pr_reviews_approved_url <- function () {
-    "metric-change-requests-accepted"
 }

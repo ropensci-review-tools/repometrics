@@ -1,9 +1,8 @@
 #' CHAOSS metric for "Types of Contributions", which assesses the diversity of
 #' contribution types.
 #'
-#' This is greatly simplified here, to measure a single proportion of
-#' propoertions of unique GitHub users contributing to issues who are not
-#' otherwise main contributors.
+#' This is greatly simplified here, to measure a single proportion of unique
+#' GitHub users contributing to issues who are not otherwise main contributors.
 #'
 #' \url{https://chaoss.community/kb/metric-types-of-contributions/}.
 #'
