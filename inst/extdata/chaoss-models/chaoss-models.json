@@ -7,6 +7,12 @@
             "better": "higher"
         },
         {
+            "name": "burstiness",
+            "what": "ratio",
+            "scale": "none",
+            "better": "lower"
+        },
+        {
             "name": "change_req_n_closed",
             "what": "count",
             "scale": "log",
@@ -55,9 +61,21 @@
             "better": "higher"
         },
         {
+            "name": "cran_downloads",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
             "name": "ctb_count",
             "what": "count",
             "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "ctb_diversity",
+            "what": "ratio",
+            "scale": "none",
             "better": "higher"
         },
         {
@@ -193,13 +211,31 @@
             "better": "lower"
         },
         {
+            "name": "pr_closure_ratio",
+            "what": "ratio",
+            "scale": "none",
+            "better": "higher"
+        },
+        {
+            "name": "pr_cmt_count",
+            "what": "count",
+            "scale": "log",
+            "better": "higher"
+        },
+        {
+            "name": "pr_response_durations",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
             "name": "pr_review_duration",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
-            "name": "pr_revs_approved",
+            "name": "pr_reviews_approved",
             "what": "count",
             "scale": "log",
             "better": "higher"
@@ -218,6 +254,12 @@
         },
         {
             "name": "release_freq",
+            "what": "days",
+            "scale": "log",
+            "better": "lower"
+        },
+        {
+            "name": "response_time",
             "what": "days",
             "scale": "log",
             "better": "lower"
