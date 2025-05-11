@@ -1,6 +1,6 @@
 load_model_json_data <- function () {
     f <- system.file (
-        fs::path ("extdata", "chaoss-models", "chaoss-models.json"),
+        fs::path ("extdata", "metrics-models", "metrics-models.json"),
         package = "repometrics"
     )
     jsonlite::read_json (f, simplify = TRUE)
