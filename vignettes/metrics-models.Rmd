@@ -1,8 +1,8 @@
 ---
-title: "CHAOSS models"
+title: "Metrics models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{CHAOSS models}
+  %\VignetteIndexEntry{Metrics models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,10 +15,11 @@ knitr::opts_chunk$set (
 ```
 
 The `repometrics` package allows the construction of
-["models"](https://chaoss.community/kbtopic/all-metrics-models/) derived by the
-[CHAOSS community ("Community Health Analytics in Open Source
-Software")](https://chaoss.community/). These models collate various numbers of
-individual ["metrics"](https://chaoss.community/kbtopic/all-metrics/):
+["models"](https://chaoss.community/kbtopic/all-metrics-models/) adapted from
+those developed by the [CHAOSS community ("Community Health Analytics in Open
+Source Software")](https://chaoss.community/). These models collate various
+numbers of individual
+["metrics"](https://chaoss.community/kbtopic/all-metrics/):
 
 > to provide deeper context and answer more complex questions about a community's health.
 
@@ -31,7 +32,7 @@ function](https://docs.ropensci.org/repometrics/reference/rm_chaoss_metrics_list
 In contrast to the metrics, each of which is encoded as a separate function
 within this package, the models are not hard-coded, rather the metrics used in
 each are defined within a single JSON file stored at
-[`extdata/chaoss-models/chaoss-models.json`](https://github.com/ropensci-review-tools/repometrics/blob/main/inst/extdata/chaoss-models/chaoss-models.json)
+[`extdata/metrics-models/metrics-models.json`](https://github.com/ropensci-review-tools/repometrics/blob/main/inst/extdata/metrics-models/metrics-models.json)
 in the `inst` sub-directory of the package. This allows the model construction
 to be easily modified without needing to modify the underlying code of this
 package.
@@ -46,7 +47,7 @@ and then locating the file with:
 
 ```{r cm-file-location}
 f <- system.file (
-    fs::path ("extdata", "chaoss-models", "chaoss-models.json"),
+    fs::path ("extdata", "metrics-models", "metrics-models.json"),
     package = "repometrics"
 )
 ```
@@ -81,8 +82,8 @@ described in the following sub-section.
 Different [CHAOSS metrics](https://chaoss.community/kbtopic/all-metrics/)
 quantify different properties, and are measured on different scales. To combine
 metrics into a single model, differences in scale must be reconciled. The
-[`chaoss-models.json`
-file](https://github.com/ropensci-review-tools/repometrics/blob/main/inst/extdata/chaoss-models/chaoss-models.json)
+[`metrics-models.json`
+file](https://github.com/ropensci-review-tools/repometrics/blob/main/inst/extdata/metrics-models/metrics-models.json)
 defines each metrics according to one of five types of measurement:
 
 - *binary*, translated to 0 for false and 1 for true;
