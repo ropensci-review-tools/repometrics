@@ -2,288 +2,432 @@
     "metrics": [
         {
             "name": "best_practices",
+            "airtable_name": "Best Practices badge",
+            "description": "Does repo have a best practices badge?",
+            "url": "https://chaoss.community/kb/metric-open-source-security-foundation-openssf-best-practices-badge/",
             "what": "binary",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "burstiness",
+            "airtable_name": "Development burstiness",
+            "description": "A measure of the 'burtiness' in all development activity (code, issues, comments). Lower numbers reflect more consistent development activity.",
+            "url": "https://chaoss.community/kb/metric-burstiness/",
             "what": "ratio",
             "scale": "none",
             "better": "lower"
         },
         {
             "name": "change_req_n_closed",
+            "airtable_name": "Nr. closed change requests",
+            "description": "Number of recently closed change requests; log-transformed.",
+            "url": "https://chaoss.community/kb/metric-change-requests/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "change_req_n_opened",
+            "airtable_name": "Nr. opened change requests",
+            "description": "Number of recently opened change requests; log-transformed.",
+            "url": "https://chaoss.community/kb/metric-change-requests/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "change_req_prop_code",
+            "airtable_name": "Code from change requests",
+            "description": "The proportion of code contributed through change requests.",
+            "url": "https://chaoss.community/kb/metric-change-request-commits/",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "change_req_prop_merged",
+            "airtable_name": "Merged change requests",
+            "description": "Proportion of change requests which are merged",
+            "url": "https://chaoss.community/kb/metric-change-request-acceptance-ratio/",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "code_change_lines",
+            "airtable_name": "Lines of code changed",
+            "description": "Total number of code lines changed (added or removed); log-transformed.",
+            "url": "https://chaoss.community/kb/metric-code-changes-lines/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "commit_count",
+            "airtable_name": "Number of commits",
+            "description": "Total number of commits made to source code; log-transformed.",
+            "url": "https://chaoss.community/kb/metric-code-changes-commits/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "committer_count",
+            "airtable_name": "Number of committers",
+            "description": "Number of individuals who committed to source code",
+            "url": "https://chaoss.community/kb/metric-committers/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "contrib_absence_commits",
+            "airtable_name": "Contributor absence factor",
+            "description": "Number of contributors responsible for at least half of all contributions; log-transformed",
+            "url": "https://chaoss.community/kb/metric-contributor-absence-factor/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "cran_downloads",
+            "airtable_name": "CRAN downloads",
+            "description": "Number of downloads of packages on CRAN",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "ctb_count",
+            "airtable_name": "Number of source contributors",
+            "description": "Number of contributors to source code; log-transformed",
+            "url": "https://chaoss.community/kb/metric-contributors/",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "ctb_diversity",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "defect_resolution_dur",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "dependency_count",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "elephant_factor",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "has_ci",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "binary",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "issue_age",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "issue_cmt_count",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "issue_response_time",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "issue_updates",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "issues_active",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "issues_closed",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "issues_to_prs",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "label_inclusivity",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "languages",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "real",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "libyears",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "license_coverage",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "licenses_declared",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "binary",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "maintainer_count",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "num_commits",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "num_contributors",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "num_forks",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "num_stars",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "pr_age",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "pr_closure_ratio",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "pr_cmt_count",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "pr_response_durations",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "pr_review_duration",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "pr_reviews_approved",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "pr_revs_rejected",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "recent_releases",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "release_freq",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "response_time",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "test_coverage",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "ratio",
             "scale": "none",
             "better": "higher"
         },
         {
             "name": "time_to_close",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
         },
         {
             "name": "watcher_count",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "count",
             "scale": "log",
             "better": "higher"
         },
         {
             "name": "duration",
+            "airtable_name": "",
+            "description": "",
+            "url": "",
             "what": "days",
             "scale": "log",
             "better": "lower"
