@@ -111,7 +111,7 @@
         {
             "name": "ctb_diversity",
             "airtable_name": "Diversity of contributors",
-q           "description": "Simplified version of CHAOSS metrics, measured as total number of non-primary contributors; log-transformed",
+            "description": "Simplified version of CHAOSS metrics, measured as total number of non-primary contributors; log-transformed",
             "url": "https://chaoss.community/kb/metric-types-of-contributions/",
             "what": "ratio",
             "scale": "none",
