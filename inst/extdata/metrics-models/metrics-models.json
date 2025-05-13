@@ -389,8 +389,8 @@
         },
         {
             "name": "response_time",
-            "airtable_name": "Issue response time",
-            "description": "Average time taken (in days) to respond to newly opened issues; log-transformed",
+            "airtable_name": "Response time",
+            "description": "Average time taken (in days) to respond to anything requiring attention (issues, pull request, CRAN errors); log-transformed",
             "url": "https://chaoss.community/kb/metric-time-to-first-response/",
             "what": "days",
             "scale": "log",
