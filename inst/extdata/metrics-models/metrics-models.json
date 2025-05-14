@@ -28,7 +28,7 @@
             "what": "count",
             "scale": "log",
             "better": "higher",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "change_req_n_opened",
@@ -38,7 +38,7 @@
             "what": "count",
             "scale": "log",
             "better": "higher",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "change_req_prop_code",
@@ -48,7 +48,7 @@
             "what": "ratio",
             "scale": "none",
             "better": "higher",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "change_req_prop_merged",
@@ -58,7 +58,7 @@
             "what": "ratio",
             "scale": "none",
             "better": "higher",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "code_change_lines",
@@ -358,7 +358,7 @@
             "what": "ratio",
             "scale": "none",
             "better": "higher",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "pr_cmt_count",
@@ -378,7 +378,7 @@
             "what": "days",
             "scale": "log",
             "better": "lower",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "pr_review_duration",
@@ -388,7 +388,7 @@
             "what": "days",
             "scale": "log",
             "better": "lower",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "pr_reviews_approved",
@@ -398,7 +398,7 @@
             "what": "count",
             "scale": "log",
             "better": "higher",
-            "field_group": "PRs"
+            "field_group": "issues"
         },
         {
             "name": "pr_revs_rejected",
