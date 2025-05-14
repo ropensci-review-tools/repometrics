@@ -7,7 +7,8 @@
             "url": "https://chaoss.community/kb/metric-open-source-security-foundation-openssf-best-practices-badge/",
             "what": "binary",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "burstiness",
@@ -16,7 +17,8 @@
             "url": "https://chaoss.community/kb/metric-burstiness/",
             "what": "ratio",
             "scale": "none",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "development"
         },
         {
             "name": "change_req_n_closed",
@@ -25,7 +27,8 @@
             "url": "https://chaoss.community/kb/metric-change-requests/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "PRs"
         },
         {
             "name": "change_req_n_opened",
@@ -34,7 +37,8 @@
             "url": "https://chaoss.community/kb/metric-change-requests/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "PRs"
         },
         {
             "name": "change_req_prop_code",
@@ -43,7 +47,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-commits/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "PRs"
         },
         {
             "name": "change_req_prop_merged",
@@ -52,7 +57,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-acceptance-ratio/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "PRs"
         },
         {
             "name": "code_change_lines",
@@ -61,7 +67,8 @@
             "url": "https://chaoss.community/kb/metric-code-changes-lines/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "commit_count",
@@ -70,7 +77,8 @@
             "url": "https://chaoss.community/kb/metric-code-changes-commits/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "committer_count",
@@ -79,7 +87,8 @@
             "url": "https://chaoss.community/kb/metric-committers/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "contrib_absence_commits",
@@ -88,7 +97,8 @@
             "url": "https://chaoss.community/kb/metric-contributor-absence-factor/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "cran_downloads",
@@ -97,7 +107,8 @@
             "url": "",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "popularity"
         },
         {
             "name": "ctb_count",
@@ -106,7 +117,8 @@
             "url": "https://chaoss.community/kb/metric-contributors/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "ctb_diversity",
@@ -115,7 +127,8 @@
             "url": "https://chaoss.community/kb/metric-types-of-contributions/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "defect_resolution_dur",
@@ -124,7 +137,8 @@
             "url": "https://chaoss.community/kb/defect-resolution-duration/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "none"
         },
         {
             "name": "dependency_count",
@@ -133,7 +147,8 @@
             "url": "https://chaoss.community/kb/metric-upstream-code-dependencies/",
             "what": "count",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "meta"
         },
         {
             "name": "elephant_factor",
@@ -142,7 +157,8 @@
             "url": "https://chaoss.community/kb/metric-elephant-factor/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "has_ci",
@@ -151,7 +167,8 @@
             "url": "",
             "what": "binary",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "meta"
         },
         {
             "name": "issue_age",
@@ -160,7 +177,8 @@
             "url": "https://chaoss.community/kb/metric-issue-age/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "issues"
         },
         {
             "name": "issue_cmt_count",
@@ -169,7 +187,8 @@
             "url": "https://chaoss.community/kb/metrics-model-community-activity/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "issues"
         },
         {
             "name": "issue_response_time",
@@ -178,7 +197,8 @@
             "url": "https://chaoss.community/kb/metric-issue-response-time/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "issues"
         },
         {
             "name": "issue_updates",
@@ -187,7 +207,8 @@
             "url": "https://chaoss.community/kb/metrics-model-community-activity/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "issues"
         },
         {
             "name": "issues_active",
@@ -196,7 +217,8 @@
             "url": "https://chaoss.community/kb/metric-issues-active/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "issues"
         },
         {
             "name": "issues_closed",
@@ -205,7 +227,8 @@
             "url": "https://chaoss.community/kb/metrics-model-community-activity/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "issues"
         },
         {
             "name": "issues_to_prs",
@@ -214,7 +237,8 @@
             "url": "https://chaoss.community/kb/metrics-model-community-activity/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "issues"
         },
         {
             "name": "label_inclusivity",
@@ -223,7 +247,8 @@
             "url": "https://chaoss.community/kb/metric-issue-label-inclusivity/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "issues"
         },
         {
             "name": "languages",
@@ -232,7 +257,8 @@
             "url": "https://chaoss.community/?p=3430",
             "what": "real",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "meta"
         },
         {
             "name": "libyears",
@@ -241,7 +267,8 @@
             "url": "https://chaoss.community/kb/metric-libyears/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "meta"
         },
         {
             "name": "license_coverage",
@@ -250,7 +277,8 @@
             "url": "https://chaoss.community/kb/metric-license-coverage/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "licenses_declared",
@@ -259,7 +287,8 @@
             "url": "https://chaoss.community/kb/metric-licenses-declared/",
             "what": "binary",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "maintainer_count",
@@ -268,7 +297,8 @@
             "url": "https://chaoss.community/kb/metric-committers/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "num_commits",
@@ -277,7 +307,8 @@
             "url": "https://chaoss.community/kb/metric-code-changes-commits/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "num_contributors",
@@ -286,7 +317,8 @@
             "url": "https://chaoss.community/kb/metric-contributors/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "development"
         },
         {
             "name": "num_forks",
@@ -295,7 +327,8 @@
             "url": "https://chaoss.community/kb/metric-technical-fork/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "popularity"
         },
         {
             "name": "num_stars",
@@ -304,7 +337,8 @@
             "url": "",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "popularity"
         },
         {
             "name": "pr_age",
@@ -313,7 +347,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-reviews/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "none"
         },
         {
             "name": "pr_closure_ratio",
@@ -322,7 +357,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-closure-ratio/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "PRs"
         },
         {
             "name": "pr_cmt_count",
@@ -331,7 +367,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-reviews/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "pr_response_durations",
@@ -340,7 +377,8 @@
             "url": "https://chaoss.community/kb/metric-time-to-first-response/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "PRs"
         },
         {
             "name": "pr_review_duration",
@@ -349,7 +387,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-reviews/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "PRs"
         },
         {
             "name": "pr_reviews_approved",
@@ -358,7 +397,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-reviews/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "PRs"
         },
         {
             "name": "pr_revs_rejected",
@@ -367,7 +407,8 @@
             "url": "https://chaoss.community/kb/metric-change-request-reviews/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "none"
         },
         {
             "name": "recent_releases",
@@ -376,7 +417,8 @@
             "url": "https://chaoss.community/kb/metric-release-frequency/",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "meta"
         },
         {
             "name": "release_freq",
@@ -385,7 +427,8 @@
             "url": "https://chaoss.community/kb/metric-release-frequency/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "meta"
         },
         {
             "name": "response_time",
@@ -394,7 +437,8 @@
             "url": "https://chaoss.community/kb/metric-time-to-first-response/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "issues"
         },
         {
             "name": "test_coverage",
@@ -403,7 +447,8 @@
             "url": "https://chaoss.community/kb/metric-test-coverage/",
             "what": "ratio",
             "scale": "none",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "meta"
         },
         {
             "name": "time_to_close",
@@ -412,7 +457,8 @@
             "url": "https://chaoss.community/kb/metric-time-to-close/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "issues"
         },
         {
             "name": "watcher_count",
@@ -421,7 +467,8 @@
             "url": "",
             "what": "count",
             "scale": "log",
-            "better": "higher"
+            "better": "higher",
+            "field_group": "popularity"
         },
         {
             "name": "pr_duration",
@@ -430,7 +477,8 @@
             "url": "https://chaoss.community/kb/metric-change-requests-duration/",
             "what": "days",
             "scale": "log",
-            "better": "lower"
+            "better": "lower",
+            "field_group": "none"
         }
     ],
     "models": {
