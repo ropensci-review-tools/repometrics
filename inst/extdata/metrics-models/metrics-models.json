@@ -448,7 +448,7 @@
             "what": "ratio",
             "scale": "none",
             "better": "higher",
-            "field_group": "meta"
+            "field_group": "development"
         },
         {
             "name": "time_to_close",
