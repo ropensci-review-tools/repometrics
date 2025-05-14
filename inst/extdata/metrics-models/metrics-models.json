@@ -168,7 +168,7 @@
             "what": "binary",
             "scale": "none",
             "better": "higher",
-            "field_group": "meta"
+            "field_group": "development"
         },
         {
             "name": "issue_age",
