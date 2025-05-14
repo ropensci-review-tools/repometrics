@@ -12,7 +12,7 @@
         {
             "name": "burstiness",
             "airtable_name": "Development burstiness",
-            "description": "A measure of the 'burtiness' in all development activity (code, issues, comments). Lower numbers reflect more consistent development activity.",
+            "description": "A measure of the 'burstiness' in all development activity (code, issues, comments). Lower numbers reflect more consistent development activity.",
             "url": "https://chaoss.community/kb/metric-burstiness/",
             "what": "ratio",
             "scale": "none",
