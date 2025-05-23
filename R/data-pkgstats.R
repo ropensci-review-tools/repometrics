@@ -171,6 +171,7 @@ run_one_pkgstats <- function (path, pkg_date) {
     }
 
     package <- ext_calls <- n <- NULL # Suppress 'no visible binding' note.
+    ext_calls_summary <- rep (NA, 4L)
     if (!is.null (s$external_calls)) {
         ext_calls <- s$external_calls |>
             dplyr::filter (package != s$desc$package) |>
@@ -194,16 +195,16 @@ run_one_pkgstats <- function (path, pkg_date) {
         }
 
         ext_calls <- dplyr::mutate (ext_calls, date = pkg_date)
+
+        base_calls <- null2na_int (ext_calls$n [ext_calls$package == "base"])
+        n_ext_pkgs <- null2na_int (nrow (ext_calls)) - 1L
+
+        ext_calls_summary <- ext_calls |>
+            dplyr::filter (package != "base") |>
+            dplyr::group_by (package) |>
+            dplyr::summarise (n = sum (n))
+        ext_calls_summary <- mn_med_sum (ext_calls_summary$n)
     }
-
-    base_calls <- null2na_int (ext_calls$n [ext_calls$package == "base"])
-    n_ext_pkgs <- null2na_int (nrow (ext_calls)) - 1L
-
-    ext_calls_summary <- ext_calls |>
-        dplyr::filter (package != "base") |>
-        dplyr::group_by (package) |>
-        dplyr::summarise (n = sum (n))
-    ext_calls_summary <- mn_med_sum (ext_calls_summary$n)
 
     s$loc <- cbind (
         package = s$desc$package,
