@@ -170,7 +170,7 @@ run_one_pkgstats <- function (path, pkg_date) {
         fn_nms <- unique (fns [, c ("fn_name", "exported")])
     }
 
-    package <- ext_calls <- NULL # Suppress 'no visible binding' note.
+    package <- ext_calls <- n <- NULL # Suppress 'no visible binding' note.
     if (!is.null (s$external_calls)) {
         ext_calls <- s$external_calls |>
             dplyr::filter (package != s$desc$package) |>

@@ -21,6 +21,9 @@ knitr: $(LFILE).Rmd ## Render `REAMDE.Rds` to `README.md`.
 open: ## Open HTML-rendered vignette
 	xdg-open docs/index.html &
 
+check: ## Run `rcmdcheck`
+	Rscript -e 'rcmdcheck::rcmdcheck()'
+
 pkgcheck: ## Run `pkgcheck` and print results to screen.
 	Rscript -e 'library(pkgcheck); checks <- pkgcheck(); print(checks); summary (checks)'
 
