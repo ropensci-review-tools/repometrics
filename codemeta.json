@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.0.017",
+  "version": "0.2.0.026",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
+  "runtimePlatform": "R version 4.5.0 (2025-04-11)",
   "author": [
     {
       "@type": "Person",
@@ -175,6 +175,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "visNetwork",
+      "name": "visNetwork",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=visNetwork"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "withr",
       "name": "withr",
       "provider": {
@@ -327,13 +339,19 @@
     },
     "12": {
       "@type": "SoftwareApplication",
+      "identifier": "pkgcheck",
+      "name": "pkgcheck",
+      "sameAs": "https://github.com/ropensci-review-tools/pkgcheck"
+    },
+    "13": {
+      "@type": "SoftwareApplication",
       "identifier": "pkgstats",
       "name": "pkgstats",
       "sameAs": "https://github.com/ropensci-review-tools/pkgstats"
     },
     "SystemRequirements": {}
   },
-  "fileSize": "24739.199KB",
+  "fileSize": "24754.658KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
   "contIntegration": [
     "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",

@@ -110,6 +110,8 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
         cli::cli_alert_success ("Done!")
     }
 
+    checks <- pkgcheck::pkgcheck (path, goodpractice = FALSE)
+
     if (is_verbose ()) {
         cli::cli_alert_info ("Extracting GitHub data ...")
     }
@@ -122,6 +124,7 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
 
     list (
         pkgstats = pkgstats,
+        pkgcheck = checks,
         rm = rm
     )
 }

@@ -34,7 +34,10 @@ test_that ("repometrics data full", {
     expect_type (data, "list")
     expect_named (
         data,
-        c ("pkgstats", "rm", "contributors", "cm_metrics", "cm_models")
+        c (
+            "pkgstats", "pkgcheck", "rm",
+            "contributors", "cm_metrics", "cm_models"
+        )
     )
 
     dat_constructed <- c (

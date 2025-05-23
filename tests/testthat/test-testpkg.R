@@ -11,8 +11,8 @@ test_that ("testpkg and input errors", {
     fs::dir_delete (path)
 
     expect_type (res, "list")
-    expect_length (res, 3L)
-    expect_identical (names (res), c ("desc_data", "loc", "stats"))
+    expect_length (res, 4L)
+    expect_identical (names (res), c ("desc_data", "loc", "stats", "ext_calls"))
     expect_true (all (vapply (res, nrow, integer (1L)) > 1L))
 })
 

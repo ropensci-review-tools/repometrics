@@ -146,6 +146,7 @@ run_one_pkgstats <- function (path, pkg_date) {
         return (s)
     }
 
+    # Internal function calls:
     index <- which (
         s$objects$kind == "function" &
             !grepl ("^anonFunc", s$objects$fn_name) &
@@ -156,9 +157,9 @@ run_one_pkgstats <- function (path, pkg_date) {
         "fn_name", "language", "loc", "npars",
         "has_dots", "exported", "num_doclines"
     )
-
     nms <- nms [which (nms %in% names (s$objects))]
     fns <- s$objects [index, ] |> dplyr::select (dplyr::all_of (nms))
+
     doclines <-
         mn_med_sum (fns$num_doclines [which (!is.na (fns$num_doclines))])
     npars <- mn_med_sum (fns$npars)
@@ -169,18 +170,40 @@ run_one_pkgstats <- function (path, pkg_date) {
         fn_nms <- unique (fns [, c ("fn_name", "exported")])
     }
 
-    package <- ext_calls <- NULL # Suppress 'no visible binding' note.
+    package <- ext_calls <- n <- NULL # Suppress 'no visible binding' note.
     if (!is.null (s$external_calls)) {
         ext_calls <- s$external_calls |>
-            dplyr::select ("call", "package") |>
-            dplyr::group_by (package) |>
-            dplyr::count (package) |>
-            dplyr::filter (package != s$desc$package)
+            dplyr::filter (package != s$desc$package) |>
+            dplyr::group_by (package, call) |>
+            dplyr::summarise (n = dplyr::n (), .groups = "keep") |>
+            dplyr::ungroup ()
+        # Aggregate all base calls:
+        ext_calls_base <- ext_calls |>
+            dplyr::filter (package == "base") |>
+            dplyr::summarise (
+                package = "base",
+                call = NA_character_,
+                n = sum (n)
+            )
+        ext_calls <- ext_calls |>
+            dplyr::filter (package != "base")
+        if (nrow (ext_calls) > 0L) {
+            ext_calls <- dplyr::bind_rows (ext_calls, ext_calls_base)
+        } else {
+            ext_calls <- ext_calls_base
+        }
+
+        ext_calls <- dplyr::mutate (ext_calls, date = pkg_date)
     }
 
     base_calls <- null2na_int (ext_calls$n [ext_calls$package == "base"])
     n_ext_pkgs <- null2na_int (nrow (ext_calls)) - 1L
-    ext_calls <- mn_med_sum (ext_calls$n [ext_calls$package != "base"])
+
+    ext_calls_summary <- ext_calls |>
+        dplyr::filter (package != "base") |>
+        dplyr::group_by (package) |>
+        dplyr::summarise (n = sum (n))
+    ext_calls_summary <- mn_med_sum (ext_calls_summary$n)
 
     s$loc <- cbind (
         package = s$desc$package,
@@ -207,8 +230,9 @@ run_one_pkgstats <- function (path, pkg_date) {
             doclines = doclines,
             npars = npars,
             loc = loc,
-            ext_calls = ext_calls
-        )
+            ext_calls = ext_calls_summary
+        ),
+        ext_calls_all = ext_calls
     )
 }
 
@@ -245,12 +269,15 @@ collate_pkgstats <- function (x) {
     stats$measure <- gsub ("[0-9]+$", "", rownames (stats))
     rownames (stats) <- NULL
 
+    ext_calls <- do.call (rbind, lapply (x, function (i) i$ext_calls_all))
+
     # Lazy convert all to tibbles, which `res$loc` is from `dplyr`:
     class (desc_data) <- class (stats) <- class (loc)
 
     list (
         desc_data = desc_data,
         loc = loc,
-        stats = stats
+        stats = stats,
+        ext_calls = ext_calls
     )
 }
