@@ -111,6 +111,11 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
     }
 
     checks <- pkgcheck::pkgcheck (path, goodpractice = FALSE)
+    cran_checks <- "Not on CRAN"
+    if (checks$checks$on_cran) {
+        pkg_name <- pkgstats$desc_data$package [1L]
+        cran_checks <- foghorn::cran_details (pkg = pkg_name, src = "crandb")
+    }
 
     if (is_verbose ()) {
         cli::cli_alert_info ("Extracting GitHub data ...")
@@ -125,6 +130,7 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
     list (
         pkgstats = pkgstats,
         pkgcheck = checks,
+        cran_checks = cran_checks,
         rm = rm
     )
 }

@@ -35,7 +35,7 @@ test_that ("repometrics data full", {
     expect_named (
         data,
         c (
-            "pkgstats", "pkgcheck", "rm",
+            "pkgstats", "pkgcheck", "cran_checks", "rm",
             "contributors", "cm_metrics", "cm_models"
         )
     )
