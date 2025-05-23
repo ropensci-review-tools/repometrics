@@ -193,7 +193,7 @@ run_one_pkgstats <- function (path, pkg_date) {
             ext_calls <- ext_calls_base
         }
 
-        dplyr::mutate (ext_calls, date = pkg_date)
+        ext_calls <- dplyr::mutate (ext_calls, date = pkg_date)
     }
 
     base_calls <- null2na_int (ext_calls$n [ext_calls$package == "base"])
