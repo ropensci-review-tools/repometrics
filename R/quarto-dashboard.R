@@ -302,7 +302,7 @@ check_dashboard_arg <- function (data) {
     checkmate::assert_names (names (data), identical.to = c ("pkgstats", "rm"))
     checkmate::assert_names (
         names (data$pkgstats),
-        identical.to = c ("desc_data", "loc", "stats")
+        identical.to = c ("desc_data", "loc", "stats", "ext_calls")
     )
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
@@ -315,7 +315,7 @@ check_dashboard_arg <- function (data) {
 
     # ------ pkgstats structure ------
     ncols <- vapply (data$pkgstats, ncol, integer (1L))
-    ncols_expected <- c (desc_data = 9L, loc = 15L, stats = 8L)
+    ncols_expected <- c (desc_data = 9L, loc = 15L, stats = 8L, ext_calls = 4L)
     if (!identical (ncols, ncols_expected)) {
         cli::cli_abort (paste0 (
             "'data' has wrong number of columns; ",
