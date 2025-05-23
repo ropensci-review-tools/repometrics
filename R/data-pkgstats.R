@@ -187,7 +187,8 @@ run_one_pkgstats <- function (path, pkg_date) {
             )
         ext_calls <- ext_calls |>
             dplyr::filter (package != "base") |>
-            dplyr::bind_rows (ext_calls_base)
+            dplyr::bind_rows (ext_calls_base) |>
+            dplyr::mutate (date = pkg_date)
 
     }
 
@@ -264,12 +265,15 @@ collate_pkgstats <- function (x) {
     stats$measure <- gsub ("[0-9]+$", "", rownames (stats))
     rownames (stats) <- NULL
 
+    ext_calls <- do.call (rbind, lapply (x, function (i) i$ext_calls_all))
+
     # Lazy convert all to tibbles, which `res$loc` is from `dplyr`:
     class (desc_data) <- class (stats) <- class (loc)
 
     list (
         desc_data = desc_data,
         loc = loc,
-        stats = stats
+        stats = stats,
+        ext_calls = ext_calls
     )
 }
