@@ -61,6 +61,7 @@ gh_next_page <- function (resp) {
             ptn <- "<([^>]+)>"
             next_page <- regmatches (link, regexpr (ptn, link))
             next_page <- gsub ("^.*&page\\=|>", "", next_page)
+            next_page <- gsub ("\\&after\\=.*$", "", next_page)
         }
     }
 
