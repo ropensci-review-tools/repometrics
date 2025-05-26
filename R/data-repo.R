@@ -176,7 +176,20 @@ rm_data_repo <- function (path) {
         })
     } else {
         res <- pbapply::pblapply (data_fns, function (i) {
-            do.call (i, list (path = path))
+            message (i)
+            res_i <- NULL
+            num_tries <- 0L
+            while (is.null (res_i) && num_tries < 10L) {
+                res_i <- tryCatch (
+                    do.call (i, list (path = path)),
+                    error = function (e) NULL
+                )
+                num_tries <- num_tries + 1L
+            }
+            if (num_tries >= 10L) {
+                cli::cli_abort ("Unable to retrieve GitHub data.")
+            }
+            return (res_i)
         })
     }
     names (res) <- gsub ("^rm\\_data\\_", "", data_fns)
