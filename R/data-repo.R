@@ -176,7 +176,6 @@ rm_data_repo <- function (path) {
         })
     } else {
         res <- pbapply::pblapply (data_fns, function (i) {
-            message (i)
             res_i <- NULL
             num_tries <- 0L
             while (is.null (res_i) && num_tries < 10L) {
