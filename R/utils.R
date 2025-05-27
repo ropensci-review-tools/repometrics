@@ -57,9 +57,16 @@ get_end_date_seq <- function (end_date = Sys.Date (),
                               period = get_repometrics_period (),
                               num_years = 3) {
 
-    num_periods <- num_years * 365.25 / period
+    num_periods <- floor (num_years * 365.25 / period)
     period_seq <- seq_len (num_periods) * period - period
-    end_dates <- Sys.Date () - period_seq
+    end_dates <- end_date - period_seq
+
+    # Adjust days to same day as 'end_date', but no date-time pkgs here:
+    if (period > 30) {
+        days <- regmatches (end_dates, regexpr ("[0-9]+$", end_dates))
+        end_dates <- gsub ("[0-9]+$", days [1], as.character (end_dates)) |>
+            as.Date ()
+    }
 
     return (end_dates)
 }
