@@ -24,6 +24,9 @@ open: ## Open HTML-rendered vignette
 check: ## Run `rcmdcheck`
 	Rscript -e 'rcmdcheck::rcmdcheck()'
 
+test: ## Run test suite
+	Rscript -e 'devtools::load_all(); testthat::test_local()'
+
 pkgcheck: ## Run `pkgcheck` and print results to screen.
 	Rscript -e 'library(pkgcheck); checks <- pkgcheck(); print(checks); summary (checks)'
 
