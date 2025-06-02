@@ -19,7 +19,7 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
     handle <- email <- NULL
 
     ctbs_log <- dplyr::rename (ctbs_log, name = handle) |>
-        dplyr::filter (!grepl ("noreply", email))
+        dplyr::filter (!name %in% c ("GitHub", "GitHub Action"))
 
     # Match emails:
     index <- match (ctbs_log$email, ctbs_gh$email)
