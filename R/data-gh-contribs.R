@@ -27,10 +27,11 @@ rm_data_contribs_from_log <- function (path) {
     index_table <- table (c (index1, index2))
     index <- as.integer (names (index_table) [which (index_table == 2L)])
 
+    rm_handles <- c ("GitHub", "GitHub Action")
     data.frame (
         handle = gh_handle,
         email = gh_email
-    ) [index, ]
+    ) [index, ] |> dplyr::filter (!handle %in% rm_handles)
 }
 
 gitlog_unique_contributors <- function (path, start_date, end_date) {
@@ -122,7 +123,8 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
     ctbs_user_info <- lapply (ctbs$login, user_from_gh_api)
     ctbs_user_info <- do.call (rbind, ctbs_user_info)
 
-    ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id"))
+    ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id")) |>
+        dplyr::filter (login != "actions-user")
 
     return (ctbs)
 }

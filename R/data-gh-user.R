@@ -294,6 +294,7 @@ gh_user_commits_qry <- function (login = "",
 
     # GraphQL API here has restriction:
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
+    nyears <- min (c (1, nyears))
     checkmate::assert_numeric (nyears, len = 1L, upper = 1)
 
     # These 'format' calls pad with hms = "00:00:00":
@@ -346,6 +347,7 @@ gh_user_commits_internal <- function (login,
     repos <- num_commits <- dates <- end_cursor <- end_cursors <- NULL
 
     has_next_page <- TRUE
+    years_done <- 0L # Used below if nyears > 1
 
     while (has_next_page) {
 
@@ -408,6 +410,17 @@ gh_user_commits_internal <- function (login,
         if (has_next_page) {
             end_cursor <- end_cursors [1L]
             end_cursors <- end_cursors [-1L]
+        } else if (nyears > 1) {
+            this_year <-
+                regmatches (end_date, regexpr ("^[0-9]{4}", end_date)) |>
+                as.integer ()
+            annual_days <- ifelse (this_year %% 4 == 0, 366L, 365L)
+            end_date <- end_date - annual_days
+            years_done <- years_done + 1
+            if (years_done < nyears) {
+                has_next_page <- FALSE
+                end_cursor <- NULL
+            }
         }
     }
 
@@ -438,6 +451,7 @@ gh_user_issues_qry <- function (login = "",
 
     # GraphQL API here has restriction:
     # "The total time spanned by 'from' and 'to' must not exceed 1 year"
+    nyears <- min (c (1, nyears))
     checkmate::assert_numeric (nyears, len = 1L, upper = 1)
 
     from <- format (end_date - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
