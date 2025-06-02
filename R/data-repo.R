@@ -48,6 +48,7 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
     )
 
     ctbs <- data$rm$contribs_from_gh_api$login
+    ctbs <- ctbs [which (!ctbs == "actions-user")]
     data_ctbs <- lapply (ctbs, function (ctb) {
         tryCatch (
             repometrics_data_user (
@@ -122,7 +123,8 @@ repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
     }
     rm <- rm_data_repo (path)
     rm$contributors <-
-        get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api)
+        get_all_contribs (rm$contribs_from_log, rm$contribs_from_gh_api) |>
+        dplyr::filter (name != "GitHub Action")
     if (is_verbose ()) {
         cli::cli_alert_success ("Done!")
     }
