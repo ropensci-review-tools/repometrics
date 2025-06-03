@@ -1,7 +1,16 @@
 rm_data_r_universe <- function (path) {
 
-    pkg_name <- pkg_name_from_path (path)
-    universe <- get_r_univ_universe (pkg_name)
+    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
+    if (!is_test_env) {
+
+        pkg_name <- pkg_name_from_path (path)
+        universe <- get_r_univ_universe (pkg_name)
+
+    } else {
+
+        pkg_name <- "repometrics"
+        universe <- "ropensci-review-tools"
+    }
 
     get_r_univ_pkg_data (pkg_name, universe)
 }

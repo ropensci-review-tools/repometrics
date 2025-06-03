@@ -60,13 +60,13 @@ test_that ("rm data repo", {
     fs::dir_delete (path)
 
     expect_type (dat, "list")
-    expect_length (dat, 14L)
+    expect_length (dat, 15L)
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
         "dependencies_downstream", "gh_repo_workflow", "gitlog",
         "issue_comments_from_gh_api", "issues_from_gh_api", "libyears",
-        "prs_from_gh_api", "releases_from_gh_api", "repo_forks",
-        "repo_from_gh_api", "repo_stargazers"
+        "prs_from_gh_api", "r_universe", "releases_from_gh_api",
+        "repo_forks", "repo_from_gh_api", "repo_stargazers"
     )
     expect_equal (names (dat), nms)
 

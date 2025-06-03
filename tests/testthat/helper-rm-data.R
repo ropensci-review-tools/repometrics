@@ -39,6 +39,9 @@ mock_rm_data <- function (repo = TRUE) {
     coverage <- httptest2::with_mock_dir ("coverage", {
         cm_data_test_coverage (path)
     })
+    universe <- httptest2::with_mock_dir ("r_univ", {
+        rm_data_r_universe (path)
+    })
 
     # rm-data-user:
     logins <- c ("gaborcsardi", "hfrick", "mpadge")

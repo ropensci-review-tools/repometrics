@@ -28,6 +28,13 @@ function (resp) {
         fixed = TRUE
     )
 
+    resp <- httptest2::gsub_response (
+        resp,
+        "ropensci-review-tools.r-universe.dev/api/packages",
+        "r-universe-api",
+        fixed = TRUE
+    )
+
     test_repo <- "ropensci-review-tools/repometrics"
     resp <- httptest2::gsub_response (
         resp,
