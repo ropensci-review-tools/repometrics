@@ -2,6 +2,8 @@ rm_data_r_univ <- function (path) {
 
     pkg_name <- pkg_name_from_path (path)
     universe <- get_r_univ_universe (pkg_name)
+
+    get_r_univ_pkg_data (pkg_name, universe)
 }
 
 get_r_univ_universe <- function (pkg_name) {
@@ -24,4 +26,35 @@ get_r_univ_universe <- function (pkg_name) {
 
     pkg_data <- packages$results [[which (pkg_names == pkg_name)]]
     return (pkg_data$`_user`)
+}
+
+get_r_univ_pkg_data <- function (pkg_name, universe) {
+
+    url <- paste0 ("https://", universe, ".r-universe.dev/api/packages/", pkg_name)
+    pkg_data_full <- httr2::request (url) |>
+        httr2::req_user_agent ("R-universe docs") |>
+        httr2::req_perform () |>
+        httr2::resp_body_json ()
+
+    created <- pkg_data_full$`_created`
+    jobs <- do.call (rbind, lapply (pkg_data_full$`_jobs`, data.frame))
+    binaries <- lapply (pkg_data_full$`_binaries`, function (b) {
+        res <- data.frame (b)
+        if (!"distro" %in% names (res)) {
+            res <- dplyr::mutate (res, distro = NA_character_, .after = "date")
+        }
+        if (!"check" %in% names (res)) {
+            res <- dplyr::mutate (res, check = NA_character_, .after = "status")
+        }
+        return (res)
+    })
+    binaries <- do.call (rbind, binaries)
+
+    list (
+        package = pkg_name,
+        universe = universe,
+        created = created,
+        jobs = jobs,
+        binaries = binaries
+    )
 }
