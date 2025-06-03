@@ -11,12 +11,19 @@ pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
 flist <- unzip (pkg, exdir = fs::path_temp ())
 path <- fs::path_dir (flist [1])
 pkgstats <- repo_pkgstats_history (path, num_cores = 1L)
+chks <- pkgcheck::pkgcheck (path, goodpractice = FALSE)
 
 num_users <- 4L
 data_ctbs <- lapply (seq_len (num_users), function (i) mock_user_rel_data ())
 names (data_ctbs) <- letters [seq_len (length (data_ctbs))]
 
-data0 <- list (pkgstats = pkgstats, rm = rm_data, contributors = data_ctbs)
+data0 <- list (
+    pkgstats = pkgstats,
+    pkgcheck = chks,
+    cran_checks = "Not on CRAN",
+    rm = rm_data,
+    contributors = data_ctbs
+)
 
 # --------- pre-process end --------
 

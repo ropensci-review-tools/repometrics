@@ -1,0 +1,698 @@
+{
+    "Package": "repometrics",
+    "Title": "Metrics for Your Code Repository",
+    "Version": "0.2.1.008",
+    "Authors@R": "person(\"Mark\", \"Padgham\", , \"mark.padgham@email.com\", role = c(\"aut\", \"cre\"),\ncomment = c(ORCID = \"0000-0003-2172-5265\"))",
+    "Description": "Metrics for your code repository. Call one function to\ngenerate an interactive dashboard displaying the state of your\ncode.",
+    "License": "GPL-3",
+    "URL": "https://docs.ropensci.org/repometrics/,\nhttps://github.com/ropensci-review-tools/repometrics",
+    "BugReports": "https://github.com/ropensci-review-tools/repometrics/issues",
+    "Remotes": [
+        "ropensci-review-tools/pkgcheck",
+        "ropensci-review-tools/pkgmatch",
+        "ropensci-review-tools/pkgstats"
+    ],
+    "Config/testthat/edition": "3",
+    "Encoding": "UTF-8",
+    "Language": "en-GB",
+    "Roxygen": "list(markdown = TRUE)",
+    "RoxygenNote": "7.3.2",
+    "VignetteBuilder": "knitr",
+    "Config/pak/sysreqs": "git libglpk-dev make libgit2-dev libicu-dev\nlibssh2-1-dev libxml2-dev libssl-dev libx11-dev",
+    "Repository": "https://ropensci-review-tools.r-universe.dev",
+    "RemoteUrl": "https://github.com/ropensci-review-tools/repometrics",
+    "RemoteRef": "HEAD",
+    "RemoteSha": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+    "NeedsCompilation": "no",
+    "Packaged": {
+        "Date": "2025-06-02 15:33:08 UTC",
+        "User": "root"
+    },
+    "Author": "Mark Padgham [aut, cre] (ORCID:\n<https://orcid.org/0000-0003-2172-5265>)",
+    "Maintainer": "Mark Padgham <mark.padgham@email.com>",
+    "MD5sum": "3e18fb1b5d19bfe30cb8aa0eb7e575ca",
+    "_user": "ropensci-review-tools",
+    "_type": "src",
+    "_file": "repometrics_0.2.1.008.tar.gz",
+    "_fileid": "a71f2901e1159f074506f95872b96b4627334d77685c0a65e390ba393cf0de0e",
+    "_filesize": 227012,
+    "_sha256": "a71f2901e1159f074506f95872b96b4627334d77685c0a65e390ba393cf0de0e",
+    "_created": "2025-06-02T15:33:08.000Z",
+    "_published": "2025-06-02T15:36:27.246Z",
+    "_distro": "noble",
+    "_jobs": [
+        {
+            "job": 43318142978,
+            "time": 156,
+            "config": "linux-devel-x86_64",
+            "r": "4.6.0",
+            "check": "ERROR"
+        },
+        {
+            "job": 43318142998,
+            "time": 159,
+            "config": "linux-release-x86_64",
+            "r": "4.5.0",
+            "check": "ERROR"
+        },
+        {
+            "job": 43318143048,
+            "time": 77,
+            "config": "macos-oldrel-arm64",
+            "r": "4.4.3",
+            "check": "ERROR"
+        },
+        {
+            "job": 43318143033,
+            "time": 101,
+            "config": "macos-release-arm64",
+            "r": "4.5.0",
+            "check": "ERROR"
+        },
+        {
+            "job": 43317855153,
+            "time": 222,
+            "config": "source",
+            "r": "4.5.0",
+            "check": "OK"
+        },
+        {
+            "job": 43318142955,
+            "time": 127,
+            "config": "wasm-oldrel",
+            "r": "4.4.2",
+            "check": "OK"
+        },
+        {
+            "job": 43318142968,
+            "time": 124,
+            "config": "wasm-release",
+            "r": "4.5.0",
+            "check": "OK"
+        },
+        {
+            "job": 43318142991,
+            "time": 141,
+            "config": "windows-devel",
+            "r": "4.6.0",
+            "check": "ERROR"
+        },
+        {
+            "job": 43318143035,
+            "time": 140,
+            "config": "windows-oldrel",
+            "r": "4.4.3",
+            "check": "ERROR"
+        },
+        {
+            "job": 43318143007,
+            "time": 139,
+            "config": "windows-release",
+            "r": "4.5.0",
+            "check": "ERROR"
+        }
+    ],
+    "_buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165",
+    "_status": "success",
+    "_host": "GitHub-Actions",
+    "_upstream": "https://github.com/ropensci-review-tools/repometrics",
+    "_commit": {
+        "id": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+        "author": "mark padgham <mark.padgham@email.com>",
+        "committer": "GitHub <noreply@github.com>",
+        "message": "Merge pull request #171 from ropensci-review-tools/authors\n\nfix get_all_contribs fn for #169",
+        "time": 1748877289
+    },
+    "_maintainer": {
+        "name": "Mark Padgham",
+        "email": "mark.padgham@email.com",
+        "login": "mpadge",
+        "mastodon": "@mpadge@nerdculture.de",
+        "uuid": 6697851,
+        "orcid": "0000-0003-2172-5265"
+    },
+    "_registered": true,
+    "_dependencies": [
+        {
+            "package": "R",
+            "version": ">= 4.1",
+            "role": "Depends"
+        },
+        {
+            "package": "checkmate",
+            "role": "Imports"
+        },
+        {
+            "package": "cli",
+            "role": "Imports"
+        },
+        {
+            "package": "dplyr",
+            "role": "Imports"
+        },
+        {
+            "package": "foghorn",
+            "role": "Imports"
+        },
+        {
+            "package": "fs",
+            "role": "Imports"
+        },
+        {
+            "package": "gert",
+            "role": "Imports"
+        },
+        {
+            "package": "gh",
+            "role": "Imports"
+        },
+        {
+            "package": "git2r",
+            "role": "Imports"
+        },
+        {
+            "package": "httr2",
+            "role": "Imports"
+        },
+        {
+            "package": "memoise",
+            "role": "Imports"
+        },
+        {
+            "package": "pbapply",
+            "role": "Imports"
+        },
+        {
+            "package": "pkgcheck",
+            "role": "Imports"
+        },
+        {
+            "package": "pkgstats",
+            "role": "Imports"
+        },
+        {
+            "package": "brio",
+            "role": "Suggests"
+        },
+        {
+            "package": "desc",
+            "role": "Suggests"
+        },
+        {
+            "package": "DT",
+            "role": "Suggests"
+        },
+        {
+            "package": "httptest2",
+            "role": "Suggests"
+        },
+        {
+            "package": "jsonlite",
+            "role": "Suggests"
+        },
+        {
+            "package": "knitr",
+            "role": "Suggests"
+        },
+        {
+            "package": "pkgmatch",
+            "role": "Suggests"
+        },
+        {
+            "package": "quarto",
+            "role": "Suggests"
+        },
+        {
+            "package": "readr",
+            "role": "Suggests"
+        },
+        {
+            "package": "rmarkdown",
+            "role": "Suggests"
+        },
+        {
+            "package": "testthat",
+            "version": ">= 3.0.0",
+            "role": "Suggests"
+        },
+        {
+            "package": "tidyr",
+            "role": "Suggests"
+        },
+        {
+            "package": "visNetwork",
+            "role": "Suggests"
+        },
+        {
+            "package": "withr",
+            "role": "Suggests"
+        },
+        {
+            "package": "zoo",
+            "role": "Suggests"
+        }
+    ],
+    "_owner": "ropensci-review-tools",
+    "_selfowned": true,
+    "_usedby": 0,
+    "_updates": [
+        {
+            "week": "2024-28",
+            "n": 23
+        },
+        {
+            "week": "2024-29",
+            "n": 28
+        },
+        {
+            "week": "2024-46",
+            "n": 19
+        },
+        {
+            "week": "2024-47",
+            "n": 13
+        },
+        {
+            "week": "2024-48",
+            "n": 18
+        },
+        {
+            "week": "2024-49",
+            "n": 16
+        },
+        {
+            "week": "2024-50",
+            "n": 12
+        },
+        {
+            "week": "2024-51",
+            "n": 1
+        },
+        {
+            "week": "2025-03",
+            "n": 5
+        },
+        {
+            "week": "2025-04",
+            "n": 12
+        },
+        {
+            "week": "2025-05",
+            "n": 10
+        },
+        {
+            "week": "2025-06",
+            "n": 17
+        },
+        {
+            "week": "2025-07",
+            "n": 2
+        },
+        {
+            "week": "2025-08",
+            "n": 13
+        },
+        {
+            "week": "2025-09",
+            "n": 2
+        },
+        {
+            "week": "2025-10",
+            "n": 4
+        },
+        {
+            "week": "2025-11",
+            "n": 9
+        },
+        {
+            "week": "2025-16",
+            "n": 1
+        },
+        {
+            "week": "2025-19",
+            "n": 1
+        },
+        {
+            "week": "2025-20",
+            "n": 9
+        },
+        {
+            "week": "2025-21",
+            "n": 4
+        },
+        {
+            "week": "2025-22",
+            "n": 7
+        },
+        {
+            "week": "2025-23",
+            "n": 2
+        }
+    ],
+    "_tags": [
+
+    ],
+    "_topics": [
+        "dashboard",
+        "software-metrics"
+    ],
+    "_stars": 3,
+    "_contributors": [
+        {
+            "user": "mpadge",
+            "count": 842,
+            "uuid": 6697851
+        }
+    ],
+    "_userbio": {
+        "uuid": 85607140,
+        "type": "organization",
+        "name": "ropensci-review-tools",
+        "description": "Tools for automation of software review at rOpenSci"
+    },
+    "_downloads": {
+        "count": 0,
+        "source": "https://cranlogs.r-pkg.org/downloads/total/last-month/repometrics"
+    },
+    "_devurl": "https://github.com/ropensci-review-tools/repometrics",
+    "_pkgdown": "https://docs.ropensci.org/repometrics/",
+    "_searchresults": 0,
+    "_rbuild": "4.5.0",
+    "_assets": [
+        "extra/citation.cff",
+        "extra/citation.html",
+        "extra/citation.json",
+        "extra/citation.txt",
+        "extra/contents.json",
+        "extra/readme.html",
+        "extra/readme.md",
+        "extra/repometrics.html",
+        "manual.pdf"
+    ],
+    "_realowner": "ropensci",
+    "_cranurl": false,
+    "_exports": [
+        "repo_pkgstats_history",
+        "repometrics_dashboard",
+        "repometrics_data",
+        "repometrics_data_repo",
+        "repometrics_data_user",
+        "rm_chaoss_metrics_list"
+    ],
+    "_help": [
+        {
+            "page": "repo_pkgstats_history",
+            "title": "Apply 'pkgstats' across the git history of a package",
+            "topics": [
+                "repo_pkgstats_history"
+            ]
+        },
+        {
+            "page": "repometrics_dashboard",
+            "title": "Start quarto dashboard with results of main repometrics_data_repo function.",
+            "topics": [
+                "repometrics_dashboard"
+            ]
+        },
+        {
+            "page": "repometrics_data",
+            "title": "Collate 'repometrics' data for a local R package.",
+            "topics": [
+                "repometrics_data"
+            ]
+        },
+        {
+            "page": "repometrics_data_repo",
+            "title": "Collate code and repository data for a local R package.",
+            "topics": [
+                "repometrics_data_repo"
+            ]
+        },
+        {
+            "page": "repometrics_data_user",
+            "title": "Extract and combine data on all contributors to a repository.",
+            "topics": [
+                "repometrics_data_user"
+            ]
+        },
+        {
+            "page": "rm_chaoss_metrics_list",
+            "title": "List all implemented CHAOSS metrics",
+            "topics": [
+                "rm_chaoss_metrics_list"
+            ]
+        }
+    ],
+    "_readme": "https://github.com/ropensci-review-tools/repometrics/raw/HEAD/README.md",
+    "_rundeps": [
+        "ami",
+        "askpass",
+        "backports",
+        "base64enc",
+        "bit",
+        "bit64",
+        "brew",
+        "brio",
+        "bslib",
+        "cachem",
+        "callr",
+        "checkmate",
+        "cli",
+        "clipr",
+        "clisymbols",
+        "codetools",
+        "commonmark",
+        "covr",
+        "cpp11",
+        "crayon",
+        "credentials",
+        "crul",
+        "curl",
+        "cyclocomp",
+        "desc",
+        "digest",
+        "dplyr",
+        "evaluate",
+        "fansi",
+        "fastmap",
+        "foghorn",
+        "fontawesome",
+        "fs",
+        "generics",
+        "gert",
+        "gh",
+        "ghql",
+        "git2r",
+        "gitcreds",
+        "glue",
+        "goodpractice",
+        "graphql",
+        "here",
+        "highr",
+        "hms",
+        "htmltools",
+        "httpcode",
+        "httr",
+        "httr2",
+        "igraph",
+        "ini",
+        "jquerylib",
+        "jsonlite",
+        "knitr",
+        "lattice",
+        "lazyeval",
+        "lifecycle",
+        "lintr",
+        "magrittr",
+        "Matrix",
+        "memoise",
+        "mime",
+        "openssl",
+        "pbapply",
+        "pillar",
+        "pkgbuild",
+        "pkgcheck",
+        "pkgconfig",
+        "pkgload",
+        "pkgstats",
+        "praise",
+        "prettyunits",
+        "processx",
+        "progress",
+        "ps",
+        "purrr",
+        "R6",
+        "rappdirs",
+        "rcmdcheck",
+        "Rcpp",
+        "readr",
+        "remotes",
+        "rex",
+        "rlang",
+        "rmarkdown",
+        "roxygen2",
+        "rprojroot",
+        "rstudioapi",
+        "rvest",
+        "sass",
+        "selectr",
+        "sessioninfo",
+        "srr",
+        "stringi",
+        "stringr",
+        "sys",
+        "tibble",
+        "tidyselect",
+        "tinytex",
+        "triebeard",
+        "tzdb",
+        "urltools",
+        "utf8",
+        "vctrs",
+        "vroom",
+        "whoami",
+        "withr",
+        "xfun",
+        "xml2",
+        "xmlparsedata",
+        "xopen",
+        "yaml",
+        "zip"
+    ],
+    "_vignettes": [
+        {
+            "source": "chaoss-metrics.Rmd",
+            "filename": "chaoss-metrics.html",
+            "title": "CHAOSS metrics",
+            "engine": "knitr::rmarkdown",
+            "headings": [
+
+            ],
+            "created": "2025-03-12 13:10:46",
+            "modified": "2025-03-12 13:10:46",
+            "commits": 1
+        },
+        {
+            "source": "metrics-models.Rmd",
+            "filename": "metrics-models.html",
+            "title": "Metrics models",
+            "engine": "knitr::rmarkdown",
+            "headings": [
+                "The models used here",
+                "Combining metrics within models"
+            ],
+            "created": "2025-05-12 08:54:03",
+            "modified": "2025-05-12 08:54:03",
+            "commits": 1
+        }
+    ],
+    "_score": 4.838849090737256,
+    "_indexed": false,
+    "_nocasepkg": "repometrics",
+    "_universes": [
+        "ropensci-review-tools"
+    ],
+    "_indexurl": "https://ropensci.r-universe.dev/repometrics",
+    "_previous": "0.2.1.006",
+    "_binaries": [
+        {
+            "r": "4.6.0",
+            "os": "linux",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:40.000Z",
+            "distro": "noble",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "ffe7132713458dcffe4c7255593153468bddf370c6ea44bc7e94cfa144b8f16f",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.5.0",
+            "os": "linux",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:43.000Z",
+            "distro": "noble",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "511a0cf7425253a3951fed5befd742f2957f651ad5fbc576315c6ce63b15be23",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.4.3",
+            "os": "mac",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:34:29.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "e207ff064c441dcb4816b8b4160bbfa030953dca178ec81a5257ff6fbec6c692",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.5.0",
+            "os": "mac",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:34:47.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "a2d8ef82262a97afdab8a57b3047a83125216c96ae63536c71b88ae8356a67c5",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.4.2",
+            "os": "wasm",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:39.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "ba00348c61aff930f8fcb4c4f7356573e234e9e51e45de8610447f8a3a865437",
+            "status": "success",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.5.0",
+            "os": "wasm",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:36.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "5b825f393e42dca78760fde4d26e92c9b537ea5dc52f9a0d3faac6e8c204e1cf",
+            "status": "success",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.6.0",
+            "os": "win",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:19.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "d53028e82b24c6f09736e43daf39c08929e23736294dfcc04cb20a5558746966",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.4.3",
+            "os": "win",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:20.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "fefeacdd691dbaf64ce7200fe8fca2909aaa0b5b27bf125c7165a33cb1da37d9",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        },
+        {
+            "r": "4.5.0",
+            "os": "win",
+            "version": "0.2.1.008",
+            "date": "2025-06-02T15:35:21.000Z",
+            "commit": "cbc2d7de1bcca305856567685c9bbaa8359e3922",
+            "fileid": "d63a97553b162d88af5fd0f331ec0ab70e97f47d05110ea8cf0bf1431998b8f6",
+            "status": "failure",
+            "check": "ERROR",
+            "buildurl": "https://github.com/r-universe/ropensci-review-tools/actions/runs/15396300165"
+        }
+    ]
+}

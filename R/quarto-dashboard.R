@@ -24,6 +24,9 @@
 repometrics_dashboard <- function (data, action = "preview",
                                    ctb_threshold = NULL, max_ctbs = NULL) {
 
+    action <- match.arg (action, c ("preview", "render"))
+    quarto_action <- paste0 ("quarto::quarto_", action)
+
     if (!is.null (ctb_threshold)) {
         checkmate::assert_numeric (
             ctb_threshold,
@@ -59,9 +62,6 @@ repometrics_dashboard <- function (data, action = "preview",
     requireNamespace ("jsonlite")
     requireNamespace ("quarto")
     requireNamespace ("withr")
-
-    action <- match.arg (action, c ("preview", "render"))
-    quarto_action <- paste0 ("quarto::quarto_", action)
 
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")
@@ -298,17 +298,22 @@ quarto_insert_pkg_name <- function (dir, pkg_name) {
 
 check_dashboard_arg <- function (data) {
 
-    checkmate::assert_list (data, len = 2L, names = "named")
-    checkmate::assert_names (names (data), identical.to = c ("pkgstats", "rm"))
+    checkmate::assert_list (data, len = 4L, names = "named")
+    checkmate::assert_names (
+        names (data),
+        identical.to = c ("pkgstats", "pkgcheck", "cran_checks", "rm")
+    )
     checkmate::assert_names (
         names (data$pkgstats),
         identical.to = c ("desc_data", "loc", "stats", "ext_calls")
     )
+
+    checkmate::assert_list (data$rm, len = 16L, names = "named")
     nms <- c (
         "contribs_from_gh_api", "contribs_from_log", "dependencies",
         "dependencies_downstream", "gh_repo_workflow", "gitlog",
         "issue_comments_from_gh_api", "issues_from_gh_api", "libyears",
-        "prs_from_gh_api", "releases_from_gh_api", "repo_forks",
+        "prs_from_gh_api", "r_universe", "releases_from_gh_api", "repo_forks",
         "repo_from_gh_api", "repo_stargazers", "contributors"
     )
     checkmate::assert_names (names (data$rm), identical.to = nms)
@@ -332,7 +337,7 @@ check_dashboard_arg <- function (data) {
     # ------ rm structure ------
     classes <- vapply (data$rm, class, character (1L))
     index <- which (classes == "data.frame")
-    if (length (index) != (length (classes) - 1L)) {
+    if (length (index) != (length (classes) - 2L)) {
         cli::cli_abort (
             "Chaoss metrics data have wrong length; should be {length(index)}."
         )
