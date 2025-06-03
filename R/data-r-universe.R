@@ -1,4 +1,4 @@
-rm_data_r_univ <- function (path) {
+rm_data_r_universe <- function (path) {
 
     pkg_name <- pkg_name_from_path (path)
     universe <- get_r_univ_universe (pkg_name)
