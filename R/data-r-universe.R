@@ -55,6 +55,9 @@ get_r_univ_pkg_data <- function (pkg_name, universe) {
         if (!"check" %in% names (res)) {
             res <- dplyr::mutate (res, check = NA_character_, .after = "status")
         }
+        if (!"arch" %in% names (res)) {
+            res <- dplyr::mutate (res, arch = NA_character_, .after = "distro")
+        }
         return (res)
     })
     binaries <- do.call (rbind, binaries)
