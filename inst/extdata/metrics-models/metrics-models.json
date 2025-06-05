@@ -489,7 +489,7 @@
         },
         {
             "name": "proj_engagement",
-            "text": "Project engagement"
+            "text": "Project engagement",
             "url": "https://chaoss.community/kb/metrics-model-project-engagement/"
         },
         {
@@ -544,7 +544,7 @@
         },
         {
             "name": "comm_welcoming",
-            "text": "Community welcomingness",
+            "text": "Community welcomingess",
             "url": "https://chaoss.community/kb/metrics-model-community-welcomingness/"
         }
     ],
