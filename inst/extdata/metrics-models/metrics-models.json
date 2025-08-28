@@ -481,6 +481,60 @@
             "field_group": "none"
         }
     ],
+    "model_names": [
+        {
+            "name": "dev_responsiveness",
+            "airtable_name": "Developer responsiveness"
+        },
+        {
+            "name": "proj_engagement",
+            "airtable_name": "Project engagement"
+        },
+        {
+            "name": "proj_awareness",
+            "airtable_name": "Project awareness"
+        },
+        {
+            "name": "community_activity",
+            "airtable_name": "Community activity"
+        },
+        {
+            "name": "oss_compliance",
+            "airtable_name": "OSS compliance"
+        },
+        {
+            "name": "viability_community",
+            "airtable_name": "Viability: community"
+        },
+        {
+            "name": "viability_starter",
+            "airtable_name": "Viability: starter"
+        },
+        {
+            "name": "viability_gov",
+            "airtable_name": "Viability: governance"
+        },
+        {
+            "name": "viability_strategy",
+            "airtable_name": "Viability: strategy"
+        },
+        {
+            "name": "collab_devel_index",
+            "airtable_name": "Collaboration development index"
+        },
+        {
+            "name": "comm_serv_support",
+            "airtable_name": "Community service and support"
+        },
+        {
+            "name": "starter_health",
+            "airtable_name": "Starter health"
+        },
+        {
+            "name": "comm_welcoming",
+            "airtable_name": "Community welcomingness"
+        }
+    ],
     "models": {
         "dev_responsiveness": [
             "pr_review_duration",
