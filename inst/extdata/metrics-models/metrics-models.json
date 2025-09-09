@@ -484,55 +484,68 @@
     "model_names": [
         {
             "name": "dev_responsiveness",
-            "airtable_name": "Developer responsiveness"
+            "airtable_name": "Developer responsiveness",
+            "url": "https://chaoss.community/kb/metrics-model-development-responsiveness/"
         },
         {
             "name": "proj_engagement",
-            "airtable_name": "Project engagement"
+            "airtable_name": "Project engagement",
+            "url": "https://chaoss.community/kb/metrics-model-project-engagement/"
         },
         {
             "name": "proj_awareness",
-            "airtable_name": "Project awareness"
+            "airtable_name": "Project awareness",
+            "url": "https://chaoss.community/kb/metrics-model-project-awareness/"
         },
         {
             "name": "community_activity",
-            "airtable_name": "Community activity"
+            "airtable_name": "Community activity",
+            "url": "https://chaoss.community/kb/metrics-model-community-activity/"
         },
         {
             "name": "oss_compliance",
-            "airtable_name": "OSS compliance"
+            "airtable_name": "OSS compliance",
+            "url": "https://chaoss.community/kb/metrics-model-oss-project-viability-compliance-security/"
         },
         {
             "name": "viability_community",
-            "airtable_name": "Viability: community"
+            "airtable_name": "Viability: community",
+            "url": "https://chaoss.community/kb/metrics-model-oss-project-viability-community/"
         },
         {
             "name": "viability_starter",
-            "airtable_name": "Viability: starter"
+            "airtable_name": "Viability: starter",
+            "url": "https://chaoss.community/kb/metrics-model-project-viability-starter/"
         },
         {
             "name": "viability_gov",
-            "airtable_name": "Viability: governance"
+            "airtable_name": "Viability: governance",
+            "url": "https://chaoss.community/kb/metrics-model-oss-project-viability-governance/"
         },
         {
             "name": "viability_strategy",
-            "airtable_name": "Viability: strategy"
+            "airtable_name": "Viability: strategy",
+            "url": "https://chaoss.community/kb/metrics-model-oss-project-viability-strategy/"
         },
         {
             "name": "collab_devel_index",
-            "airtable_name": "Collaboration development index"
+            "airtable_name": "Collaboration development index",
+            "url": "https://chaoss.community/kb/metrics-model-collaboration-development-index/"
         },
         {
             "name": "comm_serv_support",
-            "airtable_name": "Community service and support"
+            "airtable_name": "Community service and support",
+            "url": "https://chaoss.community/kb/metrics-model-community-service-and-support/"
         },
         {
             "name": "starter_health",
-            "airtable_name": "Starter health"
+            "airtable_name": "Starter health",
+            "url": "https://chaoss.community/kb/metrics-model-starter-project-health/"
         },
         {
             "name": "comm_welcoming",
-            "airtable_name": "Community welcomingness"
+            "airtable_name": "Community welcomingness",
+            "url": "https://chaoss.community/kb/metrics-model-community-welcomingness/"
         }
     ],
     "models": {
