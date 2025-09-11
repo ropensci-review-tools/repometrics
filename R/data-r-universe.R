@@ -46,7 +46,16 @@ get_r_univ_pkg_data <- function (pkg_name, universe) {
         httr2::resp_body_json ()
 
     created <- pkg_data_full$`_created`
-    jobs <- do.call (rbind, lapply (pkg_data_full$`_jobs`, data.frame))
+
+    jobs <- pkg_data_full$`_jobs`
+    # Some entries may have NULL, but only char entries:
+    jobs <- lapply (jobs, function (i) {
+        lapply (i, function (j) {
+            ifelse (is.null (j), "", j)
+        })
+    })
+    jobs <- do.call (rbind, lapply (jobs, data.frame))
+
     binaries <- lapply (pkg_data_full$`_binaries`, function (b) {
         res <- data.frame (b)
         if (!"distro" %in% names (res)) {
@@ -62,10 +71,31 @@ get_r_univ_pkg_data <- function (pkg_name, universe) {
     })
     binaries <- do.call (rbind, binaries)
 
+    score <- pkg_data_full$`_score`
+    downloads <- pkg_data_full$`_downloads`$count
+    scripts <- pkg_data_full$`_searchresults`
+
+    updates <- pkg_data_full$`_updates`
+    updates <- data.frame (
+        week = vapply (updates, function (i) i$week, character (1L)),
+        n = vapply (updates, function (i) i$n, integer (1L))
+    )
+    releases <- pkg_data_full$`_releases`
+    releases <- data.frame (
+        version = vapply (releases, function (i) i$version, character (1L)),
+        date = vapply (releases, function (i) i$date, character (1L))
+    )
+    releases <- releases [order (releases$date, decreasing = TRUE), ]
+
     list (
         package = pkg_name,
         universe = universe,
         created = created,
+        score = score,
+        downloads = downloads,
+        n_scripts = scripts,
+        updates = updates,
+        releases = releases,
         jobs = jobs,
         binaries = binaries
     )
