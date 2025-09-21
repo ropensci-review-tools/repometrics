@@ -96,7 +96,7 @@ repometrics_data <- function (path, date_interval = "month", num_cores = -1L,
 #'
 #' @family data
 #' @export
-repometrics_data_repo <- function (path, date_interval = 1L, num_cores = -1L) {
+repometrics_data_repo <- function (path, date_interval = "month", num_cores = -1L) {
 
     if (is_verbose ()) {
         cli::cli_alert_info ("Extracting package statistics ...")

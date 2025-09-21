@@ -4,7 +4,7 @@
 \alias{repometrics_data_repo}
 \title{Collate code and repository data for a local R package.}
 \usage{
-repometrics_data_repo(path, date_interval = 1L, num_cores = -1L)
+repometrics_data_repo(path, date_interval = "month", num_cores = -1L)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
