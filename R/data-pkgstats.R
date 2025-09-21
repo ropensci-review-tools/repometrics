@@ -1,5 +1,6 @@
 repo_pkgstats_history_internal <- function (path, date_interval = "month", num_cores = -1L) {
 
+    checkmate::assert_character (date_interval)
     date_interval <- match.arg (
         date_interval,
         c ("day", "week", "month", "year")
@@ -7,7 +8,6 @@ repo_pkgstats_history_internal <- function (path, date_interval = "month", num_c
 
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
-    checkmate::assert_int (date_interval, lower = 0L)
     checkmate::assert_int (num_cores)
 
     num_cores <- set_num_cores (num_cores)
