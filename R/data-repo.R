@@ -6,10 +6,9 @@
 #' \link{repometrics_data_user} functions.
 #'
 #' @param path Path to local repository containing an R package.
-#' @param step_days Analyse package at intervals of this number of days. The
-#' last commit for each day is chosen. For example, `step_days = 7L` will
-#' return weekly statistics. Values of zero or less will analyse all commits,
-#' including potentially multiple daily commits.
+#' @param date_interval Interval at which to analyse package statistics, with
+#' options of "day", "week", "month", or "year". The last commit for each
+#' period is chosen.
 #' @param num_cores Number of cores to use in multi-core processing. Has no
 #' effect on Windows operating systems, on which calculations are always
 #' single-core only. Negative values are subtracted from number of available
@@ -40,11 +39,11 @@
 #'
 #' @family data
 #' @export
-repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
+repometrics_data <- function (path, date_interval = "month", num_cores = -1L,
                               end_date = Sys.Date (), nyears = 1) {
 
     data <- repometrics_data_repo (
-        path = path, step_days = step_days, num_cores = num_cores
+        path = path, date_interval = date_interval, num_cores = num_cores
     )
 
     ctbs <- data$rm$contribs_from_gh_api$login
@@ -97,14 +96,14 @@ repometrics_data <- function (path, step_days = 1L, num_cores = -1L,
 #'
 #' @family data
 #' @export
-repometrics_data_repo <- function (path, step_days = 1L, num_cores = -1L) {
+repometrics_data_repo <- function (path, date_interval = 1L, num_cores = -1L) {
 
     if (is_verbose ()) {
         cli::cli_alert_info ("Extracting package statistics ...")
     }
     pkgstats <- repo_pkgstats_history (
         path,
-        step_days = step_days,
+        date_interval = date_interval,
         num_cores = num_cores
     )
     if (is_verbose ()) {

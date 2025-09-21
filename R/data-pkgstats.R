@@ -1,14 +1,19 @@
-repo_pkgstats_history_internal <- function (path, step_days = 1L, num_cores = -1L) {
+repo_pkgstats_history_internal <- function (path, date_interval = "month", num_cores = -1L) {
+
+    date_interval <- match.arg (
+        date_interval,
+        c ("day", "week", "month", "year")
+    )
 
     checkmate::assert_character (path, len = 1L)
     checkmate::assert_directory (path)
-    checkmate::assert_int (step_days, lower = 0L)
+    checkmate::assert_int (date_interval, lower = 0L)
     checkmate::assert_int (num_cores)
 
     num_cores <- set_num_cores (num_cores)
 
     log <- rm_data_gitlog (path)
-    log <- filter_git_log (log, step_days)
+    log <- filter_git_log (log, date_interval)
 
     if (num_cores == 1L) {
 
@@ -42,19 +47,22 @@ repo_pkgstats_history_internal <- function (path, step_days = 1L, num_cores = -1
 #' @export
 repo_pkgstats_history <- memoise::memoise (repo_pkgstats_history_internal)
 
-filter_git_log <- function (log, step_days) {
+filter_git_log <- function (log, date_interval) {
 
-    if (step_days >= 1L) {
-        log$date <- as.Date (log$timestamp)
-        log <- dplyr::group_by (log, date) |>
-            dplyr::filter (dplyr::row_number () == 1L)
-        if (step_days > 1L) {
-            index <- which (-diff (log$date) < step_days)
-            if (length (index) > 0L) {
-                log <- log [-(index), ]
-            }
-        }
+    log$date <- as.Date (log$timestamp)
+    if (date_interval == "year") {
+        log$date <- strftime (log$date, "%Y")
+    } else if (date_interval == "month") {
+        log$date <- strftime (log$date, "%Y-%m")
+    } else if (date_interval == "week") {
+        log$date <- strftime (log$date, "%V")
+    } else if (date_interval == "day") {
+        log$date <- strftime (log$date, "%Y-%m-%d")
     }
+
+    log <- dplyr::group_by (log, date) |>
+        dplyr::filter (dplyr::row_number () == 1L) |>
+        dplyr::ungroup ()
 
     return (log)
 }

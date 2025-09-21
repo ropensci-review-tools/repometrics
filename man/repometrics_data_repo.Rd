@@ -4,15 +4,14 @@
 \alias{repometrics_data_repo}
 \title{Collate code and repository data for a local R package.}
 \usage{
-repometrics_data_repo(path, step_days = 1L, num_cores = -1L)
+repometrics_data_repo(path, date_interval = 1L, num_cores = -1L)
 }
 \arguments{
 \item{path}{Path to local repository containing an R package.}
 
-\item{step_days}{Analyse package at intervals of this number of days. The
-last commit for each day is chosen. For example, \code{step_days = 7L} will
-return weekly statistics. Values of zero or less will analyse all commits,
-including potentially multiple daily commits.}
+\item{date_interval}{Interval at which to analyse package statistics, with
+options of "day", "week", "month", or "year". The last commit for each
+period is chosen.}
 
 \item{num_cores}{Number of cores to use in multi-core processing. Has no
 effect on Windows operating systems, on which calculations are always
