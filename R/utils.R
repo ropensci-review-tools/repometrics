@@ -56,6 +56,7 @@ n_per_page_in_tests <- function (n_per_page) {
 get_end_date_seq <- function (end_date = Sys.Date (),
                               num_years = 3) {
 
+    period <- get_repometrics_period ()
     num_periods <- floor (num_years * 365.25 / period)
     period_seq <- seq_len (num_periods) * period - period
     end_dates <- end_date - period_seq
@@ -63,27 +64,18 @@ get_end_date_seq <- function (end_date = Sys.Date (),
     # Adjust days to same day as 'end_date', but no date-time pkgs here:
     if (period > 30) {
 
-        months <- as.integer (strftime (end_dates, format = "%m"))
-        days <- vapply (months, num_days, integer (1L))
-        end_dates_prev_month <- format (end_dates - days, "%Y-%m")
+        years <- format (end_dates, format = "%Y")
+        months <- as.integer (format (end_dates, format = "%m")) - 1L
+        months [which (months == 0)] <- 12L
+        months <- sprintf ("%02d", months)
+        days <- format (end_dates, format = "%d")
 
         as.Date (paste0 (
-            end_dates_prev_month, paste0 ("-", format (end_dates, "%d"))
+            years, "-", months, "-", days
         ))
     }
 
     return (end_dates)
-}
-
-num_days <- function (date) {
-
-    m <- as.integer (format (date, format = "%m"))
-    y <- as.integer (format (date, format = "%y"))
-    ndays <- as.integer (c (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31))
-    if (y %% 4 == 0) {
-        ndays [2] <- 29L
-    }
-    ndays [m]
 }
 
 is_verbose <- function () {
