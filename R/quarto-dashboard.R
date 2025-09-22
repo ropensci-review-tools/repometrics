@@ -58,10 +58,10 @@ repometrics_dashboard <- function (data, action = "preview",
     check_dashboard_arg (data)
     data$pkgstats <- timestamps_to_dates (data$pkgstats)
 
-    requireNamespace ("brio")
-    requireNamespace ("jsonlite")
-    requireNamespace ("quarto")
-    requireNamespace ("withr")
+    requireNamespace ("brio", quietly = TRUE)
+    requireNamespace ("jsonlite", quietly = TRUE)
+    requireNamespace ("quarto", quietly = TRUE)
+    requireNamespace ("withr", quietly = TRUE)
 
     path_src <- system.file ("extdata", "quarto", package = "repometrics")
     path_dest <- fs::path (fs::path_temp (), "quarto")

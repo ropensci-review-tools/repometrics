@@ -1,6 +1,6 @@
 cm_data_test_coverage <- function (path, end_date = NULL) {
 
-    requireNamespace ("readr")
+    requireNamespace ("readr", quietly = TRUE)
 
     or <- org_repo_from_path (path)
 
