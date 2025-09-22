@@ -23,9 +23,15 @@ rm_data_gitlog_internal <- function (path) {
     lines_removed <- vapply (stats, function (i) i$deletions, integer (1L))
     nfiles_changed <- vapply (stats, function (i) i$files, integer (1L))
 
+    # This can crash, for example through "embedded null in string":
     diffs <- lapply (
         hash,
-        function (i) gert::git_diff (ref = i, repo = path)
+        function (i) {
+            tryCatch (
+                gert::git_diff (ref = i, repo = path),
+                error = function (e) NULL
+            )
+        }
     )
 
     # files_changed <- lapply (diffs, function (i) i$new)
@@ -34,6 +40,10 @@ rm_data_gitlog_internal <- function (path) {
     # `length (grep ("^(\\-|\\+)$", j))` or
     # `length (which (j %in% c ("-", "+")))`.
     whitespace <- vapply (diffs, function (i) {
+        if (length (i) == 0L) {
+            return (rep (0L, 2L))
+        }
+
         patch_i <- suppressWarnings (strsplit (i$patch, "\\n"))
         res <- vapply (patch_i, function (j) {
             c (length (which (j == "+")), length (which (j == "-")))
