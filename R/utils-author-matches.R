@@ -308,7 +308,7 @@ index_partial_duplicates <- function (log) {
             logical (1L)
         ))
         if (length (also_in_email) > 0) {
-            i <- unique (c (i, index_emails [[also_in_email]]))
+            i <- unique (c (i, unlist (index_emails [also_in_email])))
         }
         return (i)
     })
