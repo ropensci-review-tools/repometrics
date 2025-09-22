@@ -4,6 +4,9 @@
 #' @noRd
 rm_data_contribs_from_log <- function (path) {
 
+    # Suppress no visible binding notes:
+    handle <- NULL
+
     log <- rm_data_gitlog (path)
 
     gh_handle <- unique (log$aut_name)
