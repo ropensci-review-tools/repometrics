@@ -54,7 +54,6 @@ n_per_page_in_tests <- function (n_per_page) {
 
 # Fn used in collating all metrics over ranges of end dates:
 get_end_date_seq <- function (end_date = Sys.Date (),
-                              period = get_repometrics_period (),
                               num_years = 3) {
 
     num_periods <- floor (num_years * 365.25 / period)
@@ -63,22 +62,28 @@ get_end_date_seq <- function (end_date = Sys.Date (),
 
     # Adjust days to same day as 'end_date', but no date-time pkgs here:
     if (period > 30) {
-        end_dates <- as.character (end_dates)
-        days <- regmatches (end_dates, regexpr ("[0-9]+$", end_dates))
-        # re-adjust months where period shifts back to last few days:
-        index <- which (as.integer (days) > 25)
-        end_dates [index] <- gsub ("[0-9]+$", "01", end_dates [index])
-        end_dates [index] <- vapply (end_dates [index], function (i) {
-            m <- regmatches (i, regexpr ("\\-[0-9]+\\-", i))
-            m_num <- as.integer (gsub ("\\-", "", m))
-            m_plus_1 <- paste0 ("-", sprintf ("%02d", m_num + 1), "-")
-            gsub (m, m_plus_1, i)
-        }, character (1L))
 
-        end_dates <- as.Date (end_dates)
+        months <- as.integer (strftime (end_dates, format = "%m"))
+        days <- vapply (months, num_days, integer (1L))
+        end_dates_prev_month <- format (end_dates - days, "%Y-%m")
+
+        as.Date (paste0 (
+            end_dates_prev_month, paste0 ("-", format (end_dates, "%d"))
+        ))
     }
 
     return (end_dates)
+}
+
+num_days <- function (date) {
+
+    m <- as.integer (format (date, format = "%m"))
+    y <- as.integer (format (date, format = "%y"))
+    ndays <- as.integer (c (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31))
+    if (y %% 4 == 0) {
+        ndays [2] <- 29L
+    }
+    ndays [m]
 }
 
 is_verbose <- function () {
