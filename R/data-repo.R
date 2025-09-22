@@ -98,6 +98,9 @@ repometrics_data <- function (path, date_interval = "month", num_cores = -1L,
 #' @export
 repometrics_data_repo <- function (path, date_interval = "month", num_cores = -1L) {
 
+    # Suppress no visible binding notes:
+    name <- NULL
+
     if (is_verbose ()) {
         cli::cli_alert_info ("Extracting package statistics ...")
     }

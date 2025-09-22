@@ -16,7 +16,7 @@ get_all_contribs <- function (ctbs_log, ctbs_gh) {
     checkmate::assert_data_frame (ctbs_gh, ncols = 17L, col.names = "named")
 
     # Suppress no visible binding notes:
-    handle <- email <- NULL
+    handle <- email <- name <- NULL
 
     ctbs_log <- dplyr::rename (ctbs_log, name = handle) |>
         dplyr::filter (!name %in% c ("GitHub", "GitHub Action"))
