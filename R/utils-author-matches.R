@@ -88,13 +88,22 @@ match_string_pairs <- function (name_src1, name_src2, ctbs_gh, ctbs_log) {
             names2 <- strsplit (name_src2, "\\s+")
         }
 
-        matches <- lapply (seq_along (names1), function (i) {
-            res <- unique (match_names (names1 [[i]], names2) [, 2:3])
-            res$i <- i
-            return (res)
-        })
-        matches <- do.call (rbind, matches)
-        matches <- matches [which (matches$match >= match_limit), ]
+        index <- which (vapply (
+            names1,
+            function (n) length (n) > 0,
+            logical (1L)
+        ))
+        names1 <- names1 [index]
+        matches <- matrix (nrow = 0L, ncol = 2L)
+        if (length (names1) > 0L) {
+            matches <- lapply (seq_along (names1), function (i) {
+                res <- unique (match_names (names1 [[i]], names2) [, 2:3])
+                res$i <- i
+                return (res)
+            })
+            matches <- do.call (rbind, matches)
+            matches <- matches [which (matches$match >= match_limit), ]
+        }
         if (nrow (matches) > 0L) {
             ctbs_log$gh_handle [index_na] [matches$i] <-
                 ctbs_gh$login [matches$index]
