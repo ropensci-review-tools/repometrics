@@ -123,7 +123,12 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
         contributions = contributions
     )
 
-    ctbs_user_info <- lapply (ctbs$login, user_from_gh_api)
+    ctbs_user_info <- lapply (ctbs$login, function (ctb) {
+        tryCatch (
+            user_from_gh_api (ctb),
+            error = function (e) NULL
+        )
+    })
     ctbs_user_info <- do.call (rbind, ctbs_user_info)
 
     ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id")) |>
