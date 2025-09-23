@@ -12,6 +12,13 @@
 #' @noRd
 get_all_contribs <- function (ctbs_log, ctbs_gh) {
 
+    if (nrow (ctbs_gh) == 0L) {
+        ctbs_log <- ctbs_log |>
+            dplyr::rename (name = handle) |>
+            dplyr::mutate (gh_handle = name)
+        return (ctbs_log)
+    }
+
     checkmate::assert_data_frame (ctbs_log, ncols = 2L, col.names = "named")
     checkmate::assert_data_frame (ctbs_gh, ncols = 17L, col.names = "named")
 

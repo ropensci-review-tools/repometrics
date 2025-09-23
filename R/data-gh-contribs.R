@@ -108,12 +108,19 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
             httr2::req_url_query (page = next_page)
     }
 
-    login <- vapply (body, function (i) i$login, character (1L))
-    ctb_id <- vapply (body, function (i) i$id, integer (1L))
-    avatar_url <- vapply (body, function (i) i$avatar_url, character (1L))
-    api_url <- vapply (body, function (i) i$url, character (1L))
-    gh_url <- vapply (body, function (i) i$html_url, character (1L))
-    contributions <- vapply (body, function (i) i$contributions, integer (1L))
+    login <- avatar_url <- api_url <- gh_url <- character (0L)
+    ctb_id <- contributions <- integer (0L)
+
+    if (is.null (names (body)) && length (body) > 0L) {
+        # If no contributors are on GH anymore, the API request can return
+        # strange results.
+        login <- vapply (body, function (i) i$login, character (1L))
+        ctb_id <- vapply (body, function (i) i$id, integer (1L))
+        avatar_url <- vapply (body, function (i) i$avatar_url, character (1L))
+        api_url <- vapply (body, function (i) i$url, character (1L))
+        gh_url <- vapply (body, function (i) i$html_url, character (1L))
+        contributions <- vapply (body, function (i) i$contributions, integer (1L))
+    }
 
     ctbs <- data.frame (
         login = login,
@@ -132,8 +139,10 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
     })
     ctbs_user_info <- do.call (rbind, ctbs_user_info)
 
-    ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id")) |>
-        dplyr::filter (login != "actions-user")
+    if (!is.null (ctbs_user_info)) {
+        ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id")) |>
+            dplyr::filter (login != "actions-user")
+    }
 
     return (ctbs)
 }
