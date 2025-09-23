@@ -417,7 +417,7 @@ gh_user_commits_internal <- function (login,
             annual_days <- ifelse (this_year %% 4 == 0, 366L, 365L)
             end_date <- end_date - annual_days
             years_done <- years_done + 1
-            if (years_done < nyears) {
+            if (years_done > nyears) {
                 has_next_page <- FALSE
                 end_cursor <- NULL
             }
