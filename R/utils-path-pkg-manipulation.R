@@ -39,6 +39,7 @@ org_repo_from_path <- function (path) {
     if (length (url) == 0L) {
         return (FALSE)
     }
+    url <- gsub ("#.*$", "", url)
 
     url_parts <- strsplit (url, "\\/") [[1]]
     i <- which (url_parts == "github.com")
