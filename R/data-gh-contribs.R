@@ -12,9 +12,10 @@ rm_data_contribs_from_log <- function (path) {
     gh_handle <- unique (log$aut_name)
     gh_email <- log$aut_email [match (gh_handle, log$aut_name)]
 
-    # Remove any duplicates of either, but excluding non-entries:
+    # Remove any duplicates of either, but excluding non-entries.
+    # Also need to catch 'gsub' errors for non-UTF8 strings:
     rm_dup_rows <- function (x) {
-        x <- gsub ("\\s+", "", x)
+        x <- tryCatch (gsub ("\\s+", "", x), error = function (e) x)
         index <- seq_along (x)
         index_out <- which (duplicated (x) & nzchar (x))
         if (length (index_out) > 0) {
