@@ -16,6 +16,8 @@ pkg_gh_url_from_path <- function (path) {
         url <- strsplit (unname (url), "\\n|,") [[1]]
         url <- gsub ("^[[:space:]]*", "", url)
         url <- gsub ("[[:space:]].*$", "", url)
+        url <- gsub ("^<|>$", "", url)
+        url <- gsub ("\\/$", "", url)
         grep ("github\\.com", url, value = TRUE)
     }
     if ("URL" %in% colnames (desc)) {
