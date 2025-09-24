@@ -20,8 +20,11 @@ cm_data_test_coverage <- function (path, end_date = NULL) {
     if (length (codecov) == 0L) {
         return (NA_real_)
     }
-    ptn <- "https\\:.*\\.svg"
+    ptn <- "http(s?)\\:.*\\.svg"
     badge_svg <- regmatches (codecov, gregexpr (ptn, codecov)) [[1]]
+    if (is.null (badge_svg)) {
+        return (NA_real_)
+    }
     # Have to use httr2 to enable mocking via httptest2:
     badge <- httr2::request (badge_svg) |>
         httr2::req_perform ()
