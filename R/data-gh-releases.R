@@ -37,20 +37,24 @@ rm_data_releases_from_gh_api_internal <- function (path, # nolint
             httr2::req_url_query (page = next_page)
     }
 
+    null2char <- function (x) {
+        ifelse (is.null (x), "", x)
+    }
+
     data.frame (
         id = vapply (body, function (i) i$id, integer (1L)),
         author_login =
-            vapply (body, function (i) i$author$login, character (1L)),
+            vapply (body, function (i) null2char (i$author$login), character (1L)),
         author_id = vapply (body, function (i) i$author$id, integer (1L)),
-        tag_name = vapply (body, function (i) i$tag_name, character (1L)),
+        tag_name = vapply (body, function (i) null2char (i$tag_name), character (1L)),
         target_commitish =
-            vapply (body, function (i) i$target_commitish, character (1L)),
-        name = vapply (body, function (i) i$name, character (1L)),
+            vapply (body, function (i) null2char (i$target_commitish), character (1L)),
+        name = vapply (body, function (i) null2char (i$name), character (1L)),
         draft = vapply (body, function (i) i$draft, logical (1L)),
         prerelease = vapply (body, function (i) i$prerelease, logical (1L)),
-        created_at = vapply (body, function (i) i$created_at, character (1L)),
+        created_at = vapply (body, function (i) null2char (i$created_at), character (1L)),
         published_at =
-            vapply (body, function (i) i$published_at, character (1L))
+            vapply (body, function (i) null2char (i$published_at), character (1L))
     )
 }
 rm_data_releases_from_gh_api <-
