@@ -68,7 +68,7 @@ gh_user_general_internal <- function (login = "",
         repos_contributed_to =
             null2na_int (user$repositoriesContributedTo$totalCount),
         num_issues_opened = user$issues$totalCount,
-        num_prs_opeend = user$pullRequests$totalCount,
+        num_prs_opened = user$pullRequests$totalCount,
         num_starred_repos = null2na_int (user$starredRepositories$totalCount)
     )
 
