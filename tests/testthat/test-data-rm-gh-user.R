@@ -25,10 +25,11 @@ test_that ("rm user data internal structures", {
 
     expect_s3_class (dat1$general$user, "data.frame")
     expect_equal (nrow (dat1$general$user), 1L)
-    expect_equal (ncol (dat1$general$user), 10L)
+    expect_equal (ncol (dat1$general$user), 12L)
     nms <- c (
         "login", "name", "email", "location", "company", "bio", "avatarUrl",
-        "num_repositories", "repos_contributed_to", "num_starred_repos"
+        "num_repositories", "repos_contributed_to", "num_issues_opened",
+        "num_prs_opened", "num_starred_repos"
     )
     expect_named (dat1$general$user, nms)
 

@@ -16,7 +16,7 @@
                         "url": "https://github.com/rladies",
                         "websiteUrl": "https://rladies.org",
                         "membersWithRole": {
-                            "totalCount": 32
+                            "totalCount": 33
                         }
                     },
                     {
@@ -26,7 +26,7 @@
                         "url": "https://github.com/tidyverse",
                         "websiteUrl": "http://tidyverse.org",
                         "membersWithRole": {
-                            "totalCount": 26
+                            "totalCount": 27
                         }
                     },
                     {
@@ -43,10 +43,16 @@
             },
             "avatarUrl": "https://avatars.githubusercontent.com/u/12950918?u=d663acf844f310395068585570b8040bb14571ed&v=4",
             "repositories": {
-                "totalCount": 53
+                "totalCount": 57
             },
             "repositoriesContributedTo": {
-                "totalCount": 44
+                "totalCount": 41
+            },
+            "issues": {
+                "totalCount": 527
+            },
+            "pullRequests": {
+                "totalCount": 1069
             },
             "starredRepositories": {
                 "totalCount": 5
