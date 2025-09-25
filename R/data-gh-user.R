@@ -30,6 +30,12 @@ gh_user_general_qry <- function (login = "") {
             repositoriesContributedTo (first: 1) {
                 totalCount
             }
+            issues (first: 1) {
+                totalCount
+            }
+            pullRequests (first: 1) {
+                totalCount
+            }
             starredRepositories (first: 1) {
                 totalCount
             }
@@ -61,6 +67,8 @@ gh_user_general_internal <- function (login = "",
         num_repositories = null2na_int (user$repositories$totalCount),
         repos_contributed_to =
             null2na_int (user$repositoriesContributedTo$totalCount),
+        num_issues_opened = user$issues$totalCount,
+        num_prs_opeend = user$pullRequests$totalCount,
         num_starred_repos = null2na_int (user$starredRepositories$totalCount)
     )
 
