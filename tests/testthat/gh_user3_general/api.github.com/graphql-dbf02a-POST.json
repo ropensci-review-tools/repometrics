@@ -16,7 +16,7 @@
                         "url": "https://github.com/ropensci",
                         "websiteUrl": "https://ropensci.org/",
                         "membersWithRole": {
-                            "totalCount": 301
+                            "totalCount": 319
                         }
                     },
                     {
@@ -26,7 +26,7 @@
                         "url": "https://github.com/ecohealthalliance",
                         "websiteUrl": "http://ecohealthalliance.org/",
                         "membersWithRole": {
-                            "totalCount": 50
+                            "totalCount": 49
                         }
                     },
                     {
@@ -56,7 +56,7 @@
                         "url": "https://github.com/osm-router",
                         "websiteUrl": null,
                         "membersWithRole": {
-                            "totalCount": 3
+                            "totalCount": 2
                         }
                     },
                     {
@@ -66,7 +66,7 @@
                         "url": "https://github.com/reconhub",
                         "websiteUrl": "http://www.repidemicsconsortium.org",
                         "membersWithRole": {
-                            "totalCount": 23
+                            "totalCount": 26
                         }
                     },
                     {
@@ -248,18 +248,34 @@
                         "membersWithRole": {
                             "totalCount": 1
                         }
+                    },
+                    {
+                        "location": null,
+                        "name": "changing-cities",
+                        "resourcePath": "/changing-cities",
+                        "url": "https://github.com/changing-cities",
+                        "websiteUrl": null,
+                        "membersWithRole": {
+                            "totalCount": 1
+                        }
                     }
                 ]
             },
             "avatarUrl": "https://avatars.githubusercontent.com/u/6697851?u=0f8c9fc5b04de2485164e2cde5b62d45b4e684a0&v=4",
             "repositories": {
-                "totalCount": 172
+                "totalCount": 176
             },
             "repositoriesContributedTo": {
-                "totalCount": 62
+                "totalCount": 57
+            },
+            "issues": {
+                "totalCount": 1733
+            },
+            "pullRequests": {
+                "totalCount": 1061
             },
             "starredRepositories": {
-                "totalCount": 1631
+                "totalCount": 1673
             }
         }
     }

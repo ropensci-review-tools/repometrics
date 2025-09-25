@@ -16,7 +16,7 @@
                         "url": "https://github.com/tidyverse",
                         "websiteUrl": "http://tidyverse.org",
                         "membersWithRole": {
-                            "totalCount": 26
+                            "totalCount": 27
                         }
                     },
                     {
@@ -33,13 +33,19 @@
             },
             "avatarUrl": "https://avatars.githubusercontent.com/u/660288?u=677db9b09ed7b9ca76a2fc24622a9ca433ce05d5&v=4",
             "repositories": {
-                "totalCount": 124
+                "totalCount": 128
             },
             "repositoriesContributedTo": {
-                "totalCount": 189
+                "totalCount": 149
+            },
+            "issues": {
+                "totalCount": 4513
+            },
+            "pullRequests": {
+                "totalCount": 1479
             },
             "starredRepositories": {
-                "totalCount": 1367
+                "totalCount": 1373
             }
         }
     }
