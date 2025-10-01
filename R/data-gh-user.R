@@ -57,7 +57,7 @@ gh_user_general_internal <- function (login = "",
     user <- dat$data$user
 
     user_dat <- data.frame (
-        login = user$login,
+        login = null2na_char (user$login),
         name = null2na_char (user$name),
         email = null2na_char (user$email),
         location = null2na_char (user$location),
@@ -67,8 +67,8 @@ gh_user_general_internal <- function (login = "",
         num_repositories = null2na_int (user$repositories$totalCount),
         repos_contributed_to =
             null2na_int (user$repositoriesContributedTo$totalCount),
-        num_issues_opened = user$issues$totalCount,
-        num_prs_opened = user$pullRequests$totalCount,
+        num_issues_opened = null2na_int (user$issues$totalCount),
+        num_prs_opened = null2na_int (user$pullRequests$totalCount),
         num_starred_repos = null2na_int (user$starredRepositories$totalCount)
     )
 
