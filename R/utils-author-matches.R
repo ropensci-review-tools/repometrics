@@ -197,14 +197,11 @@ permute_names <- function (names) {
 
 match_names <- function (name1, names2) {
 
-    name1 <- tolower (name1)
-    names2 <- tolower (names2)
-
     name_parts1 <- permute_names (name1)
 
     matches <- lapply (name_parts1, function (n1) {
 
-        n1_sp <- strsplit (n1, "") [[1]]
+        n1_sp <- strsplit (tolower (n1), "") [[1]]
 
         matches_n <- lapply (seq_along (names2), function (n2) {
 
@@ -212,7 +209,7 @@ match_names <- function (name1, names2) {
 
             match_lengths <- vapply (name_parts2, function (i) {
 
-                n2_sp <- strsplit (i, "") [[1]]
+                n2_sp <- strsplit (tolower (i), "") [[1]]
 
                 n1_len <- length (which (!is.na (pmatch (n1_sp, n2_sp))))
                 n2_len <- length (which (!is.na (pmatch (n2_sp, n1_sp))))
