@@ -197,6 +197,9 @@ permute_names <- function (names) {
 
 match_names <- function (name1, names2) {
 
+    name1 <- tolower (name1)
+    names2 <- tolower (names2)
+
     name_parts1 <- permute_names (name1)
 
     matches <- lapply (name_parts1, function (n1) {
