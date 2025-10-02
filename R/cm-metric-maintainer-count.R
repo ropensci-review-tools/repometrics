@@ -41,6 +41,9 @@ cm_data_maintainer_count <- function (path, end_date = Sys.Date ()) {
     issue_cmt_ctbs <- issue_cmts$user_login
 
     gh_auts <- unique (c (pr_revs, pr_ctbs, issue_auts, issue_cmt_ctbs))
+    index <- which (!is.na (gh_auts) &
+        !grepl ("github\\-actions|\\[bot\\]", gh_auts))
+    gh_auts <- gh_auts [index]
 
     num_gh_auts <- match_repo_ctbs_to_desc (path, auts, gh_auts)
 
@@ -49,7 +52,7 @@ cm_data_maintainer_count <- function (path, end_date = Sys.Date ()) {
 
 cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
     dat <- cm_data_maintainer_count (path, end_date)
-    return (dat [["recent"]])
+    return (dat [["total"]]) # Number of DESC "aut" roles
 }
 
 cm_metric_maintainer_count_url <- function () {
