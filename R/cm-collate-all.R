@@ -19,12 +19,12 @@
 #' implemented to align metrics with their usage in aggregate "models".
 #'
 #' @examples
-#' metrics <- rm_chaoss_metrics_list ()
+#' metrics <- rm_metrics_list ()
 #' @family auxiliary
 #' @export
-rm_chaoss_metrics_list <- function () {
+rm_metrics_list <- function () {
 
-    fn_names <- chaoss_metrics_fn_names ()
+    fn_names <- rm_metrics_fn_names ()
     url_fns <- paste0 (fn_names, "_url")
     urls <- vapply (url_fns, function (u) do.call (u, list ()), character (1L))
     urls <- paste0 (rm_metric_base_url (), unname (urls))
@@ -32,7 +32,7 @@ rm_chaoss_metrics_list <- function () {
     data.frame (fn_name = fn_names, url = urls)
 }
 
-chaoss_metrics_fn_names <- function () {
+rm_metrics_fn_names <- function () {
 
     ptn <- "^rm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
@@ -45,7 +45,7 @@ chaoss_metrics_fn_names <- function () {
 
 collate_all_metrics <- function (path, end_date = Sys.Date ()) {
 
-    metric_fns <- rm_chaoss_metrics_list ()$fn_name
+    metric_fns <- rm_metrics_list ()$fn_name
 
     pars <- list (path = path, end_date = end_date)
     extra_pars <- list (

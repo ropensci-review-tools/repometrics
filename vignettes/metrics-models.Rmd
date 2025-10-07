@@ -26,8 +26,8 @@ numbers of individual
 The metrics used in the models are described in the separate [*CHAOSS metrics*
 vignette](https://docs.ropensci.org/repometrics/articles/chaoss-models.html),
 and are detailed in the `data.frame` returned by [the
-`rm_chaoss_metrics_list()`
-function](https://docs.ropensci.org/repometrics/reference/rm_chaoss_metrics_list.html).
+`rm_metrics_list()`
+function](https://docs.ropensci.org/repometrics/reference/rm_metrics_list.html).
 
 In contrast to the metrics, each of which is encoded as a separate function
 within this package, the models are not hard-coded, rather the metrics used in

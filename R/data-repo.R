@@ -32,7 +32,7 @@
 #' to the repository, whether by code contributions or GitHub issues or
 #' discussions.
 #' \item "rm_metrics" as a list of values for all CHAOSS metrics defined in the
-#' output of \link{rm_chaoss_metrics_list}.
+#' output of \link{rm_metrics_list}.
 #' \item "rm_models" as a list of values for CHAOSS models, derived from
 #' aggregating various metrics.
 #' }
