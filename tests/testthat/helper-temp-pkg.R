@@ -1,9 +1,17 @@
 generate_test_pkg <- function () {
 
+    on_r_univ <- nzchar (Sys.getenv ("MY_UNIVERSE"))
+
     pkg <- system.file ("extdata", "testpkg.zip", package = "repometrics")
     pkg_dest <- fs::path (fs::path_temp (), "testpkg")
     if (fs::dir_exists (pkg_dest)) {
-        stop ("test package already exists", call. = FALSE)
+        if (on_r_univ) {
+            # For some reason, directories are not properly cleaned up on
+            # r-univ machines, so this fn always fails.
+            fs::dir_delete (pkg_dest)
+        } else {
+            stop ("test package already exists", call. = FALSE)
+        }
     }
     flist <- unzip (pkg, exdir = fs::path_temp ())
 
