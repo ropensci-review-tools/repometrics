@@ -7,7 +7,7 @@
 #' provide a consistent interface).
 #'
 #' @noRd
-cm_data_best_practices <- function (path, end_date = NULL) {
+rm_data_best_practices_internal <- function (path, end_date = NULL) {
     readme_path <- fs::dir_ls (path, regexp = "readme\\.md", ignore.case = TRUE)
     if (length (readme_path) == 0L) {
         return (FALSE)
@@ -21,7 +21,7 @@ cm_data_best_practices <- function (path, end_date = NULL) {
 }
 
 cm_metric_best_practices <- function (path, end_date = NULL) {
-    cm_data_best_practices (path, end_date)
+    rm_data_best_practices_internal (path, end_date)
 }
 
 cm_metric_best_practices_url <- function () {

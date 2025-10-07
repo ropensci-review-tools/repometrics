@@ -20,7 +20,7 @@
 #' into that.
 #'
 #' @noRd
-cm_data_pr_reviews <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_reviews_internal <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date) # in data-gh-prs.R
 
@@ -102,7 +102,7 @@ cm_data_pr_reviews <- function (path, end_date = Sys.Date ()) {
 #' \url{https://chaoss.community/kb/metric-change-request-reviews/}
 #'
 #' @noRd
-cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_reviews_approved_internal <- function (path, end_date = Sys.Date ()) {
 
     pr_dat <- get_prs_in_period (path, end_date)
 
@@ -115,7 +115,7 @@ cm_data_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_reviews_approved (path, end_date)
+    rm_data_pr_reviews_approved_internal (path, end_date)
 }
 
 cm_metric_pr_reviews_approved_url <- function () {
@@ -123,7 +123,7 @@ cm_metric_pr_reviews_approved_url <- function () {
 }
 
 cm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_pr_reviews (path, end_date)
+    dat <- rm_data_pr_reviews_internal (path, end_date)
     return (dat [["rejected_count"]])
 }
 
@@ -131,7 +131,7 @@ cm_metric_pr_revs_rejected_url <- function () {
     "metric-change-request-reviews"
 }
 
-cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_review_duration_internal <- function (path, end_date = Sys.Date ()) {
 
     prs <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
 
@@ -167,7 +167,7 @@ cm_data_pr_review_duration <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_pr_review_duration (path, end_date)
+    dat <- rm_data_pr_review_duration_internal (path, end_date)
     # That has "cycle_dur_mn" and overall "review_dur_mn"; take mean of both:
     res <- mn_med_sum (dat [grep ("\\_mn$", names (dat))])
     return (res [["mean"]])
@@ -177,7 +177,7 @@ cm_metric_pr_review_duration_url <- function () {
     "metric-change-request-review-duration"
 }
 
-cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_cmt_count_internal <- function (path, end_date = Sys.Date ()) {
 
     pr_dat <- get_prs_in_period (path, end_date) # in cm-metrics-change-req.R
     comment_counts <- c (
@@ -193,7 +193,7 @@ cm_data_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_cmt_count (path, end_date)
+    rm_data_pr_cmt_count_internal (path, end_date)
 }
 
 cm_metric_pr_cmt_count_url <- function () {
@@ -205,7 +205,7 @@ cm_metric_pr_cmt_count_url <- function () {
 #'
 #' @return Difftime vector of response durations in days
 #' @noRd
-cm_data_pr_response_durations <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_response_durations_internal <- function (path, end_date = Sys.Date ()) {
 
     contribs <- rm_data_contribs_from_gh_api (path)
     contribs <- unique (contribs$login)
@@ -246,14 +246,14 @@ cm_data_pr_response_durations <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_response_durations (path, end_date)
+    rm_data_pr_response_durations_internal (path, end_date)
 }
 
 cm_metric_pr_response_durations_url <- function () {
     "metric-change-requests-duration"
 }
 
-cm_data_pr_age <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_age_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
     created_at <- closed_at <- NULL
@@ -271,7 +271,7 @@ cm_data_pr_age <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_pr_age (path, end_date)
+    dat <- rm_data_pr_age_internal (path, end_date)
     return (dat [["mean"]])
 }
 

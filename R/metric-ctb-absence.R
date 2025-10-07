@@ -10,7 +10,7 @@
 #' @param path Local path to repository
 #' @param end_date Date at which metric is to be calculated.
 #' @noRd
-cm_data_contrib_absence <- function (path, end_date = Sys.Date ()) {
+rm_data_contrib_absence_internal <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_date (end_date)
 
@@ -22,7 +22,7 @@ cm_data_contrib_absence <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_contrib_absence_commits <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_contrib_absence (path, end_date)
+    dat <- rm_data_contrib_absence_internal (path, end_date)
     dat [["ncommits"]]
 }
 
@@ -34,12 +34,12 @@ cm_metric_contrib_absence_commits_url <- function () {
 # anyway:
 #
 # cm_metric_contrib_absence_files <- function (path, end_date = Sys.Date ()) {
-#     dat <- cm_data_contrib_absence (path, end_date)
+#     dat <- rm_data_contrib_absence_internal (path, end_date)
 #     dat [["nfiles_changed"]]
 # }
 #
 # cm_metric_contrib_absence_lines <- function (path, end_date = Sys.Date ()) {
-#     dat <- cm_data_contrib_absence (path, end_date)
+#     dat <- rm_data_contrib_absence_internal (path, end_date)
 #     dat [["lines_changed"]]
 # }
 

@@ -5,7 +5,7 @@
 #' issue authors, and issue comments participants over a certain period of
 #' time."
 #' @noRd
-cm_data_ctb_count <- function (path, end_date = Sys.Date ()) {
+rm_data_ctb_count_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- NULL
@@ -32,7 +32,7 @@ cm_data_ctb_count <- function (path, end_date = Sys.Date ()) {
 
 # Only code contributions are actually counted
 cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_ctb_count (path, end_date)
+    dat <- rm_data_ctb_count_internal (path, end_date)
     return (dat [["code"]])
 }
 
@@ -50,7 +50,7 @@ cm_metric_ctb_count_url <- function () {
 #'  D2_count: Contributors who have created a merge request and successfully
 #'    merged code."
 #' @noRd
-cm_data_committer_count <- function (path, end_date = Sys.Date ()) {
+rm_data_committer_count_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     starred_at <- created <- org_repo <- created_at <- NULL
@@ -84,11 +84,11 @@ cm_data_committer_count <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
-    cm_data_committer_count (path, end_date)
+    rm_data_committer_count_internal (path, end_date)
 }
 
 cm_metric_watcher_count <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_committer_count (path, end_date)
+    dat <- rm_data_committer_count_internal (path, end_date)
     return (dat [["watchers"]])
 }
 

@@ -37,7 +37,7 @@ mock_rm_data <- function (repo = TRUE) {
         rm_data_repo_stargazers (path)
     })
     coverage <- httptest2::with_mock_dir ("coverage", {
-        cm_data_test_coverage (path)
+        rm_data_test_coverage_internal (path)
     })
     universe <- httptest2::with_mock_dir ("r_univ", {
         rm_data_r_universe (path)

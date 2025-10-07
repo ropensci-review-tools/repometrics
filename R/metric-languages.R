@@ -6,7 +6,7 @@
 #' @param end_date Not used here, but specified for consistent interface to all
 #' metric fns.
 #' @noRd
-cm_data_languages <- function (path, end_date = NULL) {
+rm_data_languages_internal <- function (path, end_date = NULL) {
 
     # Suppress no visible binding note:
     language <- nfiles <- ncode <- NULL
@@ -44,7 +44,7 @@ cm_data_languages <- function (path, end_date = NULL) {
 # full calculation used regardless to allow potential improvement in the
 # future.
 cm_metric_languages <- function (path, end_date = NULL) {
-    dat <- cm_data_languages (path, end_date)
+    dat <- rm_data_languages_internal (path, end_date)
     lang_dist_mn <- mean (dat$ncode_pc) # lower is better
     # Re-scale this so that 4 languages translates to a value of 1:
     lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)

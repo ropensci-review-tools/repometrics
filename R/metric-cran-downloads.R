@@ -5,7 +5,7 @@
 #' @param end_date The date up to which download counts are to be aggregated.
 #' @return A single integer counting the number of downloads.
 #' @noRd
-cm_data_cran_downloads <- function (path, end_date = Sys.Date ()) {
+rm_data_cran_downloads_internal <- function (path, end_date = Sys.Date ()) {
 
     checkmate::assert_directory_exists (path)
     checkmate::assert_date (end_date)
@@ -21,7 +21,7 @@ cm_data_cran_downloads <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
-    cm_data_cran_downloads (path, end_date)
+    rm_data_cran_downloads_internal (path, end_date)
 }
 
 cm_metric_cran_downloads_url <- function () {

@@ -3,7 +3,7 @@
 #' counting only those who were active either in commits, issues, or pull
 #' requests over the standard time period.
 #' @noRd
-cm_data_maintainer_count <- function (path, end_date = Sys.Date ()) {
+rm_data_maintainer_count_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     user_login <- merged_by <- participants <- created_at <-
@@ -51,7 +51,7 @@ cm_data_maintainer_count <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_maintainer_count (path, end_date)
+    dat <- rm_data_maintainer_count_internal (path, end_date)
     return (dat [["total"]]) # Number of DESC "aut" roles
 }
 

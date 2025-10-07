@@ -5,7 +5,7 @@
 #' \url{https://chaoss.community/kb/metric-elephant-factor/}.
 #'
 #' @noRd
-cm_data_elephant_factor <- function (path, end_date = Sys.Date ()) {
+rm_data_elephant_factor_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     name <- company <- ncommits <- nfiles_changed <- lines_changed <- NULL
@@ -40,7 +40,7 @@ cm_data_elephant_factor <- function (path, end_date = Sys.Date ()) {
 #' all very highly correlated, so only one returned here.
 #' @noRd
 cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_elephant_factor (path, end_date)
+    dat <- rm_data_elephant_factor_internal (path, end_date)
     dat [["ncommits"]]
 }
 

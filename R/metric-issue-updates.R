@@ -3,7 +3,7 @@
 #' \url{https://chaoss.community/kb/metrics-model-community-activity/}
 #' "The number of issues updated over a certain period of time."
 #' @noRd
-cm_data_issue_updates <- function (path, end_date = Sys.Date ()) {
+rm_data_issue_updates_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- NULL
@@ -22,14 +22,14 @@ cm_data_issue_updates <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
-    cm_data_issue_updates (path, end_date)
+    rm_data_issue_updates_internal (path, end_date)
 }
 
 cm_metric_issue_updates_url <- function () {
     "metric-issues-active"
 }
 
-cm_data_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
+rm_data_issue_cmt_count_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     created_at <- issue_number <- NULL
@@ -57,14 +57,14 @@ cm_data_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
-    cm_data_issue_cmt_count (path, end_date) [["mean"]]
+    rm_data_issue_cmt_count_internal (path, end_date) [["mean"]]
 }
 
 cm_metric_issue_cmt_count_url <- function () {
     "metric-issues-active"
 }
 
-cm_data_issues_closed <- function (path, end_date = Sys.Date ()) {
+rm_data_issues_closed_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding note:
     closed_at <- NULL
@@ -80,7 +80,7 @@ cm_data_issues_closed <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
-    cm_data_issues_closed (path, end_date)
+    rm_data_issues_closed_internal (path, end_date)
 }
 
 cm_metric_issues_closed_url <- function () {

@@ -111,7 +111,7 @@ test_that ("cm metric change reqests", { # R/cm-metrics-change-req.R
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 10000)
 
-    pr_dat <- cm_data_change_req (path, end_date = end_date)
+    pr_dat <- rm_data_change_req_internal (path, end_date = end_date)
 
     expect_type (pr_dat, "double")
     expect_length (pr_dat, 4L)
@@ -165,7 +165,7 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    revs <- cm_data_pr_reviews (path, end_date = end_date)
+    revs <- rm_data_pr_reviews_internal (path, end_date = end_date)
     cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
     prs_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
     prs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
@@ -350,7 +350,7 @@ test_that ("cm data popularity", { # R/cm-metric-popularity.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_data_popularity (path, end_date = end_date)
+    res <- rm_data_popularity_internal (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -429,7 +429,7 @@ test_that ("cm metric programming languages", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    dat <- cm_data_languages (path)
+    dat <- rm_data_languages_internal (path)
     met <- cm_metric_languages (path) # re-scaled version of ncode_pc
 
     fs::dir_delete (path)
@@ -458,7 +458,7 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    dat <- cm_data_contrib_absence (path, end_date = end_date)
+    dat <- rm_data_contrib_absence_internal (path, end_date = end_date)
     res1 <- cm_metric_contrib_absence_commits (path, end_date = end_date)
     res2 <- cm_metric_elephant_factor (path, end_date = end_date)
 
@@ -490,7 +490,7 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
     path <- generate_test_pkg ()
 
     # data has [code, pr_authors, issue_authors, issue_cmt_authors]
-    data_ctb <- cm_data_ctb_count (path, end_date = end_date)
+    data_ctb <- rm_data_ctb_count_internal (path, end_date = end_date)
     counts_ctb <- cm_metric_ctb_count (path, end_date = end_date) # code only
     counts_cmt <- cm_metric_committer_count (path, end_date = end_date)
     counts_watchers <- cm_metric_watcher_count (path, end_date = end_date)
@@ -570,7 +570,7 @@ test_that ("cm metric licenses declared + best practices", {
 
     path <- generate_test_pkg ()
 
-    lic_dat <- cm_data_licenses_declared (path)
+    lic_dat <- rm_data_licenses_declared_internal (path)
 
     expect_type (lic_dat, "character")
     expect_named (lic_dat, NULL)

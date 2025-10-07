@@ -5,7 +5,7 @@
 #' @param path Path to local repo
 #' @param end_date Not used here, but specified for consistent interface to all
 #' @noRd
-cm_data_licenses_declared <- function (path, end_date = NULL) {
+rm_data_licenses_declared_internal <- function (path, end_date = NULL) {
 
     requireNamespace ("desc", quietly = TRUE)
 
@@ -15,7 +15,7 @@ cm_data_licenses_declared <- function (path, end_date = NULL) {
 
 cm_metric_licenses_declared <- function (path, end_date = NULL) {
 
-    lic_dat <- cm_data_licenses_declared (path)
+    lic_dat <- rm_data_licenses_declared_internal (path)
     return (length (lic_dat) > 0L)
 }
 
@@ -32,9 +32,9 @@ cm_metric_licenses_declared_url <- function () {
 #' @param dirs Directories to include in assessing files for license coverage.
 #' metric fns.
 #' @noRd
-cm_data_license_coverage <- function (path,
-                                      end_date = NULL,
-                                      dirs = c ("R", "src", "inst/extdata")) {
+rm_data_license_coverage_internal <- function (path,
+                                               end_date = NULL,
+                                               dirs = c ("R", "src", "inst/extdata")) {
 
     requireNamespace ("readr", quietly = TRUE)
 
@@ -78,7 +78,7 @@ cm_metric_license_coverage <- function (path,
                                         end_date = NULL,
                                         dirs = c ("R", "src", "inst/extdata")) {
 
-    cm_data_license_coverage (path, end_date, dirs)
+    rm_data_license_coverage_internal (path, end_date, dirs)
 }
 
 cm_metric_license_coverage_url <- function () {

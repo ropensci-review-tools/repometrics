@@ -1,4 +1,4 @@
-cm_data_num_commits <- function (path, end_date = Sys.Date ()) {
+rm_data_num_commits_internal <- function (path, end_date = Sys.Date ()) {
 
     log <- git_log_in_period (path, end_date)
 
@@ -6,7 +6,7 @@ cm_data_num_commits <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_num_commits <- function (path, end_date = Sys.Date ()) {
-    cm_data_num_commits (path, end_date)
+    rm_data_num_commits_internal (path, end_date)
 }
 
 cm_metric_num_commits_url <- function () {
@@ -16,7 +16,7 @@ cm_metric_num_commits_url <- function () {
 #' CHAOSS Metric for commit frequency, which is actually assessed here as
 #' average number of commits per week, so a direct count rather than frequency.
 #' @noRd
-cm_data_commit_freq <- function (path, end_date = Sys.Date ()) {
+rm_data_commit_freq_internal <- function (path, end_date = Sys.Date ()) {
 
     # Suppress no visible binding notes:
     timestamp <- NULL
@@ -52,7 +52,7 @@ cm_data_commit_freq <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_commit_count <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_commit_freq (path, end_date)
+    dat <- rm_data_commit_freq_internal (path, end_date)
     return (dat [["mean"]])
 }
 

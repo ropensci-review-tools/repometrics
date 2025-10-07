@@ -1,4 +1,4 @@
-cm_data_issue_response_time <- function (path, end_date = Sys.Date ()) {
+rm_data_issue_response_time_internal <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible warning notes:
     user_login <- issue_number <- created_at <- response_date <- NULL
@@ -33,7 +33,7 @@ cm_data_issue_response_time <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
-    issue_responses <- cm_data_issue_response_time (path, end_date)
+    issue_responses <- rm_data_issue_response_time_internal (path, end_date)
     mean (as.integer (issue_responses$response_time), na.rm = TRUE)
 }
 
@@ -41,7 +41,7 @@ cm_metric_issue_response_time_url <- function () {
     "metric-issue-response-time"
 }
 
-cm_data_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nolint
+rm_data_defect_resolution_dur_internal <- function (path, end_date = Sys.Date ()) { # nolint
 
     issues <- rm_data_issues_from_gh_api (path)
     index <- grep ("bug|defect|fix", issues$label, ignore.case = TRUE)
@@ -70,7 +70,7 @@ cm_data_defect_resolution_dur <- function (path, end_date = Sys.Date ()) { # nol
 }
 
 cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_defect_resolution_dur (path, end_date)
+    dat <- rm_data_defect_resolution_dur_internal (path, end_date)
     dat [["mean"]]
 }
 
@@ -84,7 +84,7 @@ cm_metric_defect_resolution_dur_url <- function () {
 #' "How much time passes between creating and closing an operation such as an
 #' issue, change request, or support ticket?"
 #' @noRd
-cm_data_time_to_close <- function (path, end_date = Sys.Date ()) {
+rm_data_time_to_close_internal <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     state <- NULL
@@ -104,7 +104,7 @@ cm_data_time_to_close <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_time_to_close (path, end_date)
+    dat <- rm_data_time_to_close_internal (path, end_date)
     return (dat [["mean"]])
 }
 
@@ -127,7 +127,7 @@ cm_metric_time_to_close_url <- function () {
 #' to suggest a fix. That should at least help clarify.
 #'
 #' @noRd
-cm_data_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
+rm_data_pr_closure_ratio_internal <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     closed <- NULL
@@ -149,14 +149,14 @@ cm_data_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
-    cm_data_pr_closure_ratio (path, end_date)
+    rm_data_pr_closure_ratio_internal (path, end_date)
 }
 
 cm_metric_pr_closure_ratio_url <- function () {
     "metric-change-request-closure-ratio"
 }
 
-cm_data_issue_age <- function (path, end_date = Sys.Date ()) {
+rm_data_issue_age_internal <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     created_at <- closed_at <- NULL
@@ -184,7 +184,7 @@ cm_data_issue_age <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_issue_age (path, end_date)
+    dat <- rm_data_issue_age_internal (path, end_date)
     return (dat [["mean"]])
 }
 
@@ -197,7 +197,7 @@ cm_metric_issue_age_url <- function () {
 #'
 #' \url{https://chaoss.community/kb/metric-issues-active/}
 #' @noRd
-cm_data_issues_active <- function (path, end_date = Sys.Date ()) {
+rm_data_issues_active_internal <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     created_at <- closed_at <- updated_at <- NULL
@@ -212,7 +212,7 @@ cm_data_issues_active <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
-    cm_data_issues_active (path, end_date)
+    rm_data_issues_active_internal (path, end_date)
 }
 
 cm_metric_issues_active_url <- function () {

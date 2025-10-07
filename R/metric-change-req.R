@@ -20,7 +20,7 @@
 #' request.
 #' }
 #' @noRd
-cm_data_change_req <- function (path, end_date = Sys.Date ()) {
+rm_data_change_req_internal <- function (path, end_date = Sys.Date ()) {
 
     ret <- c (
         n_opened = 0, n_closed = 0, prop_merged = 0, prop_code_from_prs = 0
@@ -46,22 +46,22 @@ cm_data_change_req <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_change_req_n_opened <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_change_req (path, end_date)
+    dat <- rm_data_change_req_internal (path, end_date)
     return (as.integer (dat [["n_opened"]]))
 }
 
 cm_metric_change_req_n_closed <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_change_req (path, end_date)
+    dat <- rm_data_change_req_internal (path, end_date)
     return (as.integer (dat [["n_closed"]]))
 }
 
 cm_metric_change_req_prop_merged <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_change_req (path, end_date)
+    dat <- rm_data_change_req_internal (path, end_date)
     dat [["prop_merged"]]
 }
 
 cm_metric_change_req_prop_code <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_change_req (path, end_date)
+    dat <- rm_data_change_req_internal (path, end_date)
     dat [["prop_code_from_prs"]]
 }
 

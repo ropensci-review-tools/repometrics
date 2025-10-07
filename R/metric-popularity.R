@@ -1,4 +1,4 @@
-cm_data_popularity <- function (path, end_date = Sys.Date ()) {
+rm_data_popularity_internal <- function (path, end_date = Sys.Date ()) {
 
     # suppress no visible binding notes:
     timestamp <- aut_email <- aut_name <- created <- starred_at <- NULL
@@ -28,12 +28,12 @@ cm_data_popularity <- function (path, end_date = Sys.Date ()) {
 }
 
 cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_popularity (path, end_date)
+    dat <- rm_data_popularity_internal (path, end_date)
     return (dat [["forks"]])
 }
 
 cm_metric_num_stars <- function (path, end_date = Sys.Date ()) {
-    dat <- cm_data_popularity (path, end_date)
+    dat <- rm_data_popularity_internal (path, end_date)
     return (dat [["stars"]])
 }
 
