@@ -43,9 +43,9 @@ repository.
 \item "contributors" as a named list of data on every individual contributor
 to the repository, whether by code contributions or GitHub issues or
 discussions.
-\item "cm_metrics" as a list of values for all CHAOSS metrics defined in the
-output of \link{rm_chaoss_metrics_list}.
-\item "cm_models" as a list of values for CHAOSS models, derived from
+\item "rm_metrics" as a list of values for all CHAOSS metrics defined in the
+output of \link{rm_metrics_list}.
+\item "rm_models" as a list of values for CHAOSS models, derived from
 aggregating various metrics.
 }
 }

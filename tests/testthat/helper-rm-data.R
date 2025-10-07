@@ -37,7 +37,7 @@ mock_rm_data <- function (repo = TRUE) {
         rm_data_repo_stargazers (path)
     })
     coverage <- httptest2::with_mock_dir ("coverage", {
-        cm_data_test_coverage (path)
+        rm_data_test_coverage_internal (path)
     })
     universe <- httptest2::with_mock_dir ("r_univ", {
         rm_data_r_universe (path)
@@ -86,7 +86,7 @@ mock_rm_data <- function (repo = TRUE) {
     # test-cm-metrics.R only tests cran downloads for this one date:
     end_date_cran <- as.Date ("2024-08-01")
     dl <- httptest2::with_mock_dir ("cran_dl", {
-        cm_metric_cran_downloads (path, end_date = end_date_cran)
+        rm_metric_cran_downloads (path, end_date = end_date_cran)
     })
 
     # The return full mocked data set:

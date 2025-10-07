@@ -13,7 +13,7 @@ test_that ("cm metric cran_downloads", { # R/cm-metric-cran-downloads.R
     desc [1] <- "Package: goodpractice"
     writeLines (desc, desc_path)
 
-    dl <- cm_metric_cran_downloads (path = path, end_date = end_date)
+    dl <- rm_metric_cran_downloads (path = path, end_date = end_date)
     expect_type (dl, "integer")
     expect_length (dl, 1L)
     expect_true (dl > 100)
@@ -39,7 +39,7 @@ test_that ("cm metric has_ci", { # R/cm-metric-has-ci.R
     expect_equal (chk, "github")
 
     # Test cli::cli_alert_warning output:
-    expect_snapshot (chk <- cm_metric_has_ci (path))
+    expect_snapshot (chk <- rm_metric_has_ci (path))
     expect_true (chk)
 
     fs::dir_delete (path)
@@ -82,19 +82,19 @@ test_that ("cm metrics num_commits num_contribs", {
 
     path <- generate_test_pkg ()
 
-    n <- cm_metric_num_commits (path, end_date = end_date)
+    n <- rm_metric_num_commits (path, end_date = end_date)
     expect_type (n, "integer")
     expect_length (n, 1L)
     expect_named (n, expected = NULL)
     expect_equal (n, 4L)
 
-    n <- cm_metric_num_contributors (path, end_date = end_date)
+    n <- rm_metric_num_contributors (path, end_date = end_date)
     expect_type (n, "integer")
     expect_length (n, 1L)
     expect_named (n, expected = NULL)
     expect_equal (n, 1L)
 
-    n <- cm_metric_commit_count (path, end_date = end_date)
+    n <- rm_metric_commit_count (path, end_date = end_date)
     expect_type (n, "double")
     expect_length (n, 1L)
     expect_named (n, NULL)
@@ -111,17 +111,17 @@ test_that ("cm metric change reqests", { # R/cm-metrics-change-req.R
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 10000)
 
-    pr_dat <- cm_data_change_req (path, end_date = end_date)
+    pr_dat <- rm_data_change_req_internal (path, end_date = end_date)
 
     expect_type (pr_dat, "double")
     expect_length (pr_dat, 4L)
     expect_named (pr_dat, c ("n_opened", "n_closed", "prop_merged", "prop_code_from_prs"))
     expect_true (all (pr_dat > 0))
 
-    pr_n_opened <- cm_metric_change_req_n_opened (path, end_date = end_date)
-    pr_n_closed <- cm_metric_change_req_n_closed (path, end_date = end_date)
-    pr_closure_ratio <- cm_metric_change_req_prop_merged (path, end_date = end_date)
-    prop_code_from_prs <- cm_metric_change_req_prop_code (path, end_date = end_date)
+    pr_n_opened <- rm_metric_change_req_n_opened (path, end_date = end_date)
+    pr_n_closed <- rm_metric_change_req_n_closed (path, end_date = end_date)
+    pr_closure_ratio <- rm_metric_change_req_prop_merged (path, end_date = end_date)
+    prop_code_from_prs <- rm_metric_change_req_prop_code (path, end_date = end_date)
 
     options ("repometrics_period" = op)
     fs::dir_delete (path)
@@ -149,7 +149,7 @@ test_that ("cm metric issues-to-prs", { # R/cm-metric-issues-to-prs.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    x <- cm_metric_issues_to_prs (path, end_date = end_date)
+    x <- rm_metric_issues_to_prs (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (x, "double")
@@ -165,11 +165,11 @@ test_that ("cm metric pr-reviews", { # R/cm-metric-pr-review.R
 
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    revs <- cm_data_pr_reviews (path, end_date = end_date)
-    cmts <- cm_metric_pr_cmt_count (path, end_date = end_date)
-    prs_approved <- cm_metric_pr_reviews_approved (path, end_date = end_date)
-    prs_rejected <- cm_metric_pr_revs_rejected (path, end_date = end_date)
-    age <- cm_metric_pr_age (path, end_date = end_date)
+    revs <- rm_data_pr_reviews_internal (path, end_date = end_date)
+    cmts <- rm_metric_pr_cmt_count (path, end_date = end_date)
+    prs_approved <- rm_metric_pr_reviews_approved (path, end_date = end_date)
+    prs_rejected <- rm_metric_pr_revs_rejected (path, end_date = end_date)
+    age <- rm_metric_pr_age (path, end_date = end_date)
 
     options ("repometrics_period" = op)
     fs::dir_delete (path)
@@ -211,8 +211,8 @@ test_that ("cm metric num forks, stars", { # R/cm-metrics-num-forks.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    forks <- cm_metric_num_forks (path, end_date = end_date)
-    stars <- cm_metric_num_stars (path, end_date = end_date)
+    forks <- rm_metric_num_forks (path, end_date = end_date)
+    stars <- rm_metric_num_stars (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (forks, "integer")
@@ -228,8 +228,8 @@ test_that ("cm metric num forks, stars", { # R/cm-metrics-num-forks.R
 test_that ("cm metric code change lines", { # R/cm-metrics-code-change.R
 
     path <- generate_test_pkg ()
-    x1 <- cm_metric_code_change_lines (path, end_date = end_date)
-    x2 <- cm_metric_code_change_lines (
+    x1 <- rm_metric_code_change_lines (path, end_date = end_date)
+    x2 <- rm_metric_code_change_lines (
         path,
         end_date = end_date,
         exclude_whitespace = FALSE
@@ -249,7 +249,7 @@ test_that ("cm metric review duration", { # R/cm-metrics-pr-reviews.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    rev_dur_mn <- cm_metric_pr_review_duration (path, end_date = end_date)
+    rev_dur_mn <- rm_metric_pr_review_duration (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (rev_dur_mn, "double")
@@ -263,9 +263,9 @@ test_that ("cm metric issue numbers, durations, response times", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    dur_issues <- cm_metric_issue_response_time (path, end_date = end_date)
-    resp_time <- cm_metric_response_time (path, end_date = end_date)
-    num_issues <- cm_metric_issues_active (path, end_date = end_date)
+    dur_issues <- rm_metric_issue_response_time (path, end_date = end_date)
+    resp_time <- rm_metric_response_time (path, end_date = end_date)
+    num_issues <- rm_metric_issues_active (path, end_date = end_date)
     fs::dir_delete (path)
 
     # Vector of response durations:
@@ -289,7 +289,7 @@ test_that ("cm metric defect resolution duration", {
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    res <- cm_metric_defect_resolution_dur (path, end_date = end_date)
+    res <- rm_metric_defect_resolution_dur (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (res, "double")
@@ -302,7 +302,7 @@ test_that ("cm metric label inclusivity", { # R/cm-metric-labels.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    res <- cm_metric_label_inclusivity (path, end_date = end_date)
+    res <- rm_metric_label_inclusivity (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (res, "double")
@@ -316,7 +316,7 @@ test_that ("cm metric time to close", { # R/cm-metrics-issue-response.R
     Sys.setenv ("REPOMETRICS_TESTS" = "true")
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
-    res <- cm_metric_time_to_close (path, end_date = end_date)
+    res <- rm_metric_time_to_close (path, end_date = end_date)
     fs::dir_delete (path)
 
     expect_type (res, "double")
@@ -334,7 +334,7 @@ test_that ("cm metric closure ratio", { # R/cm-metrics-issue-response.R
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 10000)
 
-    res <- cm_metric_pr_closure_ratio (path, end_date = end_date)
+    res <- rm_metric_pr_closure_ratio (path, end_date = end_date)
 
     options ("repometrics_period" = op)
     fs::dir_delete (path)
@@ -350,7 +350,7 @@ test_that ("cm data popularity", { # R/cm-metric-popularity.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_data_popularity (path, end_date = end_date)
+    res <- rm_data_popularity_internal (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -365,8 +365,8 @@ test_that ("cm metric libyears", { # R/cm-metric-libyears.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    ly <- cm_metric_libyears (path)
-    ndeps <- cm_metric_dependency_count (path)
+    ly <- rm_metric_libyears (path)
+    ndeps <- rm_metric_dependency_count (path)
 
     fs::dir_delete (path)
 
@@ -387,7 +387,7 @@ test_that ("cm metric issue age", { # R/cm-metrics-issue-response.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    res <- cm_metric_issue_age (path, end_date = end_date)
+    res <- rm_metric_issue_age (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -406,8 +406,8 @@ test_that ("cm metric release frequency", { # R/cm-metrics-release-freq.R
     # Need to extend period to capture enough releases:
     op <- getOption ("repometrics_period")
     options ("repometrics_period" = 1000)
-    rel_freq <- cm_metric_release_freq (path, end_date = end_date)
-    rel_count <- cm_metric_recent_releases (path, end_date = end_date)
+    rel_freq <- rm_metric_release_freq (path, end_date = end_date)
+    rel_count <- rm_metric_recent_releases (path, end_date = end_date)
     options ("repometrics_period" = op)
 
     fs::dir_delete (path)
@@ -429,8 +429,8 @@ test_that ("cm metric programming languages", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    dat <- cm_data_languages (path)
-    met <- cm_metric_languages (path) # re-scaled version of ncode_pc
+    dat <- rm_data_languages_internal (path)
+    met <- rm_metric_languages (path) # re-scaled version of ncode_pc
 
     fs::dir_delete (path)
 
@@ -458,9 +458,9 @@ test_that ("cm metric bus and elephant", { # R/cm-metric-has-ci.R
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    dat <- cm_data_contrib_absence (path, end_date = end_date)
-    res1 <- cm_metric_contrib_absence_commits (path, end_date = end_date)
-    res2 <- cm_metric_elephant_factor (path, end_date = end_date)
+    dat <- rm_data_contrib_absence_internal (path, end_date = end_date)
+    res1 <- rm_metric_contrib_absence_commits (path, end_date = end_date)
+    res2 <- rm_metric_elephant_factor (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -490,10 +490,10 @@ test_that ("cm metric ctb and committer count", { # R/cm-metric-ctb-count.R
     path <- generate_test_pkg ()
 
     # data has [code, pr_authors, issue_authors, issue_cmt_authors]
-    data_ctb <- cm_data_ctb_count (path, end_date = end_date)
-    counts_ctb <- cm_metric_ctb_count (path, end_date = end_date) # code only
-    counts_cmt <- cm_metric_committer_count (path, end_date = end_date)
-    counts_watchers <- cm_metric_watcher_count (path, end_date = end_date)
+    data_ctb <- rm_data_ctb_count_internal (path, end_date = end_date)
+    counts_ctb <- rm_metric_ctb_count (path, end_date = end_date) # code only
+    counts_cmt <- rm_metric_committer_count (path, end_date = end_date)
+    counts_watchers <- rm_metric_watcher_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -528,9 +528,9 @@ test_that ("cm metric issue updates and comments", { # R/cm-metric-issue-updates
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    num_updates <- cm_metric_issue_updates (path, end_date = end_date)
-    issues_closed <- cm_metric_issues_closed (path, end_date = end_date)
-    num_issue_cmts <- cm_metric_issue_cmt_count (path, end_date = end_date)
+    num_updates <- rm_metric_issue_updates (path, end_date = end_date)
+    issues_closed <- rm_metric_issues_closed (path, end_date = end_date)
+    num_issue_cmts <- rm_metric_issue_cmt_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -556,7 +556,7 @@ test_that ("cm metric maintainer count", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    maintainers <- cm_metric_maintainer_count (path, end_date = end_date)
+    maintainers <- rm_metric_maintainer_count (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -570,7 +570,7 @@ test_that ("cm metric licenses declared + best practices", {
 
     path <- generate_test_pkg ()
 
-    lic_dat <- cm_data_licenses_declared (path)
+    lic_dat <- rm_data_licenses_declared_internal (path)
 
     expect_type (lic_dat, "character")
     expect_named (lic_dat, NULL)
@@ -578,9 +578,9 @@ test_that ("cm metric licenses declared + best practices", {
     lic_ptn <- paste0 (included_licenses, collapse = "|")
     expect_true (all (grepl (lic_ptn, lic_dat)))
 
-    lic <- cm_metric_licenses_declared (path)
-    n <- cm_metric_license_coverage (path)
-    bp <- cm_metric_best_practices (path)
+    lic <- rm_metric_licenses_declared (path)
+    n <- rm_metric_license_coverage (path)
+    bp <- rm_metric_best_practices (path)
 
     fs::dir_delete (path)
 
@@ -605,7 +605,7 @@ test_that ("cm metric burstiness", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    b <- cm_metric_burstiness (path, end_date = end_date)
+    b <- rm_metric_burstiness (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -621,7 +621,7 @@ test_that ("cm metric test coverage", {
     dat <- mock_rm_data ()
     path <- generate_test_pkg ()
 
-    cov <- cm_metric_test_coverage (path, end_date = end_date)
+    cov <- rm_metric_test_coverage (path, end_date = end_date)
 
     fs::dir_delete (path)
 
@@ -641,8 +641,8 @@ test_that ("cm metric collate all", {
 
     expect_type (metrics_data, "list")
     expect_length (metrics_data, 47L)
-    metric_fns <- rm_chaoss_metrics_list ()$fn_name
-    expect_identical (names (metrics_data), gsub ("^cm\\_metric\\_", "", metric_fns))
+    metric_fns <- rm_metrics_list ()$fn_name
+    expect_identical (names (metrics_data), gsub ("^rm\\_metric\\_", "", metric_fns))
 
     lens <- vapply (metrics_data, length, integer (1L), USE.NAMES = FALSE)
     lens_expected <- as.integer (c (

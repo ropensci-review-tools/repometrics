@@ -19,8 +19,8 @@ test_that ("repometrics data full", {
     })
     names (data_ctbs) <- logins
 
-    cm_metrics <- collate_all_metrics (path, end_date = end_date)
-    cm_models <- collate_all_models (path, end_date = end_date)
+    rm_metrics <- collate_all_metrics (path, end_date = end_date)
+    rm_models <- collate_all_models (path, end_date = end_date)
 
     data <- repometrics_data (
         path,
@@ -36,15 +36,15 @@ test_that ("repometrics data full", {
         data,
         c (
             "pkgstats", "pkgcheck", "cran_checks", "rm",
-            "contributors", "cm_metrics", "cm_models"
+            "contributors", "rm_metrics", "rm_models"
         )
     )
 
     dat_constructed <- c (
         data_repo,
         contributors = list (data_ctbs),
-        cm_metrics = list (cm_metrics),
-        cm_models = list (cm_models)
+        rm_metrics = list (rm_metrics),
+        rm_models = list (rm_models)
     )
     expect_identical (data, dat_constructed)
 })
