@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.1.054",
+  "version": "0.2.1.055",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.0 (2025-04-11)",
+  "runtimePlatform": "R version 4.5.1 (2025-06-13)",
   "author": [
     {
       "@type": "Person",
@@ -363,7 +363,7 @@
     },
     "SystemRequirements": {}
   },
-  "fileSize": "24755.462KB",
+  "fileSize": "14276.165KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
   "contIntegration": [
     "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",
