@@ -47,10 +47,10 @@ rm_data_has_ci_internal <- function (path, end_date = NULL) {
     return (has_ci)
 }
 
-cm_metric_has_ci <- function (path, end_date = NULL) {
+rm_metric_has_ci <- function (path, end_date = NULL) {
     rm_data_has_ci_internal (path, end_date)
 }
 
-cm_metric_has_ci_url <- function () {
+rm_metric_has_ci_url <- function () {
     "metric-test-coverage"
 }

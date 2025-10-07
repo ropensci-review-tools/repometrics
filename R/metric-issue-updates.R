@@ -21,11 +21,11 @@ rm_data_issue_updates_internal <- function (path, end_date = Sys.Date ()) {
     length (issue_nums)
 }
 
-cm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
+rm_metric_issue_updates <- function (path, end_date = Sys.Date ()) {
     rm_data_issue_updates_internal (path, end_date)
 }
 
-cm_metric_issue_updates_url <- function () {
+rm_metric_issue_updates_url <- function () {
     "metric-issues-active"
 }
 
@@ -56,11 +56,11 @@ rm_data_issue_cmt_count_internal <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (cmts))
 }
 
-cm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_issue_cmt_count <- function (path, end_date = Sys.Date ()) {
     rm_data_issue_cmt_count_internal (path, end_date) [["mean"]]
 }
 
-cm_metric_issue_cmt_count_url <- function () {
+rm_metric_issue_cmt_count_url <- function () {
     "metric-issues-active"
 }
 
@@ -79,10 +79,10 @@ rm_data_issues_closed_internal <- function (path, end_date = Sys.Date ()) {
     nrow (issues)
 }
 
-cm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
+rm_metric_issues_closed <- function (path, end_date = Sys.Date ()) {
     rm_data_issues_closed_internal (path, end_date)
 }
 
-cm_metric_issues_closed_url <- function () {
+rm_metric_issues_closed_url <- function () {
     "metric-issues-closed"
 }

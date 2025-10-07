@@ -43,7 +43,7 @@ rm_data_languages_internal <- function (path, end_date = NULL) {
 # standardised measure, this is simply equal to 1 / number-of-languages, but
 # full calculation used regardless to allow potential improvement in the
 # future.
-cm_metric_languages <- function (path, end_date = NULL) {
+rm_metric_languages <- function (path, end_date = NULL) {
     dat <- rm_data_languages_internal (path, end_date)
     lang_dist_mn <- mean (dat$ncode_pc) # lower is better
     # Re-scale this so that 4 languages translates to a value of 1:
@@ -51,6 +51,6 @@ cm_metric_languages <- function (path, end_date = NULL) {
     return (lang_dist_mn)
 }
 
-cm_metric_languages_url <- function () {
+rm_metric_languages_url <- function () {
     "chaoss.community/?p=3430"
 }

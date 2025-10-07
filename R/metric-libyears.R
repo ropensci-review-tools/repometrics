@@ -7,24 +7,24 @@
 #' @param end_date Not used here, but specified for consistent interface to all
 #' metric fns.
 #' @noRd
-cm_metric_libyears <- function (path, end_date = NULL) {
+rm_metric_libyears <- function (path, end_date = NULL) {
     deps <- rm_data_libyears (path)
     dat <- mn_med_sum (deps$libyears)
 
     return (dat [["mean"]])
 }
 
-cm_metric_dependency_count <- function (path, end_date = NULL) {
+rm_metric_dependency_count <- function (path, end_date = NULL) {
 
     deps <- rm_data_libyears (path)
 
     return (nrow (deps))
 }
 
-cm_metric_libyears_url <- function () {
+rm_metric_libyears_url <- function () {
     "chaoss.community/kb/metric-libyears"
 }
 
-cm_metric_dependency_count_url <- function () {
+rm_metric_dependency_count_url <- function () {
     "chaoss.community/kb/metric-libyears"
 }

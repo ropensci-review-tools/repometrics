@@ -1,6 +1,6 @@
 #' The CHAOSS Metric "Elephant Factor", which is the number of distint
 #' organizations needed to reach 50% of contributions. This is akin to the
-#' "cm_metric_contrib_absence()", but for organizations instead of individuals.
+#' "rm_metric_contrib_absence()", but for organizations instead of individuals.
 #'
 #' \url{https://chaoss.community/kb/metric-elephant-factor/}.
 #'
@@ -39,11 +39,11 @@ rm_data_elephant_factor_internal <- function (path, end_date = Sys.Date ()) {
 #' See 'contrib_absence', which returns commits, files, and code, but they're
 #' all very highly correlated, so only one returned here.
 #' @noRd
-cm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
+rm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_elephant_factor_internal (path, end_date)
     dat [["ncommits"]]
 }
 
-cm_metric_elephant_factor_url <- function () {
+rm_metric_elephant_factor_url <- function () {
     "metric-elephant-factor"
 }

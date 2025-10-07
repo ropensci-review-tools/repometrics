@@ -21,24 +21,24 @@ rm_data_contrib_absence_internal <- function (path, end_date = Sys.Date ()) {
     gitlog_absence_factor (log)
 }
 
-cm_metric_contrib_absence_commits <- function (path, end_date = Sys.Date ()) {
+rm_metric_contrib_absence_commits <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_contrib_absence_internal (path, end_date)
     dat [["ncommits"]]
 }
 
-cm_metric_contrib_absence_commits_url <- function () {
+rm_metric_contrib_absence_commits_url <- function () {
     "metric-contributor-absence-factor"
 }
 
 # These others are not used, as they are highly correlated with main measure
 # anyway:
 #
-# cm_metric_contrib_absence_files <- function (path, end_date = Sys.Date ()) {
+# rm_metric_contrib_absence_files <- function (path, end_date = Sys.Date ()) {
 #     dat <- rm_data_contrib_absence_internal (path, end_date)
 #     dat [["nfiles_changed"]]
 # }
 #
-# cm_metric_contrib_absence_lines <- function (path, end_date = Sys.Date ()) {
+# rm_metric_contrib_absence_lines <- function (path, end_date = Sys.Date ()) {
 #     dat <- rm_data_contrib_absence_internal (path, end_date)
 #     dat [["lines_changed"]]
 # }

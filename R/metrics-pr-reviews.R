@@ -114,20 +114,20 @@ rm_data_pr_reviews_approved_internal <- function (path, end_date = Sys.Date ()) 
     return (ret)
 }
 
-cm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_reviews_approved_internal (path, end_date)
 }
 
-cm_metric_pr_reviews_approved_url <- function () {
+rm_metric_pr_reviews_approved_url <- function () {
     "metric-change-requests-accepted"
 }
 
-cm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_pr_reviews_internal (path, end_date)
     return (dat [["rejected_count"]])
 }
 
-cm_metric_pr_revs_rejected_url <- function () {
+rm_metric_pr_revs_rejected_url <- function () {
     "metric-change-request-reviews"
 }
 
@@ -166,14 +166,14 @@ rm_data_pr_review_duration_internal <- function (path, end_date = Sys.Date ()) {
     )
 }
 
-cm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_pr_review_duration_internal (path, end_date)
     # That has "cycle_dur_mn" and overall "review_dur_mn"; take mean of both:
     res <- mn_med_sum (dat [grep ("\\_mn$", names (dat))])
     return (res [["mean"]])
 }
 
-cm_metric_pr_review_duration_url <- function () {
+rm_metric_pr_review_duration_url <- function () {
     "metric-change-request-review-duration"
 }
 
@@ -192,11 +192,11 @@ rm_data_pr_cmt_count_internal <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (comment_counts))
 }
 
-cm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_cmt_count_internal (path, end_date)
 }
 
-cm_metric_pr_cmt_count_url <- function () {
+rm_metric_pr_cmt_count_url <- function () {
     "metric-change-requests"
 }
 
@@ -245,11 +245,11 @@ rm_data_pr_response_durations_internal <- function (path, end_date = Sys.Date ()
     return (durations)
 }
 
-cm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_response_durations_internal (path, end_date)
 }
 
-cm_metric_pr_response_durations_url <- function () {
+rm_metric_pr_response_durations_url <- function () {
     "metric-change-requests-duration"
 }
 
@@ -270,11 +270,11 @@ rm_data_pr_age_internal <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (ages))
 }
 
-cm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_pr_age_internal (path, end_date)
     return (dat [["mean"]])
 }
 
-cm_metric_pr_age_url <- function () {
+rm_metric_pr_age_url <- function () {
     "metric-change-requests-duration"
 }

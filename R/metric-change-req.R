@@ -45,38 +45,38 @@ rm_data_change_req_internal <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-cm_metric_change_req_n_opened <- function (path, end_date = Sys.Date ()) {
+rm_metric_change_req_n_opened <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_change_req_internal (path, end_date)
     return (as.integer (dat [["n_opened"]]))
 }
 
-cm_metric_change_req_n_closed <- function (path, end_date = Sys.Date ()) {
+rm_metric_change_req_n_closed <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_change_req_internal (path, end_date)
     return (as.integer (dat [["n_closed"]]))
 }
 
-cm_metric_change_req_prop_merged <- function (path, end_date = Sys.Date ()) {
+rm_metric_change_req_prop_merged <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_change_req_internal (path, end_date)
     dat [["prop_merged"]]
 }
 
-cm_metric_change_req_prop_code <- function (path, end_date = Sys.Date ()) {
+rm_metric_change_req_prop_code <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_change_req_internal (path, end_date)
     dat [["prop_code_from_prs"]]
 }
 
-cm_metric_change_req_n_opened_url <- function () {
+rm_metric_change_req_n_opened_url <- function () {
     "metric-change-requests"
 }
 
-cm_metric_change_req_n_closed_url <- function () {
+rm_metric_change_req_n_closed_url <- function () {
     "metric-change-requests"
 }
 
-cm_metric_change_req_prop_merged_url <- function () {
+rm_metric_change_req_prop_merged_url <- function () {
     "metric-change-requests"
 }
 
-cm_metric_change_req_prop_code_url <- function () {
+rm_metric_change_req_prop_code_url <- function () {
     "metric-change-requests"
 }

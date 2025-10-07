@@ -5,11 +5,11 @@ rm_data_num_commits_internal <- function (path, end_date = Sys.Date ()) {
     return (nrow (log))
 }
 
-cm_metric_num_commits <- function (path, end_date = Sys.Date ()) {
+rm_metric_num_commits <- function (path, end_date = Sys.Date ()) {
     rm_data_num_commits_internal (path, end_date)
 }
 
-cm_metric_num_commits_url <- function () {
+rm_metric_num_commits_url <- function () {
     "metric-code-changes-commits"
 }
 
@@ -51,11 +51,11 @@ rm_data_commit_freq_internal <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (commits))
 }
 
-cm_metric_commit_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_commit_count <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_commit_freq_internal (path, end_date)
     return (dat [["mean"]])
 }
 
-cm_metric_commit_count_url <- function () {
+rm_metric_commit_count_url <- function () {
     "metric-code-changes-commits"
 }

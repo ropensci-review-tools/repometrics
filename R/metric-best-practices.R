@@ -20,10 +20,10 @@ rm_data_best_practices_internal <- function (path, end_date = NULL) {
     return (any (grepl (ptn, readme)))
 }
 
-cm_metric_best_practices <- function (path, end_date = NULL) {
+rm_metric_best_practices <- function (path, end_date = NULL) {
     rm_data_best_practices_internal (path, end_date)
 }
 
-cm_metric_best_practices_url <- function () {
+rm_metric_best_practices_url <- function () {
     "metric-open-source-security-foundation-openssf-best-practices-badge"
 }

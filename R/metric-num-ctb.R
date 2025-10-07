@@ -24,10 +24,10 @@ rm_data_num_contributors_internal <- function (path, end_date = Sys.Date ()) {
     return (length (index))
 }
 
-cm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
+rm_metric_num_contributors <- function (path, end_date = Sys.Date ()) {
     rm_data_num_contributors_internal (path, end_date)
 }
 
-cm_metric_num_contributors_url <- function () {
+rm_metric_num_contributors_url <- function () {
     "metric-contributors"
 }

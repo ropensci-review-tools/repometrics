@@ -14,7 +14,7 @@ calculate_one_model <- function (path, end_date = Sys.Date (), metrics_data = NU
     mod_dat <- load_model_json_data ()
     model_metrics <- mod_dat$models [[grep (model_name, names (mod_dat$models), fixed = TRUE)]]
     these_metrics <- dplyr::filter (mod_dat$metrics, name %in% model_metrics)
-    fn_names <- paste0 ("cm_metric_", these_metrics$name)
+    fn_names <- paste0 ("rm_metric_", these_metrics$name)
 
     # metrics_values in the following are summed because some metrics like
     # committer count have multiple fields:

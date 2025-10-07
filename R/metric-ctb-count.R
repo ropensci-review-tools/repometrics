@@ -31,12 +31,12 @@ rm_data_ctb_count_internal <- function (path, end_date = Sys.Date ()) {
 }
 
 # Only code contributions are actually counted
-cm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_ctb_count <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_ctb_count_internal (path, end_date)
     return (dat [["code"]])
 }
 
-cm_metric_ctb_count_url <- function () {
+rm_metric_ctb_count_url <- function () {
     "metrics-model-community-activity"
 }
 
@@ -83,19 +83,19 @@ rm_data_committer_count_internal <- function (path, end_date = Sys.Date ()) {
     )
 }
 
-cm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_committer_count <- function (path, end_date = Sys.Date ()) {
     rm_data_committer_count_internal (path, end_date)
 }
 
-cm_metric_watcher_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_watcher_count <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_committer_count_internal (path, end_date)
     return (dat [["watchers"]])
 }
 
-cm_metric_committer_count_url <- function () {
+rm_metric_committer_count_url <- function () {
     "metrics-model-community-activity"
 }
 
-cm_metric_watcher_count_url <- function () {
+rm_metric_watcher_count_url <- function () {
     "metrics-model-community-activity"
 }

@@ -32,12 +32,12 @@ rm_data_issue_response_time_internal <- function (path, end_date = Sys.Date ()) 
     return (issue_responses)
 }
 
-cm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
+rm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     issue_responses <- rm_data_issue_response_time_internal (path, end_date)
     mean (as.integer (issue_responses$response_time), na.rm = TRUE)
 }
 
-cm_metric_issue_response_time_url <- function () {
+rm_metric_issue_response_time_url <- function () {
     "metric-issue-response-time"
 }
 
@@ -69,12 +69,12 @@ rm_data_defect_resolution_dur_internal <- function (path, end_date = Sys.Date ()
     ))
 }
 
-cm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
+rm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_defect_resolution_dur_internal (path, end_date)
     dat [["mean"]]
 }
 
-cm_metric_defect_resolution_dur_url <- function () {
+rm_metric_defect_resolution_dur_url <- function () {
     "defect-resolution-duration"
 }
 
@@ -103,12 +103,12 @@ rm_data_time_to_close_internal <- function (path, end_date = Sys.Date ()) {
     return (mn_med_sum (times_to_close))
 }
 
-cm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
+rm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_time_to_close_internal (path, end_date)
     return (dat [["mean"]])
 }
 
-cm_metric_time_to_close_url <- function () {
+rm_metric_time_to_close_url <- function () {
     "metric-time-to-close"
 }
 
@@ -148,11 +148,11 @@ rm_data_pr_closure_ratio_internal <- function (path, end_date = Sys.Date ()) {
     length (index_closed) / length (index_open)
 }
 
-cm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
+rm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_closure_ratio_internal (path, end_date)
 }
 
-cm_metric_pr_closure_ratio_url <- function () {
+rm_metric_pr_closure_ratio_url <- function () {
     "metric-change-request-closure-ratio"
 }
 
@@ -183,12 +183,12 @@ rm_data_issue_age_internal <- function (path, end_date = Sys.Date ()) {
     )
 }
 
-cm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
+rm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_issue_age_internal (path, end_date)
     return (dat [["mean"]])
 }
 
-cm_metric_issue_age_url <- function () {
+rm_metric_issue_age_url <- function () {
     "metric-issue-age"
 }
 
@@ -211,10 +211,10 @@ rm_data_issues_active_internal <- function (path, end_date = Sys.Date ()) {
     return (nrow (issues))
 }
 
-cm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
+rm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
     rm_data_issues_active_internal (path, end_date)
 }
 
-cm_metric_issues_active_url <- function () {
+rm_metric_issues_active_url <- function () {
     "metric-issues-active"
 }

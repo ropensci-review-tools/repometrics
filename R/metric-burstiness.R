@@ -58,10 +58,10 @@ rm_data_burstiness_internal <- function (path, end_date, band_len = 31L, band_wi
     return (ret)
 }
 
-cm_metric_burstiness <- function (path, end_date, band_len = 31L, band_width = 2) {
+rm_metric_burstiness <- function (path, end_date, band_len = 31L, band_width = 2) {
     rm_data_burstiness_internal (path, end_date, band_len = 31L, band_width = 2)
 }
 
-cm_metric_burstiness_url <- function () {
+rm_metric_burstiness_url <- function () {
     "metric-burstiness"
 }

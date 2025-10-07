@@ -13,13 +13,13 @@ rm_data_code_change_lines_internal <- function (path,
     return (changes - ws)
 }
 
-cm_metric_code_change_lines <- function (path,
+rm_metric_code_change_lines <- function (path,
                                          end_date = Sys.Date (),
                                          exclude_whitespace = TRUE) {
 
     rm_data_code_change_lines_internal (path, end_date, exclude_whitespace)
 }
 
-cm_metric_code_change_lines_url <- function () {
+rm_metric_code_change_lines_url <- function () {
     "metric-code-changes-commits"
 }

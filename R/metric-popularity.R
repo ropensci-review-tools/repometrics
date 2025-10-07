@@ -27,20 +27,20 @@ rm_data_popularity_internal <- function (path, end_date = Sys.Date ()) {
     )
 }
 
-cm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
+rm_metric_num_forks <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_popularity_internal (path, end_date)
     return (dat [["forks"]])
 }
 
-cm_metric_num_stars <- function (path, end_date = Sys.Date ()) {
+rm_metric_num_stars <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_popularity_internal (path, end_date)
     return (dat [["stars"]])
 }
 
-cm_metric_num_forks_url <- function () {
+rm_metric_num_forks_url <- function () {
     "metric-project-popularity"
 }
 
-cm_metric_num_stars_url <- function () {
+rm_metric_num_stars_url <- function () {
     "metric-project-popularity"
 }

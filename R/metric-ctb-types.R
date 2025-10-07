@@ -39,10 +39,10 @@ rm_data_ctb_diversity_internal <- function (path, end_date = Sys.Date ()) {
     return (length (setdiff (cmt_aut, main_auts)) / length (main_auts))
 }
 
-cm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
+rm_metric_ctb_diversity <- function (path, end_date = Sys.Date ()) {
     rm_data_ctb_diversity_internal (path, end_date)
 }
 
-cm_metric_ctb_diversity_url <- function () {
+rm_metric_ctb_diversity_url <- function () {
     "metric-types-of-contributions"
 }

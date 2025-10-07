@@ -20,11 +20,11 @@ rm_data_cran_downloads_internal <- function (path, end_date = Sys.Date ()) {
     return (sum (cran_dl$downloads))
 }
 
-cm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
+rm_metric_cran_downloads <- function (path, end_date = Sys.Date ()) {
     rm_data_cran_downloads_internal (path, end_date)
 }
 
-cm_metric_cran_downloads_url <- function () {
+rm_metric_cran_downloads_url <- function () {
     "metric-number-of-downloads"
 }
 

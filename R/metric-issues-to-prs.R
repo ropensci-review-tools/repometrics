@@ -11,11 +11,11 @@ rm_data_issues_to_prs_internal <- function (path, end_date = Sys.Date ()) {
     return (ret)
 }
 
-cm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
+rm_metric_issues_to_prs <- function (path, end_date = Sys.Date ()) {
     rm_data_issues_to_prs_internal (path, end_date)
 }
 
-cm_metric_issues_to_prs_url <- function () {
+rm_metric_issues_to_prs_url <- function () {
     "metric-change-requests"
 }
 

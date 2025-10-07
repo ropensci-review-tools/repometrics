@@ -27,14 +27,14 @@ rm_chaoss_metrics_list <- function () {
     fn_names <- chaoss_metrics_fn_names ()
     url_fns <- paste0 (fn_names, "_url")
     urls <- vapply (url_fns, function (u) do.call (u, list ()), character (1L))
-    urls <- paste0 (cm_metric_base_url (), unname (urls))
+    urls <- paste0 (rm_metric_base_url (), unname (urls))
 
     data.frame (fn_name = fn_names, url = urls)
 }
 
 chaoss_metrics_fn_names <- function () {
 
-    ptn <- "^cm\\_metric\\_"
+    ptn <- "^rm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     fns <- grep (ptn, pkg_fns, value = TRUE)
     fns <- fns [which (!grepl ("\\_internal|\\_url$", fns))]
@@ -49,9 +49,9 @@ collate_all_metrics <- function (path, end_date = Sys.Date ()) {
 
     pars <- list (path = path, end_date = end_date)
     extra_pars <- list (
-        cm_metric_burstiness = list (band_len = 31L, band_width = 2),
-        cm_metric_code_change_lines = list (exclude_whitespace = TRUE),
-        cm_metric_license_coverage =
+        rm_metric_burstiness = list (band_len = 31L, band_width = 2),
+        rm_metric_code_change_lines = list (exclude_whitespace = TRUE),
+        rm_metric_license_coverage =
             list (dirs = c ("R", "src", "inst/extdata"))
     )
 
@@ -63,7 +63,7 @@ collate_all_metrics <- function (path, end_date = Sys.Date ()) {
         }
         do.call (f, these_pars)
     })
-    names (metrics_data) <- gsub ("^cm\\_metric\\_", "", metric_fns)
+    names (metrics_data) <- gsub ("^rm\\_metric\\_", "", metric_fns)
 
     return (metrics_data)
 }
@@ -118,6 +118,6 @@ models_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) 
     return (models_data)
 }
 
-cm_metric_base_url <- function () {
+rm_metric_base_url <- function () {
     "https://chaoss.community/kb/"
 }

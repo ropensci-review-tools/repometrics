@@ -50,12 +50,12 @@ rm_data_maintainer_count_internal <- function (path, end_date = Sys.Date ()) {
     c (total = nrow (auts), recent = num_gh_auts)
 }
 
-cm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
+rm_metric_maintainer_count <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_maintainer_count_internal (path, end_date)
     return (dat [["total"]]) # Number of DESC "aut" roles
 }
 
-cm_metric_maintainer_count_url <- function () {
+rm_metric_maintainer_count_url <- function () {
     "metric-contributors"
 }
 

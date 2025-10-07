@@ -13,13 +13,13 @@ rm_data_licenses_declared_internal <- function (path, end_date = NULL) {
     return (gsub ("^\\s*|\\s*$", "", strsplit (lic, ",") [[1]]))
 }
 
-cm_metric_licenses_declared <- function (path, end_date = NULL) {
+rm_metric_licenses_declared <- function (path, end_date = NULL) {
 
     lic_dat <- rm_data_licenses_declared_internal (path)
     return (length (lic_dat) > 0L)
 }
 
-cm_metric_licenses_declared_url <- function () {
+rm_metric_licenses_declared_url <- function () {
     "chaoss.community/kb/metric-licenses-declared"
 }
 
@@ -74,14 +74,14 @@ rm_data_license_coverage_internal <- function (path,
     return (length (which (has_license)) / length (flist))
 }
 
-cm_metric_license_coverage <- function (path,
+rm_metric_license_coverage <- function (path,
                                         end_date = NULL,
                                         dirs = c ("R", "src", "inst/extdata")) {
 
     rm_data_license_coverage_internal (path, end_date, dirs)
 }
 
-cm_metric_license_coverage_url <- function () {
+rm_metric_license_coverage_url <- function () {
     "chaoss.community/kb/metric-license-coverage"
 }
 
