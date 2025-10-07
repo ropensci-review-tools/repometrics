@@ -47,27 +47,6 @@ repo_pkgstats_history_internal <- function (path, date_interval = "month", num_c
 #' @export
 repo_pkgstats_history <- memoise::memoise (repo_pkgstats_history_internal)
 
-filter_git_log <- function (log, date_interval) {
-
-    log$date <- as.Date (log$timestamp)
-    if (date_interval == "year") {
-        log$date <- strftime (log$date, "%Y")
-    } else if (date_interval == "month") {
-        log$date <- strftime (log$date, "%Y-%m")
-    } else if (date_interval == "week") {
-        log$date <- strftime (log$date, "%V")
-    } else if (date_interval == "day") {
-        log$date <- strftime (log$date, "%Y-%m-%d")
-    }
-
-    log <- dplyr::group_by (log, date) |>
-        dplyr::filter (dplyr::row_number () == 1L) |>
-        dplyr::ungroup ()
-
-    return (log)
-}
-
-
 extract_pkgstats_data_single <- function (log, path) {
 
     path_cp <- fs::path (fs::path_temp (), basename (path))
@@ -124,24 +103,6 @@ extract_pkgstats_data_multi <- function (log, path, num_cores) {
     return (res)
 
     return (res)
-}
-
-reset_repo <- function (path, hash) {
-
-    g <- gert::git_reset_hard (ref = hash, repo = path) # nolint
-    flist <- fs::dir_ls (path, recurse = TRUE, type = "file")
-    # Reduce to paths relative to 'path' itself:
-    flist <- fs::path_rel (flist, path)
-    flist_git <- gert::git_ls (path)
-    flist_out <- flist [which (!flist %in% flist_git$path)]
-    if (length (flist_out) > 0L) {
-        tryCatch (
-            fs::file_delete (flist_out),
-            error = function (e) NULL
-        )
-    }
-
-    return (fs::dir_ls (path, recurse = TRUE))
 }
 
 run_one_pkgstats <- function (path, pkg_date) {

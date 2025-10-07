@@ -83,3 +83,41 @@ git_log_in_period <- function (path, end_date = Sys.Date ()) {
 
     return (log)
 }
+
+filter_git_log <- function (log, date_interval) {
+
+    log$date <- as.Date (log$timestamp)
+    if (date_interval == "year") {
+        log$date <- strftime (log$date, "%Y")
+    } else if (date_interval == "month") {
+        log$date <- strftime (log$date, "%Y-%m")
+    } else if (date_interval == "week") {
+        log$date <- strftime (log$date, "%V")
+    } else if (date_interval == "day") {
+        log$date <- strftime (log$date, "%Y-%m-%d")
+    }
+
+    log <- dplyr::group_by (log, date) |>
+        dplyr::filter (dplyr::row_number () == 1L) |>
+        dplyr::ungroup ()
+
+    return (log)
+}
+
+reset_repo <- function (path, hash) {
+
+    g <- gert::git_reset_hard (ref = hash, repo = path) # nolint
+    flist <- fs::dir_ls (path, recurse = TRUE, type = "file")
+    # Reduce to paths relative to 'path' itself:
+    flist <- fs::path_rel (flist, path)
+    flist_git <- gert::git_ls (path)
+    flist_out <- flist [which (!flist %in% flist_git$path)]
+    if (length (flist_out) > 0L) {
+        tryCatch (
+            fs::file_delete (flist_out),
+            error = function (e) NULL
+        )
+    }
+
+    return (fs::dir_ls (path, recurse = TRUE))
+}
