@@ -117,7 +117,10 @@ repometrics_data_repo <- function (path, date_interval = "month", num_cores = -1
     cran_checks <- "Not on CRAN"
     if (checks$checks$on_cran) {
         pkg_name <- pkgstats$desc_data$package [1L]
-        cran_checks <- foghorn::cran_details (pkg = pkg_name, src = "crandb")
+        cran_checks <- tryCatch (
+            foghorn::cran_details (pkg = pkg_name, src = "crandb"),
+            error = function (e) "Unable to access CRAN website"
+        )
     }
 
     if (is_verbose ()) {
