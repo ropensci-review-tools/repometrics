@@ -12,7 +12,7 @@ rm_data_repo_from_gh_api_internal <- function (path) { # nolint
     req <- httr2::request (u_org_repo)
 
     req <- add_gh_token_to_req (req)
-    resp <- httr2::req_perform (req)
+    resp <- httr2::req_retry (req)
     httr2::resp_check_status (resp)
 
     body <- httr2::resp_body_json (resp)
