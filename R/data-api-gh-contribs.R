@@ -21,7 +21,8 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
     while (!is.null (next_page)) {
 
         req <- add_gh_token_to_req (req)
-        resp <- httr2::req_retry (req)
+        resp <- httr2::req_retry (req) |>
+            httr2::req_perform ()
         httr2::resp_check_status (resp)
 
         body <- c (body, httr2::resp_body_json (resp))
@@ -84,7 +85,8 @@ user_from_gh_api <- function (user) {
 
     req <- httr2::request (u_endpoint) |>
         add_gh_token_to_req ()
-    resp <- httr2::req_retry (req)
+    resp <- httr2::req_retry (req) |>
+        httr2::req_perform ()
     httr2::resp_check_status (resp)
     body <- httr2::resp_body_json (resp)
 

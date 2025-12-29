@@ -54,7 +54,8 @@ cran_downloads_internal <- function (pkg_name = NULL,
 
     req <- httr2::request (req_url)
     resp <- tryCatch (
-        httr2::req_retry (req),
+        httr2::req_retry (req) |>
+            httr2::req_perform ()
         error = function (e) NULL
     )
     if (is.null (resp)) {

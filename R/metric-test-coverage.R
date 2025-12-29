@@ -27,7 +27,8 @@ rm_data_test_coverage_internal <- function (path, end_date = NULL) {
     }
     # Have to use httr2 to enable mocking via httptest2:
     badge <- httr2::request (badge_svg) |>
-        httr2::req_retry ()
+        httr2::req_retry () |>
+        httr2::req_perform ()
     httr2::resp_check_status (badge)
     badge <- httr2::resp_body_string (badge)
 

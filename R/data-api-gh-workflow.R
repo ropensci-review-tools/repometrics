@@ -20,7 +20,8 @@ rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) { # nolin
             branch = repo_dat$default_branch
         )
 
-    resp <- httr2::req_retry (req)
+    resp <- httr2::req_retry (req) |>
+        httr2::req_perform ()
     httr2::resp_check_status (resp)
 
     body <- httr2::resp_body_json (resp)
