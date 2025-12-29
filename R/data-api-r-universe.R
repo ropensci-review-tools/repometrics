@@ -20,7 +20,8 @@ get_r_univ_universe <- function (pkg_name) {
     packages <- httr2::request ("https://r-universe.dev/api/search") |>
         httr2::req_url_query (q = pkg_name) |>
         httr2::req_user_agent ("R-universe docs") |>
-        httr2::req_retry () |>
+        httr2::req_retry (max_tries = 5L) |>
+        httr2::req_perform () |>
         httr2::resp_body_json ()
 
     pkg_names <- vapply (
@@ -42,7 +43,8 @@ get_r_univ_pkg_data <- function (pkg_name, universe) {
     url <- paste0 ("https://", universe, ".r-universe.dev/api/packages/", pkg_name)
     pkg_data_full <- httr2::request (url) |>
         httr2::req_user_agent ("R-universe docs") |>
-        httr2::req_retry () |>
+        httr2::req_retry (max_tries = 5L) |>
+        httr2::req_perform () |>
         httr2::resp_body_json ()
 
     created <- pkg_data_full$`_created`

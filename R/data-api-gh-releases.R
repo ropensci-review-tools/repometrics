@@ -22,7 +22,8 @@ rm_data_releases_from_gh_api_internal <- function (path, # nolint
     while (!is.null (next_page)) {
 
         req <- add_gh_token_to_req (req)
-        resp <- httr2::req_retry (req)
+        resp <- httr2::req_retry (req, max_tries = 5L) |>
+            httr2::req_perform ()
         httr2::resp_check_status (resp)
 
         body <- c (body, httr2::resp_body_json (resp))
