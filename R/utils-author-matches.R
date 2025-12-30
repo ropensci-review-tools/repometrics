@@ -12,7 +12,7 @@
 #' @noRd
 get_all_contribs <- function (ctbs_log, ctbs_gh) {
 
-    if (nrow (ctbs_gh) == 0L) {
+    if (is.null (ctbs_gh) || nrow (ctbs_gh) == 0L) {
         ctbs_log <- ctbs_log |>
             dplyr::rename (name = handle) |>
             dplyr::mutate (gh_handle = name)
