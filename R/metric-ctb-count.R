@@ -15,12 +15,37 @@ rm_data_ctb_count_internal <- function (path, end_date = Sys.Date ()) {
     start_date <- end_date - get_repometrics_period ()
 
     log <- gitlog_unique_contributors (path, start_date, end_date)
-    issues <- rm_data_issues_from_gh_api (path) |>
-        dplyr::filter (created_at >= start_date & created_at <= end_date)
-    issue_cmts <- rm_data_issue_comments_from_gh_api (path) |>
-        dplyr::filter (created_at >= start_date & created_at <= end_date)
-    prs <- rm_data_prs_from_gh_api (path) |>
-        dplyr::filter (created_at >= start_date & created_at <= end_date)
+
+    issues <- tryCatch (
+        rm_data_issues_from_gh_api (path),
+        error = function (e) data.frame (integer (0L))
+    )
+    if (!is.null (issues)) {
+        issues <- dplyr::filter (
+            issues,
+            created_at >= start_date & created_at <= end_date
+        )
+    }
+    issue_cmts <- tryCatch (
+        rm_data_issue_comments_from_gh_api (path),
+        error = function (e) data.frame (integer (0L))
+    )
+    if (!is.null (issue_cmts)) {
+        issue_cmts <- dplyr::filter (
+            issue_cmts,
+            created_at >= start_date & created_at <= end_date
+        )
+    }
+    prs <- tryCatch (
+        rm_data_prs_from_gh_api (path),
+        error = function (e) data.frame (integer (0L))
+    )
+    if (!is.null (prs)) {
+        prs <- dplyr::filter (
+            prs,
+            created_at >= start_date & created_at <= end_date
+        )
+    }
 
     c (
         code = nrow (log),
