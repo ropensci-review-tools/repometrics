@@ -20,6 +20,7 @@ add_gh_token_to_req <- function (req) {
         tok <- get_gh_token ()
         req <- httr2::req_headers (req, "Authorization" = paste0 ("Bearer ", tok))
     }
+    req <- httr2::req_headers (req, "User-Agent" = "request")
 
     return (req)
 }
