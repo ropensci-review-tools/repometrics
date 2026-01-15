@@ -38,7 +38,10 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
     }
 
     login <- avatar_url <- api_url <- gh_url <- character (0L)
+    name <- company <- email <- location <- blog <- bio <- character (0L)
     ctb_id <- contributions <- integer (0L)
+    public_repos <- followers <- following <- integer (0L)
+    created_at <- updated_at <- character (0L)
 
     if (is.null (names (body)) && length (body) > 0L) {
         # If no contributors are on GH anymore, the API request can return
@@ -68,7 +71,12 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
     })
     ctbs_user_info <- do.call (rbind, ctbs_user_info)
 
-    if (!is.null (ctbs_user_info)) {
+    if (is.null (ctbs_user_info)) {
+        ctbs$name <- ctbs$company <- ctbs$email <- ctbs$location <-
+            ctbs$blog <- ctbs$bio <- ""
+        ctbs$public_repos <- ctbs$followers <- ctbs$following <- 0
+        ctbs$created_at <- ctbs$updated_at <- ""
+    } else {
         ctbs <- dplyr::left_join (ctbs, ctbs_user_info, by = c ("login", "ctb_id")) |>
             dplyr::filter (login != "actions-user")
     }
