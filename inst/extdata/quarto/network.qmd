@@ -89,8 +89,8 @@ chart = {
   const width = 928;
   const height = 600;
 
-  // const nodes = network.nodes;
-  // const links = network.links;
+  let transform = d3.zoomIdentity;
+
   const nodes = network.nodes.filter(function(node) {
     return orgSelection.includes(node.org) || node.org.length === 0
   })
@@ -137,6 +137,12 @@ chart = {
       .attr("stroke", d => color(d.type))
       .attr("stroke-width", d => Math.sqrt(d.value) * linewidth);
 
+  const zoomRect = svg.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .style("fill", "none")
+    .style("pointer-events", "all");
+
   const node = svg.append("g")
     .selectAll("g")
     .data(nodes)
@@ -161,14 +167,37 @@ chart = {
       .attr("stroke", "white")
       .attr("stroke-width", 3);
 
+  const zoom = d3.zoom()
+    .scaleExtent([1/2, 64])
+    .on("zoom", zoomed);
+
+  zoomRect.call(zoom)
+    .call(zoom.translateTo, 0, 0);
+
   simulation.on("tick", () => {
-    link.attr("d", linkArc);
-    node.attr("transform", d => `translate(${d.x},${d.y})`);
+
+    link
+      .attr("d", linkArc)
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+    node
+      .attr("transform", d => `translate(${d.x},${d.y})`)
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
   });
 
   invalidation.then(() => simulation.stop());
 
   return Object.assign(svg.node(), {scales: {color}});
+
+  function zoomed(event, d) {
+    transform = event.transform;
+    node.attr("transform", event.transform);
+    link.attr("transform", event.transform);
+  }
 }
 ```
 
