@@ -16,7 +16,8 @@ rm_data_releases_from_gh_api_internal <- function (path, # nolint
     req0 <- req <- httr2::request (u_endpoint) |>
         add_gh_token_to_req () |>
         httr2::req_url_query (per_page = n_per_page) |>
-        httr2::req_retry (max_tries = 5L)
+        httr2::req_retry (max_tries = 5L) |>
+        httr2::req_error (is_error = \(resp) FALSE)
 
     body <- NULL
     next_page <- 1
