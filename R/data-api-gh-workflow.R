@@ -21,6 +21,7 @@ rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) { # nolin
         )
 
     resp <- httr2::req_retry (req, max_tries = 5L) |>
+        httr2::req_error (is_error = \(resp) FALSE) |>
         httr2::req_perform ()
 
     workflows <- NULL

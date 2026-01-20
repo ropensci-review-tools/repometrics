@@ -16,6 +16,7 @@ rm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) { # nol
     while (!is.null (next_page)) {
 
         resp <- httr2::req_retry (req, max_tries = 5L) |>
+            httr2::req_error (is_error = \(resp) FALSE) |>
             httr2::req_perform ()
 
         if (httr2::resp_is_error (resp)) {
@@ -118,6 +119,7 @@ rm_data_issue_comments_from_gh_api_internal <- function (path, # nolint
     while (!is.null (next_page)) {
 
         resp <- httr2::req_retry (req, max_tries = 5L) |>
+            httr2::req_error (is_error = \(resp) FALSE) |>
             httr2::req_perform ()
 
         if (httr2::resp_is_error (resp)) {

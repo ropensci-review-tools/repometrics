@@ -22,6 +22,7 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
 
         req <- add_gh_token_to_req (req)
         resp <- httr2::req_retry (req, max_tries = 5L) |>
+            httr2::req_error (is_error = \(resp) FALSE) |>
             httr2::req_perform ()
 
         if (httr2::resp_is_error (resp)) {
@@ -100,6 +101,7 @@ user_from_gh_api <- function (user) {
     req <- httr2::request (u_endpoint) |>
         add_gh_token_to_req ()
     resp <- httr2::req_retry (req, max_tries = 5L) |>
+        httr2::req_error (is_error = \(resp) FALSE) |>
         httr2::req_perform ()
 
     body <- NULL

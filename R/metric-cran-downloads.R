@@ -54,6 +54,7 @@ cran_downloads_internal <- function (pkg_name = NULL,
 
     req <- httr2::request (req_url)
     resp <- httr2::req_retry (req, max_tries = 5L) |>
+        httr2::req_error (is_error = \(resp) FALSE) |>
         httr2::req_perform ()
     if (httr2::resp_is_error (resp)) {
         return (data.frame (date = as.Date (character (0L)), downloads = integer (0L)))
