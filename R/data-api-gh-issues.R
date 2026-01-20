@@ -17,16 +17,19 @@ rm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) { # nol
 
         resp <- httr2::req_retry (req, max_tries = 5L) |>
             httr2::req_perform ()
-        httr2::resp_check_status (resp)
 
-        body <- c (body, httr2::resp_body_json (resp))
-
-        next_page <- gh_next_page (resp)
-        if (is_test_env) {
+        if (httr2::resp_is_error (resp)) {
             next_page <- NULL
-        }
+        } else {
+            body <- c (body, httr2::resp_body_json (resp))
 
-        req <- httr2::req_url_query (req0, page = next_page)
+            next_page <- gh_next_page (resp)
+            if (is_test_env) {
+                next_page <- NULL
+            }
+
+            req <- httr2::req_url_query (req0, page = next_page)
+        }
     }
 
     issues <- data.frame (
