@@ -160,6 +160,9 @@ match_string_vecs <- function (str1, str2, threshold = 0.9) {
         match_val <- matches_i [match_i, 2]
 
         ret <- NA_character_
+        if (is.null (match_val)) {
+            return (ret)
+        }
         if (match_val > threshold) {
             ret <- str2 [match_i]
         }
