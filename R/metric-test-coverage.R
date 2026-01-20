@@ -26,11 +26,15 @@ rm_data_test_coverage_internal <- function (path, end_date = NULL) {
         return (NA_real_)
     }
     # Have to use httr2 to enable mocking via httptest2:
-    badge <- httr2::request (badge_svg) |>
+    resp <- httr2::request (badge_svg) |>
         httr2::req_retry (max_tries = 5L) |>
         httr2::req_perform ()
-    httr2::resp_check_status (badge)
-    badge <- httr2::resp_body_string (badge)
+
+    if (httr2::resp_is_error (resp)) {
+        return (NA_real_)
+    }
+
+    badge <- httr2::resp_body_string (resp)
 
     # No XML/HTML parsing pkgs here, so grep for text:
     text_in <- gregexpr ("<text", badge) [[1]]
