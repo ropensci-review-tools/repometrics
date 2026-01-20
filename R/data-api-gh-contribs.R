@@ -42,10 +42,7 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
     }
 
     login <- avatar_url <- api_url <- gh_url <- character (0L)
-    name <- company <- email <- location <- blog <- bio <- character (0L)
     ctb_id <- contributions <- integer (0L)
-    public_repos <- followers <- following <- integer (0L)
-    created_at <- updated_at <- character (0L)
 
     if (is.null (names (body)) && length (body) > 0L) {
         # If no contributors are on GH anymore, the API request can return
@@ -67,6 +64,10 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
         contributions = contributions
     )
     if (nrow (ctbs) == 0L) {
+        ctbs$name <- ctbs$company <- ctbs$email <- ctbs$location <-
+            ctbs$blog <- ctbs$bio <- character (0L)
+        ctbs$public_repos <- ctbs$followers <- ctbs$following <- integer (0L)
+        ctbs$created_at <- ctbs$updated_at <- character (0L)
         return (ctbs)
     }
 
