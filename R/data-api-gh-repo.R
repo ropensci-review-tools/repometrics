@@ -14,11 +14,22 @@ rm_data_repo_from_gh_api_internal <- function (path) { # nolint
     req <- add_gh_token_to_req (req)
     resp <- httr2::req_retry (req, max_tries = 5L) |>
         httr2::req_perform ()
-    httr2::resp_check_status (resp)
 
-    body <- httr2::resp_body_json (resp)
+    body <- NULL
+    if (!httr2::resp_is_error (resp)) {
+        body <- httr2::resp_body_json (resp)
+    }
 
-    topics <- paste0 (unlist (body$topics), collapse = ", ")
+    description <- homepage <- language <- topics <-
+        default_branch <- character(0L)
+
+    if (!is.null (body)) {
+        description <- null2na_char (body$description)
+        homepage <- null2na_char (body$homepage)
+        language <- null2na_char (body$language)
+        default_branch <- null2na_char (body$default_branch)
+        topics <- paste0 (unlist (body$topics), collapse = ", ")
+    }
 
     data.frame (
         id = body$id,
@@ -26,19 +37,19 @@ rm_data_repo_from_gh_api_internal <- function (path) { # nolint
         full_name = body$full_name,
         owner = body$owner$login,
         url = body$html_url,
-        description = null2na_char (body$description),
+        description = description,
         is_fork = body$fork,
         created_at = body$created_at,
         updated_at = body$updated_at,
-        homepage = null2na_char (body$homepage),
+        homepage = homepage,
         size = body$size,
         stargazers_count = body$stargazers_count,
         subscribers_count = body$subscribers_count,
-        language = null2na_char (body$language),
+        language = language,
         forks_count = body$forks_count,
         open_issues_count = body$open_issues_count,
         topics = topics,
-        default_branch = null2na_char (body$default_branch)
+        default_branch = default_branch
     )
 }
 rm_data_repo_from_gh_api <- memoise::memoise (rm_data_repo_from_gh_api_internal)
