@@ -22,16 +22,29 @@ rm_data_elephant_factor_internal <- function (path, end_date = Sys.Date ()) {
         dplyr::select (name, company) |>
         dplyr::rename (aut_name = name)
 
-    log <- dplyr::left_join (log, gh_contribs, by = "aut_name")
-    log_na <- dplyr::filter (log, is.na (company))
-    log <- dplyr::filter (log, !is.na (company)) |>
-        dplyr::group_by (company) |>
-        dplyr::summarise (
-            ncommits = sum (ncommits),
-            nfiles_changed = sum (nfiles_changed),
-            lines_changed = sum (lines_changed)
-        ) |>
-        dplyr::bind_rows (log_na)
+    log0 <- data.frame (
+        company = character (0L),
+        ncommits = integer (0L),
+        nfiles_changed = integer (0L),
+        lines_changed = integer (0L),
+        aut_name = character (0L),
+        aut_email = character (0L)
+    )
+
+    if (nrow (log) == 0L) {
+        log <- log0
+    } else {
+        log <- dplyr::left_join (log, gh_contribs, by = "aut_name")
+        log_na <- dplyr::filter (log, is.na (company))
+        log <- dplyr::filter (log, !is.na (company)) |>
+            dplyr::group_by (company) |>
+            dplyr::summarise (
+                ncommits = sum (ncommits),
+                nfiles_changed = sum (nfiles_changed),
+                lines_changed = sum (lines_changed)
+            ) |>
+            dplyr::bind_rows (log_na)
+    }
 
     gitlog_absence_factor (log)
 }
