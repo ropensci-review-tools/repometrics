@@ -22,10 +22,12 @@ rm_data_gh_repo_workflow_internal <- function (path, n_per_page = 30L) { # nolin
 
     resp <- httr2::req_retry (req, max_tries = 5L) |>
         httr2::req_perform ()
-    httr2::resp_check_status (resp)
 
-    body <- httr2::resp_body_json (resp)
-    workflows <- body$workflow_runs
+    workflows <- NULL
+    if (!httr2::resp_is_error (resp)) {
+        body <- httr2::resp_body_json (resp)
+        workflows <- body$workflow_runs
+    }
 
     ids <- vapply (workflows, function (i) i$id, numeric (1L))
     names <- vapply (workflows, function (i) i$name, character (1L))
