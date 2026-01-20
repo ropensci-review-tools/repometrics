@@ -175,11 +175,22 @@ gh_user_general_internal <- function (login = "",
         org_web_url <- org_location <- character (0L)
     org_num_members <- integer (0L)
 
-    if (length (orgs) > 0L) {
+    nms <- c (
+        "name", "resourcePath", "url",
+        "websiteUrl", "location", "membersWithRole"
+    )
+    has_names <- vapply (
+        orgs,
+        function (i) all (nms %in% names (i)),
+        logical (1L)
+    )
+
+    if (length (orgs) > 0L && all (has_names)) {
 
         org_name <- vapply (orgs, function (i) i$name, character (1L))
         org_gh_org <- vapply (orgs, function (i) i$resourcePath, character (1L))
         org_url <- vapply (orgs, function (i) i$url, character (1L))
+
         org_web_url <- vapply (
             orgs,
             function (i) null2na_char (i$websiteUrl),
