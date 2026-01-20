@@ -13,29 +13,30 @@ rm_data_releases_from_gh_api_internal <- function (path, # nolint
 
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "releases")
 
-    req <- httr2::request (u_endpoint) |>
-        httr2::req_url_query (per_page = n_per_page)
+    req0 <- req <- httr2::request (u_endpoint) |>
+        add_gh_token_to_req () |>
+        httr2::req_url_query (per_page = n_per_page) |>
+        httr2::req_retry (max_tries = 5L)
 
     body <- NULL
     next_page <- 1
 
     while (!is.null (next_page)) {
 
-        req <- add_gh_token_to_req (req)
-        resp <- httr2::req_retry (req, max_tries = 5L) |>
-            httr2::req_perform ()
-        httr2::resp_check_status (resp)
+        resp <- httr2::req_perform (req)
 
-        body <- c (body, httr2::resp_body_json (resp))
-
-        next_page <- gh_next_page (resp)
-        if (is_test_env || latest_only) {
+        if (httr2::resp_is_error (resp)) {
             next_page <- NULL
-        }
+        } else {
+            body <- c (body, httr2::resp_body_json (resp))
 
-        req <- httr2::request (u_endpoint) |>
-            httr2::req_url_query (per_page = n_per_page) |>
-            httr2::req_url_query (page = next_page)
+            next_page <- gh_next_page (resp)
+            if (is_test_env || latest_only) {
+                next_page <- NULL
+            }
+
+            req <- httr2::req_url_query(req0, page = next_page)
+        }
     }
 
     null2char <- function (x) {
