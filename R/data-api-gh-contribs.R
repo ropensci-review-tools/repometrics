@@ -23,18 +23,21 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
         req <- add_gh_token_to_req (req)
         resp <- httr2::req_retry (req, max_tries = 5L) |>
             httr2::req_perform ()
-        httr2::resp_check_status (resp)
 
-        body <- c (body, httr2::resp_body_json (resp))
-
-        next_page <- gh_next_page (resp)
-        if (is_test_env) {
+        if (httr2::resp_is_error (resp)) {
             next_page <- NULL
-        }
+        } else {
+            body <- c (body, httr2::resp_body_json (resp))
 
-        req <- httr2::request (u_endpoint) |>
-            httr2::req_url_query (per_page = n_per_page) |>
-            httr2::req_url_query (page = next_page)
+            next_page <- gh_next_page (resp)
+            if (is_test_env) {
+                next_page <- NULL
+            }
+
+            req <- httr2::request (u_endpoint) |>
+                httr2::req_url_query (per_page = n_per_page) |>
+                httr2::req_url_query (page = next_page)
+        }
     }
 
     login <- avatar_url <- api_url <- gh_url <- character (0L)
@@ -62,6 +65,9 @@ rm_data_contribs_from_gh_api_internal <- function (path, n_per_page = 100L) { # 
         gh_url = gh_url,
         contributions = contributions
     )
+    if (nrow (ctbs) == 0L) {
+        return (ctbs)
+    }
 
     ctbs_user_info <- lapply (ctbs$login, function (ctb) {
         tryCatch (
@@ -95,18 +101,32 @@ user_from_gh_api <- function (user) {
         add_gh_token_to_req ()
     resp <- httr2::req_retry (req, max_tries = 5L) |>
         httr2::req_perform ()
-    httr2::resp_check_status (resp)
-    body <- httr2::resp_body_json (resp)
+
+    body <- NULL
+    name <- company <- email <- location <-
+        blog <- bio <- character (0L)
+
+    if (!httr2::resp_is_error (resp)) {
+
+        body <- httr2::resp_body_json (resp)
+
+        name <- null2na_char (body$name)
+        company <- null2na_char (body$company)
+        email <- null2na_char (body$email)
+        location <- null2na_char (body$location)
+        blog <- null2na_char (body$blog)
+        bio <- null2na_char (body$bio)
+    }
 
     data.frame (
         login = body$login,
         ctb_id = body$id,
-        name = null2na_char (body$name),
-        company = null2na_char (body$company),
-        email = null2na_char (body$email),
-        location = null2na_char (body$location),
-        blog = null2na_char (body$blog),
-        bio = null2na_char (body$bio),
+        name = name,
+        company = company,
+        email = email,
+        location = location,
+        blog = blog,
+        bio = bio,
         public_repos = body$public_repos,
         followers = body$followers,
         following = body$following,
