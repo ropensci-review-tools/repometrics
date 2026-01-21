@@ -59,13 +59,24 @@ extract_pkgstats_data_single <- function (log, path) {
 
     if (is_verbose ()) {
         res <- pbapply::pblapply (seq_len (nrow (log)), function (i) {
-            flist <- reset_repo (path_cp, log$hash [i]) # nolint
-            run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
+            # gert::git_reset_hard can error for reasons unknown and unrepeatable
+            flist <- tryCatch (
+                reset_repo (path_cp, log$hash [i]), # nolint
+                error = function (e) NULL # nolint
+            )
+            if (!is.null (flist)) {
+                run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
+            }
         })
     } else {
         res <- lapply (seq_len (nrow (log)), function (i) {
-            flist <- reset_repo (path_cp, log$hash [i]) # nolint
-            run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
+            flist <- tryCatch (
+                reset_repo (path_cp, log$hash [i]), # nolint
+                error = function (e) NULL # nolint
+            )
+            if (!is.null (flist)) {
+                run_one_pkgstats (path = path_cp, pkg_date = log$timestamp [i])
+            }
         })
     }
 
