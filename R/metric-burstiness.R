@@ -14,8 +14,6 @@ rm_data_burstiness_internal <- function (path, end_date, band_len = 31L, band_wi
     # Suppress no visible binding notes:
     timestamp <- ncommits <- mn <- sd <- upper <- lower <- outlier <- NULL
 
-    requireNamespace ("zoo", quietly = TRUE)
-
     start_date <- end_date - get_repometrics_period ()
 
     log <- rm_data_gitlog (path) |>

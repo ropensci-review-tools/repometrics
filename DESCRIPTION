@@ -24,7 +24,8 @@ Imports:
     memoise,
     pbapply,
     pkgcheck,
-    pkgstats
+    pkgstats,
+    zoo
 Suggests:
     brio,
     desc,
@@ -39,8 +40,7 @@ Suggests:
     testthat (>= 3.0.0),
     tidyr,
     visNetwork,
-    withr,
-    zoo
+    withr
 Remotes:
     ropensci-review-tools/pkgcheck,
     ropensci-review-tools/pkgmatch,
