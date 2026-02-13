@@ -34,6 +34,14 @@ remotes::install_github ("ropensci-review-tools/repometrics")
 pak::pkg_install ("ropensci-review-tools/repometrics")
 ```
 
+The package may also be installed from locations other than GitHub, with any of
+the following options:
+``` r
+remotes::install_git ("https://codeberg.org/ropensci-review-tools/repometrics")
+remotes::install_git ("https://codefloe.com/ropensci-review-tools/repometrics")
+```
+
+
 ### Use
 
 The `repometrics` package has one main function for collating all data for a

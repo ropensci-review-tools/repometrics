@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/ropensci-review-tools/repometrics",
   "issueTracker": "https://github.com/ropensci-review-tools/repometrics/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.1.78",
+  "version": "0.2.1.080",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -367,11 +367,18 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=zoo"
     },
-    "SystemRequirements": null
+    "SystemRequirements": {}
   },
   "fileSize": "14737.342KB",
   "readme": "https://github.com/ropensci-review-tools/repometrics/blob/main/README.md",
-  "contIntegration": ["https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check", "https://app.codecov.io/gh/ropensci-review-tools/repometrics"],
+  "contIntegration": [
+    "https://github.com/ropensci-review-tools/repometrics/actions?query=workflow%3AR-CMD-check",
+    "https://app.codecov.io/gh/ropensci-review-tools/repometrics"
+  ],
   "developmentStatus": "https://www.repostatus.org/#active",
-  "keywords": ["dashboard", "r", "software-metrics"]
+  "keywords": [
+    "dashboard",
+    "r",
+    "software-metrics"
+  ]
 }
