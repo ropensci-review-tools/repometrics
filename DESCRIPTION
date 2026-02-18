@@ -46,6 +46,7 @@ Remotes:
     ropensci-review-tools/pkgmatch,
     ropensci-review-tools/pkgstats
 Config/testthat/edition: 3
+Config/ropensci/maintainer: staff
 Encoding: UTF-8
 Language: en-GB
 Roxygen: list(markdown = TRUE)
