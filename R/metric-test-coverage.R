@@ -28,7 +28,7 @@ rm_data_test_coverage_internal <- function (path, end_date = NULL) {
     # Have to use httr2 to enable mocking via httptest2:
     resp <- httr2::request (badge_svg) |>
         httr2::req_retry (max_tries = 5L) |>
-        httr2::req_error (is_error = \(resp) FALSE) |>
+        httr2::req_error (is_error = \ (resp) FALSE) |>
         httr2::req_perform ()
 
     if (httr2::resp_is_error (resp)) {
@@ -60,7 +60,3 @@ rm_metric_test_coverage_internal <- function (path, end_date = Sys.Date ()) {
     rm_data_test_coverage_internal (path, end_date) / 100
 }
 rm_metric_test_coverage <- memoise::memoise (rm_metric_test_coverage_internal)
-
-rm_metric_test_coverage_url <- function () {
-    "metric-test-coverage"
-}

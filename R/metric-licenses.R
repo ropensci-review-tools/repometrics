@@ -19,9 +19,6 @@ rm_metric_licenses_declared <- function (path, end_date = NULL) {
     return (length (lic_dat) > 0L)
 }
 
-rm_metric_licenses_declared_url <- function () {
-    "chaoss.community/kb/metric-licenses-declared"
-}
 
 #' Metric fo rnumber of files with declared licenses
 #'
@@ -81,9 +78,6 @@ rm_metric_license_coverage <- function (path,
     rm_data_license_coverage_internal (path, end_date, dirs)
 }
 
-rm_metric_license_coverage_url <- function () {
-    "chaoss.community/kb/metric-license-coverage"
-}
 
 included_exts <- c ("r", "q", "qmd", "rmd", "c", "cpp", "h", "js", "py")
 

@@ -118,18 +118,12 @@ rm_metric_pr_reviews_approved <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_reviews_approved_internal (path, end_date)
 }
 
-rm_metric_pr_reviews_approved_url <- function () {
-    "metric-change-requests-accepted"
-}
 
 rm_metric_pr_revs_rejected <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_pr_reviews_internal (path, end_date)
     return (dat [["rejected_count"]])
 }
 
-rm_metric_pr_revs_rejected_url <- function () {
-    "metric-change-request-reviews"
-}
 
 rm_data_pr_review_duration_internal <- function (path, end_date = Sys.Date ()) {
 
@@ -173,9 +167,6 @@ rm_metric_pr_review_duration <- function (path, end_date = Sys.Date ()) {
     return (res [["mean"]])
 }
 
-rm_metric_pr_review_duration_url <- function () {
-    "metric-change-request-review-duration"
-}
 
 rm_data_pr_cmt_count_internal <- function (path, end_date = Sys.Date ()) {
 
@@ -196,9 +187,6 @@ rm_metric_pr_cmt_count <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_cmt_count_internal (path, end_date)
 }
 
-rm_metric_pr_cmt_count_url <- function () {
-    "metric-change-requests"
-}
 
 #' Measure response duration to PRs, but only from primary contributors.
 #' https://chaoss.community/kb/metric-time-to-first-response/
@@ -249,9 +237,6 @@ rm_metric_pr_response_durations <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_response_durations_internal (path, end_date)
 }
 
-rm_metric_pr_response_durations_url <- function () {
-    "metric-change-requests-duration"
-}
 
 rm_data_pr_age_internal <- function (path, end_date = Sys.Date ()) {
 
@@ -273,8 +258,4 @@ rm_data_pr_age_internal <- function (path, end_date = Sys.Date ()) {
 rm_metric_pr_age <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_pr_age_internal (path, end_date)
     return (dat [["mean"]])
-}
-
-rm_metric_pr_age_url <- function () {
-    "metric-change-requests-duration"
 }

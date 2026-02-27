@@ -17,7 +17,3 @@ rm_data_response_time_internal <- function (path, end_date = Sys.Date ()) {
 rm_metric_response_time <- function (path, end_date = Sys.Date ()) {
     rm_data_response_time_internal (path, end_date)
 }
-
-rm_metric_response_time_url <- function () {
-    "metric-time-to-first-response"
-}

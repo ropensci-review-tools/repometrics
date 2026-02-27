@@ -56,7 +56,3 @@ rm_metric_elephant_factor <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_elephant_factor_internal (path, end_date)
     dat [["ncommits"]]
 }
-
-rm_metric_elephant_factor_url <- function () {
-    "metric-elephant-factor"
-}

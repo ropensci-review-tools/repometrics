@@ -64,19 +64,3 @@ rm_metric_change_req_prop_code <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_change_req_internal (path, end_date)
     dat [["prop_code_from_prs"]]
 }
-
-rm_metric_change_req_n_opened_url <- function () {
-    "metric-change-requests"
-}
-
-rm_metric_change_req_n_closed_url <- function () {
-    "metric-change-requests"
-}
-
-rm_metric_change_req_prop_merged_url <- function () {
-    "metric-change-requests"
-}
-
-rm_metric_change_req_prop_code_url <- function () {
-    "metric-change-requests"
-}
