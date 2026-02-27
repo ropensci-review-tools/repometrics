@@ -41,35 +41,20 @@ gh_user_follow_internal <- function (login,
                                      n_per_page = 100L,
                                      followers = TRUE) {
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    n_per_page <- n_per_page_in_tests (n_per_page)
-
-    end_cursor <- result <- NULL
-    has_next_page <- TRUE
-
     object <- ifelse (followers, "followers", "following")
 
-    while (has_next_page) {
+    result <- gh_gql_paginate (
+        qry_fn = function (end_cursor, n_per_page) {
+            gh_user_follow_qry (
+                login = login, followers = followers,
+                end_cursor = end_cursor, n_per_page = n_per_page
+            )
+        },
+        extract_nodes = function (dat) dat$data$user [[object]]$nodes,
+        extract_page = function (dat) dat$data$user [[object]]$pageInfo,
+        n_per_page = n_per_page
+    )
 
-        q <- gh_user_follow_qry (
-            login = login,
-            followers = followers,
-            end_cursor = end_cursor,
-            n_per_page = n_per_page
-        )
-        dat <- gh::gh_gql (query = q)
-
-        result <- c (result, dat$data$user [[object]]$nodes)
-
-        has_next_page <- dat$data$user [[object]]$pageInfo$hasNextPage
-        end_cursor <- dat$data$user [[object]]$pageInfo$endCursor
-        if (is_test_env) {
-            has_next_page <- FALSE
-        }
-    }
-
-    result <- vapply (result, function (i) i$login, character (1L))
-
-    return (result)
+    vapply (result, function (i) i$login, character (1L))
 }
 gh_user_follow <- memoise::memoise (gh_user_follow_internal)

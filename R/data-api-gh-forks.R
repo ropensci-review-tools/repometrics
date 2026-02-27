@@ -31,31 +31,19 @@ gh_forks_qry <- function (org = "ropensci-review-tools",
 
 rm_data_repo_forks_internal <- function (path, n_per_page = 100L) {
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    n_per_page <- n_per_page_in_tests (n_per_page)
-
     or <- org_repo_from_path (path)
-    end_cursor <- fork_data <- NULL
-    has_next_page <- TRUE
 
-    while (has_next_page) {
-
-        q <- gh_forks_qry (
-            org = or [1],
-            repo = or [2],
-            end_cursor = end_cursor,
-            n_per_page = n_per_page
-        )
-        dat <- gh::gh_gql (query = q)
-
-        fork_data <- c (fork_data, dat$data$repository$forks$nodes)
-
-        has_next_page <- dat$data$repository$forks$pageInfo$hasNextPage
-        end_cursor <- dat$data$repository$forks$pageInfo$endCursor
-        if (is_test_env) {
-            has_next_page <- FALSE
-        }
-    }
+    fork_data <- gh_gql_paginate (
+        qry_fn = function (end_cursor, n_per_page) {
+            gh_forks_qry (
+                org = or [1], repo = or [2],
+                end_cursor = end_cursor, n_per_page = n_per_page
+            )
+        },
+        extract_nodes = function (dat) dat$data$repository$forks$nodes,
+        extract_page = function (dat) dat$data$repository$forks$pageInfo,
+        n_per_page = n_per_page
+    )
 
     org_repo <- vapply (fork_data, function (i) i$nameWithOwner, character (1L))
     created <- vapply (fork_data, function (i) i$createdAt, character (1L))

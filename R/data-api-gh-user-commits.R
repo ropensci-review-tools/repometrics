@@ -42,49 +42,24 @@ gh_user_commit_cmt_internal <- function (login,
                                          nyears = 1,
                                          n_per_page = 100L) {
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    n_per_page <- n_per_page_in_tests (n_per_page)
-
-    end_cursor <- timestamps <- repourl <- repo_stargazers <- NULL
-    has_next_page <- TRUE
-
-    while (has_next_page) {
-
-        q <- gh_user_commit_cmt_qry (
-            login = login,
-            end_cursor = end_cursor,
-            n_per_page = n_per_page
-        )
-        dat <- gh::gh_gql (query = q)
-
-        nodes <- dat$data$user$commitComments$nodes
-        timestamps <- c (
-            timestamps,
-            vapply (nodes, function (i) i$createdAt, character (1L))
-        )
-        repourl <- c (
-            repourl,
-            vapply (
-                nodes,
-                function (i) i$repository$nameWithOwner,
-                character (1L)
+    nodes <- gh_gql_paginate (
+        qry_fn = function (end_cursor, n_per_page) {
+            gh_user_commit_cmt_qry (
+                login = login, end_cursor = end_cursor, n_per_page = n_per_page
             )
-        )
-        repo_stargazers <- c (
-            repo_stargazers,
-            vapply (
-                nodes,
-                function (i) i$repository$stargazerCount,
-                integer (1L)
-            )
-        )
+        },
+        extract_nodes = function (dat) dat$data$user$commitComments$nodes,
+        extract_page = function (dat) dat$data$user$commitComments$pageInfo,
+        n_per_page = n_per_page
+    )
 
-        has_next_page <- dat$data$user$commitComments$pageInfo$hasNextPage
-        end_cursor <- dat$data$user$commitComments$pageInfo$endCursor
-        if (is_test_env) {
-            has_next_page <- FALSE
-        }
-    }
+    timestamps <- vapply (nodes, function (i) i$createdAt, character (1L))
+    repourl <- vapply (
+        nodes, function (i) i$repository$nameWithOwner, character (1L)
+    )
+    repo_stargazers <- vapply (
+        nodes, function (i) i$repository$stargazerCount, integer (1L)
+    )
 
     repourl <- strsplit (repourl, "\\/")
     org <- vapply (repourl, function (i) i [1], character (1L))

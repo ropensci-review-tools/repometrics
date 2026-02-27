@@ -32,31 +32,19 @@ gh_stargazers_qry <- function (org = "ropensci-review-tools",
 
 rm_data_repo_stargazers_internal <- function (path, n_per_page = 100L) { # nolint
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    n_per_page <- n_per_page_in_tests (n_per_page)
-
     or <- org_repo_from_path (path)
-    end_cursor <- stargazers <- NULL
-    has_next_page <- TRUE
 
-    while (has_next_page) {
-
-        q <- gh_stargazers_qry (
-            org = or [1],
-            repo = or [2],
-            end_cursor = end_cursor,
-            n_per_page = n_per_page
-        )
-        dat <- gh::gh_gql (query = q)
-
-        stargazers <- c (stargazers, dat$data$repository$stargazers$edges)
-
-        has_next_page <- dat$data$repository$stargazers$pageInfo$hasNextPage
-        end_cursor <- dat$data$repository$stargazers$pageInfo$endCursor
-        if (is_test_env) {
-            has_next_page <- FALSE
-        }
-    }
+    stargazers <- gh_gql_paginate (
+        qry_fn = function (end_cursor, n_per_page) {
+            gh_stargazers_qry (
+                org = or [1], repo = or [2],
+                end_cursor = end_cursor, n_per_page = n_per_page
+            )
+        },
+        extract_nodes = function (dat) dat$data$repository$stargazers$edges,
+        extract_page = function (dat) dat$data$repository$stargazers$pageInfo,
+        n_per_page = n_per_page
+    )
 
     login <- vapply (stargazers, function (i) i$node$login, character (1L))
     starred_at <- vapply (stargazers, function (i) i$starredAt, character (1L))

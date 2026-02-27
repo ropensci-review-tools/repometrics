@@ -110,31 +110,19 @@ gh_prs_qry <- function (org = "ropensci-review-tools",
 
 rm_data_prs_from_gh_api_internal <- function (path, n_per_page = 30L) { # nolint
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-    n_per_page <- n_per_page_in_tests (n_per_page)
-
     or <- org_repo_from_path (path)
-    end_cursor <- pr_data <- NULL
-    has_next_page <- TRUE
 
-    while (has_next_page) {
-
-        q <- gh_prs_qry (
-            org = or [1],
-            repo = or [2],
-            end_cursor = end_cursor,
-            n_per_page = n_per_page
-        )
-        dat <- gh::gh_gql (query = q)
-
-        pr_data <- c (pr_data, dat$data$repository$pullRequests$nodes)
-
-        has_next_page <- dat$data$repository$pullRequests$pageInfo$hasNextPage
-        end_cursor <- dat$data$repository$pullRequests$pageInfo$endCursor
-        if (is_test_env) {
-            has_next_page <- FALSE
-        }
-    }
+    pr_data <- gh_gql_paginate (
+        qry_fn = function (end_cursor, n_per_page) {
+            gh_prs_qry (
+                org = or [1], repo = or [2],
+                end_cursor = end_cursor, n_per_page = n_per_page
+            )
+        },
+        extract_nodes = function (dat) dat$data$repository$pullRequests$nodes,
+        extract_page = function (dat) dat$data$repository$pullRequests$pageInfo,
+        n_per_page = n_per_page
+    )
 
     num_commits <- vapply (
         pr_data,
