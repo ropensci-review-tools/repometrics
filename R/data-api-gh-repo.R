@@ -13,7 +13,7 @@ rm_data_repo_from_gh_api_internal <- function (path) { # nolint
 
     req <- add_gh_token_to_req (req)
     resp <- httr2::req_retry (req, max_tries = 5L) |>
-        httr2::req_error (is_error = \(resp) FALSE) |>
+        httr2::req_error (is_error = \ (resp) FALSE) |>
         httr2::req_perform ()
 
     body <- NULL
@@ -22,7 +22,7 @@ rm_data_repo_from_gh_api_internal <- function (path) { # nolint
     }
 
     description <- homepage <- language <- topics <-
-        default_branch <- character(0L)
+        default_branch <- character (0L)
 
     if (!is.null (body)) {
         description <- null2na_char (body$description)
