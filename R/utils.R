@@ -82,3 +82,22 @@ is_verbose <- function () {
     getOption ("rlang_message_verbosity", "") == "verbose" ||
         getOption ("rlib_message_verbosity", "") == "verbose"
 }
+
+#' Filter a data.frame to the standard repometrics time period.
+#'
+#' @param data A data.frame
+#' @param date_col Name of the date column to filter on (character)
+#' @param end_date End of the period (Date); defaults to today.
+#' @return Rows of `data` where `date_col` falls within the period window.
+#' @noRd
+filter_to_period <- function (data, date_col, end_date = Sys.Date ()) {
+    start_date <- end_date - get_repometrics_period ()
+    d <- as.Date (data [[date_col]])
+    data [which (d >= start_date & d <= end_date), ]
+}
+
+#' Build the GraphQL cursor text for paginated queries.
+#' @noRd
+gql_cursor_txt <- function (end_cursor) {
+    if (is.null (end_cursor)) "" else paste0 (', after:"', end_cursor, '"')
+}

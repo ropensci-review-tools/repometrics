@@ -184,14 +184,9 @@ rm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
 #' @noRd
 rm_data_issues_active_internal <- function (path, end_date = Sys.Date ()) {
 
-    # suppress no visible binding notes:
-    created_at <- closed_at <- updated_at <- NULL
-
-    start_date <- end_date - get_repometrics_period ()
-
-    issues <- rm_data_issues_from_gh_api (path) |>
-        dplyr::mutate (updated_at = as.Date (updated_at)) |>
-        dplyr::filter (updated_at >= start_date & updated_at <= end_date)
+    issues <- rm_data_issues_from_gh_api (path)
+    issues$updated_at <- as.Date (issues$updated_at)
+    issues <- filter_to_period (issues, "updated_at", end_date)
 
     return (nrow (issues))
 }
