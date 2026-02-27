@@ -4,10 +4,7 @@ gh_user_commit_cmt_qry <- function (login = "",
 
     checkmate::assert_integerish (n_per_page)
 
-    after_txt <- ""
-    if (!is.null (end_cursor)) {
-        after_txt <- paste0 (", after:\"", end_cursor, "\"")
-    }
+    after_txt <- gql_cursor_txt (end_cursor)
 
     q <- paste0 ("{
         user(login:\"", login, "\") {
@@ -93,10 +90,7 @@ gh_user_commits_qry <- function (login = "",
     from <- format (end_date - 365.25 * nyears, "%Y-%m-%dT%H:%M:%S")
     end_date <- format (end_date, "%Y-%m-%dT%H:%M:%S")
 
-    after_txt <- ""
-    if (!is.null (end_cursor)) {
-        after_txt <- paste0 (", after:\"", end_cursor, "\"")
-    }
+    after_txt <- gql_cursor_txt (end_cursor)
 
     q <- paste0 ("{
         user(login:\"", login, "\") {

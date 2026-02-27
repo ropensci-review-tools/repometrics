@@ -5,10 +5,7 @@ gh_forks_qry <- function (org = "ropensci-review-tools",
 
     checkmate::assert_integerish (n_per_page)
 
-    after_txt <- ""
-    if (!is.null (end_cursor)) {
-        after_txt <- paste0 (", after:\"", end_cursor, "\"")
-    }
+    after_txt <- gql_cursor_txt (end_cursor)
 
     q <- paste0 ("{
         repository(owner:\"", org, "\", name:\"", repo, "\") {

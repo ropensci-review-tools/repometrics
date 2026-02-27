@@ -10,10 +10,7 @@ gh_user_follow_qry <- function (login = "",
 
     object <- ifelse (followers, "followers", "following")
 
-    after_txt <- ""
-    if (!is.null (end_cursor)) {
-        after_txt <- paste0 (", after:\"", end_cursor, "\"")
-    }
+    after_txt <- gql_cursor_txt (end_cursor)
 
     q <- paste0 ("{
         user(login:\"", login, "\") {
