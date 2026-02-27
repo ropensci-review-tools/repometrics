@@ -1,37 +1,8 @@
 rm_data_issues_from_gh_api_internal <- function (path, n_per_page = 100) { # nolint
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
-
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "issues")
-
-    req0 <- req <- httr2::request (u_endpoint) |>
-        httr2::req_url_query (state = "all") |>
-        httr2::req_url_query (per_page = n_per_page) |>
-        add_gh_token_to_req ()
-
-    body <- NULL
-    next_page <- 1
-
-    while (!is.null (next_page)) {
-
-        resp <- httr2::req_retry (req, max_tries = 5L) |>
-            httr2::req_error (is_error = \(resp) FALSE) |>
-            httr2::req_perform ()
-
-        if (httr2::resp_is_error (resp)) {
-            next_page <- NULL
-        } else {
-            body <- c (body, httr2::resp_body_json (resp))
-
-            next_page <- gh_next_page (resp)
-            if (is_test_env) {
-                next_page <- NULL
-            }
-
-            req <- httr2::req_url_query (req0, page = next_page)
-        }
-    }
+    body <- gh_rest_paginate (u_endpoint, n_per_page = n_per_page, state = "all")
 
     issues <- data.frame (
         number = vapply (body, function (i) i$number, integer (1L)),
@@ -103,38 +74,10 @@ get_issue_reactions <- function (body) {
 rm_data_issue_comments_from_gh_api_internal <- function (path, # nolint
                                                          n_per_page = 100) {
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
     n_per_page <- n_per_page_in_tests (n_per_page)
-
     u_endpoint <-
         gh_rest_api_endpoint (path = path, endpoint = "issues/comments")
-
-    req0 <- req <- httr2::request (u_endpoint) |>
-        httr2::req_url_query (per_page = n_per_page) |>
-        add_gh_token_to_req ()
-
-    body <- NULL
-    next_page <- 1
-
-    while (!is.null (next_page)) {
-
-        resp <- httr2::req_retry (req, max_tries = 5L) |>
-            httr2::req_error (is_error = \(resp) FALSE) |>
-            httr2::req_perform ()
-
-        if (httr2::resp_is_error (resp)) {
-            next_page <- NULL
-        } else {
-            body <- c (body, httr2::resp_body_json (resp))
-
-            next_page <- gh_next_page (resp)
-            if (is_test_env) {
-                next_page <- NULL
-            }
-
-            req <- httr2::req_url_query (req0, page = next_page)
-        }
-    }
+    body <- gh_rest_paginate (u_endpoint, n_per_page = n_per_page)
 
     issue_url <- vapply (body, function (i) i$issue_url, character (1L))
     comment_url <- vapply (body, function (i) i$html_url, character (1L))

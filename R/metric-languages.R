@@ -50,7 +50,3 @@ rm_metric_languages <- function (path, end_date = NULL) {
     lang_dist_mn <- ifelse (lang_dist_mn == 0, 0, 0.25 / lang_dist_mn)
     return (lang_dist_mn)
 }
-
-rm_metric_languages_url <- function () {
-    "chaoss.community/?p=3430"
-}

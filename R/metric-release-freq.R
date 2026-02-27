@@ -31,9 +31,6 @@ rm_metric_release_freq <- function (path, end_date = Sys.Date ()) {
     return (dat [["mean"]])
 }
 
-rm_metric_release_freq_url <- function () {
-    "metric-release-frequency"
-}
 
 rm_data_recent_releases_internal <- function (path, end_date = Sys.Date ()) {
 
@@ -51,8 +48,4 @@ rm_data_recent_releases_internal <- function (path, end_date = Sys.Date ()) {
 
 rm_metric_recent_releases <- function (path, end_date = Sys.Date ()) {
     rm_data_recent_releases_internal (path, end_date)
-}
-
-rm_metric_recent_releases_url <- function () {
-    "metric-release-frequency"
 }

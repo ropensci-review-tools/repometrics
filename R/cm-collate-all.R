@@ -25,11 +25,14 @@
 rm_metrics_list <- function () {
 
     fn_names <- rm_metrics_fn_names ()
-    url_fns <- paste0 (fn_names, "_url")
-    urls <- vapply (url_fns, function (u) do.call (u, list ()), character (1L))
-    urls <- paste0 (rm_metric_base_url (), unname (urls))
+    metric_names <- gsub ("^rm_metric_", "", fn_names)
 
-    data.frame (fn_name = fn_names, url = urls)
+    json_metrics <- load_model_json_data ()$metrics
+    url_map <- stats::setNames (json_metrics$url, json_metrics$name)
+    urls <- url_map [metric_names]
+    urls [is.na (urls)] <- ""
+
+    data.frame (fn_name = fn_names, url = unname (urls))
 }
 
 rm_metrics_fn_names <- function () {
@@ -37,7 +40,7 @@ rm_metrics_fn_names <- function () {
     ptn <- "^rm\\_metric\\_"
     pkg_fns <- ls (envir = asNamespace ("repometrics"))
     fns <- grep (ptn, pkg_fns, value = TRUE)
-    fns <- fns [which (!grepl ("\\_internal|\\_url$", fns))]
+    fns <- fns [which (!grepl ("\\_internal$", fns))]
 
     return (fns)
 
@@ -116,8 +119,4 @@ models_over_end_dates <- function (path, end_date = Sys.Date (), num_years = 3) 
         dplyr::mutate (date = end_dates, .before = 1)
 
     return (models_data)
-}
-
-rm_metric_base_url <- function () {
-    "https://chaoss.community/kb/"
 }

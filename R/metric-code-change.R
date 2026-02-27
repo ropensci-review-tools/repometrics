@@ -19,7 +19,3 @@ rm_metric_code_change_lines <- function (path,
 
     rm_data_code_change_lines_internal (path, end_date, exclude_whitespace)
 }
-
-rm_metric_code_change_lines_url <- function () {
-    "metric-code-changes-commits"
-}

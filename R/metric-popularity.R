@@ -36,11 +36,3 @@ rm_metric_num_stars <- function (path, end_date = Sys.Date ()) {
     dat <- rm_data_popularity_internal (path, end_date)
     return (dat [["stars"]])
 }
-
-rm_metric_num_forks_url <- function () {
-    "metric-project-popularity"
-}
-
-rm_metric_num_stars_url <- function () {
-    "metric-project-popularity"
-}

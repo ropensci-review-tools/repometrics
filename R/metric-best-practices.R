@@ -23,7 +23,3 @@ rm_data_best_practices_internal <- function (path, end_date = NULL) {
 rm_metric_best_practices <- function (path, end_date = NULL) {
     rm_data_best_practices_internal (path, end_date)
 }
-
-rm_metric_best_practices_url <- function () {
-    "metric-open-source-security-foundation-openssf-best-practices-badge"
-}

@@ -37,9 +37,6 @@ rm_metric_issue_response_time <- function (path, end_date = Sys.Date ()) {
     mean (as.integer (issue_responses$response_time), na.rm = TRUE)
 }
 
-rm_metric_issue_response_time_url <- function () {
-    "metric-issue-response-time"
-}
 
 rm_data_defect_resolution_dur_internal <- function (path, end_date = Sys.Date ()) { # nolint
 
@@ -74,9 +71,6 @@ rm_metric_defect_resolution_dur <- function (path, end_date = Sys.Date ()) {
     dat [["mean"]]
 }
 
-rm_metric_defect_resolution_dur_url <- function () {
-    "defect-resolution-duration"
-}
 
 #' CHAOSS metric "Time to Close"
 #'
@@ -108,9 +102,6 @@ rm_metric_time_to_close <- function (path, end_date = Sys.Date ()) {
     return (dat [["mean"]])
 }
 
-rm_metric_time_to_close_url <- function () {
-    "metric-time-to-close"
-}
 
 #' CHAOSS metric "Change Request Closure Ratio"
 #'
@@ -152,9 +143,6 @@ rm_metric_pr_closure_ratio <- function (path, end_date = Sys.Date ()) {
     rm_data_pr_closure_ratio_internal (path, end_date)
 }
 
-rm_metric_pr_closure_ratio_url <- function () {
-    "metric-change-request-closure-ratio"
-}
 
 rm_data_issue_age_internal <- function (path, end_date = Sys.Date ()) {
 
@@ -188,9 +176,6 @@ rm_metric_issue_age <- function (path, end_date = Sys.Date ()) {
     return (dat [["mean"]])
 }
 
-rm_metric_issue_age_url <- function () {
-    "metric-issue-age"
-}
 
 #' CHAOSS metric for "Issues Active", which is simply the number of active
 #' issues during specified period.
@@ -199,22 +184,13 @@ rm_metric_issue_age_url <- function () {
 #' @noRd
 rm_data_issues_active_internal <- function (path, end_date = Sys.Date ()) {
 
-    # suppress no visible binding notes:
-    created_at <- closed_at <- updated_at <- NULL
-
-    start_date <- end_date - get_repometrics_period ()
-
-    issues <- rm_data_issues_from_gh_api (path) |>
-        dplyr::mutate (updated_at = as.Date (updated_at)) |>
-        dplyr::filter (updated_at >= start_date & updated_at <= end_date)
+    issues <- rm_data_issues_from_gh_api (path)
+    issues$updated_at <- as.Date (issues$updated_at)
+    issues <- filter_to_period (issues, "updated_at", end_date)
 
     return (nrow (issues))
 }
 
 rm_metric_issues_active <- function (path, end_date = Sys.Date ()) {
     rm_data_issues_active_internal (path, end_date)
-}
-
-rm_metric_issues_active_url <- function () {
-    "metric-issues-active"
 }

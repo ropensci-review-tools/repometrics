@@ -20,11 +20,3 @@ rm_metric_dependency_count <- function (path, end_date = NULL) {
 
     return (nrow (deps))
 }
-
-rm_metric_libyears_url <- function () {
-    "chaoss.community/kb/metric-libyears"
-}
-
-rm_metric_dependency_count_url <- function () {
-    "chaoss.community/kb/metric-libyears"
-}

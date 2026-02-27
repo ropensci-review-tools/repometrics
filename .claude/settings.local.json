@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(Rscript:*)",
+      "Bash(sed:*)",
+      "Bash(git stash:*)",
+      "Bash(git:*)",
+      "Bash(echo:*)",
+      "Bash(do:*)",
+      "Bash(printf y\\\\ny\\\\ny\\\\ny\\\\ny\\\\nn\\\\ny\\\\n:*)",
+      "Bash(printf n\\\\ny\\\\n:*)",
+      "Bash(printf:*)"
+    ]
+  }
+}
