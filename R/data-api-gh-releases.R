@@ -9,36 +9,12 @@ rm_data_releases_from_gh_api_internal <- function (path, # nolint
         n_per_page <- 1L
     }
 
-    is_test_env <- Sys.getenv ("REPOMETRICS_TESTS") == "true"
-
     u_endpoint <- gh_rest_api_endpoint (path = path, endpoint = "releases")
-
-    req0 <- req <- httr2::request (u_endpoint) |>
-        add_gh_token_to_req () |>
-        httr2::req_url_query (per_page = n_per_page) |>
-        httr2::req_retry (max_tries = 5L) |>
-        httr2::req_error (is_error = \(resp) FALSE)
-
-    body <- NULL
-    next_page <- 1
-
-    while (!is.null (next_page)) {
-
-        resp <- httr2::req_perform (req)
-
-        if (httr2::resp_is_error (resp)) {
-            next_page <- NULL
-        } else {
-            body <- c (body, httr2::resp_body_json (resp))
-
-            next_page <- gh_next_page (resp)
-            if (is_test_env || latest_only) {
-                next_page <- NULL
-            }
-
-            req <- httr2::req_url_query(req0, page = next_page)
-        }
-    }
+    body <- gh_rest_paginate (
+        u_endpoint,
+        n_per_page = n_per_page,
+        max_pages = if (latest_only) 1L else Inf
+    )
 
     null2char <- function (x) {
         ifelse (is.null (x), "", x)
