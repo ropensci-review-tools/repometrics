@@ -9,7 +9,7 @@ rm_data_maintainer_count_internal <- function (path, end_date = Sys.Date ()) {
     user_login <- merged_by <- participants <- created_at <-
         assignee <- closed_by <- NULL
 
-    requireNamespace ("desc", quiety = TRUE)
+    requireNamespace ("desc", quietly = TRUE)
 
     checkmate::assert_date (end_date)
 
